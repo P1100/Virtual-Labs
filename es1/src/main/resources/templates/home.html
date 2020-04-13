@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head>
+	<meta charset="UTF-8">
+	<meta content="widt=device-width, initial-scale=1, shrink-to-fit=no" name="viewport">
+	<!-- Bootstrap CSS -->
+	<link crossorigin="anonymous" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+	      integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" rel="stylesheet">
+	<title>Home Page</title>
+	<!--	media="all" th:href="@{/CSS/mystyle.css}" -->
+	<link href="./CSS/mystyle.css" rel="stylesheet" type="text/css">
+</head>
+<!-- NOTA: togliendo novalidate nel form si aggiunge un ulteriore livello di validazione -->
+<body>
+<div th:id="main_container">
+	<!-- Navigation-->
+	<div th:replace="fragments/header :: header">Header</div>
+	
+	<div class="container-fluid p-5">
+		<h1 style="text-align:center">Home Page</h1><br>
+		
+		<div th:if="${session.username == null}">
+			<p style="text-align:center"><a href="/register">Sign up here</a></p>
+			
+			<form method="post" th:action="@{/login}" th:object="${command}" novalidate><!--novalidate-->
+				<div class="form-row">
+					<div class="form-group col-md-3 mr-4">
+						<label th:for="email">Email</label>
+						<input class="form-control" required th:field="*{email}" type="text">
+					</div>
+				</div>
+				<div class="form-row">
+					<div class="form-group col-md-3 mr-4">
+						<label th:for="password">Password</label>
+						<input class="form-control" required th:field="*{password}" type="password">
+					</div>
+				</div>
+				<div class="col-md-4 mb-2">
+					<button class="btn btn-secondary m-1" type="reset">Reset</button>
+					<button class="btn btn-primary m-1" type="submit">Login</button>
+				</div>
+			</form>
+		</div>
+	</div>
+	<div th:replace="fragments/footer :: footer">Footer</div>
+</div>
+<!-- Bootstrap core JavaScript - Optional JavaScript
+================================================== -->
+<!-- Placed at the end of the document so the pages load faster -->
+<!-- jQuery first, then Popper.js, then Bootstrap JS -->
+<script crossorigin="anonymous" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
+        src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
+<script crossorigin="anonymous" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"
+        src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+<script crossorigin="anonymous" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
+        src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+</body>
+</html>
