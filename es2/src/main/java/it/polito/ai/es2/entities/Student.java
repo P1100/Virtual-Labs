@@ -20,7 +20,7 @@ public class Student {
             inverseJoinColumns = @JoinColumn(name = "course_name"))
     private List<Course> courses = new ArrayList<>();
 
-    private void addCourse(Course course) {
+    public void addCourse(Course course) {
         courses.add(course);
         course.getStudents().add(this);
     }

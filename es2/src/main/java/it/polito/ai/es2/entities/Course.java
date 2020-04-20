@@ -2,7 +2,10 @@ package it.polito.ai.es2.entities;
 
 import lombok.Data;
 
-import javax.persistence.*;
+import javax.persistence.CascadeType;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.ManyToMany;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -15,11 +18,10 @@ public class Course {
     private int min;
     private int max;
 
-    @ManyToMany(mappedBy = "courses", cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.REFRESH, CascadeType.PERSIST},
-            fetch = FetchType.LAZY) //FetchType.EAGER
+    @ManyToMany(mappedBy = "courses", cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.REFRESH, CascadeType.PERSIST})
     private List<Student> students = new ArrayList<>(); // ->  use Set
 
-    private void addStudent(Student student) {
+    public void addStudent(Student student) {
         students.add(student);
         student.getCourses().add(this);
     }
