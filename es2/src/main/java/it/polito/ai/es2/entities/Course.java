@@ -1,55 +1,54 @@
 package it.polito.ai.es2.entities;
 
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
-import javax.persistence.CascadeType;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.ManyToMany;
+import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
 
 @Entity
 @Data
-public class Course {
-    boolean enabled;
+@NoArgsConstructor
+public class Course {/*
+    @Override
+    public String toString() {
+        return "Course{}";
+    }*/
+
     @Id
     private String name;
+
     private int min;
     private int max;
+    boolean enabled;
+    @OneToMany(mappedBy = "course")//, fetch = FetchType.EAGER)
+            List<Team> teams = new ArrayList<>();
 
     @ManyToMany(mappedBy = "courses", cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.REFRESH, CascadeType.PERSIST})
     private List<Student> students = new ArrayList<>(); // ->  use Set
+
+    public Course(String name, int min, int max, boolean enabled) {
+        super();
+        this.name = name;
+        this.min = min;
+        this.max = max;
+        this.enabled = enabled;
+        this.teams = new ArrayList<>();
+    }
 
     public void addStudent(Student student) {
         students.add(student);
         student.getCourses().add(this);
     }
-/*
-    @Entity
-    @Data
-    public class Course {
-        @Id
-        String name;
-        int min;
-        int max;
-        Boolean enabled;
-        @ManyToMany(mappedBy = "courses")
-        List<Student> students = new ArrayList<>();
-        *//*
-       @OneToMany(mappedBy="course")
-       List<Team> teams;
-       *//*
-        public void addStudent(Student s){
-            students.add(s);
-            s.getCourses().add(this);
-        }
-*//*
-    public void addTeam(Team t){
-       teams.add(t);
-       t.setCourse(this);
+
+    public void addTeam(Team team) {
+        teams.add(team);
+        team.setCourse(this);
     }
-     *//*
+
+    public void removeTeam(Team team) {
+        teams.remove(team);
+        team.setCourse(null);
     }
-    */
 }

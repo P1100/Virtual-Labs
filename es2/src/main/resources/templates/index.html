@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+	<meta charset="UTF-8">
+	<meta content="width=device-width, initial-scale=1, shrink-to-fit=no" name="viewport">
+	<title>Upload CSV File Example</title>
+	
+	<!--Bootstrap 4-->
+	<link href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+
+<div class="container py-5">
+	<div class="row">
+		<div class="col-6 mx-auto">
+			<h1>Upload CSV File Example</h1>
+			<form enctype="multipart/form-data" method="POST" th:action="@{/upload-csv-file}">
+				<div class="form-group mt-3">
+					<label for="corso">Select a course</label>
+					<input class="form-control-corso" id="corso" name="corso" type="text">
+					<br>
+					<label for="file">Select a CSV file</label>
+					<input accept=".csv" class="form-control-file" id="file" name="file" type="file">
+				</div>
+				<button class="btn btn-primary" type="submit">Import CSV</button>
+			</form>
+		</div>
+	</div>
+</div>
+
+</body>
+</html>

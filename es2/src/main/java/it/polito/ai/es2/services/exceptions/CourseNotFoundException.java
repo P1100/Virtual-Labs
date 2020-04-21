@@ -1,4 +1,4 @@
-package it.polito.ai.es2.exceptions;
+package it.polito.ai.es2.services.exceptions;
 
 public class CourseNotFoundException extends TeamServiceException {
     public CourseNotFoundException() {

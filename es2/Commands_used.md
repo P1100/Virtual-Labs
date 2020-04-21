@@ -1,8 +1,13 @@
-docker run -d --mount source=es2vol,target=/es2app -p 3306:3306 --name es2 -e MYSQL_ROOT_PASSWORD=root -d mariadb
+# Old
+`docker run -d --mount source=es2vol,target=/es2app -p 3306:3306 --name es2 -e MYSQL_ROOT_PASSWORD=root -d mariadb`
 
-myes2mariadb
+# How to delete DB
+mysql> SET foreign_key_checks = 0;
+mysql> DROP table ...;
+mysql> SET foreign_key_checks = 1;
 
-CREATE DATABASE teams;
+# Current
+`docker run -d -v /home/myes2mariadb:/var/lib/mysql -p 3306:3306 --name es2 -e MYSQL_ROOT_PASSWORD=root -d mariadb`
 
--v /my/own/datadir:/var/lib/mysql
-docker run -d -v /home/myes2mariadb:/var/lib/mysql -p 3306:3306 --name es2 -e MYSQL_ROOT_PASSWORD=root -d mariadb
+`CREATE DATABASE teams;`
+
