@@ -20,18 +20,21 @@ public class Student {
             inverseJoinColumns = @JoinColumn(name = "course_name"))
     private List<Course> courses = new ArrayList<>();
 
+    @ManyToMany(mappedBy = "members")
+    List<Team> teams = new ArrayList<>();
+
     public void addCourse(Course course) {
         courses.add(course);
         course.getStudents().add(this);
     }
-        /*
-    public void addTeam(Team t){
-        teams.add(t);
-        t.getMembers().add(this);
+
+    public void addTeam(Team team) {
+        teams.add(team);
+        team.getMembers().add(this);
     }
-    public void removeTeam(Team t){
-        t.getMembers().remove(this);
-        teams.remove(t);
+
+    public void removeTeam(Team team) {
+        team.getMembers().remove(this);
+        teams.remove(team);
     }
-     */
 }

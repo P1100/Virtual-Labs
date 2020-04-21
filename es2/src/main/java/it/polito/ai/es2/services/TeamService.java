@@ -2,6 +2,7 @@ package it.polito.ai.es2.services;
 
 import it.polito.ai.es2.dtos.CourseDTO;
 import it.polito.ai.es2.dtos.StudentDTO;
+import it.polito.ai.es2.dtos.TeamDTO;
 
 import java.io.Reader;
 import java.util.List;
@@ -35,4 +36,16 @@ public interface TeamService {
     List<Boolean> addAndEroll(Reader r, String courseName);
 
     List<CourseDTO> getCourses(String studentId);
+
+    List<TeamDTO> getTeamsForStudent(String studentId);
+
+    List<StudentDTO> getMembers(Long TeamId);
+
+    TeamDTO proposeTeam(String courseId, String name, List<String> memberIds);
+
+    List<TeamDTO> getTeamForCourse(String courseName);
+
+    List<StudentDTO> getStudentsInTeams(String courseName);
+
+    List<StudentDTO> getAvailableStudents(String courseName);
 }

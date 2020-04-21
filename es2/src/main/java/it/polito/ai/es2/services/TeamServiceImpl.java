@@ -5,10 +5,13 @@ import com.opencsv.bean.CsvToBeanBuilder;
 import it.polito.ai.es2.domains.StudentViewModel;
 import it.polito.ai.es2.dtos.CourseDTO;
 import it.polito.ai.es2.dtos.StudentDTO;
+import it.polito.ai.es2.dtos.TeamDTO;
 import it.polito.ai.es2.entities.Course;
 import it.polito.ai.es2.entities.Student;
+import it.polito.ai.es2.entities.Team;
 import it.polito.ai.es2.repositories.CourseRepository;
 import it.polito.ai.es2.repositories.StudentRepository;
+import it.polito.ai.es2.repositories.TeamRepository;
 import it.polito.ai.es2.services.exceptions.CourseNotFoundException;
 import it.polito.ai.es2.services.exceptions.StudentNotFoundException;
 import it.polito.ai.es2.services.exceptions.TeamServiceException;
@@ -24,7 +27,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-// TODO: implementare controlli su min-max di corsi, e sul fatto che sia enabled.
+// TODO: implementare controlli su corso enabled
 // TODO: Controlli su presenza valore nel repository, da 2 istruzione (repo.existsID+repo.getOne) a <Optional> repo.findById() !
 @Service
 @Transactional
@@ -36,6 +39,8 @@ public class TeamServiceImpl implements TeamService {
     CourseRepository cr;
     @Autowired
     StudentRepository sr;
+    @Autowired
+    TeamRepository tr;
 //    List<CourseDTO> courseDTOList;
 //    List<StudentDTO> studentDTOList;
 //    public TeamServiceImpl() {
@@ -170,7 +175,6 @@ public class TeamServiceImpl implements TeamService {
         log.info("[after repo add]-addStudentToCourse(" + studentId + "," + courseName + ").Course:" + c.getName() + "; Student:" + s.getId());
         return true;
     }
-
     @Override
     public List<Boolean> addAll(List<StudentDTO> students) {
         if (students == null) {
@@ -190,7 +194,6 @@ public class TeamServiceImpl implements TeamService {
         sr.flush();
         return lb;
     }
-
     @Override
     public List<Boolean> enrollAll(List<String> studentIds, String courseName) {
         if (studentIds == null || courseName == null) {
@@ -213,7 +216,6 @@ public class TeamServiceImpl implements TeamService {
         }
         return lb;
     }
-
     @Override
     public List<Boolean> addAndEroll(Reader reader, String courseName) {
         if (reader == null || courseName == null) {
@@ -247,5 +249,77 @@ public class TeamServiceImpl implements TeamService {
 
         log.info(list_ids + "-" + courseName);
         return enrollAll(list_ids, courseName);
+    }
+
+    @Override
+    public List<TeamDTO> getTeamsForStudent(String studentId) {
+        return sr.getOne(studentId).getTeams().stream().map(x -> modelMapper.map(x, TeamDTO.class)).collect(Collectors.toList());
+    }
+
+    @Override
+    public List<StudentDTO> getMembers(Long teamId) {
+        return tr.getOne(teamId).getMembers().stream().map(x -> modelMapper.map(x, StudentDTO.class)).collect(Collectors.toList());
+    }
+
+    @Override
+    public TeamDTO proposeTeam(String courseId, String name, List<String> memberIds) throws TeamServiceException {
+        if (courseId == null || name == null || memberIds == null)
+            throw new TeamServiceException("null parameter");
+        // Si dà per assunto che il team non sia stato già creato
+        Optional<Course> oc = cr.findById(courseId);
+        if (!oc.isPresent())
+            throw new CourseNotFoundException("courseId not found");
+        if (oc.get().isEnabled() == false)
+            throw new TeamServiceException("proposeTeam() - course not enabled");
+        Course course = oc.get();
+
+        List<Optional<Student>> streamopt = memberIds.stream().map(x -> sr.findById(x)).collect(Collectors.toList());
+        if (!streamopt.stream().allMatch(x -> x.isPresent()))
+            throw new StudentNotFoundException("courseId not found");
+        List<Student> listMemberStudents = streamopt.stream().map(x -> x.get()).collect(Collectors.toList());
+
+        if (!listMemberStudents.stream().allMatch(x -> course.getStudents().contains(x)))
+            throw new TeamServiceException("proposeTeam() - non tutti gli studenti sono iscritti al corso");
+/*        if (course.getTeams().stream().map(x -> x.getMembers()).noneMatch(y -> {
+            for (Student student : y) {
+                if(listMemberStudents.stream().anyMatch(student::equals))
+                    return true;
+            }
+            return false;
+        }))
+            throw new TeamServiceException("proposeTeam() - studenti fanno parte di altri gruppi nell’ambito dello stesso corso");
+            */
+//        if (listMemberStudents.stream())
+//            throw new TeamServiceException("proposeTeam() - non rispettati i vincoli di cardinalità definiti nell’ambito del corso");
+//        if (listMemberStudents.stream())
+//            throw new TeamServiceException("proposeTeam() - duplicati dei partecipanti");
+        TeamDTO teamDTO = new TeamDTO(name, 1);
+        Team team = modelMapper.map(teamDTO, Team.class);
+        for (Student x : listMemberStudents.stream().collect(Collectors.toList())) {
+            team.addStudent(x);
+        }
+        course.addTeam(team);
+        team = tr.save(team);
+        return teamDTO;
+    }
+
+    @Override
+    public List<TeamDTO> getTeamForCourse(String courseName) {
+        if (courseName == null)
+            throw new TeamServiceException("null parameter");
+        Optional<Course> co = cr.findById(courseName);
+        if (!co.isPresent())
+            throw new CourseNotFoundException("getTeamForCourse - course not found");
+        return co.get().getTeams().stream().map(x -> modelMapper.map(x, TeamDTO.class)).collect(Collectors.toList());
+    }
+
+    @Override
+    public List<StudentDTO> getStudentsInTeams(String courseName) {
+        return null;
+    }
+
+    @Override
+    public List<StudentDTO> getAvailableStudents(String courseName) {
+        return null;
     }
 }
