@@ -65,8 +65,6 @@ public class Es2Application {
         teamService.addCourse(c8);
         CourseDTO c9 = new CourseDTO("C9", 1, 99, false);
         teamService.addCourse(c9);
-        CourseDTO c10 = new CourseDTO("C10", 1, 99, false);
-        teamService.addCourse(c10);
         StudentDTO s0 = new StudentDTO("S0", "S0-name", "S0-FirstName");
         teamService.addStudent(s0);
         StudentDTO s1 = new StudentDTO("S1", "S1-name", "S1-FirstName");
@@ -87,8 +85,6 @@ public class Es2Application {
         teamService.addStudent(s8);
         StudentDTO s9 = new StudentDTO("S9", "S9-name", "S9-FirstName");
         teamService.addStudent(s9);
-        StudentDTO s10 = new StudentDTO("S10", "S10-name", "S10-FirstName");
-        teamService.addStudent(s10);
   
         System.out.println("-------------------------  AddAll ------------------------------------");
         List<StudentDTO> lstudto = new ArrayList<>();
@@ -125,8 +121,8 @@ public class Es2Application {
         System.out.println(teamService.enrollAll(Arrays.asList("S1", "S4", "S5", "S6"), "C_enroll_all"));
         System.out.println(teamService.enrollAll(Collections.singletonList("S8"), "C8"));
         System.out.println("-------------------------  AddStudentToCourse ------------------------------------");
-        System.out.println("Result_1: " + teamService.addStudentToCourse("S1", "C0"));
-        System.out.println("Result_2: " + teamService.addStudentToCourse("S2", "C0"));
+        System.out.println("Result_1_duplicate: " + teamService.addStudentToCourse("S1", "C0"));
+        System.out.println("Result_2_duplicate: " + teamService.addStudentToCourse("S2", "C0"));
 //      teamService.disableCourse("C1"); // -> ritornerà falso dopo
         //teamService.addStudentToCourse("S34124124", "C5"); //--> exception student not found
         //teamService.addStudentToCourse("S6", "C13123123"); //--> exception course not found
@@ -200,11 +196,11 @@ public class Es2Application {
           }
         }
   
-        System.out.println("------------------- Final Test C10, S10, not being overwritten ---------------");
-        CourseDTO c10r = new CourseDTO("C10", 33, 44, false);
-        teamService.addCourse(c10r);
-        StudentDTO s10r = new StudentDTO("S10", "REWRITE", "REWRITE");
-        teamService.addStudent(s10r);
+        System.out.println("------------------- Final Test C9, S9, not being overwritten ---------------");
+        CourseDTO c9r = new CourseDTO("C9", 33, 44, false);
+        System.out.println(teamService.addCourse(c9r));
+        StudentDTO s9r = new StudentDTO("S9", "REWRITE", "REWRITE");
+        System.out.println(teamService.addStudent(s9r));
       }
     };
   }
