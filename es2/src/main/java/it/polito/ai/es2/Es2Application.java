@@ -16,6 +16,7 @@ import org.springframework.context.annotation.Bean;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 @SpringBootApplication
@@ -96,15 +97,15 @@ public class Es2Application {
         
         System.out.println("-------------------------  getCourse() ------------------------------------");
         System.out.print("#C1 is present():" + teamService.getCourse("C1").isPresent() + "-");
-        teamService.getCourse("C1").ifPresent(x -> System.out.println(x));
+        teamService.getCourse("C1").ifPresent(System.out::println);
         System.out.println("#C99 is present():" + teamService.getCourse("C99").isPresent());
         teamService.getCourse("C99").ifPresent(x -> System.out.println(x));
         
         System.out.println("-------------------------  getStudent() ------------------------------------");
         System.out.print("S5 is present():" + teamService.getStudent("S5").isPresent() + "-");
-        teamService.getStudent("S5").ifPresent(x -> System.out.println(x));
+        teamService.getStudent("S5").ifPresent(System.out::println);
         System.out.println("#S999 is present():" + teamService.getStudent("S999").isPresent());
-        teamService.getStudent("S999").ifPresent(x -> System.out.println(x));
+        teamService.getStudent("S999").ifPresent(System.out::println);
   
         System.out.println("-------------------------  getAllCourses() ------------------------------------");
         teamService.getAllCourses().forEach(System.out::println);
@@ -118,7 +119,7 @@ public class Es2Application {
         System.out.println("-------------------------  EnrollAll - C_enroll_all, C8 ------------------------------------");
         System.out.println(teamService.enrollAll(Arrays.asList("S1", "S4", "S5"), "C_enroll_all"));
         System.out.println(teamService.enrollAll(Arrays.asList("S1", "S4", "S5", "S6"), "C_enroll_all"));
-        System.out.println(teamService.enrollAll(Arrays.asList("S8"), "C8"));
+        System.out.println(teamService.enrollAll(Collections.singletonList("S8"), "C8"));
         System.out.println("-------------------------  AddStudentToCourse ------------------------------------");
         System.out.println("Result_1: " + teamService.addStudentToCourse("S1", "C0"));
         System.out.println("Result_2: " + teamService.addStudentToCourse("S2", "C0"));
@@ -185,7 +186,7 @@ public class Es2Application {
           }
           for (TeamDTO teamDTO : teamService.getTeamForCourse(courseDTO.getName())) {
             try {
-              for (StudentDTO studentDTO : teamService.getMembers(teamDTO.getId().longValue())) {
+              for (StudentDTO studentDTO : teamService.getMembers(teamDTO.getId())) {
                 System.out.println("---" + studentDTO);
               }
             } catch (Exception e) {

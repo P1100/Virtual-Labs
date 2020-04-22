@@ -22,10 +22,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.io.Reader;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -91,20 +88,19 @@ public class TeamServiceImpl implements TeamService {
     if (students == null) {
       throw new TeamServiceException("null parameters");
     }
-    List<Boolean> lb = students.stream()
-                           .map(x -> modelMapper.map(x, Student.class))
-                           .peek(e -> log.info("addAll(List<StudentDTO> - size:" + students.size() + " - Entità corrente:" + e))
-                           .map(
-                               e -> {
-                                 boolean b = sr.existsById(e.getId());
-                                 // Se studente esisteva già...
-                                 if (b)
-                                   return Boolean.FALSE;
-                                 // Se invece non esisteva...
-                                 sr.save(e);
+    return students.stream()
+               .map(x -> modelMapper.map(x, Student.class))
+               .peek(e -> log.info("addAll(List<StudentDTO> - size:" + students.size() + " - Entità corrente:" + e))
+               .map(
+                   e -> {
+                     boolean b = sr.existsById(e.getId());
+                     // Se studente esisteva già...
+                     if (b)
+                       return Boolean.FALSE;
+                     // Se invece non esisteva...
+                     sr.save(e);
                                  return Boolean.TRUE;
                                }).collect(Collectors.toList());
-    return lb;
   }
   
   @Override
@@ -217,8 +213,7 @@ public class TeamServiceImpl implements TeamService {
     if (!cr.existsById(courseName))
       throw new CourseNotFoundException("getEnrolledStudents() - StudentNotFoundException: (" + courseName + ")");
     Course c = cr.getOne(courseName);
-    List<StudentDTO> returnListDTO = c.getStudents().stream().map(x -> modelMapper.map(x, StudentDTO.class)).collect(Collectors.toList());
-    return returnListDTO;
+    return c.getStudents().stream().map(x -> modelMapper.map(x, StudentDTO.class)).collect(Collectors.toList());
   }
   
   /**
@@ -271,9 +266,9 @@ public class TeamServiceImpl implements TeamService {
   public List<StudentDTO> getMembers(Long teamId) {
     if (teamId == null)
       throw new TeamServiceException("getMembers() - null parameters");
-    Optional<Team> team = tr.findById(teamId.longValue());
+    Optional<Team> team = tr.findById(teamId);
     if (team.isPresent())
-      return team.get().getMembers().stream().filter(x -> x != null).map(y -> modelMapper.map(y, StudentDTO.class)).collect(Collectors.toList());
+      return team.get().getMembers().stream().filter(Objects::nonNull).map(y -> modelMapper.map(y, StudentDTO.class)).collect(Collectors.toList());
     else
       throw new TeamServiceException("getMembers() - team not found");
   }
@@ -288,18 +283,19 @@ public class TeamServiceImpl implements TeamService {
     Optional<Course> oc = cr.findById(courseId);
     if (!oc.isPresent())
       throw new CourseNotFoundException("proposeTeam - course not found");
-    if (oc.get().isEnabled() == false)
+    if (!oc.get().isEnabled())
       throw new TeamServiceException("proposeTeam() - course not enabled");
     List<Optional<Student>> streamopt = memberIds.stream().map(x -> sr.findById(x)).collect(Collectors.toList());
-    if (!streamopt.stream().allMatch(x -> x.isPresent()))
+    if (!streamopt.stream().allMatch(Optional::isPresent))
       throw new StudentNotFoundException("proposeTeam() - student not found");
-    
+  
     Course course = oc.get();
-    List<Student> listMemberStudents = streamopt.stream().map(x -> x.get()).collect(Collectors.toList());
-    if (!listMemberStudents.stream().allMatch(x -> course.getStudents().contains(x)))
+    List<Student> listMemberStudents = streamopt.stream().map(Optional::get).collect(Collectors.toList());
+    // !listMemberStudents.stream().allMatch(x -> course.getStudents().contains(x))
+    if (!course.getStudents().containsAll(listMemberStudents))
       throw new TeamServiceException("proposeTeam() - non tutti gli studenti sono iscritti al corso");
-    
-    if (course.getTeams().size() != 0 && course.getTeams().stream().map(x -> x.getMembers()).noneMatch(y -> {
+  
+    if (course.getTeams().size() != 0 && course.getTeams().stream().map(Team::getMembers).noneMatch(y -> {
       for (Student student : y) {
         if (listMemberStudents.stream().anyMatch(student::equals))
           return true;
@@ -314,7 +310,7 @@ public class TeamServiceImpl implements TeamService {
     
     TeamDTO teamDTO = new TeamDTO(null, name, 1);
     Team team = modelMapper.map(teamDTO, Team.class);
-    for (Student student : listMemberStudents.stream().collect(Collectors.toList())) {
+    for (Student student : new ArrayList<>(listMemberStudents)) {
       student.addTeam(team); // add su studenti
     }
     course.addTeam(team); // add su corsi
