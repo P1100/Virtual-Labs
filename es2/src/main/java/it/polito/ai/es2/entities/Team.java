@@ -15,19 +15,16 @@ public class Team {
   Long id;
   String name;
   int status;
-  // TODO lasciare solo persist e merge
-  @ManyToOne(cascade = CascadeType.ALL)
+  @ManyToOne(cascade = {CascadeType.MERGE, CascadeType.PERSIST})
   @JoinColumn(name = "course_id")
   @ToString.Exclude
   Course course;
-  // TODO lasciare solo persist e merge
-  @ManyToMany(cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.REFRESH, CascadeType.PERSIST, CascadeType.REMOVE})
+  @ManyToMany(cascade = {CascadeType.MERGE, CascadeType.PERSIST})
   @JoinTable(name = "teams_students", joinColumns = @JoinColumn(name = "team_id"),
       inverseJoinColumns = @JoinColumn(name = "student_id"))
   @ToString.Exclude
   List<Student> members = new ArrayList<>();
   
-  // TODO ricontrollare e aggiungere lista
   public void setCourse(Course new_course) {
     if (new_course == null) {
       this.course.getTeams().remove(this);
@@ -37,13 +34,6 @@ public class Team {
       this.course = new_course;
     }
   }
-  
-  /*public void setCourse(Course course) {
-      this.course.getTeams().remove(this);
-      if(course!=null)
-          course.getTeams().add(this);
-      this.course = course;
-  }*/
   public void addStudent(Student new_student) {
     members.add(new_student);
     new_student.getTeams().add(this);

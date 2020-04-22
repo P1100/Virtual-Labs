@@ -28,7 +28,6 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-// TODO: Controlli su presenza valore nel repository, da 2 istruzione (repo.existsID+repo.getOne) a <Optional> repo.findById() !
 @Service
 @Transactional
 @Log
@@ -191,6 +190,10 @@ public class TeamServiceImpl implements TeamService {
     Course course = cr.getOne(courseName);
     List<Boolean> lb = new ArrayList<>();
     for (String id : studentIds) {
+      if (id == null) { // null was put by AddAndReroll function
+        lb.add(false);
+        continue;
+      }
       if (!sr.existsById(id))
         throw new StudentNotFoundException("enrollAll(List<String> studentIds, String courseName) - student in list not found");
       Student student = sr.getOne(id);
@@ -203,7 +206,7 @@ public class TeamServiceImpl implements TeamService {
       course.addStudent(student);
 //      student.addCourse(course); // -> creerei duplicati
     }
-    log.info("enrollAll List<Boolean> ritornata (lb):" + lb);
+    log.info("enrollAll List<Boolean> ritornata:" + lb);
     return lb;
   }
   
@@ -218,6 +221,9 @@ public class TeamServiceImpl implements TeamService {
     return returnListDTO;
   }
   
+  /**
+   * Prendo il CSV dal controller (implementato)
+   */
   @Override
   public List<Boolean> addAndEroll(Reader reader, String courseName) {
     if (reader == null || courseName == null) {
@@ -238,49 +244,61 @@ public class TeamServiceImpl implements TeamService {
                                 {
                                   Optional<Student> optionalStudent_fromDb = sr.findById(new_studentDTO.getId());
                                   if (optionalStudent_fromDb.isPresent())
-                                    return optionalStudent_fromDb.get(); // return null; --> se uso filter sotto
+                                    return null;
                                   Student newStudent = modelMapper.map(new_studentDTO, Student.class);
                                   return sr.save(newStudent);
                                 })
-//                                // Non serve controllare che student non si già presente, lo faccio in enrollAll
+                                // No perchè devo elaborare ordine in enrollAll
 //                                .filter(k -> {
 //                                    if (k == null)
 //                                      return false;
 //                                    else
 //                                      return true;
 //                                  })
-                                .map(y -> y.getId()).collect(Collectors.toList());
-    log.info(courseName + " - CSV_Student_Ids: " + list_ids);
+                                .map(y -> y != null ? y.getId() : null).collect(Collectors.toList());
+    log.info(courseName + " - CSV_Valid_Students: " + list_ids);
     return enrollAll(list_ids, courseName);
   }
   
   @Override
   public List<TeamDTO> getTeamsForStudent(String studentId) {
+    if (studentId == null)
+      throw new TeamServiceException("getTeamsForStudent() - null parameters");
     return sr.getOne(studentId).getTeams().stream().map(x -> modelMapper.map(x, TeamDTO.class)).collect(Collectors.toList());
   }
   
   @Override
   public List<StudentDTO> getMembers(Long teamId) {
-    return tr.getOne(teamId).getMembers().stream().map(x -> modelMapper.map(x, StudentDTO.class)).collect(Collectors.toList());
+    if (teamId == null)
+      throw new TeamServiceException("getMembers() - null parameters");
+    Optional<Team> team = tr.findById(teamId.longValue());
+    if (team.isPresent())
+      return team.get().getMembers().stream().filter(x -> x != null).map(y -> modelMapper.map(y, StudentDTO.class)).collect(Collectors.toList());
+    else
+      throw new TeamServiceException("getMembers() - team not found");
   }
   
+  /**
+   * Si dà per assunto che il team non sia stato già creato (non si controlla se name già presente, solo id)
+   */
   @Override
   public TeamDTO proposeTeam(String courseId, String name, List<String> memberIds) throws TeamServiceException {
     if (courseId == null || name == null || memberIds == null)
       throw new TeamServiceException("null parameter");
-    // Si dà per assunto che il team non sia stato già creato
     Optional<Course> oc = cr.findById(courseId);
     if (!oc.isPresent())
-      throw new CourseNotFoundException("courseId not found");
+      throw new CourseNotFoundException("proposeTeam - course not found");
     if (oc.get().isEnabled() == false)
       throw new TeamServiceException("proposeTeam() - course not enabled");
-    Course course = oc.get();
     List<Optional<Student>> streamopt = memberIds.stream().map(x -> sr.findById(x)).collect(Collectors.toList());
     if (!streamopt.stream().allMatch(x -> x.isPresent()))
-      throw new StudentNotFoundException("courseId not found");
+      throw new StudentNotFoundException("proposeTeam() - student not found");
+    
+    Course course = oc.get();
     List<Student> listMemberStudents = streamopt.stream().map(x -> x.get()).collect(Collectors.toList());
     if (!listMemberStudents.stream().allMatch(x -> course.getStudents().contains(x)))
       throw new TeamServiceException("proposeTeam() - non tutti gli studenti sono iscritti al corso");
+    
     if (course.getTeams().size() != 0 && course.getTeams().stream().map(x -> x.getMembers()).noneMatch(y -> {
       for (Student student : y) {
         if (listMemberStudents.stream().anyMatch(student::equals))
@@ -293,10 +311,11 @@ public class TeamServiceImpl implements TeamService {
       throw new TeamServiceException("proposeTeam() - non rispettati i vincoli di cardinalità definiti nell’ambito del corso");
     if (!listMemberStudents.stream().allMatch(new HashSet<>()::add))
       throw new TeamServiceException("proposeTeam() - duplicati nell'elenco dei partecipanti");
-    TeamDTO teamDTO = new TeamDTO(name, 1);
+    
+    TeamDTO teamDTO = new TeamDTO(null, name, 1);
     Team team = modelMapper.map(teamDTO, Team.class);
-    for (Student x : listMemberStudents.stream().collect(Collectors.toList())) {
-      team.addStudent(x); // add su studenti
+    for (Student student : listMemberStudents.stream().collect(Collectors.toList())) {
+      student.addTeam(team); // add su studenti
     }
     course.addTeam(team); // add su corsi
     team = tr.save(team);
@@ -315,11 +334,19 @@ public class TeamServiceImpl implements TeamService {
   
   @Override
   public List<StudentDTO> getStudentsInTeams(String courseName) {
+    if (courseName == null)
+      throw new TeamServiceException("null parameter");
+    if (!cr.existsById(courseName))
+      throw new CourseNotFoundException("getTeamForCourse - course not found");
     return cr.getStudentsInTeams(courseName).stream().map(x -> modelMapper.map(x, StudentDTO.class)).collect(Collectors.toList());
   }
   
   @Override
   public List<StudentDTO> getAvailableStudents(String courseName) {
+    if (courseName == null)
+      throw new TeamServiceException("null parameter");
+    if (!cr.existsById(courseName))
+      throw new CourseNotFoundException("getTeamForCourse - course not found");
     return cr.getStudentsNotInTeams(courseName).stream().map(x -> modelMapper.map(x, StudentDTO.class)).collect(Collectors.toList());
   }
 }

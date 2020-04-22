@@ -27,9 +27,13 @@ public class Course {
         new_student.getCourses().add(this);
     }
     
+    public void removeStudent(Student old_student) {
+        students.remove(old_student);
+        old_student.getCourses().remove(this);
+    }
+    
     public void addTeam(Team new_team) {
-        teams.add(new_team);
-        new_team.setCourse(this); //OneToMany! Team has only 1 Course
+        new_team.setCourse(this);
     }
     
     public void removeTeam(Team old_team) {

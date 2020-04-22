@@ -2,6 +2,7 @@ package it.polito.ai.es2;
 
 import it.polito.ai.es2.dtos.CourseDTO;
 import it.polito.ai.es2.dtos.StudentDTO;
+import it.polito.ai.es2.dtos.TeamDTO;
 import it.polito.ai.es2.repositories.CourseRepository;
 import it.polito.ai.es2.repositories.StudentRepository;
 import it.polito.ai.es2.repositories.TeamRepository;
@@ -37,10 +38,10 @@ public class Es2Application {
         /* DONT WORK WITH LAZY LOADING */
 //                cr.findAll().stream().forEach(i -> System.out.println(i.toString()));
 //                sr.findAll().stream().forEach(i -> System.out.println(i.toString()));
-        
-        sr.deleteAll();
-        cr.deleteAll();
-        tr.deleteAll();
+  
+        // Per debug, necessario aggiungere CASCADETYPE.REMOVE a tutte le relazione owner.
+//        sr.deleteAll();cr.deleteAll();tr.deleteAll();
+  
         System.out.println("############################## BEGIN TEST SERVICE COMMAND LINE RUNNER ####################################");
         teamService.addCourse(new CourseDTO("c_enroll_all", 1, 2, false));
         CourseDTO c0 = new CourseDTO("C0", 1, 100, true);
@@ -53,7 +54,7 @@ public class Es2Application {
         teamService.addCourse(c3);
         CourseDTO c4 = new CourseDTO("C4", 1, 99, true);
         teamService.addCourse(c4);
-        CourseDTO c5 = new CourseDTO("C5", 1, 99, true);
+        CourseDTO c5 = new CourseDTO("C5", 2, 3, true);
         teamService.addCourse(c5);
         CourseDTO c6 = new CourseDTO("C6", 1, 99, true);
         teamService.addCourse(c6);
@@ -104,18 +105,20 @@ public class Es2Application {
         teamService.getStudent("S5").ifPresent(x -> System.out.println(x));
         System.out.println("#S999 is present():" + teamService.getStudent("S999").isPresent());
         teamService.getStudent("S999").ifPresent(x -> System.out.println(x));
-        
+  
         System.out.println("-------------------------  getAllCourses() ------------------------------------");
         teamService.getAllCourses().forEach(System.out::println);
-        System.out.println("------------------------- GetCourses(student_id) ------------------------");
-        System.out.println(teamService.getCourses("S3"));
         System.out.println("-------------------------  getAllStudents() ------------------------------------");
         teamService.getAllStudents().forEach(System.out::println);
-        
+  
         System.out.println("-------------------------  Enable & disable courses ------------------------------------");
         teamService.enableCourse("c_enroll_all");
         teamService.disableCourse("C7");
-        
+  
+        System.out.println("-------------------------  EnrollAll - C_enroll_all, C8 ------------------------------------");
+        System.out.println(teamService.enrollAll(Arrays.asList("S1", "S4", "S5"), "C_enroll_all"));
+        System.out.println(teamService.enrollAll(Arrays.asList("S1", "S4", "S5", "S6"), "C_enroll_all"));
+        System.out.println(teamService.enrollAll(Arrays.asList("S8"), "C8"));
         System.out.println("-------------------------  AddStudentToCourse ------------------------------------");
         System.out.println("Result_1: " + teamService.addStudentToCourse("S1", "C0"));
         System.out.println("Result_2: " + teamService.addStudentToCourse("S2", "C0"));
@@ -126,42 +129,72 @@ public class Es2Application {
         teamService.addStudentToCourse("S1", "C0");
         teamService.addStudentToCourse("S2", "C0");
         teamService.addStudentToCourse("S3", "C0");
+        teamService.addStudentToCourse("S3", "C3");
         teamService.addStudentToCourse("S5", "C3");
         teamService.addStudentToCourse("S6", "C3");
         teamService.addStudentToCourse("S9", "C3");
+        teamService.addStudentToCourse("S6", "C5");
+        teamService.addStudentToCourse("S7", "C5");
+        teamService.addStudentToCourse("S8", "C5");
+        teamService.addStudentToCourse("S9", "C5");
         System.out.println("----- C0 getCourse() + GetEnrolledStudents() -----");
         System.out.println(teamService.getCourse("C0"));
         System.out.println(teamService.getEnrolledStudents("C0"));
         System.out.println("----- C3 getCourse() + GetEnrolledStudents() -----");
         System.out.println(teamService.getCourse("C3"));
         System.out.println(teamService.getEnrolledStudents("C3"));
-        
-        System.out.println("-------------------------  EnrollAll ------------------------------------");
-        System.out.println(teamService.enrollAll(Arrays.asList("S1", "S4", "S5"), "C_enroll_all"));
-        System.out.println(teamService.enrollAll(Arrays.asList("S1", "S4", "S5", "S6"), "C_enroll_all"));
-        System.out.println(teamService.enrollAll(Arrays.asList("S8"), "C8"));
-        
+  
+        System.out.println("------------------------- GetCourses(S3) ------------------------");
+        System.out.println(teamService.getCourses("S3"));
+  
         System.out.println("-------------------------  GetEnrolledStudents ------------------------------------");
         System.out.println(teamService.getEnrolledStudents("C0"));
         System.out.println(teamService.getEnrolledStudents("C8"));
-        
-        System.out.println("------------------- getTeamForCourse ---------------");
-        teamService.proposeTeam("C0", "Team1", Arrays.asList("S0", "S1", "S2"));
-        teamService.proposeTeam("C3", "Team2", Arrays.asList("S5", "S6"));
-        
-        System.out.println("------------------- getTeamsForStudent ---------------");
+  
+        System.out.println("####################################################################################################");
+  
+        System.out.println("------------------- proposeTeam: C0, C3, C5 ---------------");
+        teamService.proposeTeam("C0", "Team1", Arrays.asList("S0", "S1", "S2", "S3"));
+        teamService.proposeTeam("C0", "Team2", Arrays.asList("S1", "S2", "S3"));
+        teamService.proposeTeam("C3", "Team3", Arrays.asList("S3", "S6"));
+//        teamService.proposeTeam("C9", "TeamException1", Arrays.asList("S0")); // course C9 not enabled
+//        teamService.proposeTeam("C33", "TeamException2", Arrays.asList("S0")); // course not found
+//        teamService.proposeTeam("C1", "TeamException3", Arrays.asList("S99")); // student not found
+//        teamService.proposeTeam("C0", "TeamException4", Arrays.asList("S9")); // non iscritto al corso
+//        teamService.proposeTeam("C5", "TeamException5", Arrays.asList("S8","S8")); // duplicati lista partecipanti
+//        teamService.proposeTeam("C5", "TeamException6", Arrays.asList("S8")); // vincolo min2
+//        teamService.proposeTeam("C5", "TeamException7", Arrays.asList("S6","S7","S8","S9")); // vincolo max3
+        teamService.proposeTeam("C5", "TeamExceptionOk", Arrays.asList("S8", "S9")); // ok
+  
+        System.out.println("------------------- getTeamsForStudent S1, S3, S6---------------");
         System.out.println(teamService.getTeamsForStudent("S1"));
-        
-        System.out.println("------------------------- getTeamForCourse ------------------------");
-        System.out.println(teamService.getTeamForCourse("C0"));
-        System.out.println(teamService.getTeamForCourse("C3"));
-        
-        System.out.println("------------------- getStudentsInTeams ---------------");
-        System.out.println(teamService.getStudentsInTeams("C0"));
-        
-        System.out.println("------------------- getAvailableStudents ---------------");
-        System.out.println(teamService.getAvailableStudents("C0"));
-        System.out.println("############### END COMMAND LINE RUNNER #################");
+        System.out.println(teamService.getTeamsForStudent("S3"));
+        System.out.println(teamService.getTeamsForStudent("S6"));
+  
+        System.out.println("------------ getMembers + getTeamForCourse + getStudentsInTeams + getAvailableStudents --------");
+        for (CourseDTO courseDTO : teamService.getAllCourses()) {
+          System.out.println("## Course " + courseDTO.getName() + " ##");
+          System.out.println(teamService.getTeamForCourse(courseDTO.getName()));
+          for (StudentDTO studentDTO : teamService.getStudentsInTeams(courseDTO.getName()))
+            System.out.println("$$$$inTeam-" + studentDTO);
+          try {
+            for (StudentDTO studentDTO : teamService.getAvailableStudents(courseDTO.getName()))
+              System.out.println("§noTeam-" + studentDTO);
+          } catch (Exception e) {
+            continue;
+          }
+          for (TeamDTO teamDTO : teamService.getTeamForCourse(courseDTO.getName())) {
+            try {
+              for (StudentDTO studentDTO : teamService.getMembers(teamDTO.getId().longValue())) {
+                System.out.println("---" + studentDTO);
+              }
+            } catch (Exception e) {
+              continue;
+            }
+          }
+        }
+  
+        System.out.println("############################## END COMMAND LINE RUNNER ##################################");
       }
     };
   }

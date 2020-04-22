@@ -14,26 +14,29 @@ public class Student {
     private String id;
     private String name;
     private String firstName;
-    // TODO lasciare solo persist e merge
-    @ManyToMany(mappedBy = "members", cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.REFRESH, CascadeType.PERSIST, CascadeType.REMOVE})
+    @ManyToMany(mappedBy = "members")
     List<Team> teams = new ArrayList<>();
-    // TODO lasciare solo persist e merge
-    @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.DETACH, CascadeType.REFRESH, CascadeType.REMOVE})
+    @ManyToMany(cascade = {CascadeType.MERGE, CascadeType.PERSIST})
     @JoinTable(name = "student_course", joinColumns = @JoinColumn(name = "student_id"),
         inverseJoinColumns = @JoinColumn(name = "course_name"))
     @ToString.Exclude
     private List<Course> courses = new ArrayList<>();
-
-    public void addCourse(Course course) {
-        courses.add(course);
-        course.getStudents().add(this);
+    
+    public void addCourse(Course new_course) {
+        courses.add(new_course);
+        new_course.getStudents().add(this);
     }
-
+    
+    public void removeCourse(Course old_course) {
+        courses.remove(old_course);
+        old_course.getStudents().remove(this);
+    }
+    
     public void addTeam(Team team) {
         teams.add(team);
         team.getMembers().add(this);
     }
-
+    
     public void removeTeam(Team team) {
         team.getMembers().remove(this);
         teams.remove(team);
