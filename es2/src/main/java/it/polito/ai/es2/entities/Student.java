@@ -10,12 +10,12 @@ import java.util.List;
 @Data
 @Entity
 public class Student {
-  @ManyToMany(mappedBy = "members")
-  List<Team> teams = new ArrayList<>();
   @Id
   private String id;
   private String name;
   private String firstName;
+  @ManyToMany(mappedBy = "members")
+  List<Team> teams = new ArrayList<>();
   @ManyToMany(cascade = {CascadeType.MERGE, CascadeType.PERSIST})
   @JoinTable(name = "student_course", joinColumns = @JoinColumn(name = "student_id"),
       inverseJoinColumns = @JoinColumn(name = "course_name"))

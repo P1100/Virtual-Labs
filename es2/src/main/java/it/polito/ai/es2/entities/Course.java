@@ -12,13 +12,13 @@ import java.util.List;
 @Entity
 @Data
 public class Course {
-  boolean enabled;
-  @OneToMany(mappedBy = "course")
-  List<Team> teams = new ArrayList<>();
   @Id
   private String name;
   private int min;
   private int max;
+  boolean enabled;
+  @OneToMany(mappedBy = "course")
+  List<Team> teams = new ArrayList<>();
   @ManyToMany(mappedBy = "courses") //cascade = CascadeType.ALL, orphanRemoval = true
   private List<Student> students = new ArrayList<>();
   

@@ -9,9 +9,9 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Data
 public class CourseDTO {
-  boolean enabled;
   private String name;
   private int min;
   private int max;
+  boolean enabled;
 }
 
