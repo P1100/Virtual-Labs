@@ -1,6 +1,7 @@
 package it.polito.ai.es2.entities;
 
 import lombok.Data;
+import lombok.ToString;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -19,10 +20,10 @@ public class Student {
     // TODO lasciare solo persist e merge
     @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.DETACH, CascadeType.REFRESH, CascadeType.REMOVE})
     @JoinTable(name = "student_course", joinColumns = @JoinColumn(name = "student_id"),
-            inverseJoinColumns = @JoinColumn(name = "course_name"))
+        inverseJoinColumns = @JoinColumn(name = "course_name"))
+    @ToString.Exclude
     private List<Course> courses = new ArrayList<>();
 
-    // TODO never used? Controllare
     public void addCourse(Course course) {
         courses.add(course);
         course.getStudents().add(this);

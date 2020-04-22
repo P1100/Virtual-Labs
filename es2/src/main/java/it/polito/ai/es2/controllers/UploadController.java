@@ -38,13 +38,14 @@ public class UploadController {
             // parse CSV file to create a list of `StudentViewModel` objects
             Reader reader = null;
             try {
-                /* Inefficente duplicare tutto, ma non sò come*/
+                /* -1st problame: inefficente duplicare tutto, ma non sò come fare al momento.
+                 * -2nd problema: user già presenti nel db vengono mostrati nel report finale (ovviamente, non essendo collegati...) */
                 reader = new BufferedReader(new InputStreamReader(file.getInputStream()));
                 // create csv bean reader
                 CsvToBean<StudentViewModel> csvToBean = new CsvToBeanBuilder(reader)
-                        .withType(StudentViewModel.class)
-                        .withIgnoreLeadingWhiteSpace(true)
-                        .build();
+                                                            .withType(StudentViewModel.class)
+                                                            .withIgnoreLeadingWhiteSpace(true)
+                                                            .build();
                 // convert `CsvToBean` object to list of users
                 List<StudentViewModel> users = csvToBean.parse();
                 // save users list on model

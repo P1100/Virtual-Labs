@@ -18,22 +18,22 @@ public class Course {
     private int max;
     boolean enabled;
     @OneToMany(mappedBy = "course")
-    List<Team> Teams = new ArrayList<>();
+    List<Team> teams = new ArrayList<>();
     @ManyToMany(mappedBy = "courses")
-    private List<Student> students = new ArrayList<>(); // ->  use Set
-
-    public void addStudent(Student student) {
-        students.add(student);
-        student.getCourses().add(this);
+    private List<Student> students = new ArrayList<>();
+    
+    public void addStudent(Student new_student) {
+        students.add(new_student);
+        new_student.getCourses().add(this);
     }
-
-    public void addTeam(Team team) {
-        Teams.add(team);
-        team.setCourse(this);
+    
+    public void addTeam(Team new_team) {
+        teams.add(new_team);
+        new_team.setCourse(this); //OneToMany! Team has only 1 Course
     }
-
-    public void removeTeam(Team team) {
-        Teams.remove(team);
-        team.setCourse(null);
+    
+    public void removeTeam(Team old_team) {
+        teams.remove(old_team);
+        old_team.setCourse(null);
     }
 }
