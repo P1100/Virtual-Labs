@@ -13,16 +13,16 @@ public class Student {
     private String id;
     private String name;
     private String firstName;
-
-    @ManyToMany(cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.REFRESH, CascadeType.PERSIST},
-            fetch = FetchType.LAZY) //FetchType.EAGER
+    // TODO lasciare solo persist e merge
+    @ManyToMany(mappedBy = "members", cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.REFRESH, CascadeType.PERSIST, CascadeType.REMOVE})
+    List<Team> teams = new ArrayList<>();
+    // TODO lasciare solo persist e merge
+    @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.DETACH, CascadeType.REFRESH, CascadeType.REMOVE})
     @JoinTable(name = "student_course", joinColumns = @JoinColumn(name = "student_id"),
             inverseJoinColumns = @JoinColumn(name = "course_name"))
     private List<Course> courses = new ArrayList<>();
 
-    @ManyToMany(mappedBy = "members")
-    List<Team> teams = new ArrayList<>();
-
+    // TODO never used? Controllare
     public void addCourse(Course course) {
         courses.add(course);
         course.getStudents().add(this);

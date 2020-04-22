@@ -23,11 +23,11 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.io.Reader;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-// TODO: implementare controlli su corso enabled
 // TODO: Controlli su presenza valore nel repository, da 2 istruzione (repo.existsID+repo.getOne) a <Optional> repo.findById() !
 @Service
 @Transactional
@@ -41,13 +41,11 @@ public class TeamServiceImpl implements TeamService {
     StudentRepository sr;
     @Autowired
     TeamRepository tr;
-//    List<CourseDTO> courseDTOList;
-//    List<StudentDTO> studentDTOList;
-//    public TeamServiceImpl() {
-//        super();
-//        courseDTOList = new ArrayList<>();
-//        studentDTOList = new ArrayList<>();
-//    }
+
+    @Override
+    public Optional<CourseDTO> getCourse(String name) {
+        return cr.findById(name).map(x -> modelMapper.map(x, CourseDTO.class));
+    }
 
     @Override
     public boolean addStudent(StudentDTO student) {
@@ -92,11 +90,6 @@ public class TeamServiceImpl implements TeamService {
             e.printStackTrace();
             return false;
         }
-    }
-
-    @Override
-    public Optional<CourseDTO> getCourse(String name) {
-        return cr.findById(name).map(x -> modelMapper.map(x, CourseDTO.class));
     }
 
     @Override
@@ -161,17 +154,20 @@ public class TeamServiceImpl implements TeamService {
         // Nota: più ottimizzato fare repo.findById(…) e trattare il risultato come Optional! Si fà una sola query così
         if (!sr.existsById(studentId))
             throw new StudentNotFoundException("student not found");
-        if (!cr.existsById(courseName))
+        Optional<Course> courseOptional = cr.findById(courseName);
+        if (!courseOptional.isPresent())
             throw new CourseNotFoundException("course not found");
-        Course c = cr.getOne(courseName);
+        Course c = courseOptional.get();
+        if (!c.isEnabled())
+            throw new TeamServiceException("course not enabled, cannot add student");
+
         Student s = sr.getOne(studentId);
         if (c.getStudents().stream().anyMatch(x -> x.getId().equals(studentId)))
             return false;
         log.info("[before repo add]-addStudentToCourse(" + studentId + "," + courseName + ")");
         c.addStudent(s);
-        /* Flush non servono! Essendo una transazione vengono effettuati automaticamente al termine del metodo! */
-//        cr.flush();
-//        sr.flush();
+        // TODO controllare che save non serva
+        /* Flush e save non servono!(?) Essendo una transazione vengono effettuati automaticamente al termine del metodo! */
         log.info("[after repo add]-addStudentToCourse(" + studentId + "," + courseName + ").Course:" + c.getName() + "; Student:" + s.getId());
         return true;
     }
@@ -213,6 +209,7 @@ public class TeamServiceImpl implements TeamService {
             }
             lb.add(true);
             course.addStudent(student);
+            student.addCourse(course);
         }
         return lb;
     }
@@ -280,19 +277,18 @@ public class TeamServiceImpl implements TeamService {
 
         if (!listMemberStudents.stream().allMatch(x -> course.getStudents().contains(x)))
             throw new TeamServiceException("proposeTeam() - non tutti gli studenti sono iscritti al corso");
-/*        if (course.getTeams().stream().map(x -> x.getMembers()).noneMatch(y -> {
+        if (course.getTeams().size() != 0 && course.getTeams().stream().map(x -> x.getMembers()).noneMatch(y -> {
             for (Student student : y) {
-                if(listMemberStudents.stream().anyMatch(student::equals))
+                if (listMemberStudents.stream().anyMatch(student::equals))
                     return true;
             }
             return false;
         }))
             throw new TeamServiceException("proposeTeam() - studenti fanno parte di altri gruppi nell’ambito dello stesso corso");
-            */
-//        if (listMemberStudents.stream())
-//            throw new TeamServiceException("proposeTeam() - non rispettati i vincoli di cardinalità definiti nell’ambito del corso");
-//        if (listMemberStudents.stream())
-//            throw new TeamServiceException("proposeTeam() - duplicati dei partecipanti");
+        if (listMemberStudents.size() < course.getMin() || listMemberStudents.size() > course.getMax())
+            throw new TeamServiceException("proposeTeam() - non rispettati i vincoli di cardinalità definiti nell’ambito del corso");
+        if (!listMemberStudents.stream().allMatch(new HashSet<>()::add))
+            throw new TeamServiceException("proposeTeam() - duplicati nell'elenco dei partecipanti");
         TeamDTO teamDTO = new TeamDTO(name, 1);
         Team team = modelMapper.map(teamDTO, Team.class);
         for (Student x : listMemberStudents.stream().collect(Collectors.toList())) {
@@ -315,11 +311,11 @@ public class TeamServiceImpl implements TeamService {
 
     @Override
     public List<StudentDTO> getStudentsInTeams(String courseName) {
-        return null;
+        return cr.getStudentsInTeams(courseName).stream().map(x -> modelMapper.map(x, StudentDTO.class)).collect(Collectors.toList());
     }
 
     @Override
     public List<StudentDTO> getAvailableStudents(String courseName) {
-        return null;
+        return cr.getStudentsNotInTeams(courseName).stream().map(x -> modelMapper.map(x, StudentDTO.class)).collect(Collectors.toList());
     }
 }

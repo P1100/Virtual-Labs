@@ -15,13 +15,13 @@ public class Team {
     Long id;
     String name;
     int status;
-    @ManyToOne(fetch = FetchType.EAGER)
+    // TODO lasciare solo persist e merge
+    @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "course_id")
     @ToString.Exclude
     Course course;
-
-    @ManyToMany(cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.REFRESH, CascadeType.PERSIST},
-            fetch = FetchType.LAZY) //FetchType.EAGER
+    // TODO lasciare solo persist e merge
+    @ManyToMany(cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.REFRESH, CascadeType.PERSIST, CascadeType.REMOVE})
     @JoinTable(name = "teams_students", joinColumns = @JoinColumn(name = "team_id"),
             inverseJoinColumns = @JoinColumn(name = "student_id"))
     List<Student> members = new ArrayList<>();
@@ -33,6 +33,12 @@ public class Team {
             this.course = course;
     }
 
+    /*public void setCourse(Course course) {
+        this.course.getTeams().remove(this);
+        if(course!=null)
+            course.getTeams().add(this);
+        this.course = course;
+    }*/
     public void addStudent(Student student) {
         members.add(student);
         student.getTeams().add(this);
