@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Entity
+@Table(uniqueConstraints = @UniqueConstraint(columnNames = {"name", "course_id"}))
 @Data
 public class Team {
   @Id
@@ -26,14 +27,16 @@ public class Team {
   List<Student> members = new ArrayList<>();
   
   public void setCourse(Course new_course) {
-    if (new_course == null) {
+    if (this.course != null)
       this.course.getTeams().remove(this);
+    if (new_course == null) {
       this.course = null;
     } else {
       new_course.getTeams().add(this);
       this.course = new_course;
     }
   }
+  
   public void addStudent(Student new_student) {
     members.add(new_student);
     new_student.getTeams().add(this);

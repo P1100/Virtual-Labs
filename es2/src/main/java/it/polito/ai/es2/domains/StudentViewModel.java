@@ -5,11 +5,11 @@ import lombok.Data;
 
 @Data
 public class StudentViewModel {
-    @CsvBindByName
-    private String id;
-    @CsvBindByName
-    private String name;
-    @CsvBindByName
-    private String firstName;
+  @CsvBindByName
+  private String id;
+  @CsvBindByName
+  private String name;
+  @CsvBindByName
+  private String firstName;
 }
 

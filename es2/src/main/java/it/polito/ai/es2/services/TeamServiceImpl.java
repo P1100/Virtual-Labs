@@ -12,9 +12,7 @@ import it.polito.ai.es2.entities.Team;
 import it.polito.ai.es2.repositories.CourseRepository;
 import it.polito.ai.es2.repositories.StudentRepository;
 import it.polito.ai.es2.repositories.TeamRepository;
-import it.polito.ai.es2.services.exceptions.CourseNotFoundException;
-import it.polito.ai.es2.services.exceptions.StudentNotFoundException;
-import it.polito.ai.es2.services.exceptions.TeamServiceException;
+import it.polito.ai.es2.services.exceptions.*;
 import lombok.extern.java.Log;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,6 +23,11 @@ import java.io.Reader;
 import java.util.*;
 import java.util.stream.Collectors;
 
+/**
+ * Politica di sovrascrittura adottata: in quasi tutti i metodi add, se un id era già presente nel database non sovrascrivo i dati
+ * già esistenti (tranne nel caso di proposeTeam, che poichè ha un id autogenerato, si è deciso di aggiornare il team vecchio usando
+ * sempre la proposeTeam).
+ */
 @Service
 @Transactional
 @Log
@@ -99,8 +102,8 @@ public class TeamServiceImpl implements TeamService {
                        return Boolean.FALSE;
                      // Se invece non esisteva...
                      sr.save(e);
-                                 return Boolean.TRUE;
-                               }).collect(Collectors.toList());
+                     return Boolean.TRUE;
+                   }).collect(Collectors.toList());
   }
   
   @Override
@@ -284,17 +287,17 @@ public class TeamServiceImpl implements TeamService {
     if (!oc.isPresent())
       throw new CourseNotFoundException("proposeTeam - course not found");
     if (!oc.get().isEnabled())
-      throw new TeamServiceException("proposeTeam() - course not enabled");
+      throw new CourseNotEnabledException("proposeTeam() - course not enabled");
     List<Optional<Student>> streamopt = memberIds.stream().map(x -> sr.findById(x)).collect(Collectors.toList());
     if (!streamopt.stream().allMatch(Optional::isPresent))
       throw new StudentNotFoundException("proposeTeam() - student not found");
-  
+    
     Course course = oc.get();
     List<Student> listMemberStudents = streamopt.stream().map(Optional::get).collect(Collectors.toList());
     // !listMemberStudents.stream().allMatch(x -> course.getStudents().contains(x))
     if (!course.getStudents().containsAll(listMemberStudents))
-      throw new TeamServiceException("proposeTeam() - non tutti gli studenti sono iscritti al corso");
-  
+      throw new StudentNotEnrolledException("proposeTeam() - non tutti gli studenti sono iscritti al corso");
+    
     if (course.getTeams().size() != 0 && course.getTeams().stream().map(Team::getMembers).noneMatch(y -> {
       for (Student student : y) {
         if (listMemberStudents.stream().anyMatch(student::equals))
@@ -302,18 +305,26 @@ public class TeamServiceImpl implements TeamService {
       }
       return false;
     }))
-      throw new TeamServiceException("proposeTeam() - studenti fanno parte di altri gruppi nell’ambito dello stesso corso");
+      throw new StudentInMultipleTeamsException("proposeTeam() - studenti fanno parte di altri gruppi nell’ambito dello stesso corso");
     if (listMemberStudents.size() < course.getMin() || listMemberStudents.size() > course.getMax())
-      throw new TeamServiceException("proposeTeam() - non rispettati i vincoli di cardinalità definiti nell’ambito del corso");
+      throw new CourseCardinalConstrainsException("proposeTeam() - non rispettati i vincoli di cardinalità definiti nell’ambito del corso");
     if (!listMemberStudents.stream().allMatch(new HashSet<>()::add))
-      throw new TeamServiceException("proposeTeam() - duplicati nell'elenco dei partecipanti");
+      throw new StudentDuplicatesInProposalException("proposeTeam() - duplicati nell'elenco dei partecipanti");
     
-    TeamDTO teamDTO = new TeamDTO(null, name, 1);
+    TeamDTO teamDTO = new TeamDTO(null, name, 0);
     Team team = modelMapper.map(teamDTO, Team.class);
     for (Student student : new ArrayList<>(listMemberStudents)) {
       student.addTeam(team); // add su studenti
     }
     course.addTeam(team); // add su corsi
+    
+    // Se team era già presente (stesso nome), lo aggiorno, cancellando prima il vecchio e poi inserendo il nuovo
+    for (Team others_team_in_course : course.getTeams()) {
+      if (others_team_in_course.getId() != null && others_team_in_course.getName().equals(team.getName())) {
+        tr.deleteById(others_team_in_course.getId());
+        tr.flush();
+      }
+    }
     team = tr.save(team);
     return teamDTO;
   }

@@ -35,7 +35,7 @@ public class Es2Application {
   CommandLineRunner runner(CourseRepository cr, StudentRepository sr, TeamRepository tr, TeamService teamService, ModelMapper modelMapper) {
     return new CommandLineRunner() {
       @Override
-      public void run(String... args) throws Exception {
+      public void run(String... args) {
         /* DONT WORK WITH LAZY LOADING */
 //                cr.findAll().stream().forEach(i -> System.out.println(i.toString()));
 //                sr.findAll().stream().forEach(i -> System.out.println(i.toString()));
@@ -65,6 +65,8 @@ public class Es2Application {
         teamService.addCourse(c8);
         CourseDTO c9 = new CourseDTO("C9", 1, 99, false);
         teamService.addCourse(c9);
+        CourseDTO c10 = new CourseDTO("C10", 1, 99, false);
+        teamService.addCourse(c10);
         StudentDTO s0 = new StudentDTO("S0", "S0-name", "S0-FirstName");
         teamService.addStudent(s0);
         StudentDTO s1 = new StudentDTO("S1", "S1-name", "S1-FirstName");
@@ -85,7 +87,9 @@ public class Es2Application {
         teamService.addStudent(s8);
         StudentDTO s9 = new StudentDTO("S9", "S9-name", "S9-FirstName");
         teamService.addStudent(s9);
-        
+        StudentDTO s10 = new StudentDTO("S10", "S10-name", "S10-FirstName");
+        teamService.addStudent(s10);
+  
         System.out.println("-------------------------  AddAll ------------------------------------");
         List<StudentDTO> lstudto = new ArrayList<>();
         lstudto = Arrays.asList(new StudentDTO("Student_0", "s0n", "s0fn"),
@@ -166,6 +170,7 @@ public class Es2Application {
 //        teamService.proposeTeam("C5", "TeamException6", Arrays.asList("S8")); // vincolo min2
 //        teamService.proposeTeam("C5", "TeamException7", Arrays.asList("S6","S7","S8","S9")); // vincolo max3
         teamService.proposeTeam("C5", "TeamExceptionOk", Arrays.asList("S8", "S9")); // ok
+        teamService.proposeTeam("C5", "TeamExceptionOk", Arrays.asList("S7", "S8", "S9")); // ?
   
         System.out.println("------------------- getTeamsForStudent S1, S3, S6---------------");
         System.out.println(teamService.getTeamsForStudent("S1"));
@@ -195,7 +200,11 @@ public class Es2Application {
           }
         }
   
-        System.out.println("############################## END COMMAND LINE RUNNER ##################################");
+        System.out.println("------------------- Final Test C10, S10, not being overwritten ---------------");
+        CourseDTO c10r = new CourseDTO("C10", 33, 44, false);
+        teamService.addCourse(c10r);
+        StudentDTO s10r = new StudentDTO("S10", "REWRITE", "REWRITE");
+        teamService.addStudent(s10r);
       }
     };
   }
