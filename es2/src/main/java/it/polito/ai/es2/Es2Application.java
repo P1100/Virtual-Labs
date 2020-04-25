@@ -6,6 +6,7 @@ import it.polito.ai.es2.dtos.TeamDTO;
 import it.polito.ai.es2.repositories.CourseRepository;
 import it.polito.ai.es2.repositories.StudentRepository;
 import it.polito.ai.es2.repositories.TeamRepository;
+import it.polito.ai.es2.services.MyTestingService;
 import it.polito.ai.es2.services.TeamService;
 import lombok.extern.java.Log;
 import org.modelmapper.ModelMapper;
@@ -32,17 +33,23 @@ public class Es2Application {
   }
   
   @Bean
-  CommandLineRunner runner(CourseRepository cr, StudentRepository sr, TeamRepository tr, TeamService teamService, ModelMapper modelMapper) {
+  CommandLineRunner runner(CourseRepository cr, StudentRepository sr, TeamRepository tr, TeamService teamService, ModelMapper modelMapper, MyTestingService testservice) {
     return new CommandLineRunner() {
       @Override
       public void run(String... args) {
         /* DONT WORK WITH LAZY LOADING */
 //                cr.findAll().stream().forEach(i -> System.out.println(i.toString()));
 //                sr.findAll().stream().forEach(i -> System.out.println(i.toString()));
-  
-        // Per debug, necessario aggiungere CASCADETYPE.REMOVE a tutte le relazione owner.
-//        sr.deleteAll();cr.deleteAll();tr.deleteAll();
-  
+        
+        // NOT WORKING --> org.hibernate.LazyInitializationException: failed to lazily initialize a collection of role: it.polito.ai.es2.entities.Course.teams, could not initialize proxy - no Session
+        testservice.entity_manager_test();
+        if (true) return;
+        
+        // --> ATTENZIONE, mettendo le cascade in ordine/combinazione sbagliata (tipo sulla mapped ontomany), NON FUNZIONA PIU NIENTE!! (...)
+        tr.deleteAll();
+        sr.deleteAll();
+        cr.deleteAll();
+        
         System.out.println("############################## BEGIN TEST SERVICE COMMAND LINE RUNNER ####################################");
         teamService.addCourse(new CourseDTO("c_enroll_all", 1, 2, false));
         CourseDTO c0 = new CourseDTO("C0", 1, 100, true);
@@ -85,7 +92,7 @@ public class Es2Application {
         teamService.addStudent(s8);
         StudentDTO s9 = new StudentDTO("S9", "S9-name", "S9-FirstName");
         teamService.addStudent(s9);
-  
+        
         System.out.println("-------------------------  AddAll ------------------------------------");
         List<StudentDTO> lstudto = new ArrayList<>();
         lstudto = Arrays.asList(new StudentDTO("Student_0", "s0n", "s0fn"),
@@ -106,23 +113,24 @@ public class Es2Application {
         teamService.getStudent("S5").ifPresent(System.out::println);
         System.out.println("#S999 is present():" + teamService.getStudent("S999").isPresent());
         teamService.getStudent("S999").ifPresent(System.out::println);
-  
+        
         System.out.println("-------------------------  getAllCourses() ------------------------------------");
         teamService.getAllCourses().forEach(System.out::println);
         System.out.println("-------------------------  getAllStudents() ------------------------------------");
         teamService.getAllStudents().forEach(System.out::println);
-  
+        
         System.out.println("-------------------------  Enable & disable courses ------------------------------------");
         teamService.enableCourse("c_enroll_all");
         teamService.disableCourse("C7");
-  
+        
         System.out.println("-------------------------  EnrollAll - C_enroll_all, C8 ------------------------------------");
         System.out.println(teamService.enrollAll(Arrays.asList("S1", "S4", "S5"), "C_enroll_all"));
         System.out.println(teamService.enrollAll(Arrays.asList("S1", "S4", "S5", "S6"), "C_enroll_all"));
         System.out.println(teamService.enrollAll(Collections.singletonList("S8"), "C8"));
+        
         System.out.println("-------------------------  AddStudentToCourse ------------------------------------");
-        System.out.println("Result_1_duplicate: " + teamService.addStudentToCourse("S1", "C0"));
-        System.out.println("Result_2_duplicate: " + teamService.addStudentToCourse("S2", "C0"));
+        System.out.println("#-Result_1_duplicate: " + teamService.addStudentToCourse("S1", "C0"));
+        System.out.println("#-Result_2_duplicate: " + teamService.addStudentToCourse("S2", "C0"));
 //      teamService.disableCourse("C1"); // -> ritornerà falso dopo
         //teamService.addStudentToCourse("S34124124", "C5"); //--> exception student not found
         //teamService.addStudentToCourse("S6", "C13123123"); //--> exception course not found
@@ -144,16 +152,19 @@ public class Es2Application {
         System.out.println("----- C3 getCourse() + GetEnrolledStudents() -----");
         System.out.println(teamService.getCourse("C3"));
         System.out.println(teamService.getEnrolledStudents("C3"));
-  
+        
         System.out.println("------------------------- GetCourses(S3) ------------------------");
         System.out.println(teamService.getCourses("S3"));
-  
+        
         System.out.println("-------------------------  GetEnrolledStudents ------------------------------------");
         System.out.println(teamService.getEnrolledStudents("C0"));
         System.out.println(teamService.getEnrolledStudents("C8"));
-  
+        
         System.out.println("####################################################################################################");
-  
+        
+        teamService.enableCourse("C0");
+        teamService.enableCourse("C3");
+        teamService.enableCourse("C5");
         System.out.println("------------------- proposeTeam: C0, C3, C5 ---------------");
         teamService.proposeTeam("C0", "Team1", Arrays.asList("S0", "S1", "S2", "S3"));
         teamService.proposeTeam("C0", "Team2", Arrays.asList("S1", "S2", "S3"));
@@ -167,12 +178,14 @@ public class Es2Application {
 //        teamService.proposeTeam("C5", "TeamException7", Arrays.asList("S6","S7","S8","S9")); // vincolo max3
         teamService.proposeTeam("C5", "TeamExceptionOk", Arrays.asList("S8", "S9")); // ok
         teamService.proposeTeam("C5", "TeamExceptionOk", Arrays.asList("S7", "S8", "S9")); // ?
-  
+        teamService.enrollAll(Arrays.asList("S0", "S1", "S2", "S4"), "C3");
+        teamService.proposeTeam("C3", "Team3", Arrays.asList("S0", "S1", "S2", "S3", "S6")); // overwritten test
+        
         System.out.println("------------------- getTeamsForStudent S1, S3, S6---------------");
         System.out.println(teamService.getTeamsForStudent("S1"));
         System.out.println(teamService.getTeamsForStudent("S3"));
         System.out.println(teamService.getTeamsForStudent("S6"));
-  
+        
         System.out.println("------------ getMembers + getTeamForCourse + getStudentsInTeams + getAvailableStudents --------");
         for (CourseDTO courseDTO : teamService.getAllCourses()) {
           System.out.println("## Course " + courseDTO.getName() + " ##");
@@ -195,7 +208,7 @@ public class Es2Application {
             }
           }
         }
-  
+        
         System.out.println("------------------- Final Test C9, S9, not being overwritten ---------------");
         CourseDTO c9r = new CourseDTO("C9", 33, 44, false);
         System.out.println(teamService.addCourse(c9r));

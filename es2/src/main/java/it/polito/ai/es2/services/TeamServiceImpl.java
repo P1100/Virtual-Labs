@@ -19,6 +19,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 import java.io.Reader;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -40,6 +42,12 @@ public class TeamServiceImpl implements TeamService {
   StudentRepository sr;
   @Autowired
   TeamRepository tr;
+  
+  // TODO: use on something
+//  @Autowired
+//  private EntityManager entityManager;
+  @PersistenceContext
+  private EntityManager em;
   
   @Override
   public boolean addStudent(StudentDTO student) {
@@ -159,7 +167,7 @@ public class TeamServiceImpl implements TeamService {
   @Override
   public boolean addStudentToCourse(String studentId, String courseName) throws StudentNotFoundException, CourseNotFoundException {
 //    log.info("##### loading addStudentToCourse(" + studentId + "," + courseName + ")" + " - Initial checks + repos.getOne####");
-    if (studentId == null || courseName == null)
+/*    if (studentId == null || courseName == null)
       throw new TeamServiceException("addStudentToCourse() - null parameters");
     if (!sr.existsById(studentId))
       throw new StudentNotFoundException("addStudentToCourse() - student not found:" + studentId);
@@ -173,7 +181,14 @@ public class TeamServiceImpl implements TeamService {
     Student s = sr.getOne(studentId);
     // Controllo che studente non sia già iscritto al corso
     if (c.getStudents().stream().anyMatch(x -> x.getId().equals(studentId)))
-      return false;
+      return false;*/
+  
+    // TODO: delete and restore after
+    Optional<Course> courseOptional = cr.findById(courseName);
+    Course c = courseOptional.get();
+    Student s = sr.getOne(studentId);
+  
+    log.info("addStudentToCourse ---> BEFORE ADD");
     c.addStudent(s);
     log.info("addStudentToCourse(" + studentId + "," + courseName + "). " + c.getName() + "->ListStudents: " + c.getStudents());
     return true;
@@ -296,7 +311,7 @@ public class TeamServiceImpl implements TeamService {
     List<Student> listMemberStudents = streamopt.stream().map(Optional::get).collect(Collectors.toList());
     // !listMemberStudents.stream().allMatch(x -> course.getStudents().contains(x))
     if (!course.getStudents().containsAll(listMemberStudents))
-      throw new StudentNotEnrolledException("proposeTeam() - non tutti gli studenti sono iscritti al corso");
+      throw new StudentNotEnrolledException("proposeTeam() - non tutti gli studenti sono iscritti al corso " + course.getName());
     
     if (course.getTeams().size() != 0 && course.getTeams().stream().map(Team::getMembers).noneMatch(y -> {
       for (Student student : y) {
@@ -310,22 +325,31 @@ public class TeamServiceImpl implements TeamService {
       throw new CourseCardinalConstrainsException("proposeTeam() - non rispettati i vincoli di cardinalità definiti nell’ambito del corso");
     if (!listMemberStudents.stream().allMatch(new HashSet<>()::add))
       throw new StudentDuplicatesInProposalException("proposeTeam() - duplicati nell'elenco dei partecipanti");
-    
+  
     TeamDTO teamDTO = new TeamDTO(null, name, 0);
-    Team team = modelMapper.map(teamDTO, Team.class);
-    for (Student student : new ArrayList<>(listMemberStudents)) {
-      student.addTeam(team); // add su studenti
-    }
-    course.addTeam(team); // add su corsi
-    
+    Team new_team = modelMapper.map(teamDTO, Team.class);
+  
     // Se team era già presente (stesso nome), lo aggiorno, cancellando prima il vecchio e poi inserendo il nuovo
-    for (Team others_team_in_course : course.getTeams()) {
-      if (others_team_in_course.getId() != null && others_team_in_course.getName().equals(team.getName())) {
-        tr.deleteById(others_team_in_course.getId());
-        tr.flush();
+    for (Iterator<Team> iterator = course.getTeams().iterator(); iterator.hasNext(); ) { // "for (Team team_to_delete : course.getTeams()) {" --> NOT WORKING, "java.util.ConcurrentModificationException: null"
+      Team team_to_delete = iterator.next();
+      // se c'era altro team (not null), con lo stesso nome (quindi team da aggiornare)
+      if (team_to_delete.getId() != null && team_to_delete.getName().equals(new_team.getName())) {
+        iterator.remove();
+        // TODO: testare 4 righe sotto! Aggiunte da poco non testate
+        team_to_delete.getCourse().getTeams().remove(team_to_delete);
+        for (Student student : team_to_delete.getMembers()) {
+          student.getTeams().remove(team_to_delete); // student.removeTeam( rimuove studenti da team, il che CREA PROBLEMI essendo nel mezzo del ciclo!
+        }
+        tr.deleteById(team_to_delete.getId());
+//        tr.flush();
       }
     }
-    team = tr.save(team);
+    // aggiungo nuovo team
+    for (Student student : new ArrayList<>(listMemberStudents)) {
+      student.addTeam(new_team); // add su studenti
+    }
+    course.addTeam(new_team); // add su corsi
+    new_team = tr.save(new_team);
     return teamDTO;
   }
   
