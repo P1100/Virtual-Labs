@@ -1,6 +1,7 @@
 package it.polito.ai.es2.entities;
 
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.ToString;
 
 import javax.persistence.*;
@@ -8,22 +9,25 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Entity
-@Table(uniqueConstraints = @UniqueConstraint(columnNames = {"name", "course_id"}))
+//@Table(uniqueConstraints = @UniqueConstraint(columnNames = {"name", "course_id"}))
 @Data
+@EqualsAndHashCode(onlyExplicitlyIncluded = true)
 public class Team {
   @Id
   @GeneratedValue
   Long id;
+  @EqualsAndHashCode.Include
   String name;
   int status;
-  @ManyToOne(cascade = {CascadeType.MERGE, CascadeType.PERSIST})
+  @ManyToOne(cascade = {CascadeType.MERGE, CascadeType.PERSIST}) //cascade = CascadeType.ALL --> no non uso il cascade qui? boh
   @JoinColumn(name = "course_id")
+  @EqualsAndHashCode.Include
   @ToString.Exclude
   Course course;
-  @ManyToMany(cascade = {CascadeType.MERGE, CascadeType.PERSIST})
+  @ManyToMany(cascade = {CascadeType.MERGE, CascadeType.PERSIST}) //cascade = CascadeType.ALL
   @JoinTable(name = "teams_students", joinColumns = @JoinColumn(name = "team_id"),
       inverseJoinColumns = @JoinColumn(name = "student_id"))
-  @ToString.Exclude
+//  @ToString.Exclude
   List<Student> members = new ArrayList<>();
   
   public void setCourse(Course new_course) {

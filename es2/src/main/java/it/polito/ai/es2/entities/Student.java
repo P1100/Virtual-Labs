@@ -14,9 +14,10 @@ public class Student {
   private String id;
   private String name;
   private String firstName;
-  @ManyToMany(mappedBy = "members")
+  @ManyToMany(mappedBy = "members", cascade = {CascadeType.MERGE, CascadeType.PERSIST}) //cascade = CascadeType.ALL
+  @ToString.Exclude
   List<Team> teams = new ArrayList<>();
-  @ManyToMany(cascade = {CascadeType.MERGE, CascadeType.PERSIST})
+  @ManyToMany(cascade = {CascadeType.MERGE, CascadeType.PERSIST}) //cascade = CascadeType.ALL
   @JoinTable(name = "student_course", joinColumns = @JoinColumn(name = "student_id"),
       inverseJoinColumns = @JoinColumn(name = "course_name"))
   @ToString.Exclude

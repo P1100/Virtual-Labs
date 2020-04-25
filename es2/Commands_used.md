@@ -11,3 +11,7 @@ mysql> SET foreign_key_checks = 1;
 
 `CREATE DATABASE teams;`
 
+
+# SQL
+Select *
+FROM team t JOIN course c on t.course_id = c.name NATURAL JOIN teams_students ts JOIN student st ON ts.student_id = st.id ;
