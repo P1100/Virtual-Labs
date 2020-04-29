@@ -9,7 +9,7 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 @Repository
-public interface CourseRepository extends JpaRepository<Course, String>, CustomCourseRepository {
+public interface CourseRepository extends JpaRepository<Course, String>, MyTestingCustomCourseRepository {
   @Query("SELECT DISTINCT s FROM Student s INNER JOIN s.teams t INNER JOIN t.course c WHERE c.name= :courseName")
   List<Student> getStudentsInTeams(String courseName);
   

@@ -42,11 +42,16 @@
             <version>5.1</version>
         </dependency>
 
-
+        <!--    //Non uso driver generico MySql, anche se funzionerebbe allo stesso modo
+                <dependency>
+                    <groupId>mysql</groupId>
+                    <artifactId>mysql-connector-java</artifactId>
+                    <scope>runtime</scope>
+                </dependency>-->
         <dependency>
-            <groupId>mysql</groupId>
-            <artifactId>mysql-connector-java</artifactId>
-            <scope>runtime</scope>
+            <groupId>org.mariadb.jdbc</groupId>
+            <artifactId>mariadb-java-client</artifactId>
+            <version>2.6.0</version>
         </dependency>
         <dependency>
             <groupId>org.projectlombok</groupId>

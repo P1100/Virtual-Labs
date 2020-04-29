@@ -24,6 +24,7 @@ public class UploadController {
   TeamService teamService;
   
   @GetMapping("/")
+//  @ResponseStatus(HttpStatus.CREATED)
   public String index() {
     return "index";
   }
@@ -36,7 +37,7 @@ public class UploadController {
       model.addAttribute("status", false);
     } else {
       // parse CSV file to create a list of `StudentViewModel` objects
-      Reader reader = null;
+      Reader reader;
       try {
         /* -1st problame: inefficente duplicare tutto, ma non sò come fare al momento.
          * -2nd problema: user già presenti nel db vengono mostrati nel report finale (ovviamente, non essendo collegati...) */

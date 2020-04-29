@@ -4,6 +4,7 @@ import lombok.Data;
 import lombok.ToString;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotBlank;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -12,6 +13,7 @@ import java.util.List;
 public class Student {
   @Id
   private String id;
+  @NotBlank
   private String name;
   private String firstName;
   @ManyToMany(mappedBy = "members", cascade = {CascadeType.MERGE, CascadeType.PERSIST}) //cascade = CascadeType.ALL

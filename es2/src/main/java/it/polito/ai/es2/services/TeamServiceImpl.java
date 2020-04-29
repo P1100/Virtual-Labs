@@ -19,8 +19,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
 import java.io.Reader;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -42,12 +40,9 @@ public class TeamServiceImpl implements TeamService {
   StudentRepository sr;
   @Autowired
   TeamRepository tr;
-  
-  // TODO: use on something
-//  @Autowired
-//  private EntityManager entityManager;
-  @PersistenceContext
-  private EntityManager em;
+
+//  @PersistenceContext
+//  private EntityManager em;
   
   @Override
   public boolean addStudent(StudentDTO student) {
@@ -167,7 +162,7 @@ public class TeamServiceImpl implements TeamService {
   @Override
   public boolean addStudentToCourse(String studentId, String courseName) throws StudentNotFoundException, CourseNotFoundException {
 //    log.info("##### loading addStudentToCourse(" + studentId + "," + courseName + ")" + " - Initial checks + repos.getOne####");
-/*    if (studentId == null || courseName == null)
+    if (studentId == null || courseName == null)
       throw new TeamServiceException("addStudentToCourse() - null parameters");
     if (!sr.existsById(studentId))
       throw new StudentNotFoundException("addStudentToCourse() - student not found:" + studentId);
@@ -181,12 +176,7 @@ public class TeamServiceImpl implements TeamService {
     Student s = sr.getOne(studentId);
     // Controllo che studente non sia già iscritto al corso
     if (c.getStudents().stream().anyMatch(x -> x.getId().equals(studentId)))
-      return false;*/
-  
-    // TODO: delete and restore after
-    Optional<Course> courseOptional = cr.findById(courseName);
-    Course c = courseOptional.get();
-    Student s = sr.getOne(studentId);
+      return false;
   
     log.info("addStudentToCourse ---> BEFORE ADD");
     c.addStudent(s);
@@ -292,7 +282,7 @@ public class TeamServiceImpl implements TeamService {
   }
   
   /**
-   * Si dà per assunto che il team non sia stato già creato (non si controlla se name già presente, solo id)
+   * Se team già presente (stesso nome-corso), allora lo cancello e poi reinserisco il nuovo. Si potrebbe anche aggiornare campi senza cancellare
    */
   @Override
   public TeamDTO proposeTeam(String courseId, String name, List<String> memberIds) throws TeamServiceException {
@@ -309,8 +299,7 @@ public class TeamServiceImpl implements TeamService {
     
     Course course = oc.get();
     List<Student> listMemberStudents = streamopt.stream().map(Optional::get).collect(Collectors.toList());
-    // !listMemberStudents.stream().allMatch(x -> course.getStudents().contains(x))
-    if (!course.getStudents().containsAll(listMemberStudents))
+    if (!course.getStudents().containsAll(listMemberStudents)) // !listMemberStudents.stream().allMatch(x -> course.getStudents().contains(x))
       throw new StudentNotEnrolledException("proposeTeam() - non tutti gli studenti sono iscritti al corso " + course.getName());
     
     if (course.getTeams().size() != 0 && course.getTeams().stream().map(Team::getMembers).noneMatch(y -> {
@@ -332,13 +321,13 @@ public class TeamServiceImpl implements TeamService {
     // Se team era già presente (stesso nome), lo aggiorno, cancellando prima il vecchio e poi inserendo il nuovo
     for (Iterator<Team> iterator = course.getTeams().iterator(); iterator.hasNext(); ) { // "for (Team team_to_delete : course.getTeams()) {" --> NOT WORKING, "java.util.ConcurrentModificationException: null"
       Team team_to_delete = iterator.next();
-      // se c'era altro team (not null), con lo stesso nome (quindi team da aggiornare)
+      // se c'era altro team (not null), con lo stesso nome nello stesso corso, lo cancello
       if (team_to_delete.getId() != null && team_to_delete.getName().equals(new_team.getName())) {
         iterator.remove();
-        // TODO: testare 4 righe sotto! Aggiunte da poco non testate
         team_to_delete.getCourse().getTeams().remove(team_to_delete);
         for (Student student : team_to_delete.getMembers()) {
-          student.getTeams().remove(team_to_delete); // student.removeTeam( rimuove studenti da team, il che CREA PROBLEMI essendo nel mezzo del ciclo!
+          // usare "student.removeTeam()" rimuoverebbe studenti da team, il che creerebbe problemi in quanto modificherebbe il ciclo foreach enhanced in corso.
+          student.getTeams().remove(team_to_delete);
         }
         tr.deleteById(team_to_delete.getId());
 //        tr.flush();
@@ -372,6 +361,7 @@ public class TeamServiceImpl implements TeamService {
     return cr.getStudentsInTeams(courseName).stream().map(x -> modelMapper.map(x, StudentDTO.class)).collect(Collectors.toList());
   }
   
+  //  @PreAuthorize("hasRole('ROLE_AUTHENTICATED')")
   @Override
   public List<StudentDTO> getAvailableStudents(String courseName) {
     if (courseName == null)

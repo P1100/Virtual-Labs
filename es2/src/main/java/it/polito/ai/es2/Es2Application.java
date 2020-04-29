@@ -15,7 +15,6 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
@@ -42,8 +41,8 @@ public class Es2Application {
 //                sr.findAll().stream().forEach(i -> System.out.println(i.toString()));
         
         // NOT WORKING --> org.hibernate.LazyInitializationException: failed to lazily initialize a collection of role: it.polito.ai.es2.entities.Course.teams, could not initialize proxy - no Session
-        testservice.entity_manager_test();
-        if (true) return;
+/*        testservice.entity_manager_test();
+        if (true) return;*/
         
         // --> ATTENZIONE, mettendo le cascade in ordine/combinazione sbagliata (tipo sulla mapped ontomany), NON FUNZIONA PIU NIENTE!! (...)
         tr.deleteAll();
@@ -94,7 +93,7 @@ public class Es2Application {
         teamService.addStudent(s9);
         
         System.out.println("-------------------------  AddAll ------------------------------------");
-        List<StudentDTO> lstudto = new ArrayList<>();
+        List<StudentDTO> lstudto;
         lstudto = Arrays.asList(new StudentDTO("Student_0", "s0n", "s0fn"),
             new StudentDTO("Student_1", "s1n", "s1fn"),
             new StudentDTO("Student_2", "s2n", "s2fn"),

@@ -4,6 +4,6 @@ import it.polito.ai.es2.entities.Course;
 
 import java.util.List;
 
-public interface CustomCourseRepository {
+public interface MyTestingCustomCourseRepository {
   List<Course> advancedSearchCourses();
 }
