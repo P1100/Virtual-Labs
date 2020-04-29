@@ -15,12 +15,12 @@ import java.util.List;
 public class Team {
   @Id
   @GeneratedValue
-  Long id;
+  Long id; // TODO: Long invece che long ci permette di avere campi null temporanei della chiave primaria!
   @EqualsAndHashCode.Include
   String name;
   int status;
   @ManyToOne(cascade = {CascadeType.MERGE, CascadeType.PERSIST}) //cascade = CascadeType.ALL --> no non uso il cascade qui? boh
-  @JoinColumn(name = "course_id")
+  @JoinColumn(name = "course_id") // TODO: aggiungere nullable = false ?
   @EqualsAndHashCode.Include
   @ToString.Exclude
   Course course;
@@ -28,7 +28,7 @@ public class Team {
   @JoinTable(name = "teams_students", joinColumns = @JoinColumn(name = "team_id"),
       inverseJoinColumns = @JoinColumn(name = "student_id"))
 //  @ToString.Exclude
-  List<Student> members = new ArrayList<>();
+  List<Student> members = new ArrayList<>(); // TODO: aggiungere Cascade.PERSIST invece che helper methods?
   
   public void setCourse(Course new_course) {
     if (this.course != null)

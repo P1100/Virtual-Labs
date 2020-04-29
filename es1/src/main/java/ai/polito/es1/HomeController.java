@@ -123,22 +123,22 @@ public class HomeController {
         if (bindingResult.hasErrors()) {
             return "register";
         }
-        RegistrationDetails u = RegistrationDetails.builder()
-                .name(rc.getName())
-                .surname(rc.getSurname())
-                .email(rc.getEmail())
-                .password(rc.getPassword1())
-                .registrationDate(LocalDateTime.now())
-                .build();
+        RegistrationDetails registrationDetails = RegistrationDetails.builder()
+                                                      .name(rc.getName())
+                                                      .surname(rc.getSurname())
+                                                      .email(rc.getEmail())
+                                                      .password(rc.getPassword1())
+                                                      .registrationDate(LocalDateTime.now())
+                                                      .build();
         // "usando lo username come chiave" --> dovrebbe essere il campo email
-        if (registrationManager.putIfAbsent(rc.getEmail(), u) != null) {
+        if (registrationManager.putIfAbsent(rc.getEmail(), registrationDetails) != null) {
             // check con if superfluo, ho già controllato prima, però veniva chiesto esplicitamente nella specifica.
             // -> Non cambio ordine perchè mi sembra più chiaro separare logica di controllo errore da logica di inserimento dati,
             // anche perchè se la password è già presente avrei creato l'oggetto RegistrationDetails inutilmente
             return "register";
         }
-        session.setAttribute("username", u.getEmail());
-
+        session.setAttribute("username", registrationDetails.getEmail());
+    
         log.info("register(POST) # POST then GET #");
         return "redirect:/private";
     }
