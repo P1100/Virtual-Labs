@@ -1,4 +1,4 @@
-package ai.polito.es1.restsecurity.restmongo;
+package ai.polito.es1.restsecurity.mongo;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
