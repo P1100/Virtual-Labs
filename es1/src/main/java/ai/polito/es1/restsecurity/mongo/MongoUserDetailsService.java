@@ -1,4 +1,4 @@
-package ai.polito.es1.restsecurity.restmongo;
+package ai.polito.es1.restsecurity.mongo;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -7,12 +7,11 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.stereotype.Component;
 
 import java.util.Arrays;
 import java.util.List;
 
-@Component
+//@Component
 public class MongoUserDetailsService implements UserDetailsService {
   @Autowired
   private UsersRepository repository;
