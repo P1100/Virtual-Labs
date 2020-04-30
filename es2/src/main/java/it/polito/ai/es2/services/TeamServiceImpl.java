@@ -43,11 +43,15 @@ public class TeamServiceImpl implements TeamService {
 
 //  @PersistenceContext
 //  private EntityManager em;
+//@Autowired
+//EntityManagerFactory factory;
+//  private manageEntities(){
+//    EntityManager em = emFactory.createEntityManager();
+//  }
   
   @Override
   public boolean addStudent(StudentDTO student) {
-    if (student == null || student.getId() == null)
-      return false;
+    if (student == null || student.getId() == null) return false;
     Student s = modelMapper.map(student, Student.class);
     try {
       if (!sr.existsById(student.getId())) {
@@ -68,9 +72,7 @@ public class TeamServiceImpl implements TeamService {
   
   @Override
   public boolean addCourse(CourseDTO course) {
-    if (course == null || course.getName() == null) {
-      return false;
-    }
+    if (course == null || course.getName() == null) return false;
     Course c = modelMapper.map(course, Course.class);
     try {
       if (!cr.existsById(course.getName())) {
@@ -91,9 +93,7 @@ public class TeamServiceImpl implements TeamService {
   
   @Override
   public List<Boolean> addAll(List<StudentDTO> students) {
-    if (students == null) {
-      throw new TeamServiceException("null parameters");
-    }
+    if (students == null) throw new TeamServiceException("null parameters");
     return students.stream()
                .map(x -> modelMapper.map(x, Student.class))
                .peek(e -> log.info("addAll(List<StudentDTO> - size:" + students.size() + " - Entità corrente:" + e))
@@ -111,15 +111,13 @@ public class TeamServiceImpl implements TeamService {
   
   @Override
   public Optional<CourseDTO> getCourse(String name) {
-    if (name == null)
-      throw new TeamServiceException("getCourse() - null parameter");
+    if (name == null) throw new TeamServiceException("getCourse() - null parameter");
     return cr.findById(name).map(x -> modelMapper.map(x, CourseDTO.class));
   }
   
   @Override
   public Optional<StudentDTO> getStudent(String studentId) {
-    if (studentId == null)
-      throw new TeamServiceException("getStudent() - null parameter");
+    if (studentId == null) throw new TeamServiceException("getStudent() - null parameter");
     return sr.findById(studentId).map(x -> modelMapper.map(x, StudentDTO.class));
   }
   
@@ -130,9 +128,7 @@ public class TeamServiceImpl implements TeamService {
   
   @Override
   public List<CourseDTO> getCourses(String studentId) {
-    if (studentId == null) {
-      throw new TeamServiceException("null parameters");
-    }
+    if (studentId == null) throw new TeamServiceException("null parameters");
     return sr.getOne(studentId).getCourses().stream().map(x -> modelMapper.map(x, CourseDTO.class)).collect(Collectors.toList());
   }
   
@@ -143,32 +139,27 @@ public class TeamServiceImpl implements TeamService {
   
   @Override
   public void enableCourse(String courseName) throws CourseNotFoundException {
-    if (courseName == null)
-      throw new CourseNotFoundException("null parameter");
-    if (!cr.existsById(courseName))
-      throw new CourseNotFoundException("course not found");
+    if (courseName == null) throw new CourseNotFoundException("null parameter");
+    if (!cr.existsById(courseName)) throw new CourseNotFoundException("course not found");
+  
     cr.getOne(courseName).setEnabled(true);
   }
   
   @Override
   public void disableCourse(String courseName) throws CourseNotFoundException {
-    if (courseName == null)
-      throw new CourseNotFoundException("null parameter");
-    if (!cr.existsById(courseName))
-      throw new CourseNotFoundException("course not found");
+    if (courseName == null) throw new CourseNotFoundException("null parameter");
+    if (!cr.existsById(courseName)) throw new CourseNotFoundException("course not found");
+  
     cr.getOne(courseName).setEnabled(false);
   }
   
   @Override
   public boolean addStudentToCourse(String studentId, String courseName) throws StudentNotFoundException, CourseNotFoundException {
-//    log.info("##### loading addStudentToCourse(" + studentId + "," + courseName + ")" + " - Initial checks + repos.getOne####");
-    if (studentId == null || courseName == null)
-      throw new TeamServiceException("addStudentToCourse() - null parameters");
-    if (!sr.existsById(studentId))
-      throw new StudentNotFoundException("addStudentToCourse() - student not found:" + studentId);
+    if (studentId == null || courseName == null) throw new TeamServiceException("addStudentToCourse() - null parameters");
+    if (!sr.existsById(studentId)) throw new StudentNotFoundException("addStudentToCourse() - student not found:" + studentId);
     Optional<Course> courseOptional = cr.findById(courseName);
-    if (!courseOptional.isPresent())
-      throw new CourseNotFoundException("addStudentToCourse() - course not found:" + courseName);
+    if (!courseOptional.isPresent()) throw new CourseNotFoundException("addStudentToCourse() - course not found:" + courseName);
+  
     Course c = courseOptional.get();
     // Controllo che corso sia enabled
     if (!c.isEnabled())
@@ -186,11 +177,10 @@ public class TeamServiceImpl implements TeamService {
   
   @Override
   public List<Boolean> enrollAll(List<String> studentIds, String courseName) {
-    if (studentIds == null || courseName == null) {
+    if (studentIds == null || courseName == null)
       throw new TeamServiceException("enrollAll(List<String> studentIds, String courseName) - null parameters");
-    }
-    if (!cr.existsById(courseName))
-      throw new CourseNotFoundException("enrollAll(List<String> studentIds, String courseName) - course not found");
+    if (!cr.existsById(courseName)) throw new CourseNotFoundException("enrollAll(List<String> studentIds, String courseName) - course not found");
+  
     Course course = cr.getOne(courseName);
     List<Boolean> lb = new ArrayList<>();
     for (String id : studentIds) {
@@ -216,10 +206,8 @@ public class TeamServiceImpl implements TeamService {
   
   @Override
   public List<StudentDTO> getEnrolledStudents(String courseName) throws CourseNotFoundException {
-    if (courseName == null)
-      throw new TeamServiceException("getEnrolledStudents() - null parameters");
-    if (!cr.existsById(courseName))
-      throw new CourseNotFoundException("getEnrolledStudents() - StudentNotFoundException: (" + courseName + ")");
+    if (courseName == null) throw new TeamServiceException("getEnrolledStudents() - null parameters");
+    if (!cr.existsById(courseName)) throw new CourseNotFoundException("getEnrolledStudents() - StudentNotFoundException: (" + courseName + ")");
     Course c = cr.getOne(courseName);
     return c.getStudents().stream().map(x -> modelMapper.map(x, StudentDTO.class)).collect(Collectors.toList());
   }
@@ -229,12 +217,10 @@ public class TeamServiceImpl implements TeamService {
    */
   @Override
   public List<Boolean> addAndEroll(Reader reader, String courseName) {
-    if (reader == null || courseName == null) {
-      throw new TeamServiceException("addAndEroll(Reader reader, String courseName) - null parameters");
-    }
+    if (reader == null || courseName == null) throw new TeamServiceException("addAndEroll(Reader reader, String courseName) - null parameters");
     Optional<Course> courseOptional = cr.findById(courseName);
-    if (!courseOptional.isPresent())
-      throw new CourseNotFoundException("addAndEroll(Reader reader, String courseName) - course not found");
+    if (!courseOptional.isPresent()) throw new CourseNotFoundException("addAndEroll(Reader reader, String courseName) - course not found");
+  
     CsvToBean<StudentViewModel> csvToBean = new CsvToBeanBuilder(reader)
                                                 .withType(StudentViewModel.class)
                                                 .withIgnoreLeadingWhiteSpace(true)
@@ -265,15 +251,13 @@ public class TeamServiceImpl implements TeamService {
   
   @Override
   public List<TeamDTO> getTeamsForStudent(String studentId) {
-    if (studentId == null)
-      throw new TeamServiceException("getTeamsForStudent() - null parameters");
+    if (studentId == null) throw new TeamServiceException("getTeamsForStudent() - null parameters");
     return sr.getOne(studentId).getTeams().stream().map(x -> modelMapper.map(x, TeamDTO.class)).collect(Collectors.toList());
   }
   
   @Override
   public List<StudentDTO> getMembers(Long teamId) {
-    if (teamId == null)
-      throw new TeamServiceException("getMembers() - null parameters");
+    if (teamId == null) throw new TeamServiceException("getMembers() - null parameters");
     Optional<Team> team = tr.findById(teamId);
     if (team.isPresent())
       return team.get().getMembers().stream().filter(Objects::nonNull).map(y -> modelMapper.map(y, StudentDTO.class)).collect(Collectors.toList());
@@ -286,22 +270,18 @@ public class TeamServiceImpl implements TeamService {
    */
   @Override
   public TeamDTO proposeTeam(String courseId, String name, List<String> memberIds) throws TeamServiceException {
-    if (courseId == null || name == null || memberIds == null)
-      throw new TeamServiceException("null parameter");
+    if (courseId == null || name == null || memberIds == null) throw new TeamServiceException("null parameter");
     Optional<Course> oc = cr.findById(courseId);
-    if (!oc.isPresent())
-      throw new CourseNotFoundException("proposeTeam - course not found");
-    if (!oc.get().isEnabled())
-      throw new CourseNotEnabledException("proposeTeam() - course not enabled");
+    if (!oc.isPresent()) throw new CourseNotFoundException("proposeTeam - course not found");
+    if (!oc.get().isEnabled()) throw new CourseNotEnabledException("proposeTeam() - course not enabled");
     List<Optional<Student>> streamopt = memberIds.stream().map(x -> sr.findById(x)).collect(Collectors.toList());
-    if (!streamopt.stream().allMatch(Optional::isPresent))
-      throw new StudentNotFoundException("proposeTeam() - student not found");
-    
+    if (!streamopt.stream().allMatch(Optional::isPresent)) throw new StudentNotFoundException("proposeTeam() - student not found");
+  
     Course course = oc.get();
     List<Student> listMemberStudents = streamopt.stream().map(Optional::get).collect(Collectors.toList());
     if (!course.getStudents().containsAll(listMemberStudents)) // !listMemberStudents.stream().allMatch(x -> course.getStudents().contains(x))
       throw new StudentNotEnrolledException("proposeTeam() - non tutti gli studenti sono iscritti al corso " + course.getName());
-    
+  
     if (course.getTeams().size() != 0 && course.getTeams().stream().map(Team::getMembers).noneMatch(y -> {
       for (Student student : y) {
         if (listMemberStudents.stream().anyMatch(student::equals))
@@ -344,30 +324,24 @@ public class TeamServiceImpl implements TeamService {
   
   @Override
   public List<TeamDTO> getTeamForCourse(String courseName) {
-    if (courseName == null)
-      throw new TeamServiceException("null parameter");
+    if (courseName == null) throw new TeamServiceException("null parameter");
     Optional<Course> co = cr.findById(courseName);
-    if (!co.isPresent())
-      throw new CourseNotFoundException("getTeamForCourse - course not found");
+    if (!co.isPresent()) throw new CourseNotFoundException("getTeamForCourse - course not found");
     return co.get().getTeams().stream().map(x -> modelMapper.map(x, TeamDTO.class)).collect(Collectors.toList());
   }
   
   @Override
   public List<StudentDTO> getStudentsInTeams(String courseName) {
-    if (courseName == null)
-      throw new TeamServiceException("null parameter");
-    if (!cr.existsById(courseName))
-      throw new CourseNotFoundException("getTeamForCourse - course not found");
+    if (courseName == null) throw new TeamServiceException("null parameter");
+    if (!cr.existsById(courseName)) throw new CourseNotFoundException("getTeamForCourse - course not found");
     return cr.getStudentsInTeams(courseName).stream().map(x -> modelMapper.map(x, StudentDTO.class)).collect(Collectors.toList());
   }
   
   //  @PreAuthorize("hasRole('ROLE_AUTHENTICATED')")
   @Override
   public List<StudentDTO> getAvailableStudents(String courseName) {
-    if (courseName == null)
-      throw new TeamServiceException("null parameter");
-    if (!cr.existsById(courseName))
-      throw new CourseNotFoundException("getTeamForCourse - course not found");
+    if (courseName == null) throw new TeamServiceException("null parameter");
+    if (!cr.existsById(courseName)) throw new CourseNotFoundException("getTeamForCourse - course not found");
     return cr.getStudentsNotInTeams(courseName).stream().map(x -> modelMapper.map(x, StudentDTO.class)).collect(Collectors.toList());
   }
 }
