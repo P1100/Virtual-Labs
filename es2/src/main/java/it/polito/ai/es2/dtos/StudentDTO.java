@@ -3,6 +3,7 @@ package it.polito.ai.es2.dtos;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.hateoas.RepresentationModel;
 
 /**
  * TODO: check DTO validation https://docs.spring.io/spring/docs/current/spring-framework-reference/core.html#validation
@@ -11,7 +12,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Data
-public class StudentDTO {
+public class StudentDTO extends RepresentationModel<CourseDTO> {
   private String id;
   private String name;
   private String firstName;

@@ -1,23 +1,10 @@
 package it.polito.ai.es2;
 
-import it.polito.ai.es2.dtos.CourseDTO;
-import it.polito.ai.es2.dtos.StudentDTO;
-import it.polito.ai.es2.dtos.TeamDTO;
-import it.polito.ai.es2.repositories.CourseRepository;
-import it.polito.ai.es2.repositories.StudentRepository;
-import it.polito.ai.es2.repositories.TeamRepository;
-import it.polito.ai.es2.services.MyTestingService;
-import it.polito.ai.es2.services.TeamService;
 import lombok.extern.java.Log;
 import org.modelmapper.ModelMapper;
-import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
-
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
 
 @SpringBootApplication
 @Log
@@ -25,30 +12,29 @@ public class Es2Application {
   public static void main(String[] args) {
     SpringApplication.run(Es2Application.class, args);
   }
-  
   @Bean
   ModelMapper modelMapper() {
     return new ModelMapper();
   }
-  
+/*
   @Bean
   CommandLineRunner runner(CourseRepository cr, StudentRepository sr, TeamRepository tr, TeamService teamService, ModelMapper modelMapper, MyTestingService testservice) {
     return new CommandLineRunner() {
       @Override
       public void run(String... args) {
-        /* DONT WORK WITH LAZY LOADING */
+//         DONT WORK WITH LAZY LOADING
 //                cr.findAll().stream().forEach(i -> System.out.println(i.toString()));
 //                sr.findAll().stream().forEach(i -> System.out.println(i.toString()));
         
         // NOT WORKING --> org.hibernate.LazyInitializationException: failed to lazily initialize a collection of role: it.polito.ai.es2.entities.Course.teams, could not initialize proxy - no Session
-/*        testservice.entity_manager_test();
-        if (true) return;*/
-        
-        // --> ATTENZIONE, mettendo le cascade in ordine/combinazione sbagliata (tipo sulla mapped ontomany), NON FUNZIONA PIU NIENTE!! (...)
-        tr.deleteAll();
-        sr.deleteAll();
-        cr.deleteAll();
-        
+//        testservice.entity_manager_test();
+//        if (true) return;
+//
+//        // --> ATTENZIONE, mettendo le cascade in ordine/combinazione sbagliata (tipo sulla mapped ontomany), NON FUNZIONA PIU NIENTE!! (...)
+//        tr.deleteAll();
+//        sr.deleteAll();
+//        cr.deleteAll();
+//
         System.out.println("############################## BEGIN TEST SERVICE COMMAND LINE RUNNER ####################################");
         teamService.addCourse(new CourseDTO("c_enroll_all", 1, 2, false));
         CourseDTO c0 = new CourseDTO("C0", 1, 100, true);
@@ -216,4 +202,5 @@ public class Es2Application {
       }
     };
   }
+  */
 }
