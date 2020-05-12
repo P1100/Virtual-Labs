@@ -28,19 +28,20 @@ public class CourseController {
     for (CourseDTO courseDTO : allCourses) {
       ModelHelper.enrich(courseDTO);
     }
+//    Link link = linkTo(methodOn(CourseController.class)
+//                           .all()).withSelfRel();
+//    CollectionModel<CourseDTO> result = new CollectionModel<>(allCourses, link);
     return allCourses;
   }
   
   @GetMapping("/{name}")
   public CourseDTO getOne(@PathVariable String name) {
-    // TODO: controllo optional later
     Optional<CourseDTO> courseDTO = teamService.getCourse(name);
     if (!courseDTO.isPresent())
       throw new ResponseStatusException(HttpStatus.CONFLICT, name);
     return ModelHelper.enrich(courseDTO.get());
   }
   
-  // TODO: aggiungere link a se stesso later
   @GetMapping("/{name}/enrolled")
   public List<StudentDTO> enrolledStudents(@PathVariable String name) {
     List<StudentDTO> studentDTOlist = teamService.getEnrolledStudents(name);
@@ -51,7 +52,7 @@ public class CourseController {
   }
   
   //   {"name":"C33","min":1,"max":100,"enabled":true}
-  // ---> Nella POST settare COntentType json
+  // ---> Nella POST settare ContentType: application/json
   @PostMapping({"", "/"})
   public CourseDTO addCourse(@RequestBody CourseDTO courseDTO) {
     if (!teamService.addCourse(courseDTO)) {
@@ -60,18 +61,20 @@ public class CourseController {
       return ModelHelper.enrich(courseDTO);
   }
   
-  // {"id":"S0","name":"S0-name","firstName":"S0-FirstName"}
-  @PostMapping("/{name}/enrollOne")
+  // ContentType:text/plain. Body:S1
+  @PostMapping("/{courseName}/enrollOne")
   public void enrollOne(@PathVariable String courseName, @RequestBody String studentId) {
-    if (!teamService.addStudentToCourse(courseName, studentId)) {
+    if (!teamService.addStudentToCourse(studentId, courseName)) {
       throw new ResponseStatusException(HttpStatus.CONFLICT, courseName + "-" + studentId);
     }
   }
   
-  // TODO: finire dopo
-  @PostMapping("/{name}/enrollMany")
+  @PostMapping("/{courseName}/enrollMany")
   public List<Boolean> enrollStudents(@PathVariable String courseName, @RequestParam("file") MultipartFile file) {
     List<Boolean> booleanList = null;
+    System.out.println(file.getContentType());
+    if (!file.getContentType().equals("text/csv"))
+      throw new ResponseStatusException(HttpStatus.UNSUPPORTED_MEDIA_TYPE, courseName + " - CSV enrollStudents - Type:" + file.getContentType());
     if (file.isEmpty()) {
       throw new ResponseStatusException(HttpStatus.CONFLICT, courseName + " - CSV enrollStudents");
     } else {

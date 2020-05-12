@@ -27,7 +27,6 @@ public class StudentController {
   
   @GetMapping("/{id}")
   public StudentDTO getOne(@PathVariable String id) {
-    // TODO: controllo optional later
     Optional<StudentDTO> studentDTO = teamService.getStudent(id);
     if (!studentDTO.isPresent())
       throw new ResponseStatusException(HttpStatus.CONFLICT, id);
@@ -35,6 +34,7 @@ public class StudentController {
   }
   
   //  {"id":"S33","name":"S33-name","firstName":"S33-FirstName"}
+  // ---> Nella POST settare ContentType: application/json
   @PostMapping({"", "/"})
   public StudentDTO addStudent(@RequestBody StudentDTO studentDTO) {
     if (!teamService.addStudent(studentDTO)) {

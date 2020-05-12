@@ -3,9 +3,8 @@ id,name,firstName
 101,Alex Jones,alex@example.com
 102,Jovan Lee,jovan@example.com
 103,Greg Hover,greg@example.com
-S10, S10 new Student, S10@@example.com
 103,Greg Hover,greg@example.com
-S1, Duplicates S1 Test#1, S1@@example.com
-S1, Duplicates S1 Test#2, S1@@example.com
-S1, S1-name, S1-FirstName
+S100,Duplicates S1 Test,S1@@example.com
+S100,S1-name,S1-@@FirstName
+S100,Duplicates S1 Test#2,S1@@example.com
 110,Ten Hover,ten@example.com
