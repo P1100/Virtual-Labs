@@ -16,7 +16,9 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.Reader;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Controller
 public class UploadController {
@@ -27,6 +29,14 @@ public class UploadController {
 //  @ResponseStatus(HttpStatus.CREATED)
   public String index() {
     return "index";
+  }
+  
+  @GetMapping("/testmap")
+  public Map<String, String> testMapBinding() {
+    Map m = new HashMap<String, String>(); //Map.of
+    m.put("key1", "value1");
+    m.put("key2", "value2");
+    return m;
   }
   
   @PostMapping("/upload-csv-file")

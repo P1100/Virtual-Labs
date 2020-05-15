@@ -14,8 +14,10 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.Reader;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
+// TODO: versione finale passare a ultimo jdk java
 @RestController
 @RequestMapping("/API/courses")
 public class CourseController {
@@ -61,9 +63,15 @@ public class CourseController {
       return ModelHelper.enrich(courseDTO);
   }
   
-  // ContentType:text/plain. Body:S1
+  // ContentType:text/plain. Body:{"id":"S33","name":"S33-name","firstName":"S33-FirstName"}
+  //  // TODO: cambiare stringa body id a Map<String,String>  ----> metti un Map<String,String> e verifica che ci sia la chiave “id”
   @PostMapping("/{courseName}/enrollOne")
-  public void enrollOne(@PathVariable String courseName, @RequestBody String studentId) {
+  public void enrollOne(@PathVariable String courseName, @RequestBody Map<String, String> studentMap) {
+    String studentId;
+    if (studentMap.containsKey("id"))
+      studentId = studentMap.get("id");
+    else
+      throw new ResponseStatusException(HttpStatus.PRECONDITION_FAILED, courseName + " - studentMapReceived:" + studentMap);
     if (!teamService.addStudentToCourse(studentId, courseName)) {
       throw new ResponseStatusException(HttpStatus.CONFLICT, courseName + "-" + studentId);
     }

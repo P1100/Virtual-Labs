@@ -1,4 +1,4 @@
-package it.polito.ai.es2.services;
+package it.polito.ai.es2._provecodicelearning;
 
 import it.polito.ai.es2.repositories.CourseRepository;
 import org.springframework.beans.factory.annotation.Autowired;

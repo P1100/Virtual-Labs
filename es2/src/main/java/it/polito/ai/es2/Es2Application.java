@@ -1,10 +1,23 @@
 package it.polito.ai.es2;
 
+import it.polito.ai.es2._provecodicelearning.MyTestingService;
+import it.polito.ai.es2.entities.Token;
+import it.polito.ai.es2.repositories.CourseRepository;
+import it.polito.ai.es2.repositories.StudentRepository;
+import it.polito.ai.es2.repositories.TeamRepository;
+import it.polito.ai.es2.repositories.TokenRepository;
+import it.polito.ai.es2.services.NotificationService;
+import it.polito.ai.es2.services.TeamService;
 import lombok.extern.java.Log;
 import org.modelmapper.ModelMapper;
+import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
+
+import java.sql.Timestamp;
+import java.time.LocalDateTime;
+import java.util.List;
 
 @SpringBootApplication
 @Log
@@ -16,12 +29,23 @@ public class Es2Application {
   ModelMapper modelMapper() {
     return new ModelMapper();
   }
-/*
+  
   @Bean
-  CommandLineRunner runner(CourseRepository cr, StudentRepository sr, TeamRepository tr, TeamService teamService, ModelMapper modelMapper, MyTestingService testservice) {
+  CommandLineRunner runner(CourseRepository cr, StudentRepository sr, TeamRepository tr, TeamService teamService,
+                           ModelMapper modelMapper, MyTestingService testservice, TokenRepository tkr,
+                           NotificationService notificationService) {
     return new CommandLineRunner() {
       @Override
       public void run(String... args) {
+        List<Token> allByTeamId = tkr.findAllByTeamId(Long.valueOf(18));
+        System.out.println("allByTeamId-" + allByTeamId);
+        List<Token> allByExpiryDateBeforeOrderByExpiryDateAsc = tkr.findAllByExpiryDateBeforeOrderByExpiryDate(Timestamp.valueOf(LocalDateTime.now()));
+        System.out.println("allByExpiryDateBeforeOrderByExpiryDateAsc-" + allByExpiryDateBeforeOrderByExpiryDateAsc);
+        List<Token> allByExpiryDateBeforeOrderByExpiryDateDesc = tkr.findAllByExpiryDateBeforeOrderByExpiryDateDesc(Timestamp.valueOf(LocalDateTime.now()));
+        System.out.println("allByExpiryDateBeforeOrderByExpiryDateDesc-" + allByExpiryDateBeforeOrderByExpiryDateDesc);
+        
+        notificationService.sendMessage("pibelex285@reqaxv.com", "This is subject2", "Hello,this is body. Last version.\n\n\nTwo new lines were added. Now Finish with one last.\n\nBye\n");
+
 //         DONT WORK WITH LAZY LOADING
 //                cr.findAll().stream().forEach(i -> System.out.println(i.toString()));
 //                sr.findAll().stream().forEach(i -> System.out.println(i.toString()));
@@ -34,7 +58,7 @@ public class Es2Application {
 //        tr.deleteAll();
 //        sr.deleteAll();
 //        cr.deleteAll();
-//
+/*
         System.out.println("############################## BEGIN TEST SERVICE COMMAND LINE RUNNER ####################################");
         teamService.addCourse(new CourseDTO("c_enroll_all", 1, 2, false));
         CourseDTO c0 = new CourseDTO("C0", 1, 100, true);
@@ -199,8 +223,9 @@ public class Es2Application {
         System.out.println(teamService.addCourse(c9r));
         StudentDTO s9r = new StudentDTO("S9", "REWRITE", "REWRITE");
         System.out.println(teamService.addStudent(s9r));
+*/
+      
       }
     };
   }
-  */
 }

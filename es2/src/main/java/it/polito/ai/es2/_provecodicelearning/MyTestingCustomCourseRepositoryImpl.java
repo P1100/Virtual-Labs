@@ -1,4 +1,4 @@
-package it.polito.ai.es2.repositories;
+package it.polito.ai.es2._provecodicelearning;
 
 import it.polito.ai.es2.entities.Course;
 import org.springframework.stereotype.Repository;
