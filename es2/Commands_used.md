@@ -11,7 +11,15 @@ mysql> SET foreign_key_checks = 1;
 
 `CREATE DATABASE teams;`
 
-
 # SQL
 Select *
 FROM team t JOIN course c on t.course_id = c.name NATURAL JOIN teams_students ts JOIN student st ON ts.student_id = st.id ;
+
+# SQL VIEW
+create definer = root@`%` view MyTeamSummary as
+select `c`.`idname` AS `corso`, `t`.`name` AS `team`, `st`.`id` AS `studente`, tk.id
+from (((`teams`.`team` `t` join `teams`.`course` `c` on (`t`.`course_id` = `c`.`idname`)) join `teams`.`teams_students` `ts` on (`t`.`id` = `ts`.`team_id`))
+         join `teams`.`student` `st` on (`ts`.`student_id` = `st`.`id`)) left join token tk on (tk.student_id=st.id AND tk.team_id=t.id)
+order by `c`.`idname`, `t`.`name`, `st`.`id`;
+
+

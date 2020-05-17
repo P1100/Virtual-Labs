@@ -20,32 +20,41 @@ public class NotificationController {
   @Autowired
   NotificationService notificationService;
   
-  @GetMapping("/notification/confirm/{token}")
-  public void confirm_token(@PathVariable String token) {
+  @GetMapping("/confirm/{token}")
+  public String confirm_token(@PathVariable String token) {
+    boolean confirm = notificationService.confirm(token);
+    if (confirm)
+      return "confirmed_token";
+    else
+      return "error_template";
   }
   
-  @GetMapping("/notification/reject/{token}")
-  public void reject_token(@PathVariable String token) {
+  @GetMapping("/reject/{token}")
+  public String reject_token(@PathVariable String token) {
+    boolean reject = notificationService.reject(token);
+    if (reject)
+      return "rejcted_token";
+    else
+      return "error_template";
   }
   
   @PostMapping("/propose")
   public String propose_team(@ModelAttribute("command") TeamViewModel teamViewModel,
                              BindingResult bindingResult, Model model) {
     // TODO: remove testing parameter later
-    teamViewModel = new TeamViewModel((long) 999, "Team_testing_email", "Course_testing_email", Arrays.asList("S1", "S2", "S3"));
+//    teamViewModel = new TeamViewModel((long) 999, "Team_testing_email", "Course_testing_email", Arrays.asList("S1", "S2", "S3"));
+    System.out.println("TeamViewModel:" + teamViewModel);
     TeamDTO created_team;
-    // TODO: fare merge di metodi proposeTeam e notifyTeam, così è un casino pazzesco
+    teamViewModel.getMemberIds().removeAll(Arrays.asList("", null));
     try {
       created_team = teamService.proposeTeam(teamViewModel.getCourseId(), teamViewModel.getName(), teamViewModel.getMemberIds());
     } catch (Exception e) {
       e.printStackTrace();
+      model.addAttribute("error", e.getMessage());
       return "error_template";
     }
     if (created_team == null)
       return "error_template";
-    notificationService.notifyTeam(created_team, teamViewModel.getMemberIds());
     return "home_csv";
   }
-//      sb.append("\n\nLink to accept token:\n" + url + "/notification/confirm/"+temp.getId());
-//      sb.append("\n\nLink to remove token:\n" + url + "/notification/reject/"+temp.getId());
 }

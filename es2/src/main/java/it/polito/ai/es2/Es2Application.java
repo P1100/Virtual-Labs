@@ -1,9 +1,6 @@
 package it.polito.ai.es2;
 
 import it.polito.ai.es2._provecodicelearning.MyTestingService;
-import it.polito.ai.es2.dtos.TeamDTO;
-import it.polito.ai.es2.entities.Team;
-import it.polito.ai.es2.entities.Token;
 import it.polito.ai.es2.repositories.CourseRepository;
 import it.polito.ai.es2.repositories.StudentRepository;
 import it.polito.ai.es2.repositories.TeamRepository;
@@ -20,16 +17,6 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.core.env.Environment;
-import org.springframework.data.domain.Example;
-import org.springframework.data.domain.ExampleMatcher;
-
-import java.net.InetAddress;
-import java.net.UnknownHostException;
-import java.sql.Timestamp;
-import java.time.LocalDateTime;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
 
 @SpringBootApplication
 @Log
@@ -60,7 +47,7 @@ public class Es2Application {
     return new CommandLineRunner() {
       @Override
       public void run(String... args) {
-        List<Token> allByTeamId = tokenRepository.findAllByTeamId(Long.valueOf(18));
+/*        List<Token> allByTeamId = tokenRepository.findAllByTeamId(Long.valueOf(18));
         System.out.println("allByTeamId-" + allByTeamId);
         
         List<Token> allByExpiryDateBeforeOrderByExpiryDateAsc = tokenRepository.findAllByExpiryDateBeforeOrderByExpiryDate(Timestamp.valueOf(LocalDateTime.now()));
@@ -68,10 +55,11 @@ public class Es2Application {
         
         List<Token> allByExpiryDateBeforeOrderByExpiryDateDesc = tokenRepository.findAllByExpiryDateBeforeOrderByExpiryDateDesc(Timestamp.valueOf(LocalDateTime.now()));
         System.out.println("allByExpiryDateBeforeOrderByExpiryDateDesc-" + allByExpiryDateBeforeOrderByExpiryDateDesc);
+        */
 
 //      notificationService.sendMessage("pibelex285@reqaxv.com", "This is subject2", "Hello,this is body. Last version.\n\n\nTwo new lines were added. Now Finish with one last.\n\nBye\n");
 //        notificationService.notifyTeam(null,null);
-        System.out.println(environment.getProperty("server.port"));
+/*        System.out.println(environment.getProperty("server.port"));
         System.out.println(environment.getProperty("server.address"));
         System.out.println(port);
         System.out.println("------");
@@ -83,11 +71,12 @@ public class Es2Application {
         notificationService.notifyTeam(new TeamDTO((long) 999, "Team_test_email", 1), Arrays.asList("S1", "S3"));
   
         teamService.setTeamStatus((long) 14, Team.status_inactive());
-        notificationService.cleanUpOldTokens();
+        notificationService.cleanUpOldTokens();*/
 
 //        teamService.proposeTeam("C0", "Team_Test_Evict", Arrays.asList("S0", "S1"));
 //        teamService.proposeTeam("C0", "Team_Test_Evict2", Collections.singletonList("S2"));
 //        teamService.proposeTeam("C0", "Team_Test_Evict3", Collections.singletonList("S3"));
+/*
         teamService.setTeamStatus((long) 21, Team.status_active());
         System.out.println(teamService.getTeamsForCourse("C0"));
         System.out.println("------------------------ EVICT TEAM NONEXISTENT TEAM ---------------");
@@ -129,9 +118,11 @@ public class Es2Application {
         System.out.println("§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§");
         System.out.println("§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§");
         System.out.println("§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§");
+*/
 
 //        teamService.proposeTeam("C0", "Team1", Collections.singletonList("S1"));
-        teamService.proposeTeam("C3", "Team3_v5", Collections.singletonList("S2"));
+//        teamService.proposeTeam("C0", "Team1", List.of("S1", "S2", "S3"));
+//        notificationService.reject("68194f20-877b-49cc-a1a4-c460f5ef8bc2");
 
 //         DONT WORK WITH LAZY LOADING
 //                courseRepository.findAll().stream().forEach(i -> System.out.println(i.toString()));

@@ -1,4 +1,4 @@
-<!DOCTYPE html><!--suppress HtmlFormInputWithoutLabel, HtmlFormInputWithoutLabel -->
+<!DOCTYPE html>
 <html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
 <head>
 	<meta charset="UTF-8">
@@ -13,23 +13,22 @@
 <div class="container py-5">
 	<div class="row">
 		<div class="col-6 mx-auto">
-			<h3>Notify students</h3>
 			<h3>Propose Team</h3>
-			<form method="post" th:action="@{/propose}" th:object="${command}">
+			<form method="post" th:action="@{/notification/propose}" th:object="${command}">
 				<div class="form-group mt-3">
 					<label th:for="name">Id</label>
 					<input type="text" th:field="*{id}">
 					<br>
 					<label th:for="name">Name</label>
-					<input type="text" th:field="*{name}">
+					<input type="text" placeholder="Team_testing_email" th:field="*{name}">
 					<br>
 					<label th:for="name">CourseId</label>
-					<input type="text" th:field="*{courseId}">
+					<input type="text" placeholder="Course_testing_email" th:field="*{courseId}">
 				</div>
 				<label th:for="name">MemberIds 0</label>
-				<input type="text" class="form-control" required th:field="*{memberIds[0]}">
+				<input type="text" placeholder="S0" th:field="*{memberIds[0]}">
 				<label th:for="name">MemberIds 1</label>
-				<input type="text" class="form-control" required th:field="*{memberIds[0]}">
+				<input type="text" placeholder="S1" th:field="*{memberIds[1]}">
 				<br>
 				<input type="submit">
 			</form>

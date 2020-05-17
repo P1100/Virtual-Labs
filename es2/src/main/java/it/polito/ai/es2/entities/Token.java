@@ -17,6 +17,6 @@ public class Token {
   Long teamId;
   Timestamp expiryDate;
   @ManyToOne(fetch = FetchType.EAGER) // TODO: remove eager later, it's for testing in commandline
-  @JoinColumn(name = "student_id_redundant", referencedColumnName = "id")
+  @JoinColumn(name = "student_id", referencedColumnName = "id")
   Student student;
 }

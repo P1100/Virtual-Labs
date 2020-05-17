@@ -43,6 +43,8 @@ public class TeamServiceImpl implements TeamService {
   TeamRepository teamRepository;
   @Autowired
   TokenRepository tokenRepository;
+  @Autowired
+  NotificationService notificationService;
 
 //  @PersistenceContext
 //  private EntityManager em;
@@ -270,6 +272,30 @@ public class TeamServiceImpl implements TeamService {
       throw new TeamServiceException("getMembers() - team not found");
   }
   
+  @Override
+  public List<TeamDTO> getTeamsForCourse(String courseName) {
+    if (courseName == null) throw new TeamServiceException("null parameter");
+    Optional<Course> co = courseRepository.findById(courseName);
+    if (!co.isPresent()) throw new CourseNotFoundException("getTeamForCourse - course not found");
+    return co.get().getTeams().stream().map(x -> modelMapper.map(x, TeamDTO.class)).collect(Collectors.toList());
+  }
+  
+  @Override
+  public List<StudentDTO> getStudentsInTeams(String courseName) {
+    if (courseName == null) throw new TeamServiceException("null parameter");
+    if (!courseRepository.existsById(courseName)) throw new CourseNotFoundException("getTeamForCourse - course not found");
+    return courseRepository.getStudentsInTeams(courseName).stream().map(x -> modelMapper.map(x, StudentDTO.class)).collect(Collectors.toList());
+  }
+  
+  //  @PreAuthorize("hasRole('ROLE_AUTHENTICATED')")
+  
+  @Override
+  public List<StudentDTO> getAvailableStudents(String courseName) {
+    if (courseName == null) throw new TeamServiceException("null parameter");
+    if (!courseRepository.existsById(courseName)) throw new CourseNotFoundException("getTeamForCourse - course not found");
+    return courseRepository.getStudentsNotInTeams(courseName).stream().map(x -> modelMapper.map(x, StudentDTO.class)).collect(Collectors.toList());
+  }
+  
   /**
    * Se team già presente (stesso nome-corso), allora lo cancello e poi reinserisco il nuovo. Si potrebbe anche aggiornare campi senza cancellare
    * Metodo complicato. Il problema è cosa fare se si fà il propose di un nuovo team, che abbia lo stesso nome di uno già presente sullo
@@ -293,7 +319,7 @@ public class TeamServiceImpl implements TeamService {
     List<Student> listStudentsProposal = streamopt_listStudentsProposal.stream().map(Optional::get).collect(Collectors.toList());
     if (!course.getStudents().containsAll(listStudentsProposal)) // !listStudentsProposal.stream().allMatch(x -> course.getStudents().contains(x))
       throw new StudentNotEnrolledException("proposeTeam() - non tutti gli studenti sono iscritti al corso " + course.getIdname());
-    
+    // Controllo se tra gli studenti dei vari teams del corso, ce n'è qualcuno tra quelli presenti nella proposta
     if (course.getTeams().size() != 0 &&
             !course.getTeams()
                  .stream()
@@ -319,44 +345,26 @@ public class TeamServiceImpl implements TeamService {
       student.addTeam(new_team); // add su studenti
     }
     course.addTeam(new_team); // add sul singolo corso
-    new_team = teamRepository.save(new_team);
-    return teamDTO;
+    TeamDTO return_teamDTO = modelMapper.map(teamRepository.save(new_team), TeamDTO.class);
+    notificationService.notifyTeam(return_teamDTO, memberIds);
+    return return_teamDTO;
   }
   
   @Override
-  public List<TeamDTO> getTeamsForCourse(String courseName) {
-    if (courseName == null) throw new TeamServiceException("null parameter");
-    Optional<Course> co = courseRepository.findById(courseName);
-    if (!co.isPresent()) throw new CourseNotFoundException("getTeamForCourse - course not found");
-    return co.get().getTeams().stream().map(x -> modelMapper.map(x, TeamDTO.class)).collect(Collectors.toList());
-  }
-  
-  @Override
-  public List<StudentDTO> getStudentsInTeams(String courseName) {
-    if (courseName == null) throw new TeamServiceException("null parameter");
-    if (!courseRepository.existsById(courseName)) throw new CourseNotFoundException("getTeamForCourse - course not found");
-    return courseRepository.getStudentsInTeams(courseName).stream().map(x -> modelMapper.map(x, StudentDTO.class)).collect(Collectors.toList());
-  }
-  
-  //  @PreAuthorize("hasRole('ROLE_AUTHENTICATED')")
-  @Override
-  public List<StudentDTO> getAvailableStudents(String courseName) {
-    if (courseName == null) throw new TeamServiceException("null parameter");
-    if (!courseRepository.existsById(courseName)) throw new CourseNotFoundException("getTeamForCourse - course not found");
-    return courseRepository.getStudentsNotInTeams(courseName).stream().map(x -> modelMapper.map(x, StudentDTO.class)).collect(Collectors.toList());
-  }
-  
-  @Override
-  public Optional<TeamDTO> getTeamDTOfromId(Long teamId) {
-    Optional<Team> team = teamRepository.findById(teamId);//.orElse(null);
-    Optional<TeamDTO> teamDTO = team.map(x -> modelMapper.map(x, TeamDTO.class));
-    return teamDTO;
-  }
-  
-  @Override
-  public boolean isTeamCreatedAndActive(Long teamId) {
-    Team team = teamRepository.findById(teamId).orElse(null);
-    return team != null && team.getStatus() != Team.status_inactive();
+  public boolean evictTeam(Long teamId) {
+    Optional<Team> optionalTeam = teamRepository.findById(teamId);
+    if (!optionalTeam.isPresent())
+      return false;
+    Team team_to_delete = optionalTeam.get();
+    
+    for (Student student : team_to_delete.getMembers()) {
+      // usare "student.removeTeam()" rimuoverebbe studenti da team, il che creerebbe problemi in quanto modificherebbe il ciclo foreach enhanced in corso (java.util.ConcurrentModificationException)
+      student.getTeams().remove(team_to_delete);
+    }
+    // --> non serve rimuovere students e course da team, perchè tanto lo cancello
+    team_to_delete.getCourse().getTeams().remove(team_to_delete);
+    teamRepository.delete(team_to_delete);
+    return true;
   }
   
   /**
@@ -371,34 +379,20 @@ public class TeamServiceImpl implements TeamService {
     return true;
   }
   
-  @Override
-  public boolean evictTeam(Long teamId) {
-    Optional<Team> optionalTeam = teamRepository.findById(teamId);
-    if (!optionalTeam.isPresent())
-      return false;
-    Team team = optionalTeam.get();
-    return true;
-/*    // Se team era già presente (stesso nome), lo aggiorno, cancellando prima il vecchio e poi inserendo il nuovo
-    for (Iterator<Team> teamIterator = course.getTeams().iterator(); teamIterator.hasNext(); ) { // "for (Team team_to_delete : course.getTeams()) {" --> NOT WORKING, "java.util.ConcurrentModificationException: null"
-      Team team_to_delete = teamIterator.next();
-      // se c'era altro team già salvato (not null), con lo stesso nome e nello stesso corso, lo cancello aggiornando prima sync su studenti e corso
-      if (team_to_delete.getId() != null && team_to_delete.getName().equals(new_team.getName())) {
-        teamIterator.remove(); // importante per evitare errore java.util.ConcurrentModificationException
-        team_to_delete.getCourse().getTeams().remove(team_to_delete);
-        for (Student student : team_to_delete.getMembers()) {
-          // usare "student.removeTeam()" rimuoverebbe studenti da team, il che creerebbe problemi in quanto modificherebbe il ciclo foreach enhanced in corso.
-          // --> non serve rimuovere stu
-          student.getTeams().remove(team_to_delete);
-        }
-        teamRepository.delete(team_to_delete);  // modified, first was deleteById
-//        tr.flush();
-      }
-    }    */
+  //  -------------------------------------- PRIVATE METHODS -----------------------------------
+/*
+  private Optional<TeamDTO> getTeamDTOfromId(Long teamId) {
+    Optional<Team> team = teamRepository.findById(teamId);//.orElse(null);
+    Optional<TeamDTO> teamDTO = team.map(x -> modelMapper.map(x, TeamDTO.class));
+    return teamDTO;
+  }*/
+  private boolean isTeamCreatedAndActive(Long teamId) {
+    Team team = teamRepository.findById(teamId).orElse(null);
+    return team != null && team.getStatus() != Team.status_inactive();
   }
   
-//  -------------------------------------- PRIVATE METHODS -----------------------------------
-// TODO: trovare metodo migliore per trovare teams con stessi dati (equals exclude e repository? new query? streams?)
-private Team getTeamFromDTO(TeamDTO teamDTO) {
-  return null;
-}
+  // TODO: trovare metodo migliore per trovare teams con stessi dati (equals exclude e repository? new query? streams?)
+  private Team getTeamFromDTO(TeamDTO teamDTO) {
+    return null;
+  }
 }

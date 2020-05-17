@@ -40,8 +40,7 @@ public class ControllerHomeCSV {
   public String index(@ModelAttribute("command") TeamViewModel teamViewModel,
                       BindingResult bindingResult,
                       Model model) {
-//    TeamViewModel command = new TeamViewModel((long)12,"test","test2");
-//    model.addAttribute("command",new TeamViewModel((long)12,"test","test2"));
+    model.addAttribute("command", new TeamViewModel(null, "Team_testing_email", "Course_testing_email", null));
     return "home_csv";
   }
   

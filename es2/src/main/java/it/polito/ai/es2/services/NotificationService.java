@@ -20,6 +20,4 @@ public interface NotificationService {
   boolean reject(String token); //per esprimere il proprio diniego a partecipare
   
   void notifyTeam(TeamDTO dto, List<String> memberIds);
-  
-  boolean cleanUpOldTokens();
 }

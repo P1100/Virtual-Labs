@@ -1,6 +1,8 @@
 package it.polito.ai.es2.services;
 
 import it.polito.ai.es2.dtos.TeamDTO;
+import it.polito.ai.es2.entities.Course;
+import it.polito.ai.es2.entities.Team;
 import it.polito.ai.es2.entities.Token;
 import it.polito.ai.es2.repositories.StudentRepository;
 import it.polito.ai.es2.repositories.TeamRepository;
@@ -25,7 +27,7 @@ import java.util.UUID;
  * TODO: add formatted email body
  */
 @Service
-@Transactional
+//@Transactional
 public class NotificationServiceImpl implements NotificationService {
   private final boolean forceOutputEmail_testing = true;
   @Autowired
@@ -33,9 +35,11 @@ public class NotificationServiceImpl implements NotificationService {
   @Autowired
   public TokenRepository tokenRepository;
   @Autowired
-  StudentRepository studentRepository;
+  TeamService teamService;
   @Autowired
   TeamRepository teamRepository;
+  @Autowired
+  StudentRepository studentRepository;
   @Value("${server.port}")
   String port;
   @Autowired
@@ -50,40 +54,49 @@ public class NotificationServiceImpl implements NotificationService {
     emailSender.send(message);
   }
   
-  private Token verifyTokenExists(String idtoken) {
-    cleanUpOldTokens();
-    Optional<Token> token = tokenRepository.findById(idtoken);
-    if (token.isEmpty())
-      return null;
-    return token.get();
-  }
-  
+  /**
+   * trovare team, e corso?, e rimuovere token
+   * if team_corrente ha ancora tokens, ritorna false
+   * altrimenti imposta team a status active, e ritorna true
+   */
   @Override
+  @Transactional
   public boolean confirm(String idtoken) {
-    Token token = verifyTokenExists(idtoken);
-    if (token == null)
+    Optional<Team> optionalTeam = cleanupAndVerifyTokenExists(idtoken);
+    if (optionalTeam.isEmpty())
       return false;
-    // trovare team, e corso?, e rimuovere token
-    // if team_corrente ha ancora tokens, ritorna false
-    // altrimenti imposta team a status active, rimuovi tutti i team duplicati (per sicurezza), e ritorna true
-//    (token.getTeamId())
-//    getTokensForTeam()
+    Team team = optionalTeam.get();
+    Long teamId = team.getId();
+    Course course = team.getCourse();
+    tokenRepository.deleteById(idtoken);
+    List<Token> tokenList = tokenRepository.findAllByTeamId(teamId);
+    if (tokenList.size() == 0) {
+      teamService.setTeamStatus(teamId, Team.status_active());
+      return true;
+    }
+    for (Token token : tokenList) {
+      tokenRepository.delete(token);
+    }
     return false;
   }
   
+  /**
+   * Trova team, rimuovi tutti i token relativi a team corrente (se ce ne sono) e invoca evict team + return true. Altrimenti false
+   */
   @Override
+  @Transactional
   public boolean reject(String idtoken) {
-    Token token = verifyTokenExists(idtoken);
-    if (token == null)
+    Optional<Team> optionalTeam = cleanupAndVerifyTokenExists(idtoken);
+    if (optionalTeam.isEmpty())
       return false;
-    // Trova team, rimuovi tutti i token relativi a team corrente (se ce ne sono) e invocare evict team e return true.
-    //altrimenti false
-    return false;
+    Long teamId = optionalTeam.get().getId();
+    tokenRepository.deleteAll(tokenRepository.findAllByTeamId(teamId));
+    return teamService.evictTeam(teamId);
   }
   
-  // TODO: inserire collegamento tra tokens e team/studenti. Controllare che team non sia gia stato creato o in corso.
-  //  Controllo che student esista.
-  // Nota: teamDTO e memberIds sono gli stessi passati a proposeTeam, quindi dovrebbero essere giusti...
+  /**
+   * Non c'è bisogno di controlli, poichè viene chiamato direttamente da propose team (che fa lui tutti i controlli)
+   */
   @Override
   public void notifyTeam(TeamDTO teamDTO, List<String> memberIds) {
     for (String memberId : memberIds) {
@@ -97,13 +110,12 @@ public class NotificationServiceImpl implements NotificationService {
         e.printStackTrace();
         return;
       }
-      
       StringBuffer sb = new StringBuffer();
       sb.append("Hello " + memberId);
       sb.append("\n\nLink to accept token:\n" + url + "/notification/confirm/" + token.getId());
       sb.append("\n\nLink to remove token:\n" + url + "/notification/reject/" + token.getId());
       System.out.println(sb);
-      
+      // TODO: uncommentare in fase di prod
       if (forceOutputEmail_testing == false) {
         System.out.println("[regular email] s" + memberId + "@studenti.polito.it - Conferma iscrizione al team " + teamDTO.getId());
 //        sendMessage("s" + memberId + "@studenti.polito.it", "Conferma iscrizione al team " + teamDTO.getId(), sb.toString());
@@ -115,18 +127,17 @@ public class NotificationServiceImpl implements NotificationService {
     }
   }
   
-  @Override
-  public boolean cleanUpOldTokens() {
+  private Optional<Team> cleanupAndVerifyTokenExists(String idtoken) {
+    cleanUpOldTokens();
+    return tokenRepository.findById(idtoken).map(token -> token.getTeamId()).map(teamId -> teamRepository.getOne(teamId));
+  }
+  
+  private boolean cleanUpOldTokens() {
     List<Token> tokenExpiredList = tokenRepository.findAllByExpiryDateBeforeOrderByExpiryDate(Timestamp.valueOf(LocalDateTime.now()));
     if (tokenExpiredList.size() > 0) {
       tokenRepository.deleteAll(tokenExpiredList);
       return true;
     } else
       return false;
-  }
-  
-  private List<Token> getTokensForTeam(Long teamId) {
-    List<Token> tokenList = tokenRepository.findAllByTeamId(teamId);
-    return tokenList;
   }
 }
