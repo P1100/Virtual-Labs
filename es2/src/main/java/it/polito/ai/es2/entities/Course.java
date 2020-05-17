@@ -1,6 +1,7 @@
 package it.polito.ai.es2.entities;
 
 import lombok.Data;
+import lombok.ToString;
 
 import javax.persistence.Entity;
 import javax.persistence.Id;
@@ -18,8 +19,10 @@ public class Course {
   private int max;
   boolean enabled;
   @OneToMany(mappedBy = "course")
+  @ToString.Exclude
   List<Team> teams = new ArrayList<>();
   @ManyToMany(mappedBy = "courses") //cascade = CascadeType.ALL, orphanRemoval = true
+  @ToString.Exclude
   private List<Student> students = new ArrayList<>();
   
   public void addStudent(Student new_student) {

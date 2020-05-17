@@ -14,6 +14,14 @@ import java.util.List;
 @Data
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 public class Team {
+  public static int status_inactive() {
+    return 0;
+  }
+  
+  public static int status_active() {
+    return 1;
+  }
+  
   @Id
   @GeneratedValue
   Long id; // Long invece che long ci permette di avere campi null temporanei della chiave primaria!
@@ -21,15 +29,15 @@ public class Team {
   @NotBlank
   String name;
   int status;
-  @ManyToOne(cascade = {CascadeType.MERGE, CascadeType.PERSIST}) //cascade = CascadeType.ALL --> no non uso il cascade qui? boh
+  @ManyToOne(cascade = {CascadeType.MERGE, CascadeType.PERSIST}, fetch = FetchType.EAGER) // TODO: remove eager later, it's for testing in commandline
   @JoinColumn(name = "course_id") // TODO: aggiungere nullable = false ?
   @EqualsAndHashCode.Include
-  @ToString.Exclude
   Course course;
-  @ManyToMany(cascade = {CascadeType.MERGE, CascadeType.PERSIST}) //cascade = CascadeType.ALL
+  @ManyToMany(cascade = {CascadeType.MERGE, CascadeType.PERSIST}, fetch = FetchType.EAGER)
+  // TODO: remove eager later, it's for testing in commandline
   @JoinTable(name = "teams_students", joinColumns = @JoinColumn(name = "team_id"),
       inverseJoinColumns = @JoinColumn(name = "student_id"))
-//  @ToString.Exclude
+  @ToString.Exclude
       List<Student> members = new ArrayList<>();
   
   public void setCourse(Course new_course) {
@@ -48,7 +56,7 @@ public class Team {
     new_student.getTeams().add(this);
   }
   
-  public void removetudent(Student old_student) {
+  public void removetudent(@org.jetbrains.annotations.NotNull Student old_student) {
     old_student.getTeams().remove(this);
     this.members.remove(old_student);
   }

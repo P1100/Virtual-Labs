@@ -43,9 +43,23 @@ public interface TeamService {
   
   TeamDTO proposeTeam(String courseId, String name, List<String> memberIds);
   
-  List<TeamDTO> getTeamForCourse(String courseName);
+  List<TeamDTO> getTeamsForCourse(String courseName);
   
   List<StudentDTO> getStudentsInTeams(String courseName);
   
   List<StudentDTO> getAvailableStudents(String courseName);
+
+//  ---------------------------
+  
+  Optional<TeamDTO> getTeam(Long teamId);
+  
+  boolean isTeamCreatedAndActive(TeamDTO teamDTO);
+  
+  boolean isTeamCreatedAndActive(Long teamId);
+  
+  boolean setTeamStatus(Long teamId, int status);
+  
+  boolean evictTeam(Long teamId);
+  
+  boolean cleanUpOldTokens();
 }

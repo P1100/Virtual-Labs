@@ -1,6 +1,8 @@
 package it.polito.ai.es2;
 
 import it.polito.ai.es2._provecodicelearning.MyTestingService;
+import it.polito.ai.es2.dtos.TeamDTO;
+import it.polito.ai.es2.entities.Team;
 import it.polito.ai.es2.entities.Token;
 import it.polito.ai.es2.repositories.CourseRepository;
 import it.polito.ai.es2.repositories.StudentRepository;
@@ -10,14 +12,24 @@ import it.polito.ai.es2.services.NotificationService;
 import it.polito.ai.es2.services.TeamService;
 import lombok.extern.java.Log;
 import org.modelmapper.ModelMapper;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
+import org.springframework.core.env.Environment;
+import org.springframework.data.domain.Example;
+import org.springframework.data.domain.ExampleMatcher;
 
+import java.net.InetAddress;
+import java.net.UnknownHostException;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
+import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 
 @SpringBootApplication
 @Log
@@ -25,39 +37,107 @@ public class Es2Application {
   public static void main(String[] args) {
     SpringApplication.run(Es2Application.class, args);
   }
+  
   @Bean
   ModelMapper modelMapper() {
     return new ModelMapper();
   }
   
+  @Autowired
+  Environment environment;
+  @Autowired
+  private ApplicationContext applicationContext;
+  @Value("${server.port}")
+  String port;
+//  @Value("${server.address}")
+//  String address;
+  
   @Bean
-  CommandLineRunner runner(CourseRepository cr, StudentRepository sr, TeamRepository tr, TeamService teamService,
-                           ModelMapper modelMapper, MyTestingService testservice, TokenRepository tkr,
+  CommandLineRunner runner(CourseRepository courseRepository, StudentRepository studentRepository,
+                           TeamRepository teamRepository, TeamService teamService,
+                           ModelMapper modelMapper, MyTestingService testservice, TokenRepository tokenRepository,
                            NotificationService notificationService) {
     return new CommandLineRunner() {
       @Override
       public void run(String... args) {
-        List<Token> allByTeamId = tkr.findAllByTeamId(Long.valueOf(18));
+        List<Token> allByTeamId = tokenRepository.findAllByTeamId(Long.valueOf(18));
         System.out.println("allByTeamId-" + allByTeamId);
-        List<Token> allByExpiryDateBeforeOrderByExpiryDateAsc = tkr.findAllByExpiryDateBeforeOrderByExpiryDate(Timestamp.valueOf(LocalDateTime.now()));
-        System.out.println("allByExpiryDateBeforeOrderByExpiryDateAsc-" + allByExpiryDateBeforeOrderByExpiryDateAsc);
-        List<Token> allByExpiryDateBeforeOrderByExpiryDateDesc = tkr.findAllByExpiryDateBeforeOrderByExpiryDateDesc(Timestamp.valueOf(LocalDateTime.now()));
-        System.out.println("allByExpiryDateBeforeOrderByExpiryDateDesc-" + allByExpiryDateBeforeOrderByExpiryDateDesc);
         
-        notificationService.sendMessage("pibelex285@reqaxv.com", "This is subject2", "Hello,this is body. Last version.\n\n\nTwo new lines were added. Now Finish with one last.\n\nBye\n");
+        List<Token> allByExpiryDateBeforeOrderByExpiryDateAsc = tokenRepository.findAllByExpiryDateBeforeOrderByExpiryDate(Timestamp.valueOf(LocalDateTime.now()));
+        System.out.println("allByExpiryDateBeforeOrderByExpiryDateAsc-" + allByExpiryDateBeforeOrderByExpiryDateAsc);
+        
+        List<Token> allByExpiryDateBeforeOrderByExpiryDateDesc = tokenRepository.findAllByExpiryDateBeforeOrderByExpiryDateDesc(Timestamp.valueOf(LocalDateTime.now()));
+        System.out.println("allByExpiryDateBeforeOrderByExpiryDateDesc-" + allByExpiryDateBeforeOrderByExpiryDateDesc);
+
+//      notificationService.sendMessage("pibelex285@reqaxv.com", "This is subject2", "Hello,this is body. Last version.\n\n\nTwo new lines were added. Now Finish with one last.\n\nBye\n");
+//        notificationService.notifyTeam(null,null);
+        System.out.println(environment.getProperty("server.port"));
+        System.out.println(environment.getProperty("server.address"));
+        System.out.println(port);
+        System.out.println("------");
+        try {
+          System.out.println(InetAddress.getLocalHost().getHostAddress());
+        } catch (UnknownHostException e) {
+          e.printStackTrace();
+        }
+        notificationService.notifyTeam(new TeamDTO((long) 999, "Team_test_email", 1), Arrays.asList("S1", "S3"));
+        
+        teamService.setTeamStatus((long) 14, Team.status_inactive());
+        teamService.cleanUpOldTokens();
+
+//        teamService.proposeTeam("C0", "Team_Test_Evict", Arrays.asList("S0", "S1"));
+//        teamService.proposeTeam("C0", "Team_Test_Evict2", Collections.singletonList("S2"));
+//        teamService.proposeTeam("C0", "Team_Test_Evict3", Collections.singletonList("S3"));
+        teamService.setTeamStatus((long) 21, Team.status_active());
+        System.out.println(teamService.getTeamsForCourse("C0"));
+        System.out.println("------------------------ EVICT TEAM NONEXISTENT TEAM ---------------");
+        System.out.println(teamService.evictTeam(Long.valueOf(1203)));
+        System.out.println("------------------------ EVICT TEAM TEST MANUAL ID ---------------");
+        System.out.println(teamService.evictTeam(Long.valueOf(20)));
+        
+        System.out.println("-------- TEST EQUALS TEAMS --------");
+        System.out.println(tokenRepository.findAll());
+        
+        System.out.println("---- TEST1 duplicate teams");
+        System.out.println(teamRepository.count());
+        List<Team> teamList = teamRepository.findAll();
+        System.out.println("################ TEST2 duplicate teams #########################");
+        for (Team team1 : teamList) {
+          for (Team team2 : teamList) {
+            if (team1 != team2 && team1.equals(team2))
+              System.out.println("Duplicate team:" + team1 + " | " + team2);
+          }
+        }
+        System.out.println("---------------------------------1-----------------------------------");
+        List<Team> allByNameAndCourse_name = teamRepository.findAllByNameAndCourse_Name("Team1", "C0");
+        System.out.println("################ TEST3 duplicate teams #########################");
+        System.out.println(allByNameAndCourse_name);
+        System.out.println("---------------------------------2-----------------------------------");
+        ExampleMatcher caseInsensitiveExampleMatcher = ExampleMatcher.matchingAll().withIgnoreCase();
+        Example<Team> example = Example.of(modelMapper.map(new TeamDTO(null, "Team1", Team.status_inactive()), Team.class), caseInsensitiveExampleMatcher);
+        
+        Optional<Team> actual = teamRepository.findOne(example);
+//        actual.ifPresent(OrElseSystem.out::println);
+        System.out.println("---------------------------------3-----------------------------------");
+        
+        System.out.println("################ ALL TEAMS LIST #########################");
+        System.out.println(teamList);
+//        teamService.proposeTeam("C0", "Team1", Arrays.asList("S0", "S1", "S2", "S3"));
+//        teamService.proposeTeam("C0", "Team2", Arrays.asList("S1", "S2", "S3"));
+//        teamService.proposeTeam("C3", "Team3", Arrays.asList("S3", "S6"));
 
 //         DONT WORK WITH LAZY LOADING
-//                cr.findAll().stream().forEach(i -> System.out.println(i.toString()));
-//                sr.findAll().stream().forEach(i -> System.out.println(i.toString()));
+//                courseRepository.findAll().stream().forEach(i -> System.out.println(i.toString()));
+//                studentRepository.findAll().stream().forEach(i -> System.out.println(i.toString()));
         
         // NOT WORKING --> org.hibernate.LazyInitializationException: failed to lazily initialize a collection of role: it.polito.ai.es2.entities.Course.teams, could not initialize proxy - no Session
 //        testservice.entity_manager_test();
 //        if (true) return;
 //
 //        // --> ATTENZIONE, mettendo le cascade in ordine/combinazione sbagliata (tipo sulla mapped ontomany), NON FUNZIONA PIU NIENTE!! (...)
-//        tr.deleteAll();
-//        sr.deleteAll();
-//        cr.deleteAll();
+//        teamRepository.deleteAll();
+//        studentRepository.deleteAll();
+//        courseRepository.deleteAll();
 /*
         System.out.println("############################## BEGIN TEST SERVICE COMMAND LINE RUNNER ####################################");
         teamService.addCourse(new CourseDTO("c_enroll_all", 1, 2, false));

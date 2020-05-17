@@ -16,10 +16,10 @@ public class Student {
   @NotBlank
   private String name;
   private String firstName;
-  @ManyToMany(mappedBy = "members", cascade = {CascadeType.MERGE, CascadeType.PERSIST}) //cascade = CascadeType.ALL
+  @ManyToMany(mappedBy = "members", cascade = {CascadeType.MERGE, CascadeType.PERSIST})
   @ToString.Exclude
   List<Team> teams = new ArrayList<>();
-  @ManyToMany(cascade = {CascadeType.MERGE, CascadeType.PERSIST}) //cascade = CascadeType.ALL
+  @ManyToMany(cascade = {CascadeType.MERGE, CascadeType.PERSIST})
   @JoinTable(name = "student_course", joinColumns = @JoinColumn(name = "student_id"),
       inverseJoinColumns = @JoinColumn(name = "course_name"))
   @ToString.Exclude
@@ -40,7 +40,7 @@ public class Student {
     team.getMembers().add(this);
   }
   
-  public void removeTeam(Team team) {
+  public void removeTeam(@org.jetbrains.annotations.NotNull Team team) {
     team.getMembers().remove(this);
     teams.remove(team);
   }

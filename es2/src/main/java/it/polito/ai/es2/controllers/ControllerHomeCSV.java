@@ -3,11 +3,14 @@ package it.polito.ai.es2.controllers;
 import com.opencsv.bean.CsvToBean;
 import com.opencsv.bean.CsvToBeanBuilder;
 import it.polito.ai.es2.domains.StudentViewModel;
+import it.polito.ai.es2.domains.TeamViewModel;
 import it.polito.ai.es2.services.TeamService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
@@ -21,22 +24,25 @@ import java.util.List;
 import java.util.Map;
 
 @Controller
-public class UploadController {
+public class ControllerHomeCSV {
   @Autowired
   TeamService teamService;
   
-  @GetMapping("/")
-//  @ResponseStatus(HttpStatus.CREATED)
-  public String index() {
-    return "index";
-  }
-  
   @GetMapping("/testmap")
   public Map<String, String> testMapBinding() {
-    Map m = new HashMap<String, String>(); //Map.of
+    Map<String, String> m = new HashMap<String, String>(); //Map.of
     m.put("key1", "value1");
     m.put("key2", "value2");
     return m;
+  }
+  
+  @GetMapping("/") //  @ResponseStatus(HttpStatus.CREATED)
+  public String index(@ModelAttribute("command") TeamViewModel teamViewModel,
+                      BindingResult bindingResult,
+                      Model model) {
+//    TeamViewModel command = new TeamViewModel((long)12,"test","test2");
+//    model.addAttribute("command",new TeamViewModel((long)12,"test","test2"));
+    return "home_csv";
   }
   
   @PostMapping("/upload-csv-file")

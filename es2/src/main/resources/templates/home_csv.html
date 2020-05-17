@@ -1,0 +1,64 @@
+<!DOCTYPE html><!--suppress HtmlFormInputWithoutLabel, HtmlFormInputWithoutLabel -->
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head>
+	<meta charset="UTF-8">
+	<meta content="widt=device-width, initial-scale=1, shrink-to-fit=no" name="viewport">
+	<!-- Bootstrap CSS -->
+	<link crossorigin="anonymous" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+	      integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" rel="stylesheet">
+	<title>Index Client Side Control Page</title>
+</head>
+<body>
+
+<div class="container py-5">
+	<div class="row">
+		<div class="col-6 mx-auto">
+			<h3>Notify students</h3>
+			<h3>Propose Team</h3>
+			<form method="post" th:action="@{/propose}" th:object="${command}">
+				<div class="form-group mt-3">
+					<label th:for="name">Id</label>
+					<input type="text" th:field="*{id}">
+					<br>
+					<label th:for="name">Name</label>
+					<input type="text" th:field="*{name}">
+					<br>
+					<label th:for="name">CourseId</label>
+					<input type="text" th:field="*{courseId}">
+				</div>
+				<label th:for="name">MemberIds 0</label>
+				<input type="text" class="form-control" required th:field="*{memberIds[0]}">
+				<label th:for="name">MemberIds 1</label>
+				<input type="text" class="form-control" required th:field="*{memberIds[0]}">
+				<br>
+				<input type="submit">
+			</form>
+			<br>
+			
+			<h3>Upload CSV File Example</h3>
+			<form enctype="multipart/form-data" method="POST" th:action="@{/upload-csv-file}">
+				<div class="form-group mt-3">
+					<label for="corso">Select a course</label>
+					<input class="form-control-corso" id="corso" name="corso" type="text">
+					<br>
+					<label for="file">Select a CSV file</label>
+					<input accept=".csv" class="form-control-file" id="file" name="file" type="file">
+				</div>
+				<button class="btn btn-primary" type="submit">Import CSV</button>
+			</form>
+		</div>
+	</div>
+</div>
+
+<!-- Bootstrap core JavaScript - Optional JavaScript
+================================================== -->
+<!-- Placed at the end of the document so the pages load faster -->
+<!-- jQuery first, then Popper.js, then Bootstrap JS -->
+<script crossorigin="anonymous" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
+        src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
+<script crossorigin="anonymous" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"
+        src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+<script crossorigin="anonymous" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
+        src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+</body>
+</html>

@@ -24,6 +24,7 @@ public class CourseController {
   @Autowired
   TeamService teamService;
   
+  //TODO: return CollectionModel instead of List
   @GetMapping({"", "/"})
   public List<CourseDTO> all() {
     List<CourseDTO> allCourses = teamService.getAllCourses();
