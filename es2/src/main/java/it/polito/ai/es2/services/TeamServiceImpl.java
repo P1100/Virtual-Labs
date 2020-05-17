@@ -9,7 +9,6 @@ import it.polito.ai.es2.dtos.TeamDTO;
 import it.polito.ai.es2.entities.Course;
 import it.polito.ai.es2.entities.Student;
 import it.polito.ai.es2.entities.Team;
-import it.polito.ai.es2.entities.Token;
 import it.polito.ai.es2.repositories.CourseRepository;
 import it.polito.ai.es2.repositories.StudentRepository;
 import it.polito.ai.es2.repositories.TeamRepository;
@@ -22,8 +21,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.io.Reader;
-import java.sql.Timestamp;
-import java.time.LocalDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -177,7 +174,7 @@ public class TeamServiceImpl implements TeamService {
   
     log.info("addStudentToCourse ---> BEFORE ADD");
     c.addStudent(s);
-    log.info("addStudentToCourse(" + studentId + "," + courseName + "). " + c.getName() + "->ListStudents: " + c.getStudents());
+    log.info("addStudentToCourse(" + studentId + "," + courseName + "). " + c.getIdname() + "->ListStudents: " + c.getStudents());
     return true;
   }
   
@@ -275,60 +272,50 @@ public class TeamServiceImpl implements TeamService {
   
   /**
    * Se team già presente (stesso nome-corso), allora lo cancello e poi reinserisco il nuovo. Si potrebbe anche aggiornare campi senza cancellare
+   * Metodo complicato. Il problema è cosa fare se si fà il propose di un nuovo team, che abbia lo stesso nome di uno già presente sullo
+   * stesso corso, con il vecchio/i che può essere già stato validato.
+   * Per semplificare, si è deciso di:
+   * 1-Non si permette la creazione di un team duplicato sullo stesso corso, prima bisogna eliminarlo manualmente tramite email reject da parte di uno
+   * qualsiasi degli appartenenti al team.
+   * 2-Se  team era già stato attivato, diventa definitivo e non si può più cancellare tramite app
    */
   @Override
-  public TeamDTO proposeTeam(String courseId, String team_name, List<String> memberIds) throws TeamServiceException {
-    if (courseId == null || team_name == null || memberIds == null) throw new TeamServiceException("null parameter");
-    Optional<Course> oc = courseRepository.findById(courseId);
+  public TeamDTO proposeTeam(String courseIdname, String team_name, List<String> memberIds) throws TeamServiceException {
+    if (courseIdname == null || team_name == null || memberIds == null) throw new TeamServiceException("null parameter");
+    Optional<Course> oc = courseRepository.findById(courseIdname);
     if (!oc.isPresent()) throw new CourseNotFoundException("proposeTeam - course not found");
     if (!oc.get().isEnabled()) throw new CourseNotEnabledException("proposeTeam() - course not enabled");
-    List<Optional<Student>> streamopt = memberIds.stream().map(x -> studentRepository.findById(x)).collect(Collectors.toList());
-    if (!streamopt.stream().allMatch(Optional::isPresent)) throw new StudentNotFoundException("proposeTeam() - student not found");
+    List<Optional<Student>> streamopt_listStudentsProposal = memberIds.stream().map(x -> studentRepository.findById(x)).collect(Collectors.toList());
+    if (!streamopt_listStudentsProposal.stream().allMatch(Optional::isPresent))
+      throw new StudentNotFoundException("proposeTeam() - student not found");
     
     Course course = oc.get();
-    List<Student> listMemberStudents = streamopt.stream().map(Optional::get).collect(Collectors.toList());
+    List<Student> listStudentsProposal = streamopt_listStudentsProposal.stream().map(Optional::get).collect(Collectors.toList());
+    if (!course.getStudents().containsAll(listStudentsProposal)) // !listStudentsProposal.stream().allMatch(x -> course.getStudents().contains(x))
+      throw new StudentNotEnrolledException("proposeTeam() - non tutti gli studenti sono iscritti al corso " + course.getIdname());
     
-    if (!course.getStudents().containsAll(listMemberStudents)) // !listMemberStudents.stream().allMatch(x -> course.getStudents().contains(x))
-      throw new StudentNotEnrolledException("proposeTeam() - non tutti gli studenti sono iscritti al corso " + course.getName());
     if (course.getTeams().size() != 0 &&
-            course.getTeams()
-                .stream()
-                .map(Team::getMembers)
-                .noneMatch(y -> {
-                  for (Student student : y) {
-                    if (listMemberStudents.stream().anyMatch(student::equals))
-                      return true;
-                  }
-                  return false;
-                })
+            !course.getTeams()
+                 .stream()
+                 .map(Team::getMembers)
+                 .flatMap(List::stream)
+                 .distinct()
+                 .noneMatch(student -> {
+                   return listStudentsProposal.stream().anyMatch(student::equals);
+                 })
     )
       throw new StudentInMultipleTeamsException("proposeTeam() - studenti fanno parte di altri gruppi nell’ambito dello stesso corso");
-    if (listMemberStudents.size() < course.getMin() || listMemberStudents.size() > course.getMax())
-      throw new CourseCardinalConstrainsException("proposeTeam() - non rispettati i vincoli di cardinalità definiti nell’ambito del corso");
-    if (!listMemberStudents.stream().allMatch(new HashSet<>()::add))
-      throw new StudentDuplicatesInProposalException("proposeTeam() - duplicati nell'elenco dei partecipanti");
+    if (listStudentsProposal.size() < course.getMin() || listStudentsProposal.size() > course.getMax())
+      throw new CourseCardinalConstrainsException("proposeTeam() - non rispettati i vincoli di cardinalità del corso su dimensioni team");
+    if (!listStudentsProposal.stream().allMatch(new HashSet<>()::add))
+      throw new StudentDuplicatesInProposalException("proposeTeam() - duplicati nell'elenco dei partecipanti della proposta team");
+    if (teamRepository.findFirstByNameAndCourse_Idname(team_name, courseIdname) != null)
+      throw new TeamAlreayCreatedException("proposeTeam() - team già creato");
     
     TeamDTO teamDTO = new TeamDTO(null, team_name, Team.status_inactive());
     Team new_team = modelMapper.map(teamDTO, Team.class);
-    
-    // Se team era già presente (stesso nome), lo aggiorno, cancellando prima il vecchio e poi inserendo il nuovo
-    for (Iterator<Team> teamIterator = course.getTeams().iterator(); teamIterator.hasNext(); ) { // "for (Team team_to_delete : course.getTeams()) {" --> NOT WORKING, "java.util.ConcurrentModificationException: null"
-      Team team_to_delete = teamIterator.next();
-      // se c'era altro team già salvato (not null), con lo stesso nome e nello stesso corso, lo cancello aggiornando prima sync su studenti e corso
-      if (team_to_delete.getId() != null && team_to_delete.getName().equals(new_team.getName())) {
-        teamIterator.remove(); // importante per evitare errore java.util.ConcurrentModificationException
-        team_to_delete.getCourse().getTeams().remove(team_to_delete);
-        for (Student student : team_to_delete.getMembers()) {
-          // usare "student.removeTeam()" rimuoverebbe studenti da team, il che creerebbe problemi in quanto modificherebbe il ciclo foreach enhanced in corso.
-          // --> non serve rimuovere stu
-          student.getTeams().remove(team_to_delete);
-        }
-        teamRepository.delete(team_to_delete);  // modified, first was deleteById
-//        tr.flush();
-      }
-    }
     // aggiungo nuovo team, a studenti e al corso
-    for (Student student : new ArrayList<>(listMemberStudents)) {
+    for (Student student : new ArrayList<>(listStudentsProposal)) {
       student.addTeam(new_team); // add su studenti
     }
     course.addTeam(new_team); // add sul singolo corso
@@ -360,15 +347,10 @@ public class TeamServiceImpl implements TeamService {
   }
   
   @Override
-  public Optional<TeamDTO> getTeam(Long teamId) {
+  public Optional<TeamDTO> getTeamDTOfromId(Long teamId) {
     Optional<Team> team = teamRepository.findById(teamId);//.orElse(null);
     Optional<TeamDTO> teamDTO = team.map(x -> modelMapper.map(x, TeamDTO.class));
     return teamDTO;
-  }
-  
-  @Override
-  public boolean isTeamCreatedAndActive(TeamDTO teamDTO) {
-    return false;
   }
   
   @Override
@@ -414,23 +396,9 @@ public class TeamServiceImpl implements TeamService {
     }    */
   }
   
-  @Override
-  public boolean cleanUpOldTokens() {
-    List<Token> tokenExpiredList = tokenRepository.findAllByExpiryDateBeforeOrderByExpiryDate(Timestamp.valueOf(LocalDateTime.now()));
-    if (tokenExpiredList.size() > 0) {
-      tokenRepository.deleteAll(tokenExpiredList);
-      return true;
-    } else
-      return false;
-  }
-  
-  private List<Token> getTokensForTeam(Long teamId) {
-    List<Token> tokenList = tokenRepository.findAllByTeamId(teamId);
-    return tokenList;
-  }
-  
-  // TODO: trovare metodo migliore per trovare teams con stessi dati (equals exclude e repository? new query? streams?)
-  private Team getTeam(TeamDTO teamDTO) {
-    return null;
-  }
+//  -------------------------------------- PRIVATE METHODS -----------------------------------
+// TODO: trovare metodo migliore per trovare teams con stessi dati (equals exclude e repository? new query? streams?)
+private Team getTeamFromDTO(TeamDTO teamDTO) {
+  return null;
+}
 }

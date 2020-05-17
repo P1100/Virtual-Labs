@@ -12,9 +12,9 @@ import java.util.List;
 // TODO: controllare CASE SENSITIVE, eventualmente modificare con Repository.findByIdIgnoreCase(String id)
 @Repository
 public interface CourseRepository extends JpaRepository<Course, String>, MyTestingCustomCourseRepository {
-  @Query("SELECT DISTINCT s FROM Student s INNER JOIN s.teams t INNER JOIN t.course c WHERE c.name= :courseName")
-  List<Student> getStudentsInTeams(String courseName);
+  @Query("SELECT DISTINCT s FROM Student s INNER JOIN s.teams t INNER JOIN t.course c WHERE c.idname= :courseIdname")
+  List<Student> getStudentsInTeams(String courseIdname);
   
-  @Query("SELECT DISTINCT s FROM Student s WHERE s.id NOT IN (SELECT s FROM Student s INNER JOIN s.teams t INNER JOIN t.course c WHERE c.name= :courseName)")
-  List<Student> getStudentsNotInTeams(String courseName);
+  @Query("SELECT DISTINCT s FROM Student s WHERE s.id NOT IN (SELECT s FROM Student s INNER JOIN s.teams t INNER JOIN t.course c WHERE c.idname= :courseIdname)")
+  List<Student> getStudentsNotInTeams(String courseIdname);
 }

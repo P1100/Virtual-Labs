@@ -9,13 +9,14 @@
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
     <groupId>it.polito.ai</groupId>
-    <artifactId>es2</artifactId>
+    <artifactId>es3</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <name>es2</name>
-    <description>AI 2020 - Esercitazione 2</description>
+    <name>es3</name>
+    <description>AI 2020 - Esercitazione 3</description>
 
+    <!--    Versione va specificata in: project structure (2 posti, più scelta jdk in vari (2) punti), e qui se 1.8 (1.11 e 1.14 non funzionano)-->
     <properties>
-        <java.version>1.8</java.version>
+        <java.version>1.11</java.version>
     </properties>
 
     <dependencies>

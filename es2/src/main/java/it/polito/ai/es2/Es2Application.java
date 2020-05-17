@@ -28,8 +28,8 @@ import java.net.UnknownHostException;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
-import java.util.Optional;
 
 @SpringBootApplication
 @Log
@@ -81,9 +81,9 @@ public class Es2Application {
           e.printStackTrace();
         }
         notificationService.notifyTeam(new TeamDTO((long) 999, "Team_test_email", 1), Arrays.asList("S1", "S3"));
-        
+  
         teamService.setTeamStatus((long) 14, Team.status_inactive());
-        teamService.cleanUpOldTokens();
+        notificationService.cleanUpOldTokens();
 
 //        teamService.proposeTeam("C0", "Team_Test_Evict", Arrays.asList("S0", "S1"));
 //        teamService.proposeTeam("C0", "Team_Test_Evict2", Collections.singletonList("S2"));
@@ -109,27 +109,34 @@ public class Es2Application {
           }
         }
         System.out.println("---------------------------------1-----------------------------------");
-        List<Team> allByNameAndCourse_name = teamRepository.findAllByNameAndCourse_Name("Team1", "C0");
+        List<Team> allByNameAndCourse_name = teamRepository.findAllByNameAndCourse_Idname("Team1", "C0");
         System.out.println("################ TEST3 duplicate teams #########################");
         System.out.println(allByNameAndCourse_name);
         System.out.println("---------------------------------2-----------------------------------");
-        ExampleMatcher caseInsensitiveExampleMatcher = ExampleMatcher.matchingAll().withIgnoreCase();
-        Example<Team> example = Example.of(modelMapper.map(new TeamDTO(null, "Team1", Team.status_inactive()), Team.class), caseInsensitiveExampleMatcher);
-        
-        Optional<Team> actual = teamRepository.findOne(example);
-//        actual.ifPresent(OrElseSystem.out::println);
+        ExampleMatcher caseInsensitiveExampleMatcher = ExampleMatcher.matchingAll().withIgnoreCase().withIgnorePaths("status");
+        Team team_mapped = modelMapper.map(new TeamDTO(null, "Team1", Team.status_active()), Team.class);
+        Example<Team> example = Example.of(team_mapped, caseInsensitiveExampleMatcher);
+  
+        List<Team> actual = teamRepository.findAll(example);
+        System.out.println("team mapped:" + team_mapped);
+        System.out.println("List Team di findAll(example) - Team1: " + actual);
+//        actual.ifPresentOrElse(System.out::println, () -> System.out.println("------> null value of findOne(example)"));
         System.out.println("---------------------------------3-----------------------------------");
-        
+  
         System.out.println("################ ALL TEAMS LIST #########################");
         System.out.println(teamList);
-//        teamService.proposeTeam("C0", "Team1", Arrays.asList("S0", "S1", "S2", "S3"));
-//        teamService.proposeTeam("C0", "Team2", Arrays.asList("S1", "S2", "S3"));
-//        teamService.proposeTeam("C3", "Team3", Arrays.asList("S3", "S6"));
+  
+        System.out.println("§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§");
+        System.out.println("§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§");
+        System.out.println("§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§");
+
+//        teamService.proposeTeam("C0", "Team1", Collections.singletonList("S1"));
+        teamService.proposeTeam("C3", "Team3_v5", Collections.singletonList("S2"));
 
 //         DONT WORK WITH LAZY LOADING
 //                courseRepository.findAll().stream().forEach(i -> System.out.println(i.toString()));
 //                studentRepository.findAll().stream().forEach(i -> System.out.println(i.toString()));
-        
+  
         // NOT WORKING --> org.hibernate.LazyInitializationException: failed to lazily initialize a collection of role: it.polito.ai.es2.entities.Course.teams, could not initialize proxy - no Session
 //        testservice.entity_manager_test();
 //        if (true) return;

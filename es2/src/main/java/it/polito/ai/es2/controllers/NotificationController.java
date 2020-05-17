@@ -34,6 +34,7 @@ public class NotificationController {
     // TODO: remove testing parameter later
     teamViewModel = new TeamViewModel((long) 999, "Team_testing_email", "Course_testing_email", Arrays.asList("S1", "S2", "S3"));
     TeamDTO created_team;
+    // TODO: fare merge di metodi proposeTeam e notifyTeam, così è un casino pazzesco
     try {
       created_team = teamService.proposeTeam(teamViewModel.getCourseId(), teamViewModel.getName(), teamViewModel.getMemberIds());
     } catch (Exception e) {

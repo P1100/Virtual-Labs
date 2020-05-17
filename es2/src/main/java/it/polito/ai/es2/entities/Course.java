@@ -13,8 +13,9 @@ import java.util.List;
 @Entity
 @Data
 public class Course {
+  // changed from "name" to "idname", since it was confusing me. Note: refractoring this field doesnt work very well, dont ever do it again.
   @Id
-  private String name;
+  private String idname;
   private int min;
   private int max;
   boolean enabled;

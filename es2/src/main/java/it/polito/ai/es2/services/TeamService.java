@@ -51,15 +51,11 @@ public interface TeamService {
 
 //  ---------------------------
   
-  Optional<TeamDTO> getTeam(Long teamId);
-  
-  boolean isTeamCreatedAndActive(TeamDTO teamDTO);
+  Optional<TeamDTO> getTeamDTOfromId(Long teamId);
   
   boolean isTeamCreatedAndActive(Long teamId);
   
   boolean setTeamStatus(Long teamId, int status);
   
   boolean evictTeam(Long teamId);
-  
-  boolean cleanUpOldTokens();
 }
