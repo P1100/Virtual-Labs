@@ -63,7 +63,7 @@ public class NotificationServiceImpl implements NotificationService {
   @Transactional
   public boolean confirm(String idtoken) {
     Optional<Team> optionalTeam = cleanupAndVerifyTokenExists(idtoken);
-    if (optionalTeam.isEmpty())
+    if (!optionalTeam.isPresent())
       return false;
     Team team = optionalTeam.get();
     Long teamId = team.getId();
@@ -87,7 +87,7 @@ public class NotificationServiceImpl implements NotificationService {
   @Transactional
   public boolean reject(String idtoken) {
     Optional<Team> optionalTeam = cleanupAndVerifyTokenExists(idtoken);
-    if (optionalTeam.isEmpty())
+    if (!optionalTeam.isPresent())
       return false;
     Long teamId = optionalTeam.get().getId();
     tokenRepository.deleteAll(tokenRepository.findAllByTeamId(teamId));
