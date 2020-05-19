@@ -1,5 +1,6 @@
 package it.polito.ai.es2.controllers;
 
+import it.polito.ai.es2.controllers.hateoas.ModelHelper;
 import it.polito.ai.es2.dtos.StudentDTO;
 import it.polito.ai.es2.services.TeamService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,7 +13,7 @@ import java.util.Optional;
 
 @RestController
 @RequestMapping("/API/students")
-public class StudentController {
+public class StudentRestController {
   @Autowired
   TeamService teamService;
   

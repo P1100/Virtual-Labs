@@ -30,7 +30,8 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
   @Override
   protected void configure(AuthenticationManagerBuilder auth) throws Exception {
 //    auth.userDetailsService(parametro_da_autowired_db_related);
-    auth.jdbcAuthentication().dataSource(dataSource)
+//    auth.jdbcAuthentication().dataSource(dataSource)
+    auth.inMemoryAuthentication()
         .withUser("Tizio")
         .password(encoder().encode("Alfa"))
         .roles("user")

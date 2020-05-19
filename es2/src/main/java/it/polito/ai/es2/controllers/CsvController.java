@@ -9,32 +9,20 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.Reader;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 @Controller
-public class ControllerHomeCSV {
+//@RequestMapping("/")
+public class CsvController {
   @Autowired
   TeamService teamService;
-  
-  @GetMapping("/testmap")
-  public Map<String, String> testMapBinding() {
-    Map<String, String> m = new HashMap<String, String>(); //Map.of
-    m.put("key1", "value1");
-    m.put("key2", "value2");
-    return m;
-  }
   
   @GetMapping("/") //  @ResponseStatus(HttpStatus.CREATED)
   public String index(@ModelAttribute("command") TeamViewModel teamViewModel,

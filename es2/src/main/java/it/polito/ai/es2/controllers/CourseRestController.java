@@ -1,5 +1,6 @@
 package it.polito.ai.es2.controllers;
 
+import it.polito.ai.es2.controllers.hateoas.ModelHelper;
 import it.polito.ai.es2.dtos.CourseDTO;
 import it.polito.ai.es2.dtos.StudentDTO;
 import it.polito.ai.es2.services.TeamService;
@@ -20,7 +21,7 @@ import java.util.Optional;
 // TODO: versione finale passare a ultimo jdk java
 @RestController
 @RequestMapping("/API/courses")
-public class CourseController {
+public class CourseRestController {
   @Autowired
   TeamService teamService;
   
