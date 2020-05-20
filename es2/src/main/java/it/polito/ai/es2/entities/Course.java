@@ -20,6 +20,7 @@ public class Course {
   private int min;
   private int max;
   boolean enabled;
+  String professor;
   @OneToMany(mappedBy = "course")
   @ToString.Exclude
   List<Team> teams = new ArrayList<>();

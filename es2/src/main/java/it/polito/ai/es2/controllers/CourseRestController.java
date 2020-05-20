@@ -99,4 +99,9 @@ public class CourseRestController {
     }
     return booleanList;
   }
+  
+  @PostMapping("/{course}/enable")
+  public void enableCourse(@PathVariable String course) {
+    teamService.enableCourse(course);
+  }
 }

@@ -3,9 +3,12 @@ package it.polito.ai.es2.securityconfig;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 
 import javax.persistence.*;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 /**
@@ -26,18 +29,36 @@ public class User {
   private String password;
   //  String email;
   boolean enabled;
+  boolean accountNonExpired;
+  boolean credentialsNonExpired;
+  boolean accountNonLocked;
   @ManyToMany(fetch = FetchType.EAGER)
-  @JoinTable(name = "authorities_global", joinColumns = @JoinColumn(name = "username", referencedColumnName = "username"), inverseJoinColumns = @JoinColumn(name = "authority", referencedColumnName = "name"))
+  @JoinTable(name = "authorities_roles", joinColumns = @JoinColumn(name = "username", referencedColumnName = "username"), inverseJoinColumns = @JoinColumn(name = "authority", referencedColumnName = "name"))
   private List<Role> roles = new ArrayList<>();
   @Transient
   private String token;
   
-  public User(String username, String password, List<Role> roles) {
+  public User(String username, String password) {
     this.username = username;
     this.password = password;
-//    this.roles = roles;
   }
   
   public User(String name) {
+  }
+  
+  public Collection<? extends GrantedAuthority> getAuthorities() {
+    List<GrantedAuthority> authorities = new ArrayList<GrantedAuthority>();
+    for (Role role : roles) {
+      authorities.add(new SimpleGrantedAuthority(role.getName()));
+    }
+    return authorities;
+  }
+  
+  public List<String> getRolesStringsList() {
+    List<String> stringRoles = new ArrayList<>();
+    for (Role role : roles) {
+      stringRoles.add(role.getName());
+    }
+    return stringRoles;
   }
 }

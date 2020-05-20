@@ -17,6 +17,8 @@ import it.polito.ai.es2.services.exceptions.*;
 import lombok.extern.java.Log;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.annotation.Secured;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -44,6 +46,7 @@ import java.util.stream.Collectors;
  * sempre la proposeTeam).
  */
 @Service
+//@PreAuthorize("hasRole('ROLE_ADMIN')")
 @Transactional
 @Log
 public class TeamServiceImpl implements TeamService {
@@ -68,6 +71,9 @@ public class TeamServiceImpl implements TeamService {
 //    EntityManager em = emFactory.createEntityManager();
 //  }
   
+  //  @Secured("ROLE_USER")
+//  @PreAuthorize("")
+  // TODO: finish security
   @Override
   public boolean addStudent(StudentDTO student) {
     if (student == null || student.getId() == null) return false;
@@ -140,6 +146,7 @@ public class TeamServiceImpl implements TeamService {
     return studentRepository.findById(studentId).map(x -> modelMapper.map(x, StudentDTO.class));
   }
   
+  @Secured("ROLE_USER")
   @Override
   public List<CourseDTO> getAllCourses() {
     return courseRepository.findAll().stream().map(x -> modelMapper.map(x, CourseDTO.class)).collect(Collectors.toList());
@@ -151,12 +158,22 @@ public class TeamServiceImpl implements TeamService {
     return studentRepository.getOne(studentId).getCourses().stream().map(x -> modelMapper.map(x, CourseDTO.class)).collect(Collectors.toList());
   }
   
+  @Secured({"ROLE_VIEWER", "ROLE_EDITOR", "ROLE_professor"})
+//  @RolesAllowed({ "ROLE_VIEWER", "ROLE_EDITOR","ROLE_professor"})
+//  @PreAuthorize("hasRole('ROLE_ADMIN')")
+//  @PreAuthorize("#username == authentication.principal.username")
+//  @PreAuthorize("hasRole('ROLE_VIEWER') or hasRole('ROLE_EDITOR')")
+//  @PreAuthorize("#username == authentication.principal.username")
+//  @PreAuthorize("#username == authentication.principal.username")
+//  @PostAuthorize("returnObject.username == authentication.principal.nickName")
+//  public CustomUser securedLoadUserDetail(String username) {
   @Override
   public List<StudentDTO> getAllStudents() {
     return studentRepository.findAll().stream().map(x -> modelMapper.map(x, StudentDTO.class)).collect(Collectors.toList());
   }
   
   @Override
+  @PreAuthorize("@securityServiceImpl.hasPermissions(authentication.principal.username, #courseName)")
   public void enableCourse(String courseName) throws CourseNotFoundException {
     if (courseName == null) throw new CourseNotFoundException("null parameter");
     if (!courseRepository.existsById(courseName)) throw new CourseNotFoundException("course not found");

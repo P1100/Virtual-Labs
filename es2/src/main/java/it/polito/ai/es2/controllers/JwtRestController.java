@@ -1,6 +1,6 @@
 package it.polito.ai.es2.controllers;
 
-import it.polito.ai.es2.securityconfig.UserDetailsImpl;
+import it.polito.ai.es2.securityconfig.UserDTO;
 import it.polito.ai.es2.securityconfig.UserDetailsServiceImpl;
 import it.polito.ai.es2.securityconfig.jwt.JwtTokenUtil;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,7 +36,7 @@ public class JwtRestController {
   }
   
   @RequestMapping(value = "/register", method = RequestMethod.POST)
-  public ResponseEntity<?> saveUser(@RequestBody UserDetailsImpl user) throws Exception {
+  public ResponseEntity<?> saveUser(@RequestBody UserDTO user) throws Exception {
     return ResponseEntity.ok(userDetailsService.save(user));
   }
   

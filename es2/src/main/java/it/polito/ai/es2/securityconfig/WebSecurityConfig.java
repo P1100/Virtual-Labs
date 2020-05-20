@@ -20,7 +20,7 @@ import javax.sql.DataSource;
 
 @Configuration
 @EnableWebSecurity
-@EnableGlobalMethodSecurity(prePostEnabled = true)
+@EnableGlobalMethodSecurity(prePostEnabled = true, securedEnabled = true)
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
   @Autowired
   private JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint;
@@ -41,10 +41,9 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     return super.authenticationManagerBean();
   }
   
-  //  @Override
-  @Autowired
+  @Autowired // non override perchè ho dichiarato prima il bean per AuthenticationManagerBuilder. Nota: nome metodo irrelevante con autowired
   public void configure(AuthenticationManagerBuilder auth_builder, DataSource dataSource) throws Exception {
-//    auth_builder.userDetailsService(userDetailsServiceImpl).passwordEncoder(passwordEncoder());
+    auth_builder.userDetailsService(userDetailsServiceImpl).passwordEncoder(passwordEncoder());
     
     auth_builder.jdbcAuthentication().dataSource(dataSource)
 //        .withUser("u1").password(passwordEncoder().encode("pass")).roles("user","Guest")
@@ -78,14 +77,14 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         .usernameParameter("custom_user")
         // default is password
         .passwordParameter("custom_pass")
-        .and()
+        .and() //.antMatcher("/**") --> applies to all?
         .authorizeRequests()
         .antMatchers("/jwt/authenticate", "/jwt/register").permitAll()
         .antMatchers("/notification/**").permitAll()
         .antMatchers("/testing/**").permitAll()
         .antMatchers("/*").authenticated()
         .antMatchers("/users/**").authenticated()
-        .antMatchers("/API/**").hasRole("professor")
+//        .antMatchers("/API/**").hasRole("professor")
         // all other requests need to be authenticated
         .anyRequest().authenticated()
 //        .and()

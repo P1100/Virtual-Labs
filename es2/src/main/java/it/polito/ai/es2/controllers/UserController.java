@@ -26,7 +26,7 @@ public class UserController {
     return userDetailsServiceImpl.addUser(user, pass, r);
   }
   
-  @GetMapping("/{user}/{pass}")
+  @GetMapping("/check/{user}/{pass}")
   @ResponseBody
   public boolean matchpass(@PathVariable String user, @PathVariable String pass) {
     return userDetailsServiceImpl.checkUser(user, pass);

@@ -6,7 +6,9 @@ import it.polito.ai.es2.securityconfig.UserDetailsServiceImpl;
 import it.polito.ai.es2.securityconfig.UserRepository;
 import it.polito.ai.es2.services.TeamService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.User;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -29,13 +31,13 @@ public class HomeController {
   
   @GetMapping("/")
   @ResponseBody
-  //UserDetails userDetails=(UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-  public String getPrincipal(Principal principal) {
+  public String getPrincipal(Principal principal, @AuthenticationPrincipal User spring_security_user) {
     if (principal == null)
       return "no principal";
-    return principal.getName() +
-               "<br>Authentication object:<br>" + SecurityContextHolder.getContext().getAuthentication().toString()
-               + "<br><br>UderDetails from principal_name/db:<br>" + userRepository.findTopByUsername(principal.getName())
+    return "Principal got from HTTP HttpServletRequest:<br>" + principal.getName() +
+               "<br><br>SecurityContextHolder.getContext().getAuthentication() object:<br>" + SecurityContextHolder.getContext().getAuthentication().toString()
+               + "<br><br>@AuthenticationPrincipal User:<br>" + spring_security_user.toString()
+               + "<br><br>UderDetails from userRepository.findTopByUsername(principal.getName())/db:<br>" + userRepository.findTopByUsername(principal.getName())
         ;
   }
   
