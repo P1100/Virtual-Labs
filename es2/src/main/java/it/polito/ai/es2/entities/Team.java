@@ -29,16 +29,15 @@ public class Team {
   @NotBlank
   String name;
   int status;
-  @ManyToOne(cascade = {CascadeType.MERGE, CascadeType.PERSIST}, fetch = FetchType.EAGER) // TODO: remove eager later, it's for testing in commandline
-  @JoinColumn(name = "course_id") // TODO: aggiungere nullable = false ?
+  @ManyToOne(cascade = {CascadeType.MERGE, CascadeType.PERSIST})
+  @JoinColumn(name = "course_id")
   @EqualsAndHashCode.Include
   Course course;
-  @ManyToMany(cascade = {CascadeType.MERGE, CascadeType.PERSIST}, fetch = FetchType.EAGER)
-  // TODO: remove eager later, it's for testing in commandline
+  @ManyToMany(cascade = {CascadeType.MERGE, CascadeType.PERSIST})
   @JoinTable(name = "teams_students", joinColumns = @JoinColumn(name = "team_id"),
       inverseJoinColumns = @JoinColumn(name = "student_id"))
   @ToString.Exclude
-      List<Student> members = new ArrayList<>();
+  List<Student> members = new ArrayList<>();
   
   public void setCourse(Course new_course) {
     if (this.course != null)

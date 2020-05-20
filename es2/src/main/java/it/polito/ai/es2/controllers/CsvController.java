@@ -19,12 +19,12 @@ import java.io.Reader;
 import java.util.List;
 
 @Controller
-//@RequestMapping("/")
+@RequestMapping("/csv")
 public class CsvController {
   @Autowired
   TeamService teamService;
   
-  @GetMapping("/") //  @ResponseStatus(HttpStatus.CREATED)
+  @GetMapping() //  @ResponseStatus(HttpStatus.CREATED)
   public String index(@ModelAttribute("command") TeamViewModel teamViewModel,
                       BindingResult bindingResult,
                       Model model) {

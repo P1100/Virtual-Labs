@@ -8,6 +8,7 @@ import javax.validation.constraints.NotBlank;
 import java.util.ArrayList;
 import java.util.List;
 
+// TODO: aggiungere entità professore
 @Data
 @Entity
 public class Student {

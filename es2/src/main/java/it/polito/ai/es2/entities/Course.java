@@ -10,6 +10,7 @@ import javax.persistence.OneToMany;
 import java.util.ArrayList;
 import java.util.List;
 
+// TODO: aggiungere campo professore al corso
 @Entity
 @Data
 public class Course {

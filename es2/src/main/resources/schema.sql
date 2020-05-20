@@ -2,7 +2,7 @@ CREATE TABLE users
 (
     username VARCHAR(50) NOT NULL,
     password VARCHAR(60) NOT NULL,
-    enabled  TINYINT     NOT NULL DEFAULT 1,
+    enabled  boolean     NOT NULL DEFAULT false,
     PRIMARY KEY (username)
 );
 

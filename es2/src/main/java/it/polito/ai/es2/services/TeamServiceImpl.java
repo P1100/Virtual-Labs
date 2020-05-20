@@ -24,6 +24,20 @@ import java.io.Reader;
 import java.util.*;
 import java.util.stream.Collectors;
 
+/*@GetMapping("/{id}/teams")
+@PreAuthorize("@securityServiceImpl.hasPermissions(#user, #id)")
+    public List<TeamDTO> getStudentTeams(@PathVariable String id, Principal user) {
+        try {
+            return teamService.getTeamsForStudent(id).stream()
+                    .map(ModelHelper::enrich)
+                    .collect(Collectors.toList());
+        } catch (Exception e){
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, id);
+        }
+    }
+    https://docs.spring.io/spring-security/site/docs/current/reference/html5/#el-permission-evaluator
+    */
+
 /**
  * Politica di sovrascrittura adottata: in quasi tutti i metodi add, se un id era già presente nel database non sovrascrivo i dati
  * già esistenti (tranne nel caso di proposeTeam, che poichè ha un id autogenerato, si è deciso di aggiornare il team vecchio usando

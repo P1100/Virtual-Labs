@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.env.Environment;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -46,6 +47,7 @@ public class NotificationServiceImpl implements NotificationService {
   Environment environment;
   
   @Override
+  @Async //TODO: da testare!
   public void sendMessage(String emailAddress, String subject, String body) {
     SimpleMailMessage message = new SimpleMailMessage();
     message.setTo(emailAddress);
