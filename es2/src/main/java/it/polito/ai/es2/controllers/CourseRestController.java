@@ -24,7 +24,6 @@ import java.util.Optional;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
-// TODO: versione finale passare a ultimo jdk java
 // TODO: aggiungere token jwt bearer nelle richieste (manualmente, per testing)
 @RestController
 @RequestMapping("/API/courses")
@@ -89,27 +88,29 @@ public class CourseRestController {
     return teamsForCourse;
   }
   
-  
-  
-  
-  
-  
-  
-  
-  //   {"name":"C33","min":1,"max":100,"enabled":true}
+  //   {"name":"C33","min":1,"max":100,"enabled":true,"professor":"malnati"}
   // ---> Nella POST settare ContentType: application/json
   @PostMapping({"", "/"})
   public CourseDTO addCourse(@RequestBody CourseDTO courseDTO) {
     if (!teamService.addCourse(courseDTO)) {
-      throw new ResponseStatusException(HttpStatus.CONFLICT, courseDTO.getIdname());
+      throw new ResponseStatusException(HttpStatus.CONFLICT, courseDTO.getName());
     } else
       return ModelHelper.enrich(courseDTO);
   }
   
+  @RequestMapping(value = "/{course}/enable", method = {RequestMethod.GET, RequestMethod.POST})
+  public void enableCourse(@PathVariable String course) {
+    teamService.enableCourse(course);
+  }
+  
+  @RequestMapping(value = "/{course}/disable", method = {RequestMethod.GET, RequestMethod.POST})
+  public void disableCourse(@PathVariable String course) {
+    teamService.disableCourse(course);
+  }
+  
   // ContentType:text/plain. Body:{"id":"S33","name":"S33-name","firstName":"S33-FirstName"}
-  //  // TODO: cambiare stringa body id a Map<String,String>  ----> metti un Map<String,String> e verifica che ci sia la chiave “id”
   @PostMapping("/{courseName}/enrollOne")
-  public void enrollOne(@PathVariable String courseName, @RequestBody Map<String, String> studentMap) {
+  public void addStudentToCourse(@PathVariable String courseName, @RequestBody Map<String, String> studentMap) {
     String studentId;
     if (studentMap.containsKey("id"))
       studentId = studentMap.get("id");
@@ -118,6 +119,12 @@ public class CourseRestController {
     if (!teamService.addStudentToCourse(studentId, courseName)) {
       throw new ResponseStatusException(HttpStatus.CONFLICT, courseName + "-" + studentId);
     }
+  }
+  
+  //["S33","S44"]
+  @PostMapping("/{courseName}/enrollAll")
+  public List<Boolean> enrollAll(@RequestBody List<String> studentIds, @PathVariable String courseName) {
+    return teamService.enrollAll(studentIds, courseName);
   }
   
   @PostMapping("/{courseName}/enrollMany")
@@ -139,15 +146,5 @@ public class CourseRestController {
       }
     }
     return booleanList;
-  }
-  
-  @PostMapping("/{course}/enable")
-  public void enableCourse(@PathVariable String course) {
-    teamService.enableCourse(course);
-  }
-  
-  //TODO: methods missing from api, to add later (?!?)
-  @PostMapping("/addall/{list}")
-  public void addAll(List<StudentDTO> students) {
   }
 }

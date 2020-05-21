@@ -8,9 +8,9 @@ import java.util.List;
 
 @Repository
 public interface TeamRepository extends JpaRepository<Team, Long> {
-  List<Team> findAllByNameAndCourse_Idname(String name, String courseId);
+  List<Team> findAllByNameAndCourse_name(String name, String courseId);
   
-  Team findFirstByNameAndCourse_Idname(String name, String courseId);
+  Team findFirstByNameAndCourse_name(String name, String courseId);
   
-  Team findFirstByNameAndStatusIsAndCourse_Idname(String name, int status, String courseId);
+  Team findFirstByNameAndStatusIsAndCourse_name(String name, int status, String courseId);
 }

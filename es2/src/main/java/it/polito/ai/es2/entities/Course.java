@@ -10,13 +10,12 @@ import javax.persistence.OneToMany;
 import java.util.ArrayList;
 import java.util.List;
 
-// TODO: aggiungere campo professore al corso
 @Entity
 @Data
 public class Course {
   // changed from "name" to "idname", since it was confusing me. Note: refractoring this field doesnt work very well, dont ever do it again.
   @Id
-  private String idname;
+  private String name;
   private int min;
   private int max;
   boolean enabled;

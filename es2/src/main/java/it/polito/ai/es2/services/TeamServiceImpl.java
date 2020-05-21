@@ -22,13 +22,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.io.Reader;
 import java.util.*;
 import java.util.stream.Collectors;
-//TODO: finire controllo api, aggiungere hateaos enricher, preauthorize e haspermission di tutto, pulizia codice
-//TODO: finire prima tutte le get hateaos. Alla fine controllare domande slack
-//TODO: nelle post, controllare che professor sia quello del corso
 
 /**
  * Politica di sovrascrittura adottata: in quasi tutti i metodi add, se un id era già presente nel database non sovrascrivo i dati
@@ -177,22 +175,16 @@ public class TeamServiceImpl implements TeamService {
     else
       throw new TeamServiceException("getMembers() - team not found");
   }
-  
-  
-  
-  
-  
-  
-  
   /**
    * POST {@link it.polito.ai.es2.controllers.CourseRestController#addCourse(CourseDTO)}
    */
   @Override
+  @PreAuthorize("hasRole('ADMIN')")
   public boolean addCourse(CourseDTO course) {
-    if (course == null || course.getIdname() == null) return false;
+    if (course == null || course.getName() == null) return false;
     Course c = modelMapper.map(course, Course.class);
     try {
-      if (!courseRepository.existsById(course.getIdname())) {
+      if (!courseRepository.existsById(course.getName())) {
         courseRepository.save(c);
         return true;
       }
@@ -207,22 +199,11 @@ public class TeamServiceImpl implements TeamService {
       return false;
     }
   }
-  
   /**
    * POST {@link it.polito.ai.es2.controllers.StudentRestController#addStudent(StudentDTO)}
    */
-// @PreAuthorize("hasRole('ROLE_PROFESSOR') or @securityServiceImpl.hasPermissions()")
-  //  @PreAuthorize("hasRole('ROLE_PROFESSOR') or @securityServiceImpl.hasPermissions()")
-//  @Secured({"ROLE_VIEWER", "ROLE_EDITOR", "ROLE_professor"})
-//  @RolesAllowed({ "ROLE_VIEWER", "ROLE_EDITOR","ROLE_professor"})
-//  @PreAuthorize("hasRole('ROLE_ADMIN')")
-//  @PreAuthorize("#username == authentication.principal.username")
-//  @PreAuthorize("hasRole('ROLE_VIEWER') or hasRole('ROLE_EDITOR')")
-//  @PreAuthorize("#username == authentication.principal.username")
-//  @PreAuthorize("#username == authentication.principal.username")
-//  @PostAuthorize("returnObject.username == authentication.principal.nickName")
-//  public CustomUser securedLoadUserDetail(String username) {
   @Override
+  @PreAuthorize("hasRole('ADMIN')")
   public boolean addStudent(StudentDTO student) {
     if (student == null || student.getId() == null) return false;
     Student s = modelMapper.map(student, Student.class);
@@ -244,9 +225,10 @@ public class TeamServiceImpl implements TeamService {
   }
   
   /**
-   * POST {@link it.polito.ai.es2.controllers.CourseRestController#addAll(List<StudentDTO>)}
+   * POST {@link it.polito.ai.es2.controllers.StudentRestController#addAll(List<StudentDTO>)}
    */
   @Override
+  @PreAuthorize("hasRole('ADMIN')")
   public List<Boolean> addAll(List<StudentDTO> students) {
     if (students == null) throw new TeamServiceException("null parameters");
     return students.stream()
@@ -263,11 +245,12 @@ public class TeamServiceImpl implements TeamService {
                      return Boolean.TRUE;
                    }).collect(Collectors.toList());
   }
+  
   /**
-   * {@link it.polito.ai.es2.controllers.}
+   * {@link it.polito.ai.es2.controllers.CourseRestController#enableCourse(String)}
    */
   @Override
-  @PreAuthorize("@mySecurityChecker.hasPermissions(authentication.principal.username, #courseName)")
+  @PreAuthorize("hasRole('ADMIN') or (hasRole('PROFESSOR') and @mySecurityChecker.isCourseOwner(#courseName,authentication.principal.username))")
   public void enableCourse(String courseName) throws CourseNotFoundException {
     if (courseName == null) throw new CourseNotFoundException("null parameter");
     if (!courseRepository.existsById(courseName)) throw new CourseNotFoundException("course not found");
@@ -276,9 +259,10 @@ public class TeamServiceImpl implements TeamService {
   }
   
   /**
-   * {@link it.polito.ai.es2.controllers.}
+   * {@link it.polito.ai.es2.controllers.CourseRestController#disableCourse(String)}
    */
   @Override
+  @PreAuthorize("hasRole('ADMIN') or (hasRole('PROFESSOR') and @mySecurityChecker.isCourseOwner(#courseName,authentication.principal.username))")
   public void disableCourse(String courseName) throws CourseNotFoundException {
     if (courseName == null) throw new CourseNotFoundException("null parameter");
     if (!courseRepository.existsById(courseName)) throw new CourseNotFoundException("course not found");
@@ -287,9 +271,10 @@ public class TeamServiceImpl implements TeamService {
   }
   
   /**
-   * {@link it.polito.ai.es2.controllers.}
+   * {@link it.polito.ai.es2.controllers.CourseRestController#addStudentToCourse(String, Map)}
    */
   @Override
+  @PreAuthorize("hasRole('ADMIN') or (hasRole('PROFESSOR') and @mySecurityChecker.isCourseOwner(#courseName,authentication.principal.username))")
   public boolean addStudentToCourse(String studentId, String courseName) throws StudentNotFoundException, CourseNotFoundException {
     if (studentId == null || courseName == null) throw new TeamServiceException("addStudentToCourse() - null parameters");
     if (!studentRepository.existsById(studentId)) throw new StudentNotFoundException("addStudentToCourse() - student not found:" + studentId);
@@ -307,14 +292,15 @@ public class TeamServiceImpl implements TeamService {
     
     log.info("addStudentToCourse ---> BEFORE ADD");
     c.addStudent(s);
-    log.info("addStudentToCourse(" + studentId + "," + courseName + "). " + c.getIdname() + "->ListStudents: " + c.getStudents());
+    log.info("addStudentToCourse(" + studentId + "," + courseName + "). " + c.getName() + "->ListStudents: " + c.getStudents());
     return true;
   }
   
   /**
-   * {@link it.polito.ai.es2.controllers.}
+   * {@link it.polito.ai.es2.controllers.CourseRestController#enrollAll(List, String)}
    */
   @Override
+  @PreAuthorize("hasRole('ADMIN') or (hasRole('PROFESSOR') and @mySecurityChecker.isCourseOwner(#courseName,authentication.principal.username))")
   public List<Boolean> enrollAll(List<String> studentIds, String courseName) {
     if (studentIds == null || courseName == null)
       throw new TeamServiceException("enrollAll(List<String> studentIds, String courseName) - null parameters");
@@ -343,11 +329,12 @@ public class TeamServiceImpl implements TeamService {
     log.info("enrollAll List<Boolean> ritornata:" + lb);
     return lb;
   }
+  
   /**
-   * Prendo il CSV dal controller (implementato)
-   *  {@link it.polito.ai.es2.controllers.}
+   * {@link it.polito.ai.es2.controllers.CourseRestController#enrollStudents(String, MultipartFile)}
    */
   @Override
+  @PreAuthorize("hasRole('ADMIN') or (hasRole('PROFESSOR') and @mySecurityChecker.isCourseOwner(#courseName,authentication.principal.username))")
   public List<Boolean> addAndEroll(Reader reader, String courseName) {
     if (reader == null || courseName == null) throw new TeamServiceException("addAndEroll(Reader reader, String courseName) - null parameters");
     Optional<Course> courseOptional = courseRepository.findById(courseName);
@@ -369,30 +356,19 @@ public class TeamServiceImpl implements TeamService {
                                   Student newStudent = modelMapper.map(new_studentDTO, Student.class);
                                   return studentRepository.save(newStudent);
                                 })
-                                // No perchè devo elaborare ordine in enrollAll
-//                                .filter(k -> {
-//                                    if (k == null)
-//                                      return false;
-//                                    else
-//                                      return true;
-//                                  })
                                 .map(y -> y != null ? y.getId() : null).collect(Collectors.toList());
     log.info(courseName + " - CSV_Valid_Students: " + list_ids);
     return enrollAll(list_ids, courseName);
   }
+  
   /**
-   * Se team già presente (stesso nome-corso), allora lo cancello e poi reinserisco il nuovo. Si potrebbe anche aggiornare campi senza cancellare
-   * Metodo complicato. Il problema è cosa fare se si fà il propose di un nuovo team, che abbia lo stesso nome di uno già presente sullo
-   * stesso corso, con il vecchio/i che può essere già stato validato.
-   * Per semplificare, si è deciso di:
-   * 1-Non si permette la creazione di un team duplicato sullo stesso corso, prima bisogna eliminarlo manualmente tramite email reject da parte di uno
-   * qualsiasi degli appartenenti al team.
-   * 2-Se  team era già stato attivato, diventa definitivo e non si può più cancellare tramite app
+   * {@link it.polito.ai.es2.controllers.TeamRestController#proposeTeam(String, String, List)}
    */
   @Override
-  public TeamDTO proposeTeam(String courseIdname, String team_name, List<String> memberIds) throws TeamServiceException {
-    if (courseIdname == null || team_name == null || memberIds == null) throw new TeamServiceException("null parameter");
-    Optional<Course> oc = courseRepository.findById(courseIdname);
+  @PreAuthorize("hasRole('ADMIN') or hasRole('STUDENT')")
+  public TeamDTO proposeTeam(String courseName, String team_name, List<String> memberIds) throws TeamServiceException {
+    if (courseName == null || team_name == null || memberIds == null) throw new TeamServiceException("null parameter");
+    Optional<Course> oc = courseRepository.findById(courseName);
     if (!oc.isPresent()) throw new CourseNotFoundException("proposeTeam - course not found");
     if (!oc.get().isEnabled()) throw new CourseNotEnabledException("proposeTeam() - course not enabled");
     List<Optional<Student>> streamopt_listStudentsProposal = memberIds.stream().map(x -> studentRepository.findById(x)).collect(Collectors.toList());
@@ -402,7 +378,7 @@ public class TeamServiceImpl implements TeamService {
     Course course = oc.get();
     List<Student> listStudentsProposal = streamopt_listStudentsProposal.stream().map(Optional::get).collect(Collectors.toList());
     if (!course.getStudents().containsAll(listStudentsProposal)) // !listStudentsProposal.stream().allMatch(x -> course.getStudents().contains(x))
-      throw new StudentNotEnrolledException("proposeTeam() - non tutti gli studenti sono iscritti al corso " + course.getIdname());
+      throw new StudentNotEnrolledException("proposeTeam() - non tutti gli studenti sono iscritti al corso " + course.getName());
     // Controllo se tra gli studenti dei vari teams del corso, ce n'è qualcuno tra quelli presenti nella proposta
     if (course.getTeams().size() != 0 &&
             !course.getTeams()
@@ -419,7 +395,7 @@ public class TeamServiceImpl implements TeamService {
       throw new CourseCardinalConstrainsException("proposeTeam() - non rispettati i vincoli di cardinalità del corso su dimensioni team");
     if (!listStudentsProposal.stream().allMatch(new HashSet<>()::add))
       throw new StudentDuplicatesInProposalException("proposeTeam() - duplicati nell'elenco dei partecipanti della proposta team");
-    if (teamRepository.findFirstByNameAndCourse_Idname(team_name, courseIdname) != null)
+    if (teamRepository.findFirstByNameAndCourse_name(team_name, courseName) != null)
       throw new TeamAlreayCreatedException("proposeTeam() - team già creato");
     
     TeamDTO teamDTO = new TeamDTO(null, team_name, Team.status_inactive());
@@ -434,7 +410,11 @@ public class TeamServiceImpl implements TeamService {
     return return_teamDTO;
   }
   
+  /**
+   * {@link it.polito.ai.es2.controllers.TeamRestController#evictTeam(Long)}
+   */
   @Override
+  @PreAuthorize("hasRole('ADMIN') or (hasRole('PROFESSOR') and @mySecurityChecker.isTeamOwner(#teamId,authentication.principal.username))")
   public boolean evictTeam(Long teamId) {
     Optional<Team> optionalTeam = teamRepository.findById(teamId);
     if (!optionalTeam.isPresent())
@@ -461,17 +441,5 @@ public class TeamServiceImpl implements TeamService {
       return false;
     team.setStatus(status); // no need to save, will be flushed automatically at the end of transaction (since not a new entity)
     return true;
-  }
-  
-  //  -------------------------------------- PRIVATE METHODS -----------------------------------
-/*
-  private Optional<TeamDTO> getTeamDTOfromId(Long teamId) {
-    Optional<Team> team = teamRepository.findById(teamId);//.orElse(null);
-    Optional<TeamDTO> teamDTO = team.map(x -> modelMapper.map(x, TeamDTO.class));
-    return teamDTO;
-  }*/
-  private boolean isTeamCreatedAndActive(Long teamId) {
-    Team team = teamRepository.findById(teamId).orElse(null);
-    return team != null && team.getStatus() != Team.status_inactive();
   }
 }

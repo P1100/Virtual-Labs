@@ -14,16 +14,18 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 public class ModelHelper {
   public static CourseDTO enrich(CourseDTO courseDTO) {
     courseDTO.add(new Link("http://localhost:8080/API/courses").withRel("courses"));
-    courseDTO.add(new Link("http://localhost:8080/API/courses/" + courseDTO.getIdname()).withSelfRel());
-    Link enrolled = linkTo(methodOn(CourseRestController.class)
-                               .getEnrolledStudents(courseDTO.getIdname())).withRel("enrolled");
-    courseDTO.add(enrolled);
+    courseDTO.add(new Link("http://localhost:8080/API/courses/" + courseDTO.getName()).withSelfRel());
+    courseDTO.add(new Link("http://localhost:8080/API/courses/" + courseDTO.getName() + "/enable").withRel("enable (POST)"));
+    courseDTO.add(new Link("http://localhost:8080/API/courses/" + courseDTO.getName() + "/disable").withRel("disable (POST)"));
+  
     courseDTO.add(linkTo(methodOn(CourseRestController.class)
-                             .getStudentsInTeams(courseDTO.getIdname())).withRel("students_in_teams"));
+                             .getEnrolledStudents(courseDTO.getName())).withRel("enrolled"));
     courseDTO.add(linkTo(methodOn(CourseRestController.class)
-                             .getAvailableStudents(courseDTO.getIdname())).withRel("students_available"));
+                             .getStudentsInTeams(courseDTO.getName())).withRel("students_in_teams"));
     courseDTO.add(linkTo(methodOn(CourseRestController.class)
-                             .getTeamsForCourse(courseDTO.getIdname())).withRel("teams"));
+                             .getAvailableStudents(courseDTO.getName())).withRel("students_available"));
+    courseDTO.add(linkTo(methodOn(CourseRestController.class)
+                             .getTeamsForCourse(courseDTO.getName())).withRel("teams"));
     return courseDTO;
   }
   

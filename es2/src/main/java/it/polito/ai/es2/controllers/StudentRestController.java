@@ -60,12 +60,6 @@ public class StudentRestController {
     return teams;
   }
   
-  
-  
-  
-  
-  
-  
   //  {"id":"S33","name":"S33-name","firstName":"S33-FirstName"}
   // ---> Nella POST settare ContentType: application/json
   @PostMapping({"", "/"})
@@ -74,5 +68,11 @@ public class StudentRestController {
       throw new ResponseStatusException(HttpStatus.CONFLICT, studentDTO.getName());
     } else
       return ModelHelper.enrich(studentDTO);
+  }
+  
+  //  [{"id":"S44","name":"S33-name","firstName":"S33-FirstName"},{"id":"S55","name":"S33-name","firstName":"S33-FirstName"}]
+  @PostMapping("/addall")
+  public List<Boolean> addAll(@RequestBody List<StudentDTO> students) {
+    return teamService.addAll(students);
   }
 }

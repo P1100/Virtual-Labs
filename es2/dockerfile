@@ -1,4 +1,4 @@
-# TODO rivedere bene come poter creare immagine da altra imamgine
+# bozza
 FROM mariadb:latest
 #FROM openjdk:8-jre-alpine
 EXPOSE 3307

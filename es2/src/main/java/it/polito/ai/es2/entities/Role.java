@@ -10,7 +10,6 @@ import javax.persistence.ManyToMany;
 import java.util.ArrayList;
 import java.util.List;
 
-// TODO: cleanup, check uppercase equals
 @Data
 @NoArgsConstructor
 @Entity(name = "role")

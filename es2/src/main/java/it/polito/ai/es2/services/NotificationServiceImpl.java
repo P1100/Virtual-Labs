@@ -12,7 +12,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.env.Environment;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
-import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -24,11 +23,8 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
-/**
- * TODO: add formatted email body
- */
 @Service
-//@Transactional
+@Transactional
 public class NotificationServiceImpl implements NotificationService {
   private final boolean forceOutputEmail_testing = true;
   @Autowired
@@ -47,7 +43,6 @@ public class NotificationServiceImpl implements NotificationService {
   Environment environment;
   
   @Override
-  @Async //TODO: da testare!
   public void sendMessage(String emailAddress, String subject, String body) {
     SimpleMailMessage message = new SimpleMailMessage();
     message.setTo(emailAddress);
@@ -62,7 +57,6 @@ public class NotificationServiceImpl implements NotificationService {
    * altrimenti imposta team a status active, e ritorna true
    */
   @Override
-  @Transactional
   public boolean confirm(String idtoken) {
     Optional<Team> optionalTeam = cleanupAndVerifyTokenExists(idtoken);
     if (!optionalTeam.isPresent())
@@ -74,19 +68,17 @@ public class NotificationServiceImpl implements NotificationService {
     List<Token> tokenList = tokenRepository.findAllByTeamId(teamId);
     if (tokenList.size() == 0) {
       teamService.setTeamStatus(teamId, Team.status_active());
-      return true;
     }
-    for (Token token : tokenList) {
-      tokenRepository.delete(token);
-    }
-    return false;
+    return true;
+//    for (Token token : tokenList) {
+//      tokenRepository.delete(token);
+//    }
   }
   
   /**
    * Trova team, rimuovi tutti i token relativi a team corrente (se ce ne sono) e invoca evict team + return true. Altrimenti false
    */
   @Override
-  @Transactional
   public boolean reject(String idtoken) {
     Optional<Team> optionalTeam = cleanupAndVerifyTokenExists(idtoken);
     if (!optionalTeam.isPresent())
@@ -117,7 +109,7 @@ public class NotificationServiceImpl implements NotificationService {
       sb.append("\n\nLink to accept token:\n" + url + "/notification/confirm/" + token.getId());
       sb.append("\n\nLink to remove token:\n" + url + "/notification/reject/" + token.getId());
       System.out.println(sb);
-      // TODO: uncommentare in fase di prod
+      // uncommentare in fase di prod
       if (forceOutputEmail_testing == false) {
         System.out.println("[regular email] s" + memberId + "@studenti.polito.it - Conferma iscrizione al team " + teamDTO.getId());
 //        sendMessage("s" + memberId + "@studenti.polito.it", "Conferma iscrizione al team " + teamDTO.getId(), sb.toString());

@@ -12,15 +12,11 @@ import org.springframework.security.core.userdetails.User;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
 import java.util.Arrays;
 
-// TODO: add API rest endpoin with all the main links?
 @Controller
 public class HomeController {
   @Autowired
@@ -29,6 +25,15 @@ public class HomeController {
   UserDetailsServiceImpl userDetailsService;
   @Autowired
   private UserRepository userRepository;
+  
+  @RequestMapping(value = "/API", produces = "application/json; charset=UTF-8")
+  @ResponseBody
+  public String getAPI() {
+    String json = "{\"corsi\":\"http://localhost:8080/API/courses\","
+                      + "\"studenti\":\"http://localhost:8080/API/students\","
+                      + "\"teams\":\"http://localhost:8080/API/teams\"}";
+    return json;
+  }
   
   @GetMapping("/")
   @ResponseBody
@@ -42,7 +47,6 @@ public class HomeController {
         ;
   }
   
-  // TODO: spostare in controller rest TeamController?
   @PostMapping("/propose")
   public String propose_team(@ModelAttribute("command") TeamViewModel teamViewModel,
                              BindingResult bindingResult, Model model) {
