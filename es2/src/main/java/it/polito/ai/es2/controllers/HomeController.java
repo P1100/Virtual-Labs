@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import java.security.Principal;
 import java.util.Arrays;
 
+// TODO: add API rest endpoin with all the main links?
 @Controller
 public class HomeController {
   @Autowired

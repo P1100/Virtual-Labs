@@ -89,6 +89,13 @@ public class CourseRestController {
     return teamsForCourse;
   }
   
+  
+  
+  
+  
+  
+  
+  
   //   {"name":"C33","min":1,"max":100,"enabled":true}
   // ---> Nella POST settare ContentType: application/json
   @PostMapping({"", "/"})

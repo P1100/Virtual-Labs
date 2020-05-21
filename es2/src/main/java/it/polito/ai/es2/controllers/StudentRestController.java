@@ -1,7 +1,9 @@
 package it.polito.ai.es2.controllers;
 
 import it.polito.ai.es2.controllers.hateoas.ModelHelper;
+import it.polito.ai.es2.dtos.CourseDTO;
 import it.polito.ai.es2.dtos.StudentDTO;
+import it.polito.ai.es2.dtos.TeamDTO;
 import it.polito.ai.es2.services.TeamService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.hateoas.CollectionModel;
@@ -22,26 +24,47 @@ public class StudentRestController {
   @Autowired
   TeamService teamService;
   
-  //TODO: return CollectionModel instead of List + aggiungere operazioni possibili a json di ritorno
   @GetMapping({"", "/"})
   public CollectionModel<StudentDTO> getAllStudents() {
-    List<StudentDTO> allCourses = teamService.getAllStudents();
-    for (StudentDTO studentDTO : allCourses) {
+    List<StudentDTO> allStudents = teamService.getAllStudents();
+    for (StudentDTO studentDTO : allStudents) {
       ModelHelper.enrich(studentDTO);
     }
-    Link link = linkTo(methodOn(CourseRestController.class)
-                           .getAllCourses()).withSelfRel();
-    CollectionModel<StudentDTO> result = new CollectionModel<>(allCourses, link);
+    Link link = linkTo(methodOn(StudentRestController.class)
+                           .getAllStudents()).withSelfRel();
+    CollectionModel<StudentDTO> result = new CollectionModel<>(allStudents, link);
     return result;
   }
   
-  @GetMapping("/{id}")
-  public StudentDTO getOne(@PathVariable String id) {
-    Optional<StudentDTO> studentDTO = teamService.getStudent(id);
+  @GetMapping("/{student_id}")
+  public StudentDTO getStudent(@PathVariable String student_id) {
+    Optional<StudentDTO> studentDTO = teamService.getStudent(student_id);
     if (!studentDTO.isPresent())
-      throw new ResponseStatusException(HttpStatus.CONFLICT, id);
+      throw new ResponseStatusException(HttpStatus.CONFLICT, student_id);
     return ModelHelper.enrich(studentDTO.get());
   }
+  @GetMapping("/{student_id}/courses")
+  public List<CourseDTO> getCourses(@PathVariable String student_id) {
+    List<CourseDTO> courses = teamService.getCourses(student_id);
+    for (CourseDTO courseDTO : courses) {
+      ModelHelper.enrich(courseDTO);
+    }
+    return courses;
+  }
+  @GetMapping("/{student_id}/teams")
+  public List<TeamDTO> getTeamsForStudent(@PathVariable String student_id) {
+    List<TeamDTO> teams = teamService.getTeamsForStudent(student_id);
+    for (TeamDTO teamDTO : teams) {
+      ModelHelper.enrich(teamDTO);
+    }
+    return teams;
+  }
+  
+  
+  
+  
+  
+  
   
   //  {"id":"S33","name":"S33-name","firstName":"S33-FirstName"}
   // ---> Nella POST settare ContentType: application/json
