@@ -13,8 +13,12 @@ public class ModelHelper {
     Link link = new Link("http://localhost:8080/API/courses/" + courseDTO.getIdname()).withSelfRel();
     courseDTO.add(link);
     Link enrolled = linkTo(methodOn(CourseRestController.class)
-                               .enrolledStudents(courseDTO.getIdname())).withRel("enrolled");
+                               .getEnrolledStudents(courseDTO.getIdname())).withRel("enrolled");
     courseDTO.add(enrolled);
+    courseDTO.add(linkTo(methodOn(CourseRestController.class)
+                             .getStudentsInTeams(courseDTO.getIdname())).withRel("students_in_teams"));
+    courseDTO.add(linkTo(methodOn(CourseRestController.class)
+                             .getAvailableStudents(courseDTO.getIdname())).withRel("students_available"));
     return courseDTO;
   }
   

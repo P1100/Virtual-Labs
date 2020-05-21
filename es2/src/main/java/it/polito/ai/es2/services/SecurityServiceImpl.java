@@ -1,8 +1,8 @@
 package it.polito.ai.es2.services;
 
+import it.polito.ai.es2.entities.Role;
+import it.polito.ai.es2.entities.User;
 import it.polito.ai.es2.repositories.CourseRepository;
-import it.polito.ai.es2.securityconfig.Role;
-import it.polito.ai.es2.securityconfig.User;
 import lombok.extern.java.Log;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

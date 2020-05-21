@@ -1,5 +1,8 @@
 package it.polito.ai.es2.securityconfig;
 
+import it.polito.ai.es2.dtos.UserDTO;
+import it.polito.ai.es2.entities.User;
+import it.polito.ai.es2.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -8,7 +11,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Collections;
 import java.util.List;
 
 @Service
@@ -41,11 +43,14 @@ public class UserDetailsServiceImpl implements UserDetailsService {
     return saveUser(userDTO.getUsername(), userDTO.getPassword(), userDTO.getRoles());
   }
   
+  /**
+   * Main entrypoint for saving a User to the db
+   */
   private User saveUser(String user, String pass, List<String> stringsRoles) {
     User newUser = new User();
     newUser.setUsername(user);
     newUser.setPassword(passwordEncoder.encode(pass));
-    newUser.setRoles(UserDTO.getRolesConverted(stringsRoles));
+    newUser.setRoles(UserDTO.getRolesFromStrings(stringsRoles));
     newUser.setEnabled(true);
     newUser.setAccountNonExpired(true);
     newUser.setAccountNonLocked(true);
@@ -54,12 +59,11 @@ public class UserDetailsServiceImpl implements UserDetailsService {
   }
   
   /**
-   * Used by UserController
+   * Used by UserController, main entrypoint for saving a User from REST API
    */
-  public boolean addUser(String user, String pass, String role) {
-//    User u = new User("admin2", bcryptEncoder.encode("adminpassword"), Role.ADMIN);
+  public boolean addUser(String user, String pass, List<String> roles) {
     if (userRepository.findTopByUsername(user) == null) {
-      saveUser(user, pass, Collections.singletonList("ROLE_" + role.toUpperCase()));
+      saveUser(user, pass, roles);
       return true;
     }
     return false;
@@ -69,7 +73,9 @@ public class UserDetailsServiceImpl implements UserDetailsService {
    * Used by UserController
    */
   public boolean checkUser(String user, String pass) {
+    if (user == null || pass == null)
+      return false;
     User u = userRepository.findTopByUsername(user);
-    return passwordEncoder.matches(pass, u.getPassword());
+    return u != null && passwordEncoder.matches(pass, u.getPassword());
   }
 }

@@ -48,7 +48,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     auth_builder.inMemoryAuthentication()
         .withUser("mem")
         .password(passwordEncoder().encode("mem"))
-        .roles("user", "guest", "admin");
+        .roles("USER", "GUEST", "ADMIN");
   
     // remember to load schema.sql first!
 //    auth_builder.jdbcAuthentication().dataSource(dataSource)
@@ -69,10 +69,6 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         .csrf().disable()
         .cors().disable()
         .formLogin()
-        // default is username (nome elemento input html)
-        .usernameParameter("custom_user")
-        // default is password
-        .passwordParameter("custom_pass")
         .and() //.antMatcher("/**") --> applies to all?
         .authorizeRequests()
         .antMatchers("/jwt/authenticate", "/jwt/register").permitAll()
@@ -80,15 +76,15 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         .antMatchers("/testing/**").permitAll()
         .antMatchers("/*").authenticated()
         .antMatchers("/users/**").authenticated()
-        .antMatchers("/API/**").authenticated()
-        // all other requests need to be authenticated
-        .anyRequest().authenticated()
+//        .antMatchers("/API/**").authenticated()
+        .anyRequest().permitAll()
 //        .and()
 //        .exceptionHandling().authenticationEntryPoint(jwtAuthenticationEntryPoint)
 //        .and()
 //        .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
     ;
-    
+  
+    // TODO: uncomment for enabling jwt
     // Add a filter to validate the tokens with every request
 //    httpSecurity.addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class);
   }

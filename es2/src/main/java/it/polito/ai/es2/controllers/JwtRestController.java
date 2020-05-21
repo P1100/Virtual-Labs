@@ -1,6 +1,6 @@
 package it.polito.ai.es2.controllers;
 
-import it.polito.ai.es2.securityconfig.UserDTO;
+import it.polito.ai.es2.dtos.UserDTO;
 import it.polito.ai.es2.securityconfig.UserDetailsServiceImpl;
 import it.polito.ai.es2.securityconfig.jwt.JwtTokenUtil;
 import org.springframework.beans.factory.annotation.Autowired;

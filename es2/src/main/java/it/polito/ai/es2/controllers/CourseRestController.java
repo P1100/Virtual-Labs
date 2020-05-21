@@ -3,6 +3,7 @@ package it.polito.ai.es2.controllers;
 import it.polito.ai.es2.controllers.hateoas.ModelHelper;
 import it.polito.ai.es2.dtos.CourseDTO;
 import it.polito.ai.es2.dtos.StudentDTO;
+import it.polito.ai.es2.dtos.TeamDTO;
 import it.polito.ai.es2.services.TeamService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.hateoas.CollectionModel;
@@ -44,21 +45,48 @@ public class CourseRestController {
     return result;
   }
   
-  @GetMapping("/{name}")
-  public CourseDTO getOne(@PathVariable String name) {
-    Optional<CourseDTO> courseDTO = teamService.getCourse(name);
+  @GetMapping("/{courseName}")
+  public CourseDTO getCourse(@PathVariable String courseName) {
+    Optional<CourseDTO> courseDTO = teamService.getCourse(courseName);
     if (!courseDTO.isPresent())
-      throw new ResponseStatusException(HttpStatus.CONFLICT, name);
+      throw new ResponseStatusException(HttpStatus.CONFLICT, courseName);
     return ModelHelper.enrich(courseDTO.get());
   }
   
-  @GetMapping("/{name}/enrolled")
-  public List<StudentDTO> enrolledStudents(@PathVariable String name) {
-    List<StudentDTO> studentDTOlist = teamService.getEnrolledStudents(name);
+  @GetMapping("/{courseName}/enrolled")
+  public List<StudentDTO> getEnrolledStudents(@PathVariable String courseName) {
+    List<StudentDTO> studentDTOlist = teamService.getEnrolledStudents(courseName);
     for (StudentDTO studentDTO : studentDTOlist) {
       ModelHelper.enrich(studentDTO);
     }
     return studentDTOlist;
+  }
+  
+  @GetMapping("/{courseName}/students_inteams")
+  public List<StudentDTO> getStudentsInTeams(@PathVariable String courseName) {
+    List<StudentDTO> studentsInTeams = teamService.getStudentsInTeams(courseName);
+    for (StudentDTO studentDTO : studentsInTeams) {
+      ModelHelper.enrich(studentDTO);
+    }
+    return studentsInTeams;
+  }
+  
+  @GetMapping("/{courseName}/students_available")
+  public List<StudentDTO> getAvailableStudents(@PathVariable String courseName) {
+    List<StudentDTO> studentsInTeams = teamService.getAvailableStudents(courseName);
+    for (StudentDTO studentDTO : studentsInTeams) {
+      ModelHelper.enrich(studentDTO);
+    }
+    return studentsInTeams;
+  }
+  
+  @GetMapping("/{courseName}/teams")
+  public List<TeamDTO> getTeamsForCourse(@PathVariable String courseName) {
+    List<TeamDTO> teamsForCourse = teamService.getTeamsForCourse(courseName);
+    for (TeamDTO teamDTO : teamsForCourse) {
+      ModelHelper.enrich(teamDTO);
+    }
+    return teamsForCourse;
   }
   
   //   {"name":"C33","min":1,"max":100,"enabled":true}

@@ -25,6 +25,8 @@ import org.springframework.transaction.annotation.Transactional;
 import java.io.Reader;
 import java.util.*;
 import java.util.stream.Collectors;
+//TODO: finire controllo api, aggiungere hateaos enricher, preauthorize e haspermission di tutto, pulizia codice
+//TODO: finire prima tutte le get hateaos. Alla fine controllare domande slack
 
 /**
  * Politica di sovrascrittura adottata: in quasi tutti i metodi add, se un id era già presente nel database non sovrascrivo i dati
@@ -32,10 +34,9 @@ import java.util.stream.Collectors;
  * sempre la proposeTeam).
  */
 @Service
-@PreAuthorize("hasRole('ADMIN') or hasRole('admin') or hasRole('STUDENT') or hasRole('PROFESSOR') ")
-//@PreAuthorize("authenticated")
 @Transactional
 @Log
+@PreAuthorize("permitAll()") // doesnt override httpsecurity settings!
 public class TeamServiceImpl implements TeamService {
   @Autowired
   ModelMapper modelMapper;
@@ -59,9 +60,20 @@ public class TeamServiceImpl implements TeamService {
   }
   
   /**
-   * {@link it.polito.ai.es2.controllers.}
+   * GET {@link it.polito.ai.es2.controllers.CourseRestController#getCourse(String)}
    */
   @Override
+  @PreAuthorize("authenticated") // overrides class roles
+  public Optional<CourseDTO> getCourse(String courseName) {
+    if (courseName == null) throw new TeamServiceException("getCourse() - null parameter");
+    return courseRepository.findById(courseName).map(x -> modelMapper.map(x, CourseDTO.class));
+  }
+  
+  /**
+   * GET {@link it.polito.ai.es2.controllers.CourseRestController#getEnrolledStudents(String)}
+   */
+  @Override
+  @PreAuthorize("hasRole('ADMIN') or hasRole('STUDENT') or hasRole('PROFESSOR')")
   public List<StudentDTO> getEnrolledStudents(String courseName) throws CourseNotFoundException {
     if (courseName == null) throw new TeamServiceException("getEnrolledStudents() - null parameters");
     if (!courseRepository.existsById(courseName))
@@ -71,9 +83,32 @@ public class TeamServiceImpl implements TeamService {
   }
   
   /**
-   * GET {@link it.polito.ai.es2.controllers.}
+   * GET {@link it.polito.ai.es2.controllers.CourseRestController#getStudentsInTeams(String)}
    */
   @Override
+  @PreAuthorize("hasRole('ADMIN') or hasRole('STUDENT') or hasRole('PROFESSOR')")
+  public List<StudentDTO> getStudentsInTeams(String courseName) {
+    if (courseName == null) throw new TeamServiceException("null parameter");
+    if (!courseRepository.existsById(courseName)) throw new CourseNotFoundException("getTeamForCourse - course not found");
+    return courseRepository.getStudentsInTeams(courseName).stream().map(x -> modelMapper.map(x, StudentDTO.class)).collect(Collectors.toList());
+  }
+  
+  /**
+   * GET {@link it.polito.ai.es2.controllers.CourseRestController#getAvailableStudents(String)}
+   */
+  @Override
+  @PreAuthorize("hasRole('ADMIN') or hasRole('STUDENT') or hasRole('PROFESSOR')")
+  public List<StudentDTO> getAvailableStudents(String courseName) {
+    if (courseName == null) throw new TeamServiceException("null parameter");
+    if (!courseRepository.existsById(courseName)) throw new CourseNotFoundException("getTeamForCourse - course not found");
+    return courseRepository.getStudentsNotInTeams(courseName).stream().map(x -> modelMapper.map(x, StudentDTO.class)).collect(Collectors.toList());
+  }
+  
+  /**
+   * GET {@link it.polito.ai.es2.controllers.CourseRestController#getTeamsForCourse(String)}
+   */
+  @Override
+  @PreAuthorize("hasRole('ADMIN') or hasRole('STUDENT') or hasRole('PROFESSOR')")
   public List<TeamDTO> getTeamsForCourse(String courseName) {
     if (courseName == null) throw new TeamServiceException("null parameter");
     Optional<Course> co = courseRepository.findById(courseName);
@@ -159,15 +194,6 @@ public class TeamServiceImpl implements TeamService {
                      studentRepository.save(e);
                      return Boolean.TRUE;
                    }).collect(Collectors.toList());
-  }
-  
-  /**
-   * {@link it.polito.ai.es2.controllers.}
-   */
-  @Override
-  public Optional<CourseDTO> getCourse(String name) {
-    if (name == null) throw new TeamServiceException("getCourse() - null parameter");
-    return courseRepository.findById(name).map(x -> modelMapper.map(x, CourseDTO.class));
   }
   
   /**
@@ -334,27 +360,6 @@ public class TeamServiceImpl implements TeamService {
       return team.get().getMembers().stream().filter(Objects::nonNull).map(y -> modelMapper.map(y, StudentDTO.class)).collect(Collectors.toList());
     else
       throw new TeamServiceException("getMembers() - team not found");
-  }
-  
-  /**
-   * {@link it.polito.ai.es2.controllers.}
-   */
-  @Override
-  public List<StudentDTO> getStudentsInTeams(String courseName) {
-    if (courseName == null) throw new TeamServiceException("null parameter");
-    if (!courseRepository.existsById(courseName)) throw new CourseNotFoundException("getTeamForCourse - course not found");
-    return courseRepository.getStudentsInTeams(courseName).stream().map(x -> modelMapper.map(x, StudentDTO.class)).collect(Collectors.toList());
-  }
-  
-  /**
-   * {@link it.polito.ai.es2.controllers.}
-   */
-  //  @PreAuthorize("hasRole('ROLE_AUTHENTICATED')")
-  @Override
-  public List<StudentDTO> getAvailableStudents(String courseName) {
-    if (courseName == null) throw new TeamServiceException("null parameter");
-    if (!courseRepository.existsById(courseName)) throw new CourseNotFoundException("getTeamForCourse - course not found");
-    return courseRepository.getStudentsNotInTeams(courseName).stream().map(x -> modelMapper.map(x, StudentDTO.class)).collect(Collectors.toList());
   }
   
   /**

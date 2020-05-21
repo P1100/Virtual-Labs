@@ -1,5 +1,7 @@
-package it.polito.ai.es2.securityconfig;
+package it.polito.ai.es2.dtos;
 
+import it.polito.ai.es2.entities.Role;
+import it.polito.ai.es2.entities.User;
 import lombok.Data;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -45,10 +47,10 @@ public class UserDTO implements UserDetails {
     return false;
   }
   
-  public static List<Role> getRolesConverted(List<String> strings) {
+  public static List<Role> getRolesFromStrings(List<String> strings) {
     List<Role> roles = new ArrayList<>();
     for (String role : strings) {
-      roles.add(new Role(role));
+      roles.add(new Role(role.toUpperCase()));
     }
     return roles;
   }

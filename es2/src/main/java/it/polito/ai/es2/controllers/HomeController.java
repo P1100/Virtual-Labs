@@ -2,8 +2,8 @@ package it.polito.ai.es2.controllers;
 
 import it.polito.ai.es2.domains.TeamViewModel;
 import it.polito.ai.es2.dtos.TeamDTO;
+import it.polito.ai.es2.repositories.UserRepository;
 import it.polito.ai.es2.securityconfig.UserDetailsServiceImpl;
-import it.polito.ai.es2.securityconfig.UserRepository;
 import it.polito.ai.es2.services.TeamService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;

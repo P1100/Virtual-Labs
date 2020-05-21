@@ -1,4 +1,4 @@
-package it.polito.ai.es2.securityconfig;
+package it.polito.ai.es2.entities;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
@@ -11,23 +11,16 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-/**
- * E' la stessa tabella che usa jdbcAuthentication (non perfettamente uguale, ma compatibile)
- */
 @Data
 @NoArgsConstructor
 @Entity
 @Table(name = "user")
 public class User {
-  //  @Id
-//  @GeneratedValue(strategy = GenerationType.IDENTITY)
-//  private Long id;
   @Id
   private String username;
   @Column
   @JsonIgnore
   private String password;
-  //  String email;
   boolean enabled;
   boolean accountNonExpired;
   boolean credentialsNonExpired;
@@ -37,14 +30,6 @@ public class User {
   private List<Role> roles = new ArrayList<>();
   @Transient
   private String token;
-  
-  public User(String username, String password) {
-    this.username = username;
-    this.password = password;
-  }
-  
-  public User(String name) {
-  }
   
   public Collection<? extends GrantedAuthority> getAuthorities() {
     List<GrantedAuthority> authorities = new ArrayList<GrantedAuthority>();
