@@ -10,9 +10,10 @@ import javax.persistence.ManyToMany;
 import java.util.ArrayList;
 import java.util.List;
 
+// TODO: cleanup, check uppercase equals
 @Data
 @NoArgsConstructor
-@Entity(name = "roles")
+@Entity(name = "role")
 //@Table(name = "authorities", uniqueConstraints = @UniqueConstraint(columnNames = {"username","authority"}))
 public class Role {
   //    @Id

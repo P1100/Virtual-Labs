@@ -4,18 +4,16 @@ import it.polito.ai.es2.controllers.CourseRestController;
 import it.polito.ai.es2.dtos.CourseDTO;
 import it.polito.ai.es2.dtos.StudentDTO;
 import org.springframework.hateoas.Link;
-import org.springframework.hateoas.server.mvc.WebMvcLinkBuilder;
 
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
 public class ModelHelper {
   public static CourseDTO enrich(CourseDTO courseDTO) {
-    Link link = new Link("http://localhost:8080/API/courses/" + courseDTO.getName()).withSelfRel();
-//    Link selfLink = linkTo(methodOn(CourseController.class).all()).withSelfRel();    courseDTO.add(selfLink);
+    Link link = new Link("http://localhost:8080/API/courses/" + courseDTO.getIdname()).withSelfRel();
     courseDTO.add(link);
-    Link enrolled = WebMvcLinkBuilder.linkTo(methodOn(CourseRestController.class)
-                               .enrolledStudents(courseDTO.getName())).withRel("enrolled");
+    Link enrolled = linkTo(methodOn(CourseRestController.class)
+                               .enrolledStudents(courseDTO.getIdname())).withRel("enrolled");
     courseDTO.add(enrolled);
     return courseDTO;
   }

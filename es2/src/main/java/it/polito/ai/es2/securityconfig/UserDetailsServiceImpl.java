@@ -53,15 +53,21 @@ public class UserDetailsServiceImpl implements UserDetailsService {
     return userRepository.save(newUser);
   }
   
+  /**
+   * Used by UserController
+   */
   public boolean addUser(String user, String pass, String role) {
 //    User u = new User("admin2", bcryptEncoder.encode("adminpassword"), Role.ADMIN);
     if (userRepository.findTopByUsername(user) == null) {
-      saveUser(user, pass, Collections.singletonList(role));
+      saveUser(user, pass, Collections.singletonList("ROLE_" + role.toUpperCase()));
       return true;
     }
     return false;
   }
   
+  /**
+   * Used by UserController
+   */
   public boolean checkUser(String user, String pass) {
     User u = userRepository.findTopByUsername(user);
     return passwordEncoder.matches(pass, u.getPassword());

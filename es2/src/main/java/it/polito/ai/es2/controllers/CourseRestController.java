@@ -5,6 +5,8 @@ import it.polito.ai.es2.dtos.CourseDTO;
 import it.polito.ai.es2.dtos.StudentDTO;
 import it.polito.ai.es2.services.TeamService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.hateoas.CollectionModel;
+import org.springframework.hateoas.Link;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -18,24 +20,28 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
+
 // TODO: versione finale passare a ultimo jdk java
+// TODO: aggiungere token jwt bearer nelle richieste (manualmente, per testing)
 @RestController
 @RequestMapping("/API/courses")
 public class CourseRestController {
   @Autowired
   TeamService teamService;
   
-  //TODO: return CollectionModel instead of List
   @GetMapping({"", "/"})
-  public List<CourseDTO> all() {
+  public CollectionModel<CourseDTO> getAllCourses() {
     List<CourseDTO> allCourses = teamService.getAllCourses();
+//    teamService.getAllCourses().stream().map(ModelHelper::enrich).collect(Collectors.toList())
     for (CourseDTO courseDTO : allCourses) {
       ModelHelper.enrich(courseDTO);
     }
-//    Link link = linkTo(methodOn(CourseController.class)
-//                           .all()).withSelfRel();
-//    CollectionModel<CourseDTO> result = new CollectionModel<>(allCourses, link);
-    return allCourses;
+    Link link = linkTo(methodOn(CourseRestController.class)
+                           .getAllCourses()).withSelfRel();
+    CollectionModel<CourseDTO> result = new CollectionModel<>(allCourses, link);
+    return result;
   }
   
   @GetMapping("/{name}")
@@ -60,7 +66,7 @@ public class CourseRestController {
   @PostMapping({"", "/"})
   public CourseDTO addCourse(@RequestBody CourseDTO courseDTO) {
     if (!teamService.addCourse(courseDTO)) {
-      throw new ResponseStatusException(HttpStatus.CONFLICT, courseDTO.getName());
+      throw new ResponseStatusException(HttpStatus.CONFLICT, courseDTO.getIdname());
     } else
       return ModelHelper.enrich(courseDTO);
   }
@@ -103,5 +109,10 @@ public class CourseRestController {
   @PostMapping("/{course}/enable")
   public void enableCourse(@PathVariable String course) {
     teamService.enableCourse(course);
+  }
+  
+  //TODO: methods missing from api, to add later (?!?)
+  @PostMapping("/addall/{list}")
+  public void addAll(List<StudentDTO> students) {
   }
 }

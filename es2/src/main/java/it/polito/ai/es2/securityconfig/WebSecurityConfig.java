@@ -44,26 +44,22 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
   @Autowired // non override perchè ho dichiarato prima il bean per AuthenticationManagerBuilder. Nota: nome metodo irrelevante con autowired
   public void configure(AuthenticationManagerBuilder auth_builder, DataSource dataSource) throws Exception {
     auth_builder.userDetailsService(userDetailsServiceImpl).passwordEncoder(passwordEncoder());
-    
-    auth_builder.jdbcAuthentication().dataSource(dataSource)
-//        .withUser("u1").password(passwordEncoder().encode("pass")).roles("user","Guest")
-//        .and().withUser("U2").password(passwordEncoder().encode("PASS")).roles("User","Guest")
-//        .and().withUser("User_jdbc").password(passwordEncoder().encode("Pass_Jdbc")).roles("User","guest","admin")
+  
+    auth_builder.inMemoryAuthentication()
+        .withUser("mem")
+        .password(passwordEncoder().encode("mem"))
+        .roles("user", "guest", "admin");
+  
+    // remember to load schema.sql first!
+//    auth_builder.jdbcAuthentication().dataSource(dataSource)
+//        .withUser("jdbc").password(passwordEncoder().encode("jdbc")).roles("admin","Guest")
 /*        .usersByUsernameQuery("select email,password,enabled "
                                   + "from bael_users "
                                   + "where email = ?")
         .authoritiesByUsernameQuery("select email,authority "
                                         + "from authorities "
                                         + "where email = ?");
-   */;
-    auth_builder.inMemoryAuthentication()
-        .withUser("Tizio")
-        .password(passwordEncoder().encode("Alfa"))
-        .roles("user")
-        .and()
-        .withUser("u")
-        .password(passwordEncoder().encode("p"))
-        .roles("guest");
+   */
   }
   
   @Override
@@ -84,7 +80,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         .antMatchers("/testing/**").permitAll()
         .antMatchers("/*").authenticated()
         .antMatchers("/users/**").authenticated()
-//        .antMatchers("/API/**").hasRole("professor")
+        .antMatchers("/API/**").authenticated()
         // all other requests need to be authenticated
         .anyRequest().authenticated()
 //        .and()

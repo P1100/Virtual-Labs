@@ -41,10 +41,10 @@ public class HomeController {
         ;
   }
   
+  // TODO: spostare in controller rest TeamController?
   @PostMapping("/propose")
   public String propose_team(@ModelAttribute("command") TeamViewModel teamViewModel,
                              BindingResult bindingResult, Model model) {
-    // TODO: remove testing parameter later
 //    teamViewModel = new TeamViewModel((long) 999, "Team_testing_email", "Course_testing_email", Arrays.asList("S1", "S2", "S3"));
     System.out.println("TeamViewModel:" + teamViewModel);
     TeamDTO created_team;
