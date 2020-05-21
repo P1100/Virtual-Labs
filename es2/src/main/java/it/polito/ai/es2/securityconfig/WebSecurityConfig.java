@@ -12,9 +12,11 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 import javax.sql.DataSource;
 
@@ -44,11 +46,11 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
   @Autowired // non override perchè ho dichiarato prima il bean per AuthenticationManagerBuilder. Nota: nome metodo irrelevante con autowired
   public void configure(AuthenticationManagerBuilder auth_builder, DataSource dataSource) throws Exception {
     auth_builder.userDetailsService(userDetailsServiceImpl).passwordEncoder(passwordEncoder());
-  
-    auth_builder.inMemoryAuthentication()
-        .withUser("mem")
-        .password(passwordEncoder().encode("mem"))
-        .roles("USER", "GUEST", "ADMIN");
+
+//    auth_builder.inMemoryAuthentication()
+//        .withUser("mem")
+//        .password(passwordEncoder().encode("mem"))
+//        .roles("USER", "GUEST", "ADMIN");
   
     // remember to load schema.sql first!
 //    auth_builder.jdbcAuthentication().dataSource(dataSource)
@@ -65,11 +67,10 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
   @Override
   protected void configure(HttpSecurity httpSecurity) throws Exception {
     httpSecurity
-//        .httpBasic().disable()
+        .httpBasic().disable()
         .csrf().disable()
         .cors().disable()
-        .formLogin()
-        .and() //.antMatcher("/**") --> applies to all?
+//        .formLogin().and() //.antMatcher("/**") --> applies to all?
         .authorizeRequests()
         .antMatchers("/jwt/authenticate", "/jwt/register").permitAll()
         .antMatchers("/notification/**").permitAll()
@@ -78,15 +79,14 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         .antMatchers("/*").authenticated()
         .antMatchers("/users/**").authenticated()
         .anyRequest().permitAll()
-//        .and()
-//        .exceptionHandling().authenticationEntryPoint(jwtAuthenticationEntryPoint)
-//        .and()
-//        .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+        .and()
+        .exceptionHandling().authenticationEntryPoint(jwtAuthenticationEntryPoint)
+        .and()
+        .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
     ;
   
-    // TODO: uncomment for enabling jwt
     // Add a filter to validate the tokens with every request
-//    httpSecurity.addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class);
+    httpSecurity.addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class);
   }
   
   //configura la catena dei filtri di sicurezza

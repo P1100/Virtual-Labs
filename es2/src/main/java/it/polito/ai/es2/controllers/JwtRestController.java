@@ -25,7 +25,17 @@ public class JwtRestController {
   @Autowired
   private UserDetailsServiceImpl userDetailsService;
   
-  // {"username":"jack","password":"pass"}
+  @GetMapping("/testjwt")
+  public String test() {
+    return "THIS IS A OK TEST";
+  }
+  
+  @PostMapping("/testjwt")
+  public String test2() {
+    return "THIS IS A OK TEST";
+  }
+  
+  // {"username":"admin","password":"a"}
   @RequestMapping(value = "/authenticate", method = RequestMethod.POST)
   public ResponseEntity<?> createAuthenticationToken(@RequestBody JwtRequest authenticationRequest) throws Exception {
     authenticate(authenticationRequest.getUsername(), authenticationRequest.getPassword());
@@ -35,6 +45,7 @@ public class JwtRestController {
     return ResponseEntity.ok(new JwtResponse(token));
   }
   
+  // {"username":"admin","password":"a"}
   @RequestMapping(value = "/register", method = RequestMethod.POST)
   public ResponseEntity<?> saveUser(@RequestBody UserDTO user) throws Exception {
     return ResponseEntity.ok(userDetailsService.save(user));

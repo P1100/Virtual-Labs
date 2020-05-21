@@ -23,6 +23,9 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
+// {
+//    "token": "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhZG1pbiIsImV4cCI6MTU5MDEwNDY4NywiaWF0IjoxNTkwMDg2Njg3fQ.qkadKxK4Hx3Cl-ziZlSdKP-erqpxpGCQ3ux39JPAWP7_FBgkaMFKhekFrxffqaZ5I40Zc1J4BgW_1kgtKcDeaw"
+//}
 @Service
 @Transactional
 public class NotificationServiceImpl implements NotificationService {
@@ -43,6 +46,7 @@ public class NotificationServiceImpl implements NotificationService {
   Environment environment;
   
   @Override
+//  @Async
   public void sendMessage(String emailAddress, String subject, String body) {
     SimpleMailMessage message = new SimpleMailMessage();
     message.setTo(emailAddress);

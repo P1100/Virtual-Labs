@@ -24,7 +24,6 @@ import java.util.Optional;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
-// TODO: aggiungere token jwt bearer nelle richieste (manualmente, per testing)
 @RestController
 @RequestMapping("/API/courses")
 public class CourseRestController {
