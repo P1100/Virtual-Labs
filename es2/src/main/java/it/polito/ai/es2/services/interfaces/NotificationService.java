@@ -1,4 +1,4 @@
-package it.polito.ai.es2.services;
+package it.polito.ai.es2.services.interfaces;
 
 import it.polito.ai.es2.dtos.TeamDTO;
 

@@ -1,4 +1,4 @@
-package it.polito.ai.es2.securityconfig;
+package it.polito.ai.es2.services;
 
 import it.polito.ai.es2.dtos.UserDTO;
 import it.polito.ai.es2.entities.User;

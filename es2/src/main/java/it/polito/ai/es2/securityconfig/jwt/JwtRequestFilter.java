@@ -1,7 +1,7 @@
 package it.polito.ai.es2.securityconfig.jwt;
 
 import io.jsonwebtoken.ExpiredJwtException;
-import it.polito.ai.es2.securityconfig.UserDetailsServiceImpl;
+import it.polito.ai.es2.services.UserDetailsServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
