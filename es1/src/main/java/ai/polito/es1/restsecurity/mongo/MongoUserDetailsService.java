@@ -14,7 +14,7 @@ import java.util.List;
 //@Component
 public class MongoUserDetailsService implements UserDetailsService {
   @Autowired
-  private UsersRepository repository;
+  private MongoUsersRepository repository;
   @Autowired
   PasswordEncoder pe;
   
