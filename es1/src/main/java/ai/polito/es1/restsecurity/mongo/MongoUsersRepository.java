@@ -6,6 +6,6 @@ import org.springframework.data.mongodb.repository.MongoRepository;
 //db.users.insert({  "username" : "user",  "password" : "pass"})
 
 //@Repository
-public interface UsersRepository extends MongoRepository<Users, String> {
+public interface MongoUsersRepository extends MongoRepository<Users, String> {
   Users findByUsername(String username);
 }
