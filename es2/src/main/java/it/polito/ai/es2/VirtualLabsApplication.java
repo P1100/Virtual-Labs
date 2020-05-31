@@ -18,11 +18,14 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.core.env.Environment;
 
+//TODO: passare a JDK14
+//TODO: Integrare con es1 (da sessione a jwt), mantenendo doppia struttura single page e multi page
+//TODO: fare tutti i test! importante
 @SpringBootApplication
 @Log
-public class Es2Application {
+public class VirtualLabsApplication {
   public static void main(String[] args) {
-    SpringApplication.run(Es2Application.class, args);
+    SpringApplication.run(VirtualLabsApplication.class, args);
   }
   
   @Bean
@@ -127,7 +130,7 @@ public class Es2Application {
 //         DONT WORK WITH LAZY LOADING
 //                courseRepository.findAll().stream().forEach(i -> System.out.println(i.toString()));
 //                studentRepository.findAll().stream().forEach(i -> System.out.println(i.toString()));
-  
+        
         // NOT WORKING --> org.hibernate.LazyInitializationException: failed to lazily initialize a collection of role: it.polito.ai.es2.entities.Course.teams, could not initialize proxy - no Session
 //        testservice.entity_manager_test();
 //        if (true) return;
