@@ -22,6 +22,11 @@ import {DashboardComponent} from './dashboard/dashboard.component';
 import {MatGridListModule} from '@angular/material/grid-list';
 import {MatCardModule} from '@angular/material/card';
 import {MatMenuModule} from '@angular/material/menu';
+import {MatAutocompleteModule} from '@angular/material/autocomplete';
+import {MatFormFieldModule} from '@angular/material/form-field';
+import {MatCheckboxModule} from '@angular/material/checkbox';
+import {FormsModule} from '@angular/forms';
+import {MatInputModule} from '@angular/material/input';
 
 @NgModule({
   declarations: [
@@ -33,6 +38,7 @@ import {MatMenuModule} from '@angular/material/menu';
     DashboardComponent
   ],
   imports: [
+    MatInputModule,
     BrowserModule,
     BrowserAnimationsModule,
     MatToolbarModule,
@@ -48,7 +54,11 @@ import {MatMenuModule} from '@angular/material/menu';
     DragDropModule,
     MatGridListModule,
     MatCardModule,
-    MatMenuModule
+    MatMenuModule,
+    MatAutocompleteModule,
+    MatFormFieldModule,
+    MatCheckboxModule,
+    FormsModule
   ],
   providers: [],
   bootstrap: [AppComponent]
