@@ -12,23 +12,26 @@ import {MatAutocompleteSelectedEvent} from '@angular/material/autocomplete';
   styleUrls: ['./students.component.css']
 })
 export class StudentsComponent implements OnInit, AfterViewInit {
-
   @Input() enrolledStudents: Student[];
   @Input() allStudents: Student[];
 
-  columnsToDisplay = ['select', 'id', 'name', 'firstName'];
+  displayedColumns: string[] = ['select', 'id', 'name', 'firstName'];
   checked;
   dataSource: MatTableDataSource<Student>;
-  checked_count = 0;
-  master_status = 0; //0:unchecked, 1:checked, 2:intermediate;
+  checkedCount = 0;
+  masterStatus = 0; // {0:unchecked, 1:checked, 2:intermediate};
 
   filteredOptions: Student[] = this.allStudents;
   studentToAdd: Student;
 
+  // MatPaginator Inputs
+  length;
+  pageSize = 12;
+  pageSizeOptions: number[] = [1, 2, 5, 10, 20];
+
   @ViewChild(MatSidenav) matsidenav: MatSidenav;
   @ViewChild(MatSort) sort: MatSort;
   @ViewChild(MatPaginator) paginator: MatPaginator;
-  value = 'clear me';
 
   ngOnInit() {
     this.dataSource = new MatTableDataSource<Student>(this.enrolledStudents);
@@ -44,9 +47,9 @@ export class StudentsComponent implements OnInit, AfterViewInit {
       this.checked.set(key, flag);
     }
     if (flag) {
-      this.checked_count = this.checked.size;
+      this.checkedCount = this.checked.size;
     } else {
-      this.checked_count = 0;
+      this.checkedCount = 0;
     }
   }
 
@@ -59,21 +62,21 @@ export class StudentsComponent implements OnInit, AfterViewInit {
     }
     let current_state = this.checked.get(row);
     if (current_state) {
-      this.checked_count--;
-      if (this.checked_count === 0) {
-        this.master_status = 0;
+      this.checkedCount--;
+      if (this.checkedCount === 0) {
+        this.masterStatus = 0;
 
-      } else if (this.checked_count === (checked_size - 1)) {
-        this.master_status = 2;
+      } else if (this.checkedCount === (checked_size - 1)) {
+        this.masterStatus = 2;
 
       }
     } else {
-      this.checked_count++;
-      if (this.checked_count === checked_size) {
-        this.master_status = 1;
+      this.checkedCount++;
+      if (this.checkedCount === checked_size) {
+        this.masterStatus = 1;
 
-      } else if (this.checked_count == 1) {
-        this.master_status = 2;
+      } else if (this.checkedCount === 1) {
+        this.masterStatus = 2;
 
       }
     }
@@ -82,33 +85,28 @@ export class StudentsComponent implements OnInit, AfterViewInit {
   }
 
   toggleCheckboxMaster(event: Event) {
-    if (this.master_status === 2 || this.master_status === 1) {
-      console.log('check master --> uncheked');
-      this.master_status = 0;
+    if (this.masterStatus === 2 || this.masterStatus === 1) {
+      this.masterStatus = 0;
       this.checkAll(false);
     } else {
-      console.log('check master --> cheked');
-      this.master_status = 1;
+      this.masterStatus = 1;
       this.checkAll(true);
     }
   }
 
-  isChecked(row) {
+  isChecked(row: string) {
     if (row === 'master') {
-      if (this.master_status === 0 || this.master_status === 2) {
+      if (this.masterStatus === 0 || this.masterStatus === 2) {
         return false;
       }
-      console.log('checked true');
       return true;
     } else {
       return this.checked.get(row);
     }
-
   }
 
   isIndeterminate() {
-    if (this.master_status === 2) {
-      console.log('indeterminate true');
+    if (this.masterStatus === 2) {
       return true;
     }
     return false;
@@ -118,8 +116,8 @@ export class StudentsComponent implements OnInit, AfterViewInit {
     this.enrolledStudents = this.enrolledStudents.filter(x => !this.checked.get(x.id));
     this.dataSource.data = this.enrolledStudents;
     this.checked = new Map(this.enrolledStudents.map(x => [x.id, false]));
-    this.checked_count = 0;
-    this.master_status = 0;
+    this.checkedCount = 0;
+    this.masterStatus = 0;
   }
 
   displayFn(student: Student): string {
@@ -132,7 +130,7 @@ export class StudentsComponent implements OnInit, AfterViewInit {
   }
 
   saveOption(event: MatAutocompleteSelectedEvent) {
-    this.studentToAdd = (event as unknown as MatAutocompleteSelectedEvent).option.value;
+    this.studentToAdd = (event).option.value;
   }
 
   addStudent(event: Event) {
@@ -140,8 +138,8 @@ export class StudentsComponent implements OnInit, AfterViewInit {
       this.enrolledStudents.push(this.studentToAdd);
       this.checked.set(this.studentToAdd.id, false);
       this.studentToAdd = null;
-      if (this.master_status === 1) {
-        this.master_status = 2;
+      if (this.masterStatus === 1) {
+        this.masterStatus = 2;
       }
       this.sortData();
     }
