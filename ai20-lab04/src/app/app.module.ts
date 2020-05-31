@@ -11,14 +11,10 @@ import {MatButtonModule} from '@angular/material/button';
 import {MatIconModule} from '@angular/material/icon';
 import {StudentsComponent} from './students/students.component';
 import {MatTabsModule} from '@angular/material/tabs';
-import {NavigationComponent} from './navigation/navigation.component';
-import {TableComponent} from './table/table.component';
 import {MatTableModule} from '@angular/material/table';
 import {MatPaginatorModule} from '@angular/material/paginator';
 import {MatSortModule} from '@angular/material/sort';
-import {DragdropComponent} from './dragdrop/dragdrop.component';
 import {DragDropModule} from '@angular/cdk/drag-drop';
-import {DashboardComponent} from './dashboard/dashboard.component';
 import {MatGridListModule} from '@angular/material/grid-list';
 import {MatCardModule} from '@angular/material/card';
 import {MatMenuModule} from '@angular/material/menu';
@@ -31,11 +27,7 @@ import {MatInputModule} from '@angular/material/input';
 @NgModule({
   declarations: [
     AppComponent,
-    StudentsComponent,
-    NavigationComponent,
-    TableComponent,
-    DragdropComponent,
-    DashboardComponent
+    StudentsComponent
   ],
   imports: [
     MatInputModule,

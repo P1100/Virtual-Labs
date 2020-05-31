@@ -22,7 +22,7 @@ export class AppComponent implements OnInit {
   title = 'VirtualLabs';
   courses = ['Applicazioni Internet', 'Programmazione di sistema'];
   allStudents = DB_STUDENT;
-  enrolledStudents: Student[] = [...DB_STUDENT.slice(1, 5)];
+  enrolledStudents: Student[] = [...DB_STUDENT.slice(2, 8)];
 
   ngOnInit(): void {
     console.log('On init: ' + this.title);
