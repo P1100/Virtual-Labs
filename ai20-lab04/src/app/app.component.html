@@ -1,67 +1,36 @@
-<!--<div>
-  <app-navigation></app-navigation>
-  <app-dragdrop></app-dragdrop>
-  <app-table></app-table>
-  <app-students></app-students>
-</div>-->
+<mat-toolbar color="primary">
+  <button
+    type="button"
+    aria-label="Toggle sidenav"
+    mat-icon-button
+    (click)="drawer.toggle()">
+    <mat-icon aria-label="Side nav toggle icon">menu</mat-icon>
+  </button>
+  <span>{{title}}</span>
+</mat-toolbar>
+<mat-toolbar>Applicazioni internet</mat-toolbar>
 
-<div>
-  <mat-toolbar color="primary" class="example-toolbar">
-    <!--    <button mat-icon-button (click)="snav.toggle()">-->
-    <!--      <mat-icon>menu</mat-icon>-->
-    <!--    </button>-->
-    <h1 class="example-app-name">VirtualLabs</h1>
-  </mat-toolbar>
-  <mat-toolbar>Applicazioni internet</mat-toolbar>
-  <mat-tab-group>
-    <mat-tab label="First"> Content 1</mat-tab>
-    <mat-tab label="Second"> Content 2</mat-tab>
-    <mat-tab label="Third"> Content 3</mat-tab>
-  </mat-tab-group>
-</div>
-
-<!--TESTING-->
-<div style="text-align:center">
-  <h1>
-    Welcome to <span (click)="toggleTitle($event)">{{ title | lowercase}}</span>!
-  </h1>
-  <p>Today is {{today | date:'short'}}</p>
-  <!--  <p>Today yyyy is {{ todayf() | date:'yyyy' }}</p>-->
-  <p>Today short is {{today | date}}</p>
-  <p>Or if you prefer, {{today | date:'fullDate'}}</p>
-  <p>The time is {{today | date:'h:mm a z'}}</p>
-
-  <p>
-    <input #yourname (input)="0" value="type your name here" (click)="getHTMLAttributeValue()"><br>
-    {{ yourname.value }}
-    <!--    -  {{ bindingInput }}  generates error -->
-  </p>
-  <div>
-    <button (click)="getHTMLAttributeValue()">Get HTML attribute value</button>
-    Won't change.<br>
-    <button (click)="getDOMPropertyValue()">Get DOM property value</button>
-    Changeable. Angular works with these.<br>
-    <button id="testButton" (click)="working()">Test Button</button>
-    <br>
-    <button (click)="toggleDisabled()">Toggle disabled property for Test Button</button>
-  </div>
-</div>
-<input (keyup)="onKey($event)"><p>{{values}}</p>
-
-<!--
-<h2>Reference variables, forms, and NgForm</h2>
-<form #itemForm="ngForm" (ngSubmit)="onSubmit(itemForm)">
-  <label for="name">Name <input class="form-control" id="name" name="name" ngModel required />
-  </label>
-  <button type="submit">Submit</button>
-</form>
-
-{{!itemForm.form.valid}}
-<div [hidden]="!itemForm.form.valid">
-  <p>{{ submitMessage }}</p>
-</div>
-
-<p>JSON: {{ itemForm.form.value | json }}</p>
--->
-
-<p>TEST OUTSIDE NAVBAR</p>
+<mat-sidenav-container class="sidenav-container">
+  <mat-sidenav #drawer class="sidenav" mode="side" opened position="start">
+    <div class="container-small">
+      <mat-nav-list>
+        <mat-list-item *ngFor="let course of courses">
+          <span>{{course}}</span>
+        </mat-list-item>
+      </mat-nav-list>
+    </div>
+  </mat-sidenav>
+  <mat-sidenav-content>
+    <mat-tab-group>
+      <mat-tab label="Studenti">
+        <div class="container">
+          <app-students [enrolledStudents]="enrolledStudents" [allStudents]="allStudents"></app-students>
+        </div>
+      </mat-tab>
+      <mat-tab label="Gruppi">
+        <div class="container">
+        </div>
+      </mat-tab>
+    </mat-tab-group>
+  </mat-sidenav-content>
+</mat-sidenav-container>
