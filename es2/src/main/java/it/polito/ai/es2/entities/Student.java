@@ -8,7 +8,6 @@ import javax.validation.constraints.NotBlank;
 import java.util.ArrayList;
 import java.util.List;
 
-//TODO: creare entity professor, e vedere come interconnettere con user
 @Data
 @Entity
 public class Student {

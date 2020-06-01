@@ -8,10 +8,14 @@ mysql> SET foreign_key_checks = 1;
 
 # Current
 `docker run -d -v /home/myes2mariadb:/var/lib/mysql -p 3306:3306 --name es2 -e MYSQL_ROOT_PASSWORD=root -d mariadb`
+## Docker Toolbox Windows
+`docker run -d -v //c/Users/src://usr//mysql -p 3306:3306 --name es2 -e MYSQL_ROOT_PASSWORD=root -d mariadb`
+
+
+# SQL
 
 `CREATE DATABASE teams;`
 
-# SQL
 Select *
 FROM team t JOIN course c on t.course_id = c.name NATURAL JOIN teams_students ts JOIN student st ON ts.student_id = st.id ;
 

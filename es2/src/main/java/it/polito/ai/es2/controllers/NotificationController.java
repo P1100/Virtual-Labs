@@ -1,6 +1,9 @@
 package it.polito.ai.es2.controllers;
 
-import it.polito.ai.es2.services.interfaces.NotificationService;
+import it.polito.ai.es2.domains.TeamViewModel;
+import it.polito.ai.es2.dtos.TeamDTO;
+import it.polito.ai.es2.services.NotificationService;
+import it.polito.ai.es2.services.TeamService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
