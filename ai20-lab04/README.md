@@ -2,6 +2,16 @@
 
 This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 9.1.7.
 
+## Comandi usati
+ng generate component teacher/studentsCont --flat --module app
+ng generate module app-routing-module --flat --module=app
+ng generate component PageNotFound --module=app --inlineTemplate --inlineStyle
+ng generate component OtherCourse --module=app --inlineTemplate --inlineStyle
+ng generate component VmsCont --module=app
+ng generate component GroupsCont --module=app
+ng generate component AssignmentsCont --module=app
+ng generate component Home --module=app
+
 ## Development server
 
 Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The app will automatically reload if you change any of the source files.

@@ -1,8 +1,10 @@
 <div class="student_div">
-  <h3>Elenco studenti iscritti al corso</h3>
+  <h3>Students enrolled in the course</h3>
   <br>
 
   <form class="example-form">
+    <!--TODO: rivedere codice autocomplete, e controllare che compaia quando si seleziona -->
+    <!--    TODO: aggiungere funzionalità autocomplete con nome che appare durante inserimento (vedere videolezione)-->
     <mat-form-field class="example-form-field">
       <input matInput type="search" #input (keyup)="activateFilter($event)" placeholder="Add student"
              [matAutocomplete]="auto">
@@ -21,6 +23,7 @@
   <table mat-table class="mat-elevation-z8" [dataSource]="dataSource" matSort (matSortChange)="changeSort($event)">
     <ng-container matColumnDef="select">
       <th mat-header-cell *matHeaderCellDef>
+        <!--        TODO: codice checkbox da ricontrollare e verificare -->
         <mat-checkbox (click)="toggleCheckboxMaster($event); $event.preventDefault()"
                       (change)="toggleCheckboxMaster($event)" [checked]="isChecked('master')"
                       [indeterminate]="isIndeterminate()"></mat-checkbox>
@@ -30,7 +33,6 @@
                       [checked]="isChecked(element.id)"></mat-checkbox>
       </td>
     </ng-container>
-
     <ng-container matColumnDef="id">
       <th mat-header-cell *matHeaderCellDef mat-sort-header> ID</th>
       <td mat-cell *matCellDef="let element"> {{element.id}} </td>
@@ -43,10 +45,15 @@
       <th mat-header-cell *matHeaderCellDef mat-sort-header> First Name</th>
       <td mat-cell *matCellDef="let element"> {{element.firstName}} </td>
     </ng-container>
-    <!--    matHeaderRowDef not getting-->
+    <ng-container matColumnDef="group">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header> Group</th>
+      <td mat-cell *matCellDef="let element"> {{element.group}} </td>
+    </ng-container>
+    <!--    matHeaderRowDef error/bug will be fixed in next version of webstorm-->
     <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
     <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
   </table>
+
   <mat-paginator [length]="length"
                  [pageSize]="pageSize"
                  [pageSizeOptions]="pageSizeOptions"

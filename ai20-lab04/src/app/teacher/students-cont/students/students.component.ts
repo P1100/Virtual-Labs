@@ -1,5 +1,5 @@
 import {AfterViewInit, Component, Input, OnInit, ViewChild} from '@angular/core';
-import {Student} from '../student.module';
+import {Student} from '../../../student';
 import {MatTableDataSource} from '@angular/material/table';
 import {MatSidenav} from '@angular/material/sidenav';
 import {MatSort} from '@angular/material/sort';
@@ -15,7 +15,7 @@ export class StudentsComponent implements OnInit, AfterViewInit {
   @Input() enrolledStudents: Student[];
   @Input() allStudents: Student[];
 
-  displayedColumns: string[] = ['select', 'id', 'name', 'firstName'];
+  displayedColumns: string[] = ['select', 'id', 'name', 'firstName', 'group'];
   checked;
   dataSource: MatTableDataSource<Student>;
   checkedCount = 0;
@@ -55,24 +55,24 @@ export class StudentsComponent implements OnInit, AfterViewInit {
 
   toggleCheckboxRow(event: Event, row) {
     console.log('here');
-    let checked_size = this.checked.size;
+    const checkedSize = this.checked.size;
     if (!this.checked.has(row)) {
       console.log('Error');
       return;
     }
-    let current_state = this.checked.get(row);
-    if (current_state) {
+    const currentState = this.checked.get(row);
+    if (currentState) {
       this.checkedCount--;
       if (this.checkedCount === 0) {
         this.masterStatus = 0;
 
-      } else if (this.checkedCount === (checked_size - 1)) {
+      } else if (this.checkedCount === (checkedSize - 1)) {
         this.masterStatus = 2;
 
       }
     } else {
       this.checkedCount++;
-      if (this.checkedCount === checked_size) {
+      if (this.checkedCount === checkedSize) {
         this.masterStatus = 1;
 
       } else if (this.checkedCount === 1) {
@@ -80,7 +80,7 @@ export class StudentsComponent implements OnInit, AfterViewInit {
 
       }
     }
-    this.checked.set(row, !current_state);
+    this.checked.set(row, !currentState);
 
   }
 
@@ -150,6 +150,7 @@ export class StudentsComponent implements OnInit, AfterViewInit {
     this.sortData();
   }
 
+  // TODO: rivedere logica sort bene
   sortData() {
     const data = this.enrolledStudents.slice();
     if (!this.sort.active || this.sort.direction === '') {

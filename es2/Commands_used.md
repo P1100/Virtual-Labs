@@ -8,9 +8,8 @@ mysql> SET foreign_key_checks = 1;
 
 # Current
 `docker run -d -v /home/myes2mariadb:/var/lib/mysql -p 3306:3306 --name es2 -e MYSQL_ROOT_PASSWORD=root -d mariadb`
-## Docker Toolbox Windows
-`docker run -d -v //c/Users/src://usr//mysql -p 3306:3306 --name es2 -e MYSQL_ROOT_PASSWORD=root -d mariadb`
-
+## Docker Toolbox Windows -> problema, toolbox non scrive dati su directory volume
+`docker run -d --rm -v "/c/Users/dockertbx:/var/mariadb" -p 3306:3306 --name es2 -e MYSQL_ROOT_PASSWORD=root -d mariadb`
 
 # SQL
 
