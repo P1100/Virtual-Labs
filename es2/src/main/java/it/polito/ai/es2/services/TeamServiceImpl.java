@@ -366,6 +366,7 @@ public class TeamServiceImpl implements TeamService {
   /**
    * {@link it.polito.ai.es2.controllers.TeamRestController#proposeTeam(String, String, List)}
    */
+  // TODO: credo di aver fatto in modo che non ci possono essere piú gruppi con lo stesso nome per lo stesso corso, check in fase di creazione
   @Override
   @PreAuthorize("hasRole('ADMIN') or hasRole('STUDENT')")
   public TeamDTO proposeTeam(String courseName, String team_name, List<String> memberIds) throws TeamServiceException {
