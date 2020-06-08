@@ -2,8 +2,12 @@
   "name": "ai20-lab04",
   "version": "0.0.0",
   "scripts": {
+    "jsonserver": "json-server-auth db.json -r routes.json --port 3000",
+    "start": "npm run startAll-windows",
+    "startAll-windows": "start npm run jsonserver & start ng serve",
+    "startAll-linux": "npm run jsonserver & ng serve",
     "ng": "ng",
-    "start": "ng serve",
+    "serve": "ng serve",
     "build": "ng build",
     "test": "ng test",
     "lint": "ng lint",

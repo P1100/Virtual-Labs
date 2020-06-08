@@ -23,7 +23,7 @@
   <table mat-table class="mat-elevation-z8" [dataSource]="dataSource" matSort (matSortChange)="changeSort($event)">
     <ng-container matColumnDef="select">
       <th mat-header-cell *matHeaderCellDef>
-        <!--        TODO: codice checkbox da ricontrollare e verificare -->
+        <!--        TODO: codice checkbox da ricontrollare e verificare. Notare come master funziona su tutte le checkbox, anche quelle nascoste -->
         <mat-checkbox (click)="toggleCheckboxMaster($event); $event.preventDefault()"
                       (change)="toggleCheckboxMaster($event)" [checked]="isChecked('master')"
                       [indeterminate]="isIndeterminate()"></mat-checkbox>

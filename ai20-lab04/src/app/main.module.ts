@@ -1,7 +1,7 @@
 import {BrowserModule} from '@angular/platform-browser';
 import {NgModule} from '@angular/core';
 
-import {AppComponent} from './app/app.component';
+import {AppComponent} from '../_unused/app/app.component';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {MatToolbarModule} from '@angular/material/toolbar';
 import {MatSidenavModule} from '@angular/material/sidenav';
@@ -24,14 +24,16 @@ import {MatCheckboxModule} from '@angular/material/checkbox';
 import {FormsModule} from '@angular/forms';
 import {MatInputModule} from '@angular/material/input';
 import {StudentsContComponent} from './teacher/students-cont/students-cont.component';
-import {AppRoutingModuleModule} from './app-routing-module.module';
+import {MainRoutingModule} from './main-routing.module';
 import {OtherCourseComponent} from './other-course/other-course.component';
 import {PageNotFoundComponent} from './page-not-found/page-not-found.component';
-import {VmsContComponent} from './vms-cont/vms-cont.component';
-import {GroupsContComponent} from './groups-cont/groups-cont.component';
-import {AssignmentsContComponent} from './assignments-cont/assignments-cont.component';
+import {VmsContComponent} from './teacher/vms-cont/vms-cont.component';
+import {GroupsContComponent} from './teacher/groups-cont/groups-cont.component';
+import {AssignmentsContComponent} from './teacher/assignments-cont/assignments-cont.component';
 import {HomeComponent} from './home/home.component';
 
+// ToDO: Passare a SSL nel progetto finale (?!)
+// Removed Ivy support, in ./tsconfig.json, for compatibility with augury
 @NgModule({
   declarations: [
     AppComponent,
@@ -66,10 +68,10 @@ import {HomeComponent} from './home/home.component';
     MatFormFieldModule,
     MatCheckboxModule,
     FormsModule,
-    AppRoutingModuleModule
+    MainRoutingModule
   ],
   providers: [],
-  bootstrap: [AppComponent]
+  bootstrap: [HomeComponent]
 })
-export class AppModule {
+export class MainModule {
 }

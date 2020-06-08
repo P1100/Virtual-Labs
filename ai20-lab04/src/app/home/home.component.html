@@ -1,1 +1,73 @@
-<p>home works!</p>
+<mat-toolbar color="primary">
+  <button
+    type="button"
+    aria-label="Toggle sidenav"
+    mat-icon-button
+    (click)="drawer.toggle()">
+    <mat-icon aria-label="Side nav toggle icon">menu</mat-icon>
+  </button>
+  <a routerLink="/home" class="not-active">{{title}}</a>
+</mat-toolbar>
+
+<mat-toolbar>Applicazioni Internet</mat-toolbar>
+
+<!--TODO: rivedere codice sidenav (responsive) da material-->
+<mat-sidenav-container class="sidenav-container">
+  <mat-sidenav #drawer class="sidenav" mode="side" opened position="start">
+    <div class="container-small">
+
+      <!--      TODO: change from course manual course name, to :course_name. Need to update active course somewhere (using [()] ?) -->
+      <mat-nav-list>
+        <mat-list-item *ngFor="let course of courses">
+          <a mat-list-item
+             routerLink="{{course.path}}"
+             routerLinkActive #rla1="routerLinkActive">{{course.label}} + {{rla1.isActive}}</a>
+          <!--          [routerLinkActive]="activeCourse"-->
+        </mat-list-item>
+      </mat-nav-list>
+
+    </div>
+  </mat-sidenav>
+
+  <mat-sidenav-content>
+    <!--    <mat-tab-group>-->
+    <nav mat-tab-nav-bar>
+      <a mat-tab-link
+         *ngFor="let link of navLinks"
+         [routerLink]="link.path"
+         routerLinkActive #rla="routerLinkActive"
+         [active]="rla.isActive">
+        {{link.label}}
+      </a>
+      <!--            <mat-tab label="VMs">-->
+      <!--            </mat-tab>-->
+      <!--            <mat-tab label="Assignments">-->
+      <!--            </mat-tab>-->
+      <!--            <mat-tab label="Groups">-->
+      <!--              <div class="container">-->
+      <!--              </div>-->
+      <!--            </mat-tab>-->
+    </nav>
+    <div class="container">
+      <router-outlet [title]="title"></router-outlet>
+      <!--      <app-students-cont></app-students-cont>-->
+    </div>
+  </mat-sidenav-content>
+
+</mat-sidenav-container>
+
+
+<!--So adding a new variable
+
+export class myComponent {
+        private dynamicParameter = '129';
+        public routerLinkVariable = "/home";
+
+Updating the [routerLink]
+
+  <a [routerLink]="[routerLinkVariable,dynamicParameter]"></a>
+
+When you want to click on this link, it would become:
+
+  <a href="/home/129"></a>
+-->

@@ -1,10 +1,10 @@
 export class Course {
   id: number;
-  title: string;
+  label: string;
   path: string;
-  constructor(id: number, title: string, path: string) {
+  constructor(id: number, label: string, path: string) {
     this.id = id;
-    this.title = title;
+    this.label = label;
     this.path = path;
   }
 }

@@ -6,6 +6,7 @@ import {MatSort} from '@angular/material/sort';
 import {MatPaginator} from '@angular/material/paginator';
 import {MatAutocompleteSelectedEvent} from '@angular/material/autocomplete';
 
+// TODO: classe molto incasinata, forse si puó migliorare leggibilitá separando e raggruppando funzione per elemento HTML?
 @Component({
   selector: 'app-students',
   templateUrl: './students.component.html',
@@ -167,7 +168,7 @@ export class StudentsComponent implements OnInit, AfterViewInit {
         case 'id':
           return compare(a.id, b.id, isAsc);
         case 'firstName':
-          return compare(a.firstName, b.firstName, isAsc);
+          return compare(a.surname, b.surname, isAsc);
         default:
           return 0;
       }

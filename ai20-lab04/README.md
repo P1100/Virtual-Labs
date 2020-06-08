@@ -11,6 +11,16 @@ ng generate component VmsCont --module=app
 ng generate component GroupsCont --module=app
 ng generate component AssignmentsCont --module=app
 ng generate component Home --module=app
+npm start
+npm run jsonserver
+
+## Comandi browser
+http://localhost:3000/students?_expand=group
+
+## Custom settings
+In node_modules/json-server-auth/dist/constants.js, changed from '1h'
+
+`exports.JWT_EXPIRES_IN = '999999h';`
 
 ## Development server
 

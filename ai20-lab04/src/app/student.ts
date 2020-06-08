@@ -1,12 +1,16 @@
 export class Student {
-  id: string;
+  id: number;
+  serial: string;
   name: string;
-  firstName: string;
-  group: string;
-  constructor(id: string, name: string, firstName: string, group: string) {
+  surname: string;
+  groupId: number;
+  courseId: number;
+  constructor(id: number, serial: string, name: string, surname: string, groupId: number, courseId: number) {
     this.id = id;
+    this.serial = serial;
     this.name = name;
-    this.firstName = firstName;
-    this.group = group;
+    this.surname = surname;
+    this.groupId = groupId;
+    this.courseId = courseId;
   }
 }
