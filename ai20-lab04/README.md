@@ -31,6 +31,7 @@ In node_modules/json-server-auth/dist/constants.js, changed from '1h'
 `exports.JWT_EXPIRES_IN = '999999h';`
 
 In tslint.json
+    "no-trailing-whitespace": false
     "variable-name": {
       "options": [
         "allow-leading-underscore",

@@ -21,7 +21,7 @@ import {MatMenuModule} from '@angular/material/menu';
 import {MatAutocompleteModule} from '@angular/material/autocomplete';
 import {MatFormFieldModule} from '@angular/material/form-field';
 import {MatCheckboxModule} from '@angular/material/checkbox';
-import {FormsModule} from '@angular/forms';
+import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {MatInputModule} from '@angular/material/input';
 import {StudentsContComponent} from './teacher/students-cont/students-cont.component';
 import {MainRoutingModule} from './main-routing.module';
@@ -68,7 +68,8 @@ import {HomeComponent} from './home/home.component';
     MatFormFieldModule,
     MatCheckboxModule,
     FormsModule,
-    MainRoutingModule
+    MainRoutingModule,
+    ReactiveFormsModule
   ],
   providers: [],
   bootstrap: [HomeComponent]
