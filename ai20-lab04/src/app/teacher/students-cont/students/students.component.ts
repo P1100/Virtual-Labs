@@ -1,5 +1,5 @@
-import {AfterViewInit, Component, Input, OnInit, ViewChild} from '@angular/core';
-import {Student} from '../../../student';
+import {AfterViewInit, Component, EventEmitter, Input, OnInit, Output, ViewChild} from '@angular/core';
+import {Student} from '../../../services/student';
 import {MatTableDataSource} from '@angular/material/table';
 import {MatSidenav} from '@angular/material/sidenav';
 import {MatSort} from '@angular/material/sort';
@@ -13,30 +13,73 @@ import {MatAutocompleteSelectedEvent} from '@angular/material/autocomplete';
   styleUrls: ['./students.component.css']
 })
 export class StudentsComponent implements OnInit, AfterViewInit {
-  @Input() enrolledStudents: Student[];
-  @Input() allStudents: Student[];
+  private _childAllStudents: Student[];
+  @Input()
+  set childAllStudents(array: Student[]) {
+    this._childAllStudents = array;
+  }
+  get childAllStudents(): Student[] { return this._childAllStudents; }
 
-  displayedColumns: string[] = ['select', 'id', 'name', 'firstName', 'group'];
-  checked;
+  private _childEnrolledStudents: Student[];
+  @Input()
+  set childEnrolledStudents(array: Student[]) {
+    this._childEnrolledStudents = array;
+  }
+  get childEnrolledStudents(): Student[] { return this._childEnrolledStudents; }
+
+  didVote = false;
+  @Output()
+  addedStudent = new EventEmitter<Student[]>();
+  @Output()
+  removedStudent = new EventEmitter<Student[]>();
+  // vote(agreed: boolean) {
+  //   this.voted.emit(agreed);
+  //   this.didVote = true;
+  // }
+  addStudent(event: Event) {
+    if (this.studentToAdd && this.childAllStudents.includes(this.studentToAdd) && !this.childEnrolledStudents.includes(this.studentToAdd)) {
+      this.childEnrolledStudents.push(this.studentToAdd);
+      this.checked.set(this.studentToAdd.id, false);
+      this.studentToAdd = null;
+      if (this.masterStatus === 1) {
+        this.masterStatus = 2;
+      }
+      this.sortData();
+    }
+  }
+  deleteSelected() {
+    this.childEnrolledStudents = this.childEnrolledStudents.filter(x => !this.checked.get(x.id));
+    this.dataSource.data = this.childEnrolledStudents;
+    this.checked = new Map(this.childEnrolledStudents.map(x => [x.id, false]));
+    this.checkedCount = 0;
+    this.masterStatus = 0;
+  }
+
+
+  displayedColumnsTable: string[];
   dataSource: MatTableDataSource<Student>;
+  checked: Map<number, boolean>;
   checkedCount = 0;
   masterStatus = 0; // {0:unchecked, 1:checked, 2:intermediate};
 
-  filteredOptions: Student[] = this.allStudents;
+  filteredOptions: Student[] = this.childAllStudents;
   studentToAdd: Student;
 
   // MatPaginator Inputs
   length;
-  pageSize = 12;
+  pageSize = 25;
   pageSizeOptions: number[] = [1, 2, 5, 10, 20];
 
   @ViewChild(MatSidenav) matsidenav: MatSidenav;
   @ViewChild(MatSort) sort: MatSort;
   @ViewChild(MatPaginator) paginator: MatPaginator;
 
+  constructor() {
+    this.displayedColumnsTable = ['select', 'id', 'firstName', 'lastName', 'group'];
+  }
   ngOnInit() {
-    this.dataSource = new MatTableDataSource<Student>(this.enrolledStudents);
-    this.checked = new Map(this.enrolledStudents.map(x => [x.id, false]));
+    this.dataSource = new MatTableDataSource<Student>(this.childEnrolledStudents);
+    this.checked = new Map(this.childEnrolledStudents.map(x => [x.id, false]));
   }
 
   ngAfterViewInit() {
@@ -44,7 +87,7 @@ export class StudentsComponent implements OnInit, AfterViewInit {
   }
 
   checkAll(flag) {
-    for (let key of this.checked.keys()) {
+    for (const key of this.checked.keys()) {
       this.checked.set(key, flag);
     }
     if (flag) {
@@ -102,7 +145,7 @@ export class StudentsComponent implements OnInit, AfterViewInit {
       }
       return true;
     } else {
-      return this.checked.get(row);
+      return this.checked.get(Number(row));
     }
   }
 
@@ -112,71 +155,52 @@ export class StudentsComponent implements OnInit, AfterViewInit {
     }
     return false;
   }
-
-  deleteSelected() {
-    this.enrolledStudents = this.enrolledStudents.filter(x => !this.checked.get(x.id));
-    this.dataSource.data = this.enrolledStudents;
-    this.checked = new Map(this.enrolledStudents.map(x => [x.id, false]));
-    this.checkedCount = 0;
-    this.masterStatus = 0;
-  }
-
   displayFn(student: Student): string {
     console.log('s');
-    return student && student.name && student.firstName && student.id ? student.name + ' ' + student.firstName : '';
+    return student && student.firstName && student.lastName && student.id ? student.firstName + ' ' + student.lastName : '';
   }
 
   activateFilter(event: Event) {
-    this.filteredOptions = this.allStudents.filter(x => x.name.toLowerCase().startsWith((<HTMLInputElement> event.target).value.toLowerCase()));
+    this.filteredOptions = this.childAllStudents.filter(x => x.firstName.toLowerCase().startsWith((event.target as HTMLInputElement).value.toLowerCase()));
   }
 
   saveOption(event: MatAutocompleteSelectedEvent) {
     this.studentToAdd = (event).option.value;
   }
 
-  addStudent(event: Event) {
-    if (this.studentToAdd && this.allStudents.includes(this.studentToAdd) && !this.enrolledStudents.includes(this.studentToAdd)) {
-      this.enrolledStudents.push(this.studentToAdd);
-      this.checked.set(this.studentToAdd.id, false);
-      this.studentToAdd = null;
-      if (this.masterStatus === 1) {
-        this.masterStatus = 2;
-      }
-      this.sortData();
-    }
-  }
 
-  changeSort(sort: MatSort) {
+  sortChange(sort: MatSort) {
     this.sort = sort;
     this.sortData();
   }
-
   // TODO: rivedere logica sort bene
   sortData() {
-    const data = this.enrolledStudents.slice();
+    const data = [...this.childEnrolledStudents]; // .slice() also shallow copy
     if (!this.sort.active || this.sort.direction === '') {
-      this.enrolledStudents = data;
-      this.dataSource.data = this.enrolledStudents;
+      this.childEnrolledStudents = data;
+      this.dataSource.data = this.childEnrolledStudents;
       return;
     }
 
-    this.enrolledStudents = data.sort((a, b) => {
-      const isAsc = this.sort.direction === 'asc';
+    this.childEnrolledStudents = data.sort((a, b) => {
+      const isAsc = !(this.sort.direction === 'asc'); // the sorting array is more intuitive this way
       switch (this.sort.active) {
-        case 'name':
-          return compare(a.name, b.name, isAsc);
-        case 'id':
-          return compare(a.id, b.id, isAsc);
-        case 'firstName':
-          return compare(a.surname, b.surname, isAsc);
+        case this.displayedColumnsTable[1]:
+          return sortCompare(a[this.displayedColumnsTable[1]], b[this.displayedColumnsTable[1]], isAsc);
+        case this.displayedColumnsTable[2]:
+          return sortCompare(a[this.displayedColumnsTable[2]], b[this.displayedColumnsTable[2]], isAsc);
+        case this.displayedColumnsTable[3]:
+          return sortCompare(a[this.displayedColumnsTable[3]], b[this.displayedColumnsTable[3]], isAsc);
+        case this.displayedColumnsTable[4]:
+          return sortCompare(a[this.displayedColumnsTable[4]], b[this.displayedColumnsTable[4]], isAsc);
         default:
           return 0;
       }
     });
-    this.dataSource.data = this.enrolledStudents;
+    this.dataSource.data = this.childEnrolledStudents;
   }
 }
 
-function compare(a: number | string, b: number | string, isAsc: boolean) {
+function sortCompare(a: number | string, b: number | string, isAsc: boolean): number {
   return (a < b ? -1 : 1) * (isAsc ? 1 : -1);
 }

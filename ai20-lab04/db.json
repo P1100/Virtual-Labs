@@ -18,17 +18,17 @@
     {
       "id": 1,
       "serial": "123451",
-      "name": "Pietro",
-      "surname": "Giasone",
+      "firstName": "Pietro",
+      "lastName": "Giasone",
       "groupp": "none",
       "courseId": 1,
-      "groupId": 1
+      "groupId": 0
     },
     {
       "id": 2,
       "serial": "123452",
-      "name": "Paolo",
-      "surname": "Ferri",
+      "firstName": "Paolo",
+      "lastName": "Ferri",
       "groupp": "Cavalry",
       "courseId": 1,
       "groupId": 1
@@ -36,8 +36,8 @@
     {
       "id": 3,
       "serial": "123453",
-      "name": "Gino",
-      "surname": "Rossi",
+      "firstName": "Gino",
+      "lastName": "Rossi",
       "groupp": "Cavalry",
       "courseId": 1,
       "groupId": 1
@@ -45,8 +45,8 @@
     {
       "id": 4,
       "serial": "123454",
-      "name": "Giovanni",
-      "surname": "Bianchi",
+      "firstName": "Giovanni",
+      "lastName": "Bianchi",
       "groupp": "Cavalry2",
       "courseId": 1,
       "groupId": 2
@@ -54,40 +54,40 @@
     {
       "id": 5,
       "serial": "123455",
-      "name": "Tizio",
-      "surname": "Tizio",
+      "firstName": "Tizio",
+      "lastName": "Tizio",
       "courseId": 1,
       "groupId": 2
     },
     {
       "id": 6,
       "serial": "123456",
-      "name": "Caio",
-      "surname": "Caio",
+      "firstName": "Caio",
+      "lastName": "Caio",
       "courseId": 1,
       "groupId": 2
     },
     {
       "id": 7,
       "serial": "123457",
-      "name": "Alberto",
-      "surname": "Terri",
+      "firstName": "Alberto",
+      "lastName": "Terri",
       "courseId": 1,
       "groupId": 0
     },
     {
       "id": 8,
       "serial": "123458",
-      "name": "Luca",
-      "surname": "Manni",
+      "firstName": "Luca",
+      "lastName": "Manni",
       "courseId": 1,
       "groupId": 0
     },
     {
       "id": 9,
       "serial": "123459",
-      "name": "Valentina",
-      "surname": "Guano",
+      "firstName": "Valentina",
+      "lastName": "Guano",
       "courseId": 2,
       "groupId": 0
     }
@@ -95,33 +95,33 @@
   "courses": [
     {
       "id": 1,
-      "name": "Applicazioni Internet",
+      "firstName": "Applicazioni Internet",
       "path": "applicazioniinternet"
     },
     {
       "id": 2,
-      "name": "Programmazione di sistema",
+      "firstName": "Programmazione di sistema",
       "path": "programmazione-di-sistema"
     },
     {
       "id": 3,
-      "name": "Mobile development",
+      "firstName": "Mobile development",
       "path": "mobile-development"
     },
     {
       "id": 9,
-      "name": "Applicazioni Internet",
+      "firstName": "Applicazioni Internet",
       "path": "applicazioni-internet"
     }
   ],
   "groups": [
     {
       "id": 1,
-      "name": "Calvary"
+      "firstName": "Calvary"
     },
     {
       "id": 2,
-      "name": "Calvary2"
+      "firstName": "Calvary2"
     }
   ],
   "tab": [

@@ -1,5 +1,5 @@
 {
-  "name": "ai20-lab04",
+  "firstName": "ai20-lab04",
   "version": "0.0.0",
   "scripts": {
     "jsonserver": "json-server-auth db.json -r routes.json --port 3000",

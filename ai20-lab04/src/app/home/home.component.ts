@@ -6,16 +6,16 @@ const DB_COURSES: Course[] = [
   {id: 2, label: 'Programmazione di sistema', path: 'programmazione-di-sistema'},
   {id: 3, label: 'Mobile development', path: 'mobile-development'}
 ];
+//   .map(y => {
+//   y.path = 'teacher/course/' + y.path;
+//   return y;
+// });
 const tabs = [
   {path: 'students', label: 'Students'},
   {path: 'vms', label: 'VMs'},
   {path: 'groups', label: 'Groups'},
   {path: 'assignments', label: 'Assignments'}
 ];
-//   .map(y => {
-//   y.path = 'teacher/course/' + y.path;
-//   return y;
-// });
 
 // TODO: da rivedere, anche in base al progetto
 const DBEs2pdf = {

@@ -12,11 +12,9 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
-import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 import javax.sql.DataSource;
 
@@ -45,7 +43,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
   
   @Autowired // non override perchè ho dichiarato prima il bean per AuthenticationManagerBuilder. Nota: nome metodo irrelevante con autowired
   public void configure(AuthenticationManagerBuilder auth_builder, DataSource dataSource) throws Exception {
-    auth_builder.userDetailsService(userDetailsServiceImpl).passwordEncoder(passwordEncoder());
+        auth_builder.userDetailsService(userDetailsServiceImpl).passwordEncoder(passwordEncoder());
 
 //    auth_builder.inMemoryAuthentication()
 //        .withUser("mem")
@@ -70,23 +68,28 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         .httpBasic().disable()
         .csrf().disable()
         .cors().disable()
-//        .formLogin().and() //.antMatcher("/**") --> applies to all?
+        // If enabled, go to /login and use "u:admin, password:a"
+      .formLogin().and() //.antMatcher("/**") --> applies to all?
+// TODO: commentcode above (commented for testing client REST data format)
         .authorizeRequests()
-        .antMatchers("/jwt/authenticate", "/jwt/register").permitAll()
-        .antMatchers("/notification/**").permitAll()
-        .antMatchers("/testing/**").permitAll()
-        .antMatchers("/API").hasRole("ADMIN")
-        .antMatchers("/*").authenticated()
-        .antMatchers("/users/**").authenticated()
+//        .antMatchers("/jwt/authenticate", "/jwt/register").permitAll()
+//        .antMatchers("/notification/**").permitAll()
+//        .antMatchers("/testing/**").permitAll()
+//        .antMatchers("/API").hasRole("ADMIN")
+//        .antMatchers("/*").authenticated()
+//        .antMatchers("/users/**").authenticated()
+// TODO: uncomment commented authentication JWT code above (commented for testing client REST data format)
         .anyRequest().permitAll()
-        .and()
-        .exceptionHandling().authenticationEntryPoint(jwtAuthenticationEntryPoint)
-        .and()
-        .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+//        .and()
+//        .exceptionHandling().authenticationEntryPoint(jwtAuthenticationEntryPoint)
+//        .and()
+//        .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+// TODO: uncomment commented authentication JWT code above (commented for testing client REST data format)
     ;
   
     // Add a filter to validate the tokens with every request
-    httpSecurity.addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class);
+//    httpSecurity.addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class);
+// TODO: uncomment commented authentication JWT code above (commented for testing client REST data format)
   }
   
   //configura la catena dei filtri di sicurezza
