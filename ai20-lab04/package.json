@@ -4,14 +4,17 @@
   "scripts": {
     "jsonserver": "json-server-auth db.json -r routes.json --port 3000",
     "start": "npm run startAll-windows",
-    "startAll-windows": "start npm run jsonserver & start ng serve",
+    "startAll-windows": "start npm run jsonserver & start ng serve --base-href / --deploy-url / --proxy-config proxy.conf.json",
     "startAll-linux": "npm run jsonserver & ng serve",
     "ng": "ng",
     "serve": "ng serve",
     "build": "ng build",
     "test": "ng test",
     "lint": "ng lint",
-    "e2e": "ng e2e"
+    "e2e": "ng e2e",
+    "proxy": "ng serve --base-href /catalog/ --deploy-url /catalog/ --proxy-config proxy.conf.json",
+    "startAll-windows-prod": "start npm run jsonserver & start ng serve --prod=true ",
+    "startAll-windows-prod-ssl-proxy": "start npm run jsonserver & start ng serve --prod true --ssl true --ssl-cert 'server.crt' --ssl-key 'server.key' --proxy-config proxy.conf.json"
   },
   "private": true,
   "dependencies": {

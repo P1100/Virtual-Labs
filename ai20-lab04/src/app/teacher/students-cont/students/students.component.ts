@@ -1,10 +1,12 @@
 import {AfterViewInit, Component, EventEmitter, Input, OnInit, Output, ViewChild} from '@angular/core';
-import {Student} from '../../../services/student';
+import {Student} from '../../../model/student';
 import {MatTableDataSource} from '@angular/material/table';
 import {MatSort} from '@angular/material/sort';
 import {MatPaginator} from '@angular/material/paginator';
 import {MatAutocompleteSelectedEvent} from '@angular/material/autocomplete';
 import {FormControl} from '@angular/forms';
+import {Observable} from 'rxjs';
+import {filter, map, startWith} from 'rxjs/operators';
 
 // TODO: classe molto incasinata, forse si puó migliorare leggibilitá separando e raggruppando funzioni per elemento HTML?
 @Component({
@@ -12,65 +14,80 @@ import {FormControl} from '@angular/forms';
   templateUrl: './students.component.html',
   styleUrls: ['./students.component.css']
 })
+// Non vengono usati Observables in questa classe, perché tutta la comunicazione asincrona con server/servizio avviene nel componente container
 export class StudentsComponent implements OnInit, AfterViewInit {
-  myControl = new FormControl();
-  // displayedColumnsTable is based on Student class (manual synch), controls various formatting elements
-  displayedColumnsTable: string[];
-  // Table data
-  dataSource: MatTableDataSource<Student>;
-  selectedStudentToAdd: Student;
-  // Checkbox
-  checked: Map<number, boolean>;
-  checkedCount = 0;
-  masterStatus = 0; // {0:unchecked, 1:checked, 2:intermediate};
-  // AutoComplete
-  filteredOptions: Student[];
-  // MatPaginator Inputs
-  length: number;
-  pageSize: number;
-  pageSizeOptions: number[];
-
-  // used in input getter/setter
-  private _childAllStudents: Student[];
-
+  // Private variable used to get data from the service (superset of filteredOptions, used in autocomplete)
+  @Input()
+  private students: Student[];
+  @Output('enroll')
+  enrolledEvent = new EventEmitter<Student[]>();
+  @Output('disenroll')
+  disenrolledEvent = new EventEmitter<Student[]>();
   // Needed to get paginator instance
   @ViewChild(MatPaginator) paginator: MatPaginator;
   // Needed sort variable
   @ViewChild(MatSort) sort: MatSort;
 
-  @Output()
-  addedStudents = new EventEmitter<Student[]>();
-  @Output()
-  removedStudents = new EventEmitter<Student[]>();
+  // displayedColumnsTable is based on Student class (manual synch), controls various formatting elements
+  displayedColumnsTable: string[] = ['select', 'id', 'firstName', 'lastName', 'group'];
+  // MatPaginator Inputs
+  length: number; // The current total number of items being paged. Read only
+  pageSize = 25;
+  pageSizeOptions: number[] = [1, 2, 5, 10, 20];
 
-  constructor() {
-    this.displayedColumnsTable = ['select', 'id', 'firstName', 'lastName', 'group'];
-    this.pageSizeOptions = [1, 2, 5, 10, 20];
-    this.pageSize = 25;
-    this.dataSource = new MatTableDataSource<Student>();
-  }
-  // Private variable used to get data from the service (superset of filteredOptions, used in autocomplete)
-  get childAllStudents(): Student[] {
-    return this._childAllStudents;
-  }
+  myControl = new FormControl();
+  // Table data, collegata direttamente enrolled tramite setter/getter (binding diretto di enrolledStudents dal padre)
+  dataSource: MatTableDataSource<Student> = new MatTableDataSource<Student>();
+  selectedStudentToAdd: Student = null;
+  // Checkbox
+  checked: Map<number, boolean> = null;
+  checkedCount = 0;
+  masterStatus = 0; // {0:unchecked, 1:checked, 2:intermediate};
+
+  // Used in AutoComplete. It's the list of all students but at times filtered (so cant be merged in only one var)
+  filteredOptions$: Observable<Student[]>;
+  // filteredOptions: Student[] = [];
+
   @Input()
-  set childAllStudents(array: Student[]) {
-    this._childAllStudents = [...array];
-  }
-  // Using directly dataSource.data instead of a private variable (_childEnrolledStudents), because data is only used/bound to the table
-  get childEnrolledStudents(): Student[] {
-    return this.dataSource.data;
-  }
-  @Input()
-  set childEnrolledStudents(array: Student[]) {
+  set enrolled(array: Student[]) {
     this.dataSource.data = [...array];
     this.sortData();
   }
-  // Data and sort update is done by the angular property binding, automatically (@Input() set childEnrolledStudents)
+  get enrolled(): Student[] {
+    return this.dataSource.data;
+  }
+
+  constructor() {
+    console.log('@ StudentsComponent.constuctor selectedStudentToAdd:\n' + this.selectedStudentToAdd);
+  }
+  ngOnInit() {
+    // arrays students and enrolled are automatically passed by the parent component, studentsContainer
+    this.checked = new Map(this.enrolled.map(x => [x.id, false]));
+    // this.filteredOptions = this.students;
+    this.filteredOptions$ = this.myControl.valueChanges
+      .pipe(
+        startWith(''),
+        // When option is selected, value becomes a Student object... not a string
+        filter(value => ((typeof value) === 'string')),
+        map((value: string): Student[] => {
+          console.log('@ value isNull ' + (value === null));
+          console.log('@ value isUndefined ' + (value === undefined));
+          console.log('@ value is type string ' + ((typeof value) === 'string'));
+          console.log('@ value is type object ' + ((typeof value) === 'object'));
+          console.log('StudentsComponent.ngOnInit filteredOptions$ value:\ntypeof->' + typeof value + '(\"' + value + '\")');
+          // console.log('@ filteredOptions$' + JSON.stringify(this.filteredOptions$)); --> no, é un observable, non viene stampato
+          return this.students.filter(x => x.firstName.toLowerCase().startsWith(value.trim().toLowerCase()));
+        }),
+      );
+  }
+  ngAfterViewInit() {
+    this.dataSource.paginator = this.paginator;
+  }
+  // Data and sort update is done by the angular property binding, automatically (@Input() set enrolled)
   studentsAdd() {
-    if (this.selectedStudentToAdd && this.childAllStudents.includes(this.selectedStudentToAdd)
-      && !this.childEnrolledStudents.includes(this.selectedStudentToAdd)) {
-      this.addedStudents.emit([this.selectedStudentToAdd]);
+    if (this.selectedStudentToAdd && this.students.includes(this.selectedStudentToAdd)
+      && !this.enrolled.includes(this.selectedStudentToAdd)) {
+      this.enrolledEvent.emit([this.selectedStudentToAdd]);
       this.checked.set(this.selectedStudentToAdd.id, false);
       this.selectedStudentToAdd = null;
       if (this.masterStatus === 1) {
@@ -78,18 +95,20 @@ export class StudentsComponent implements OnInit, AfterViewInit {
       }
     }
   }
-  // Passing the students to remove (whole Student, not just the id)
+  // Passing the students to remove (whole Students array, not just the id)
   studentsRemove() {
-    const selectedStudentToRemove = this.childEnrolledStudents.filter(x => this.checked.get(x.id));
-    this.removedStudents.emit(selectedStudentToRemove);
-    this.checked = new Map(this.childEnrolledStudents.map(x => [x.id, false]));
+    const selectedStudentToRemove = this.enrolled.filter(x => this.checked.get(x.id));
+    this.disenrolledEvent.emit(selectedStudentToRemove);
+    this.checked = new Map(this.enrolled.map(x => [x.id, false]));
     this.checkedCount = 0;
     this.masterStatus = 0;
   }
   sortChange(sort: MatSort) {
+    console.log('selectedStudentToAdd: ' + JSON.stringify(this.selectedStudentToAdd));
     this.sort = sort;
     this.sortData();
   }
+  // changes dataSource.data, which is linked by setter to the template component. As soon as data gets updated, sort is called again (look enrolled setter)
   sortData() {
     if (!this.sort || !this.sort.active || this.sort.direction === '') {
       return;
@@ -110,13 +129,6 @@ export class StudentsComponent implements OnInit, AfterViewInit {
       }
     });
   }
-  ngOnInit() {
-    this.checked = new Map(this.childEnrolledStudents.map(x => [x.id, false]));
-    this.filteredOptions = this.childAllStudents;
-  }
-  ngAfterViewInit() {
-    this.dataSource.paginator = this.paginator;
-  }
 
   checkboxCheckAll(flag) {
     for (const key of this.checked.keys()) {
@@ -130,10 +142,9 @@ export class StudentsComponent implements OnInit, AfterViewInit {
   }
 
   checkboxToggleRow(event: Event, row) {
-    console.log('here');
     const checkedSize = this.checked.size;
     if (!this.checked.has(row)) {
-      console.log('Error');
+      console.log('checkboxToggleRow Error');
       return;
     }
     const currentState = this.checked.get(row);
@@ -177,22 +188,38 @@ export class StudentsComponent implements OnInit, AfterViewInit {
     return this.masterStatus === 2;
 
   }
+  // Nota: all'intenrno il this non é il componente student, ma bensí il componente MatAutocomplete (che chiama la funzione)
   autocompleteDisplayFunction(student: Student): string {
     return student && student.firstName && student.lastName && student.id ? student.firstName + ' ' + student.lastName : '';
   }
-
-  autocompleteActivateFilter(event: Event) {
-    this.filteredOptions = this.childAllStudents.filter(x => x.firstName.toLowerCase().startsWith((event.target as HTMLInputElement).value.toLowerCase()));
-  }
-
   autocompleteSaveOption(event: MatAutocompleteSelectedEvent) {
     this.selectedStudentToAdd = (event).option.value;
+    console.log('added student' + JSON.stringify(this.selectedStudentToAdd));
   }
 // TODO: delete later, if things works without issues
   // @ViewChild(MatSidenav) matsidenav: MatSidenav;
-}
 
-// ################################### END OF COMPONENT #########################################
+  /*
+  // NOT USED ANYMORE, old implementation with the following in tag  <mat-form-field><input
+  //   <!--             (keyup)="autocompleteActivateFilter($event)"-->
+  autocompleteActivateFilter(event: Event) {
+    // @ts-ignore
+    console.log(event.target.value);
+    console.log(this.filteredOptions === this.students);
+    this.filteredOptions = this.students.filter(x => x.firstName.toLowerCase().startsWith((event.target as HTMLInputElement).value.toLowerCase()));
+    console.log(this.filteredOptions === this.students);
+  }
+*/
+  // Private variable used to get data from the service (superset of filteredOptions, used in autocomplete)
+  // get students(): Student[] {
+  //   return this._childAllStudents;
+  // }
+  // @Input()
+  // set students(array: Student[]) {
+  //   this._childAllStudents = [...array];
+  // }
+  // Using directly dataSource.data instead of a private variable (_childEnrolledStudents), because data is only used/bound to the table
+}
 
 function sortCompare(a: number | string, b: number | string, isAsc: boolean): number {
   return (a < b ? -1 : 1) * (isAsc ? 1 : -1);

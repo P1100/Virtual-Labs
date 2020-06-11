@@ -7,7 +7,6 @@
     <!--    TODO: c'é da rivedere la parte angular material su autocomplete, form field, angular reactive forms e slides form AI-->
     <mat-form-field>
       <input type="text" matInput #input
-             (keyup)="autocompleteActivateFilter($event)"
              [formControl]="myControl"
              [matAutocomplete]="auto"
              placeholder="Name of the student">
@@ -15,23 +14,23 @@
       <mat-autocomplete #auto="matAutocomplete"
                         (optionSelected)="autocompleteSaveOption($event)"
                         [displayWith]="autocompleteDisplayFunction">
-        <mat-option *ngFor="let option of filteredOptions" [value]="option">{{option.firstName}} {{option.lastName}}
+        <mat-option *ngFor="let option of filteredOptions$ | async"
+                    [value]="option">{{option.firstName}} {{option.lastName}}
           ({{option.id}})
         </mat-option>
       </mat-autocomplete>
     </mat-form-field>
     <!--    tolto $event da parametro studentsAdd, perché prende il dato da aggiornare da saveOption. Forse-->
-    <button mat-button matSuffix (click)="studentsAdd($event); input.value=''">Add</button>
+    <button mat-button matSuffix (click)="studentsAdd(); input.value=''">Add</button>
     <br>
     <button mat-button (click)="studentsRemove()">Delete selected</button>
   </form>
 
-  <!--class="mat-elevation-z8" -->
   <table mat-table [dataSource]="dataSource" matSort (matSortChange)="sortChange($event)">
     <ng-container matColumnDef="select">
       <th mat-header-cell *matHeaderCellDef>
         <!--        TODO: codice checkbox da ricontrollare e verificare. Notare come master funziona su tutte le checkbox, anche quelle nascoste -->
-        <mat-checkbox (click)="checkboxToggleMaster($event); $event.preventDefault()"
+        <mat-checkbox (click)="checkboxToggleMaster(); $event.preventDefault()"
                       [checked]="checkboxIsChecked('master')"
                       [indeterminate]="checkboxIsIndeterminate()"></mat-checkbox>
       </th>

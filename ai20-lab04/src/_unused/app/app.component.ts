@@ -9,6 +9,6 @@ export class AppComponent implements OnInit {
   title = 'VirtualLabs_app';
 
   ngOnInit(): void {
-    console.log('On init: ' + this.title);
+    console.log('AppComponent.ngOninit (title): ' + this.title);
   }
 }

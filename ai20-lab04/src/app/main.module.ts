@@ -31,6 +31,7 @@ import {VmsContComponent} from './teacher/vms-cont/vms-cont.component';
 import {GroupsContComponent} from './teacher/groups-cont/groups-cont.component';
 import {AssignmentsContComponent} from './teacher/assignments-cont/assignments-cont.component';
 import {HomeComponent} from './home/home.component';
+import {HttpClientModule} from '@angular/common/http';
 
 // ToDO: Passare a SSL nel progetto finale (?!)
 // Removed Ivy support, in ./tsconfig.json, for compatibility with augury
@@ -69,9 +70,10 @@ import {HomeComponent} from './home/home.component';
     MatCheckboxModule,
     FormsModule,
     MainRoutingModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    HttpClientModule
   ],
-  providers: [],
+  providers: [HttpClientModule],
   bootstrap: [HomeComponent]
 })
 export class MainModule {

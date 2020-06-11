@@ -35,6 +35,27 @@ In tslint.json
     "variable-name": {
       "options": [
         "allow-leading-underscore",
+        
+In tsconfig.json
+ "angularCompilerOptions": {
+       "enableIvy": false,
+       
+In angular.json (aggiunto file proxy.conf.json)
+        "serve": {
+          "builder": "@angular-devkit/build-angular:dev-server",
+          "options": {
+            "browserTarget": "ai20-lab04:build",
+            "proxyConfig": "src/proxy.conf.json"
+          },
+          "configurations": {
+            "production": {
+              "browserTarget": "ai20-lab04:build:production",
+              "proxyConfig": "src/proxy.conf.json",
+              "sslCert": "server.key",
+              "sslKey": "server.crt"
+            }
+          }
+        }
 
 
 ## Development server

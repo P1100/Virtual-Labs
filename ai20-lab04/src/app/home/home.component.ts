@@ -1,5 +1,5 @@
 import {Component, OnChanges, OnInit, SimpleChanges} from '@angular/core';
-import {Course} from '../course';
+import {Course} from '../model/course';
 
 const DB_COURSES: Course[] = [
   {id: 1, label: 'Applicazioni Internet', path: 'applicazioni-internet'},
@@ -45,16 +45,13 @@ export class HomeComponent implements OnInit, OnChanges {
     // this.activeCourse = this.courses[1].path;
   }
   ngOnChanges(changes: SimpleChanges): void {
-    console.log('##################################');
-    console.log('##################################');
-    console.log('activerCourse=' + this.activeCourse);
+    console.log('HomeController.ngOnChanges - activerCourse:\n' + this.activeCourse);
     // throw new Error('Method not implemented.');
   }
 
   ngOnInit(): void {
-    console.log('##################################');
-    console.log('##################################');
-    console.log('On init: ' + this.title);
+    console.log('# HomeController.ngOninit START #');
+    console.log('HomeController.ngOninit Title:\n' + this.title);
     if (this.isTeacher === true) {
       this.prefix = 'student';
     } else {
@@ -65,7 +62,8 @@ export class HomeComponent implements OnInit, OnChanges {
         this.navLinks.push({path: this.prefix + '/course/' + course.path + '/' + tab.path, label: tab.label});
       }
     }
-    console.log(this.navLinks);
+    console.log('HomeController.ngOninit ending Routes:\n' + JSON.stringify(this.navLinks));
+    console.log('# HomeController.ngOninit END #');
   }
 
 }
