@@ -5,6 +5,7 @@ import {PageNotFoundComponent} from './page-not-found/page-not-found.component';
 import {AssignmentsContComponent} from './teacher/assignments-cont/assignments-cont.component';
 import {GroupsContComponent} from './teacher/groups-cont/groups-cont.component';
 import {VmsContComponent} from './teacher/vms-cont/vms-cont.component';
+import {SidenavContComponent} from './home/sidenav-cont.component';
 
 // TODO: use this.router.navigate(['teacher','course'])
 // this.router.navigateByUrl(`/courses/${course.id}`);
@@ -22,7 +23,7 @@ const routes: Routes = [
     // }
     children: [
       {
-        path: 'student',
+        path: 'teacher',
         children: [
           {
             path: '',
@@ -32,47 +33,8 @@ const routes: Routes = [
             path: 'course',
             children: [
               {
-                path: '',
-                component: PageNotFoundComponent
-              },
-              {
-                path: 'applicazioni-internet',
-                children: [
-                  {
-                    path: '',
-                    component: PageNotFoundComponent
-                  },
-                  {
-                    path: 'students',
-                    component: StudentsContComponent
-                  },
-                  {
-                    path: 'vms',
-                    component: VmsContComponent
-                  },
-                  {
-                    path: 'groups',
-                    component: GroupsContComponent
-                  },
-                  {
-                    path: 'assignments',
-                    component: AssignmentsContComponent
-                  }
-                ]
-              }
-            ]
-          }
-        ]
-      },
-      {
-        path: 'teacher',
-        children: [
-          {
-            path: 'course',
-            component: PageNotFoundComponent,
-            children: [
-              {
-                path: 'applicazioni-internet',
+                path: ':id',
+                component: SidenavContComponent,
                 children: [
                   {
                     path: 'students',

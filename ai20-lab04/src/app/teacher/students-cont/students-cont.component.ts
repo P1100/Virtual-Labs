@@ -1,7 +1,8 @@
 import {Component, Input, OnDestroy, OnInit} from '@angular/core';
-import {Student} from '../../model/student';
+import {Student} from '../../model/student.model';
 import {StudentService} from '../../services/student.service';
 import {Subscription} from 'rxjs';
+import {ActivatedRoute} from '@angular/router';
 
 @Component({
   selector: 'app-students-cont',
@@ -24,17 +25,26 @@ export class StudentsContComponent implements OnInit, OnDestroy {
   enrolledStudents: Student[] = [];  // = [...DB_STUDENT.slice(1, 10)];
   subAllStudents: Subscription;
   subEnrolledStudentsCourse: Subscription = null;
-  private defaultCourseId = 1;
+  courseId = 1;
 
-  constructor(private studentService: StudentService) {
+  constructor(private studentService: StudentService, private route: ActivatedRoute) {
     // this.allStudents = studentService.getStudents();
     // this.enrolledStudents = [...this.allStudents.slice(1, 6)];
+    this.route.url.subscribe(url => {
+      this.courseId = +this.route.parent.snapshot.paramMap.get('id');
+      console.log('@Student-cont route.url: ' + url.toString() + '-' + this.courseId);
+      // necessary to update student tab list of students, when changing course ----> NOPE, i update verything on the the sidenav container
+      // this.subEnrolledStudentsCourse = this.studentService.getEnrolledStudents(this.courseId)
+      //   .subscribe((students: Student[]) => this.enrolledStudents = [...students]);
+    });
   }
   ngOnInit(): void {
+    // this.courseId = +this.route.snapshot.paramMap.get('id');
+    // console.log('StudentCont ngOnInit route course id: ' + this.courseId);
     this.subAllStudents = this.studentService.getAllStudents()
       .subscribe((students: Student[]) => this.allStudents = [...students]);
     // // TODO: change courseId later
-    this.subEnrolledStudentsCourse = this.studentService.getEnrolledStudents(this.defaultCourseId)
+    this.subEnrolledStudentsCourse = this.studentService.getEnrolledStudents(this.courseId)
       .subscribe((students: Student[]) => this.enrolledStudents = [...students]);
   }
   ngOnDestroy(): void {

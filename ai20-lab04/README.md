@@ -20,8 +20,7 @@ ng generate component AssignmentsCont --module=app
 ng generate component Home --module=app
 ng generate service services/student --flat
 
-npm start
-npm run jsonserver
+npm start (linux: npm run startAll-linux)
 
 ## Comandi browser
 http://localhost:3000/students?_expand=group

@@ -12,15 +12,15 @@
 <mat-toolbar>Applicazioni Internet</mat-toolbar>
 
 <!--TODO: rivedere codice sidenav (responsive) da material-->
-<mat-sidenav-container class="sidenav-container">
-  <mat-sidenav #drawer class="sidenav" mode="side" opened position="start">
+<mat-sidenav-container class="mat-sidenav-container">
+  <mat-sidenav #drawer class="drawer" mode="side" opened position="start">
     <div class="container-small">
 
       <!--      TODO: change from course manual course firstName, to :course_name. Need to update active course somewhere (using [()] ?) -->
       <mat-nav-list>
         <mat-list-item *ngFor="let course of courses">
           <a mat-list-item
-             routerLink="{{course.path}}"
+             routerLink="teacher/course/{{course.id}}"
              routerLinkActive #rla1="routerLinkActive">{{course.label}} + {{rla1.isActive}}</a>
           <!--          [routerLinkActive]="activeCourse"-->
         </mat-list-item>
@@ -29,33 +29,9 @@
     </div>
   </mat-sidenav>
 
-  <mat-sidenav-content>
-    <!--    <mat-tab-group>-->
-    <nav mat-tab-nav-bar>
-      <a mat-tab-link
-         *ngFor="let link of navLinks"
-         [routerLink]="link.path"
-         routerLinkActive #rla="routerLinkActive"
-         [active]="rla.isActive">
-        {{link.label}}
-      </a>
-      <!--            <mat-tab label="VMs">-->
-      <!--            </mat-tab>-->
-      <!--            <mat-tab label="Assignments">-->
-      <!--            </mat-tab>-->
-      <!--            <mat-tab label="Groups">-->
-      <!--              <div class="container">-->
-      <!--              </div>-->
-      <!--            </mat-tab>-->
-    </nav>
-    <div class="container">
-      <router-outlet [title]="title"></router-outlet>
-      <!--      <app-students-cont></app-students-cont>-->
-    </div>
-  </mat-sidenav-content>
+  <router-outlet [title]="title"></router-outlet>
 
 </mat-sidenav-container>
-
 
 <!--So adding a new variable
 
