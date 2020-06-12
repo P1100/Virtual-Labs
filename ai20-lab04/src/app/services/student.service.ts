@@ -1,6 +1,6 @@
 import {Injectable} from '@angular/core';
 import {Student} from '../model/student.model';
-import {Observable, throwError} from 'rxjs';
+import {forkJoin, Observable, throwError} from 'rxjs';
 import {HttpClient, HttpHeaders} from '@angular/common/http';
 import {catchError, retry} from 'rxjs/operators';
 
@@ -38,8 +38,8 @@ export class StudentService {
     // responseType: 'json'|'text',
     // withCredentials: true  // Whether this request should be sent with outgoing credentials (cookies).
   };
-  // private apiCourseUrl = 'http://localhost:3000/courses/1/students';
   private ApiJsonServerProxyPath = 'http://localhost:4200/api'; // URL to web api
+  // private apiCourseUrl = 'http://localhost:3000/courses/1/students';
 
   constructor(private http: HttpClient) {
     // this.DB_STUDENT = [
@@ -56,7 +56,7 @@ export class StudentService {
     //   }
     // ].map((el) => new Student(el.id, el.serial, el.firstName, el.lastName, el.groupId, el.courseId));
     // this.enrolledStudentsCourse = [...this.DB_STUDENT.slice(1, 6)];
-    console.log('@ StudentService.constructor - new service istance @');
+    console.log('@@ StudentService.constructor - new service istance');
   }
   getAllStudents(): Observable<Student[]> {
     return this.http.get<Student[]>(`${this.ApiJsonServerProxyPath}/students`)
@@ -66,7 +66,6 @@ export class StudentService {
   getEnrolledStudents(courseId: number): Observable<Student[]> {
     return this.http.get<Student[]>(`${this.ApiJsonServerProxyPath}/courses/${courseId}/students`)
       .pipe(retry(2), catchError(this.formatErrors));
-    // return of(this.enrolledStudents);
   }
   queryAllStudents(queryTitle: string): Observable<Student[]> {
     return this.http.get<Student[]>(`${this.ApiJsonServerProxyPath}/students?q=${queryTitle}`)
@@ -76,19 +75,21 @@ export class StudentService {
     return this.http.get<Student[]>(`${this.ApiJsonServerProxyPath}/courses/${courseId}/students?q=${queryTitle}`)
       .pipe(retry(2), catchError(this.formatErrors));
   }
-  updateStudent(path: string, body: Object = {}): Observable<any> {
+  updateStudent(student: Student, body: object = {}): Observable<any> {
     return this.http.put(
-      `${this.ApiJsonServerProxyPath}${path}`,
+      `${this.ApiJsonServerProxyPath}`,
       JSON.stringify(body),
       this.httpOptions
     ).pipe(retry(2), catchError(this.formatErrors));
   }
-  createStudent(path: string, body: Object = {}): Observable<any> {
+  createStudent(path: string, body: object = {}): Observable<any> {
     return this.http.post(
       `${this.ApiJsonServerProxyPath}${path}`,
       JSON.stringify(body),
       this.httpOptions
     ).pipe(retry(2), catchError(this.formatErrors));
+  }
+  deleteStudents(studentsToRemove: Student[]) {
   }
   deleteStudent(path): Observable<any> {
     return this.http.delete(
@@ -96,29 +97,36 @@ export class StudentService {
     ).pipe(retry(2), catchError(this.formatErrors));
   }
   enrollStudents(students: Student[], courseId: number) {
-    return this.http.post(
-      `${this.ApiJsonServerProxyPath}`,
-      JSON.stringify(students)
-    ).pipe(retry(2), catchError(this.formatErrors));
+    const request$ = new Array<Observable<Student>>();
+    students.forEach((student: Student) => request$.push(this.updateStudent(student)));
+    return forkJoin(request$);
+
+    // return this.http.post(
+    //   `${this.ApiJsonServerProxyPath}`,
+    //   JSON.stringify(students)
+    // ).pipe(retry(2), catchError(this.formatErrors));
   }
   disenrollStudents(students: Student[], courseId: number) {
     return this.http.delete(
       `${this.ApiJsonServerProxyPath}`
     ).pipe(retry(2), catchError(this.formatErrors));
   }
+
+  private formatErrors(error: any) {
+    console.error(error);
+    return throwError(error.error);
+  }
+
   testDeleteDB() {
     console.log(this.DB_STUDENT);
     this.DB_STUDENT = [];
     console.log(this.DB_STUDENT);
   }
-
   // create() {}
   // find() {}
   // updateStudent(student: Student) {
   // }
   // delete(){}
-  private formatErrors(error: any) {
-    console.error(error);
-    return throwError(error.error);
-  }
 }
+
+1;

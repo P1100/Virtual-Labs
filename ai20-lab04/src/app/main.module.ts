@@ -23,7 +23,7 @@ import {MatFormFieldModule} from '@angular/material/form-field';
 import {MatCheckboxModule} from '@angular/material/checkbox';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {MatInputModule} from '@angular/material/input';
-import {StudentsContComponent} from './teacher/students-cont/students-cont.component';
+import {StudentsContComponent} from './services/students-cont.component';
 import {MainRoutingModule} from './main-routing.module';
 import {OtherCourseComponent} from './other-course/other-course.component';
 import {PageNotFoundComponent} from './page-not-found/page-not-found.component';

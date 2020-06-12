@@ -5,7 +5,7 @@ Per la sidenav, forse éil caso di creare un nuovo componente a parte per la ste
   <!--    <mat-tab-group>-->
   <nav mat-tab-nav-bar>
     <!--    [routerLinkActiveOptions]="{ exact: true }"-->
-    <!--    "['/teacher/course/1/students']"-->
+    <!--    "['/teacher", 'course', courseId, 'students', {details: true}]"-->
     <a mat-tab-link
        *ngFor="let link of navLinks"
        [routerLink]="[link.path]"
@@ -24,7 +24,7 @@ Per la sidenav, forse éil caso di creare un nuovo componente a parte per la ste
   </nav>
   <div class="container">
     <!--     [courseId]="selectedId" not working on router outlet-->
-    <router-outlet [title]="title"></router-outlet>
+    <router-outlet></router-outlet>
     <!--    <app-groups-cont></app-groups-cont>-->
     <!--      <app-students-cont></app-students-cont>-->
   </div>

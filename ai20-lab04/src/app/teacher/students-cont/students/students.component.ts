@@ -58,7 +58,7 @@ export class StudentsComponent implements OnInit, AfterViewInit {
   }
 
   constructor() {
-    console.log('@ StudentsComponent.constuctor selectedStudentToAdd:\n' + this.selectedStudentToAdd);
+    console.log('# students.constuctor selectedStudentToAdd:\n' + this.selectedStudentToAdd);
   }
   ngOnInit() {
     // arrays students and enrolled are automatically passed by the parent component, studentsContainer
@@ -67,14 +67,14 @@ export class StudentsComponent implements OnInit, AfterViewInit {
     this.filteredOptions$ = this.myControl.valueChanges
       .pipe(
         startWith(''),
-        // When option is selected, value becomes a Student object... not a string
+        // When option is selected, value becomes a Student object... not a string. Code below commented (console.logs) was to test that
         filter(value => ((typeof value) === 'string')),
         map((value: string): Student[] => {
-          console.log('@ value isNull ' + (value === null));
-          console.log('@ value isUndefined ' + (value === undefined));
-          console.log('@ value is type string ' + ((typeof value) === 'string'));
-          console.log('@ value is type object ' + ((typeof value) === 'object'));
-          console.log('StudentsComponent.ngOnInit filteredOptions$ value:\ntypeof->' + typeof value + '(\"' + value + '\")');
+          // console.log('@ value isNull ' + (value === null));
+          // console.log('@ value isUndefined ' + (value === undefined));
+          // console.log('@ value is type string ' + ((typeof value) === 'string'));
+          // console.log('@ value is type object ' + ((typeof value) === 'object'));
+          // console.log('StudentsComponent.ngOnInit filteredOptions$ value:\ntypeof->' + typeof value + '(\"' + value + '\")');
           // console.log('@ filteredOptions$' + JSON.stringify(this.filteredOptions$)); --> no, é un observable, non viene stampato
           return this.students.filter(x => x.firstName.toLowerCase().startsWith(value.trim().toLowerCase()));
         }),
@@ -104,7 +104,7 @@ export class StudentsComponent implements OnInit, AfterViewInit {
     this.masterStatus = 0;
   }
   sortChange(sort: MatSort) {
-    console.log('selectedStudentToAdd: ' + JSON.stringify(this.selectedStudentToAdd));
+    console.log('# students.sortChange selectedStudentToAdd: ' + JSON.stringify(this.selectedStudentToAdd));
     this.sort = sort;
     this.sortData();
   }
@@ -144,7 +144,6 @@ export class StudentsComponent implements OnInit, AfterViewInit {
   checkboxToggleRow(event: Event, row) {
     const checkedSize = this.checked.size;
     if (!this.checked.has(row)) {
-      console.log('checkboxToggleRow Error');
       return;
     }
     const currentState = this.checked.get(row);
@@ -194,7 +193,7 @@ export class StudentsComponent implements OnInit, AfterViewInit {
   }
   autocompleteSaveOption(event: MatAutocompleteSelectedEvent) {
     this.selectedStudentToAdd = (event).option.value;
-    console.log('added student' + JSON.stringify(this.selectedStudentToAdd));
+    console.log('# StudentsComponent.autocompleSave added student' + JSON.stringify(this.selectedStudentToAdd));
   }
 // TODO: delete later, if things works without issues
   // @ViewChild(MatSidenav) matsidenav: MatSidenav;

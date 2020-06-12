@@ -1,6 +1,6 @@
 import {NgModule} from '@angular/core';
 import {RouterModule, Routes} from '@angular/router';
-import {StudentsContComponent} from './teacher/students-cont/students-cont.component';
+import {StudentsContComponent} from './services/students-cont.component';
 import {PageNotFoundComponent} from './page-not-found/page-not-found.component';
 import {AssignmentsContComponent} from './teacher/assignments-cont/assignments-cont.component';
 import {GroupsContComponent} from './teacher/groups-cont/groups-cont.component';

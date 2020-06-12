@@ -1,6 +1,7 @@
-import {Component, Input, OnChanges, OnInit, SimpleChanges} from '@angular/core';
+import {Component, OnChanges, OnDestroy, OnInit, SimpleChanges} from '@angular/core';
 import {Course} from '../model/course.model';
 import {ActivatedRoute} from '@angular/router';
+import {Subscription} from 'rxjs';
 
 const DB_COURSES: Course[] = [
   {id: 1, label: 'Applicazioni Internet', path: 'applicazioni-internet'},
@@ -33,41 +34,44 @@ const DBEs2pdf = {
   templateUrl: './sidenav-cont.component.html',
   styleUrls: ['./sidenav-cont.component.css']
 })
-export class SidenavContComponent implements OnInit, OnChanges {
-  @Input()
-  title: string;
+export class SidenavContComponent implements OnInit, OnChanges, OnDestroy {
   courses = DB_COURSES;
   isTeacher = true;
   prefix = '';
   navLinks = [];
   // TODO: need to get this value for a course service or routing
   activeCourse = 1;
+  paramSubscription: Subscription;
 
   constructor(private route: ActivatedRoute) {
-    console.log('SidenavContComponent.constructor Title:\n' + this.title);
+    console.log('Sidenav-cont.constructor Title:\n');
     if (this.isTeacher === false) {
       this.prefix = '/student';
     } else {
       this.prefix = '/teacher';
     }
-    // Devo riaggiornare i tabs ad ogni cambio di corso
-    this.route.url.subscribe(url => {
+    // Devo riaggiornare i tabs ad ogni cambio di corso. No observable =>  this.route.snapshot.paramMap.get("id");
+    this.paramSubscription = this.route.url.subscribe(url => {
       this.activeCourse = +this.route.snapshot.paramMap.get('id');
       this.navLinks = [];
       for (const tab of tabs) {
         this.navLinks.push({path: this.prefix + '/course/' + this.activeCourse + '/' + tab.path, label: tab.label});
       }
-      console.log('@Sidenav-cont route.url: ' + url.toString() + '-' + this.activeCourse);
+      console.log('Sidenav-cont activeCourse: ' + '\n' + this.activeCourse);
     });
 
-    console.log('SidenavContComponent.constructor ending Routes:\n' + JSON.stringify(this.navLinks));
+    console.log('Sidenav-cont.constructor ending Routes:\n' + JSON.stringify(this.navLinks));
   }
-
   ngOnInit(): void {
+    console.log('Sidenav-cont.ngOnInit');
   }
 
   ngOnChanges(changes: SimpleChanges): void {
-    console.log('SidenavContComponent.ngOnChanges - activerCourse:\n' + this.activeCourse);
-    // throw new Error('Method not implemented.');
+    console.log('°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°\nSidenavContComponent.ngOnChanges - activerCourse:\n' + this.activeCourse);
+    // throw new Error('Sidenav-ngOnChanges Method is never called??');
+  }
+  ngOnDestroy(): void {
+    console.log('Sidenav-cont.ngOnDestroy');
+    this.paramSubscription.unsubscribe();
   }
 }

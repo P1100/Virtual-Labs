@@ -1,5 +1,6 @@
 import {Component, OnInit} from '@angular/core';
 import {Course} from '../model/course.model';
+import {Title} from '@angular/platform-browser';
 
 const DB_COURSES: Course[] = [
   {id: 1, label: 'Applicazioni Internet', path: 'applicazioni-internet'},
@@ -17,8 +18,8 @@ export class HomeComponent implements OnInit {
   title = 'VirtualLabs';
   courses = DB_COURSES;
 
-  constructor() {
-    // this.activeCourse = this.courses[1].path;
+  constructor(private titleService: Title) {
+    titleService.setTitle(this.title);
   }
 
   ngOnInit(): void {
