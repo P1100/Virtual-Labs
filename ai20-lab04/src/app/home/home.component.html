@@ -7,22 +7,37 @@
     <mat-icon aria-label="Side nav toggle icon">menu</mat-icon>
   </button>
   <a routerLink="/home" class="not-active">{{title}}</a>
+
+  <!-- This fills the remaining space of the current row -->
+  <span class="example-fill-remaining-space"></span>
+
+  <button mat-button type="button" *ngIf="loggedUser != ''">-{{loggedUser}}</button>
+  <button mat-button type="button" *ngIf="loggedUser == ''">Register</button>
+  <!--  <button mat-button-->
+  <!--          type="button"-->
+  <!--          aria-label="login and logout"-->
+  <!--          n (click)="openLoginDialog()">{{loginOrLogout}}-->
+  <!--  </button>-->
+
+
 </mat-toolbar>
 
 <mat-toolbar>Applicazioni Internet</mat-toolbar>
 
 <!--TODO: rivedere codice sidenav (responsive) da material-->
-<mat-sidenav-container class="mat-sidenav-container">
-  <mat-sidenav #drawer class="drawer" mode="side" opened position="start">
-    <div class="container-small">
-
+<mat-sidenav-container>
+  <mat-sidenav #drawer mode="side" opened position="start">
+    <div>
       <!--      TODO: change from course manual course firstName, to :course_name. Need to update active course somewhere (using [()] ?) -->
       <mat-nav-list>
         <mat-list-item *ngFor="let course of courses">
           <a mat-list-item
              routerLink="teacher/course/{{course.id}}"
-             routerLinkActive #rla1="routerLinkActive">{{course.label}} + {{rla1.isActive}}</a>
-          <!--          [routerLinkActive]="activeCourse"-->
+             routerLinkActive="active-link"
+             #rla="routerLinkActive">
+            {{course.label}} + {{rla.isActive}}
+          </a>
+          <!--          TODO: selected course should remain active/selected, even after clicking internal tabs-->
         </mat-list-item>
       </mat-nav-list>
 

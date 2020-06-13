@@ -37,6 +37,11 @@ const routes: Routes = [
                 component: SidenavContComponent,
                 children: [
                   {
+                    path: '',
+                    component: StudentsContComponent,
+                    pathMatch: 'full'
+                  },
+                  {
                     path: 'students',
                     component: StudentsContComponent
                   },
@@ -75,5 +80,5 @@ const routes: Routes = [
   imports: [RouterModule.forRoot(routes, {enableTracing: false})],
   exports: [RouterModule]
 })
-export class MainRoutingModule {
+export class AppRoutingModule {
 }

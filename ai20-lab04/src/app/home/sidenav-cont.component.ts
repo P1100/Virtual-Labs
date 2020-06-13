@@ -35,21 +35,13 @@ const DBEs2pdf = {
   styleUrls: ['./sidenav-cont.component.css']
 })
 export class SidenavContComponent implements OnInit, OnChanges, OnDestroy {
-  courses = DB_COURSES;
-  isTeacher = true;
-  prefix = '';
+  prefix = '/teacher';
   navLinks = [];
   // TODO: need to get this value for a course service or routing
   activeCourse = 1;
   paramSubscription: Subscription;
 
   constructor(private route: ActivatedRoute) {
-    console.log('Sidenav-cont.constructor Title:\n');
-    if (this.isTeacher === false) {
-      this.prefix = '/student';
-    } else {
-      this.prefix = '/teacher';
-    }
     // Devo riaggiornare i tabs ad ogni cambio di corso. No observable =>  this.route.snapshot.paramMap.get("id");
     this.paramSubscription = this.route.url.subscribe(url => {
       this.activeCourse = +this.route.snapshot.paramMap.get('id');
@@ -57,9 +49,8 @@ export class SidenavContComponent implements OnInit, OnChanges, OnDestroy {
       for (const tab of tabs) {
         this.navLinks.push({path: this.prefix + '/course/' + this.activeCourse + '/' + tab.path, label: tab.label});
       }
-      console.log('Sidenav-cont activeCourse: ' + '\n' + this.activeCourse);
+      console.log('Sidenav-cont.constructor route.url activeCourse: ' + '\n' + this.activeCourse);
     });
-
     console.log('Sidenav-cont.constructor ending Routes:\n' + JSON.stringify(this.navLinks));
   }
   ngOnInit(): void {

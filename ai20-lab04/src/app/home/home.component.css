@@ -4,35 +4,30 @@ mat-sidenav-container {
   height: 100%;
 }
 
-.sidenav-container {
-  height: 100%;
-}
-
-app-sidenav-cont {
-  margin-left: 0 !important;
-  flex: 1 1 auto;
-  /*padding: 1px;*/
-  /*margin: 1px;*/
-  /*display: contents;*/
-  /*border: 2px solid red;*/
-}
-
 mat-sidenav {
   width: 200px;
   flex: 0 1 auto;
-}
-
-.mat-sidenav .mat-toolbar {
-  background: inherit;
-}
-
-.mat-toolbar.mat-primary {
-  position: sticky;
+  /*position: sticky;*/
   top: 0;
   z-index: 1;
+}
+
+mat-list-item {
+  margin-top: 5px;
+  margin-bottom: 5px;
 }
 
 .not-active {
   color: inherit; /* blue colors for links too */
   text-decoration: inherit; /* no underline. none */
+}
+
+.active-link {
+  font-weight: bold;
+}
+
+.example-fill-remaining-space {
+  /* This fills the remaining space, by using flexbox.
+     Every toolbar row uses a flexbox row layout. */
+  flex: 1 1 auto;
 }

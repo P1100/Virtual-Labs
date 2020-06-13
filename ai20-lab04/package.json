@@ -2,19 +2,19 @@
   "firstName": "ai20-lab04",
   "version": "0.0.0",
   "scripts": {
-    "jsonserver": "json-server-auth db.json -r routes.json --port 3000",
     "start": "npm run startAll-windows",
-    "startAll-windows": "start npm run jsonserver & start ng serve --base-href / --deploy-url / --proxy-config proxy.conf.json",
-    "startAll-linux": "npm run jsonserver & ng serve",
+    "startAll-windows": "start npm run jsonserver & start npm run serve",
+    "startAll-windows-prod-ssl": "start npm run jsonserver & start npm run serve-prod-ssl",
+    "startAll-linux": "npm run jsonserver & npm run serve",
     "ng": "ng",
-    "serve": "ng serve",
+    "serve-relaunch-win": "start npm run serve",
+    "serve": "ng serve --base-href / --deploy-url / --proxy-config proxy.conf.json",
+    "serve-prod-ssl": "ng serve --prod true --ssl true --ssl-cert 'server.crt' --ssl-key 'server.key' --proxy-config proxy.conf.json",
+    "jsonserver": "json-server-auth db.json -r routes.json --port 3000 --delay 1000",
     "build": "ng build",
     "test": "ng test",
     "lint": "ng lint",
-    "e2e": "ng e2e",
-    "proxy": "ng serve --base-href /catalog/ --deploy-url /catalog/ --proxy-config proxy.conf.json",
-    "startAll-windows-prod": "start npm run jsonserver & start ng serve --prod=true ",
-    "startAll-windows-prod-ssl-proxy": "start npm run jsonserver & start ng serve --prod true --ssl true --ssl-cert 'server.crt' --ssl-key 'server.key' --proxy-config proxy.conf.json"
+    "e2e": "ng e2e"
   },
   "private": true,
   "dependencies": {

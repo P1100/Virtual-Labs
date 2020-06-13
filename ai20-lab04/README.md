@@ -13,12 +13,15 @@ This project was generated with [Angular CLI](https://github.com/angular/angular
 ng generate component teacher/studentsCont --flat --module app
 ng generate module app-routing-module --flat --module=app
 ng generate component PageNotFound --module=app --inlineTemplate --inlineStyle
-ng generate component OtherCourse --module=app --inlineTemplate --inlineStyle
+ng generate component OtherCourse --module=app --inlineTemplate --inlineStyle --minimal=true
 ng generate component VmsCont --module=app
 ng generate component GroupsCont --module=app
 ng generate component AssignmentsCont --module=app
 ng generate component Home --module=app
 ng generate service services/student --flat
+ng generate component auth/login-dialog --flat --module=app
+ng generate component auth/register-dialog --flat --module=app
+ng generate service auth/auth --flat
 
 npm start (linux: npm run startAll-linux)
 
@@ -39,7 +42,7 @@ In tsconfig.json
  "angularCompilerOptions": {
        "enableIvy": false,
        
-In angular.json (aggiunto file proxy.conf.json)
+In angular.json (aggiunto file proxy.conf.json) --> no, poi passato a usare scripts in package.json
         "serve": {
           "builder": "@angular-devkit/build-angular:dev-server",
           "options": {
@@ -55,6 +58,12 @@ In angular.json (aggiunto file proxy.conf.json)
             }
           }
         }
+
+In environment.ts e version prod
+     urlHttpOrHttpsPrefix: 'http'
+     urlHttpOrHttpsPrefix: 'https'
+
+
 
 
 ## Development server

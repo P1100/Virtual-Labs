@@ -52,17 +52,19 @@ export class StudentsComponent implements OnInit, AfterViewInit {
   set enrolled(array: Student[]) {
     this.dataSource.data = [...array];
     this.sortData();
+    this.checked = new Map(array.map(x => [x.id, false]));
+    this.checkedCount = 0;
+    this.masterStatus = 0;
   }
   get enrolled(): Student[] {
     return this.dataSource.data;
   }
 
   constructor() {
-    console.log('# students.constuctor selectedStudentToAdd:\n' + this.selectedStudentToAdd);
+    // console.log('# students.constuctor selectedStudentToAdd:\n' + this.selectedStudentToAdd);
   }
   ngOnInit() {
     // arrays students and enrolled are automatically passed by the parent component, studentsContainer
-    this.checked = new Map(this.enrolled.map(x => [x.id, false]));
     // this.filteredOptions = this.students;
     this.filteredOptions$ = this.myControl.valueChanges
       .pipe(
@@ -131,6 +133,7 @@ export class StudentsComponent implements OnInit, AfterViewInit {
   }
 
   checkboxCheckAll(flag) {
+    console.log('checkboxCheckAll');
     for (const key of this.checked.keys()) {
       this.checked.set(key, flag);
     }
