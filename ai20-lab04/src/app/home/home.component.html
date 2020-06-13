@@ -13,13 +13,18 @@
 
   <button mat-button type="button" *ngIf="loggedUser != ''">-{{loggedUser}}</button>
   <button mat-button type="button" *ngIf="loggedUser == ''">Register</button>
-  <!--  <button mat-button-->
-  <!--          type="button"-->
-  <!--          aria-label="login and logout"-->
-  <!--          n (click)="openLoginDialog()">{{loginOrLogout}}-->
-  <!--  </button>-->
-
-
+  <button mat-button
+          type="button"
+          aria-label="login and logout"
+          n (click)="openLoginDialogTemplate()">
+    {{loginOrLogout}}-T
+  </button>
+  <button mat-button
+          type="button"
+          aria-label="login and logout"
+          n (click)="openLoginDialogReactive()">
+    {{loginOrLogout}}-R
+  </button>
 </mat-toolbar>
 
 <mat-toolbar>Applicazioni Internet</mat-toolbar>

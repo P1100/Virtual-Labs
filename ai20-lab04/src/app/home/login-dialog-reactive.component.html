@@ -1,0 +1,32 @@
+<h1 mat-dialog-title>Login {{data.name}}</h1>
+<div mat-dialog-content>
+
+  <form [formGroup]="profileForm">
+    firstName: <input type="text" formControlName="firstName"><br>
+    lastName: <input type="text" formControlName="lastName"><br>
+    <span *ngIf="profileForm.controls.firstName.errors?.required"> Name is required. </span>
+  </form>
+  <p>uncomment <i>updateOn: 'blur'</i> to limit change events to blur/enter</p>
+  <pre>
+form value: {{ profileForm.value | json }}
+    form status: {{ profileForm.status | json }}
+    form valid: {{ profileForm.valid | json }}
+    form firstName status: {{ profileForm.controls.firstName.status | json }}
+    form lastName status: {{ profileForm.controls.lastName.status | json }}
+    user: {{ user | json}}
+</pre>
+
+
+
+
+  <p>What's your favorite animal?</p>
+  <mat-form-field>
+    <mat-label>Favorite Animal</mat-label>
+    <input matInput [(ngModel)]="data.animal">
+  </mat-form-field>
+</div>
+<div mat-dialog-actions>
+  <button mat-button (click)="onNoClick()">No Thanks</button>
+  <button mat-button [mat-dialog-close]="data.animal" cdkFocusInitial>Ok</button>
+</div>
+<button mat-button tabindex="-1">Not Tabbable</button>
