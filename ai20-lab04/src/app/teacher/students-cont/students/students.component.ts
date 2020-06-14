@@ -16,25 +16,20 @@ import {filter, map, startWith} from 'rxjs/operators';
 })
 // Non vengono usati Observables in questa classe, perché tutta la comunicazione asincrona con server/servizio avviene nel componente container
 export class StudentsComponent implements OnInit, AfterViewInit {
-  // Private variable used to get data from the service (superset of filteredOptions, used in autocomplete)
-  @Input()
-  private students: Student[];
-  @Output('enroll')
+  @Output('enrolledEvent')
   enrolledEvent = new EventEmitter<Student[]>();
-  @Output('disenroll')
+  @Output('disenrolledEvent')
   disenrolledEvent = new EventEmitter<Student[]>();
   // Needed to get paginator instance
   @ViewChild(MatPaginator) paginator: MatPaginator;
   // Needed sort variable
   @ViewChild(MatSort) sort: MatSort;
-
   // displayedColumnsTable is based on Student class (manual synch), controls various formatting elements
   displayedColumnsTable: string[] = ['select', 'id', 'firstName', 'lastName', 'group'];
   // MatPaginator Inputs
   length: number; // The current total number of items being paged. Read only
   pageSize = 25;
   pageSizeOptions: number[] = [1, 2, 5, 10, 20];
-
   myControl = new FormControl();
   // Table data, collegata direttamente enrolled tramite setter/getter (binding diretto di enrolledStudents dal padre)
   dataSource: MatTableDataSource<Student> = new MatTableDataSource<Student>();
@@ -43,11 +38,18 @@ export class StudentsComponent implements OnInit, AfterViewInit {
   checked: Map<number, boolean> = null;
   checkedCount = 0;
   masterStatus = 0; // {0:unchecked, 1:checked, 2:intermediate};
-
   // Used in AutoComplete. It's the list of all students but at times filtered (so cant be merged in only one var)
   filteredOptions$: Observable<Student[]>;
+  // Private variable used to get data from the service (superset of filteredOptions, used in autocomplete)
+  @Input()
+  private students: Student[];
   // filteredOptions: Student[] = [];
-
+  constructor() {
+    // console.log('# students.constuctor selectedStudentToAdd:\n' + this.selectedStudentToAdd);
+  }
+  get enrolled(): Student[] {
+    return this.dataSource.data;
+  }
   @Input()
   set enrolled(array: Student[]) {
     this.dataSource.data = [...array];
@@ -55,13 +57,6 @@ export class StudentsComponent implements OnInit, AfterViewInit {
     this.checked = new Map(array.map(x => [x.id, false]));
     this.checkedCount = 0;
     this.masterStatus = 0;
-  }
-  get enrolled(): Student[] {
-    return this.dataSource.data;
-  }
-
-  constructor() {
-    // console.log('# students.constuctor selectedStudentToAdd:\n' + this.selectedStudentToAdd);
   }
   ngOnInit() {
     // arrays students and enrolled are automatically passed by the parent component, studentsContainer

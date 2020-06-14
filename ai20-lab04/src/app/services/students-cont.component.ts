@@ -11,8 +11,8 @@ import {concatMap, tap, toArray} from 'rxjs/operators';
   template: `
     <app-students [enrolled]="enrolledStudents"
                   [students]="allStudents"
-                  (enroll)="onStudentsToEnroll($event)"
-                  (disenroll)="onStudentsToDisenroll($event)"
+                  (enrolledEvent)="onStudentsToEnroll($event)"
+                  (disenrolledEvent)="onStudentsToDisenroll($event)"
     ></app-students>
   `,
   styleUrls: ['../../_unused/students-cont.component.css']

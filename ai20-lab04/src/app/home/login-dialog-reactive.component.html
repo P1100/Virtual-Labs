@@ -1,32 +1,31 @@
-<h1 mat-dialog-title>Login {{data.name}}</h1>
+<h1 mat-dialog-title>Login</h1>
 <div mat-dialog-content>
 
-  <form [formGroup]="profileForm">
-    firstName: <input type="text" formControlName="firstName"><br>
-    lastName: <input type="text" formControlName="lastName"><br>
-    <span *ngIf="profileForm.controls.firstName.errors?.required"> Name is required. </span>
+  <form autocomplete="off" novalidate [formGroup]="form">
+    <span *ngIf="form.controls.email.errors?.required"> Name is required. </span>
+    <mat-form-field>
+      <mat-label>Email:</mat-label>
+      <input matInput placeholder="email" name="email" formControlName="email">
+    </mat-form-field>
+    <br>
+    <mat-form-field>
+      <mat-label>Password:</mat-label>
+      <input matInput placeholder="password" name="password" formControlName="password" type="password">
+    </mat-form-field>
   </form>
-  <p>uncomment <i>updateOn: 'blur'</i> to limit change events to blur/enter</p>
-  <pre>
-form value: {{ profileForm.value | json }}
-    form status: {{ profileForm.status | json }}
-    form valid: {{ profileForm.valid | json }}
-    form firstName status: {{ profileForm.controls.firstName.status | json }}
-    form lastName status: {{ profileForm.controls.lastName.status | json }}
-    user: {{ user | json}}
-</pre>
 
-
-
-
-  <p>What's your favorite animal?</p>
-  <mat-form-field>
-    <mat-label>Favorite Animal</mat-label>
-    <input matInput [(ngModel)]="data.animal">
-  </mat-form-field>
 </div>
 <div mat-dialog-actions>
-  <button mat-button (click)="onNoClick()">No Thanks</button>
-  <button mat-button [mat-dialog-close]="data.animal" cdkFocusInitial>Ok</button>
+  <button mat-raised-button color="primary" (click)="login()" style="margin-right: 1px">Login</button>
+  <button mat-button (click)="onNoClick()" style="margin-right: 1px">Cancel</button>
+  <!--  <button mat-raised-button color="accent" (click)="logout()">Logout</button>-->
 </div>
-<button mat-button tabindex="-1">Not Tabbable</button>
+<br/>
+<pre>
+form value: {{ form.value | json }}
+  form status: {{ form.status | json }}
+  form valid: {{ form.valid | json }}
+  form email status: {{ form.controls.email.status | json }}
+  form password status: {{ form.controls.password.status | json }}
+  user: {{ user | json}}
+</pre>

@@ -27,10 +27,6 @@ export class StudentService {
   constructor(private http: HttpClient) {
     console.log('@@ StudentService.constructor - new service istance (http or htpps?)=' + environment.urlHttpOrHttpsPrefix);
   }
-  private formatErrors(error: any) {
-    console.error(error);
-    return throwError(error.error);
-  }
   getAllStudents(): Observable<Student[]> {
     return this.http.get<Student[]>(`${this.apiJsonServerProxyPath}/students`)
       .pipe(retry(0), catchError(this.formatErrors));
@@ -63,13 +59,11 @@ export class StudentService {
     return this.http.get<Student[]>(`${this.apiJsonServerProxyPath}/students?q=${queryTitle}`)
       .pipe(retry(0), catchError(this.formatErrors));
   }
-
   deleteStudent(student: Student, courseId: number): Observable<any> {
     return this.http.delete(
       `${this.apiJsonServerProxyPath}/students/${student.id}`
     ).pipe(retry(0), catchError(this.formatErrors));
   }
-
 // TODO: codice sotto da rivedere per progetto
   enrollStudents(students: Student[], courseId: number) {
     const request$ = new Array<Observable<Student>>();
@@ -101,6 +95,10 @@ export class StudentService {
       this.httpOptions
     ).pipe(retry(0), catchError(this.formatErrors));
   }
+  private formatErrors(error: any) {
+    console.error(error);
+    return throwError(error.error);
+  }
 
   // create() {}
   // find() {}
@@ -108,5 +106,3 @@ export class StudentService {
   // }
   // delete(){}
 }
-
-1;

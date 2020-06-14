@@ -4,7 +4,7 @@
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {MatToolbarModule} from '@angular/material/toolbar';
 import {MatFormFieldModule} from '@angular/material/form-field';
-import {HomeComponent, HomeControllerLoginDialogReactive, HomeControllerLoginDialogTemplate} from './home/home.component';
+import {HomeComponent, LoginDialogReactiveComponent, LoginDialogTemplateComponent} from './home/home.component';
 import {MatPaginatorModule} from '@angular/material/paginator';
 import {NgModule} from '@angular/core';
 import {MatInputModule} from '@angular/material/input';
@@ -35,7 +35,8 @@ import {AppComponent} from '../_unused/app/app.component';
 import {MAT_DIALOG_DEFAULT_OPTIONS, MatDialogModule} from '@angular/material/dialog';
 import {SidenavContComponent} from './home/sidenav-cont.component';
 import {OtherCourseComponent} from './other-course/other-course.component';
-import {HttpClientModule} from '@angular/common/http';
+import {HTTP_INTERCEPTORS, HttpClientModule} from '@angular/common/http';
+import {AuthInterceptor} from './services/auth.interceptor';
 
 @NgModule({
   imports: [
@@ -76,13 +77,14 @@ import {HttpClientModule} from '@angular/common/http';
     AssignmentsContComponent,
     HomeComponent,
     SidenavContComponent,
-    HomeControllerLoginDialogTemplate,
-    HomeControllerLoginDialogReactive
+    LoginDialogTemplateComponent,
+    LoginDialogReactiveComponent
   ],
   entryComponents: [
-    HomeComponent, HomeControllerLoginDialogTemplate, HomeControllerLoginDialogReactive
+    HomeComponent, LoginDialogTemplateComponent, LoginDialogReactiveComponent
   ],
-  providers: [HttpClientModule, {provide: MAT_DIALOG_DEFAULT_OPTIONS, useValue: {hasBackdrop: false}}],
+  providers: [HttpClientModule, {provide: MAT_DIALOG_DEFAULT_OPTIONS, useValue: {hasBackdrop: false}},
+    {provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true}],
   bootstrap: [HomeComponent]
 })
 export class AppModule {

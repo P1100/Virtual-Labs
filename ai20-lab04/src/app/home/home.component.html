@@ -11,19 +11,16 @@
   <!-- This fills the remaining space of the current row -->
   <span class="example-fill-remaining-space"></span>
 
-  <button mat-button type="button" *ngIf="loggedUser != ''">-{{loggedUser}}</button>
-  <button mat-button type="button" *ngIf="loggedUser == ''">Register</button>
+  <!--  <button mat-button type="button" *ngIf="loggedUser == ''">Register</button>-->
+  <button mat-button type="button" *ngIf="isLogged">a{{loggedUser}}</button>
+  <!--  <button mat-button type="button" aria-label="login and logout"-->
+  <!--          (click)="openLoginDialogTemplate()">    {{isLogged}}-T-->
+  <!--  </button>-->
   <button mat-button
           type="button"
           aria-label="login and logout"
-          n (click)="openLoginDialogTemplate()">
-    {{loginOrLogout}}-T
-  </button>
-  <button mat-button
-          type="button"
-          aria-label="login and logout"
-          n (click)="openLoginDialogReactive()">
-    {{loginOrLogout}}-R
+          (click)="clickLoginLogout()">
+    {{isLogged == true ? 'Logout' : 'Login'}}
   </button>
 </mat-toolbar>
 

@@ -1,14 +1,18 @@
-import {Component, Inject, OnInit} from '@angular/core';
+import {Component, Inject, OnDestroy, OnInit} from '@angular/core';
 import {Course} from '../model/course.model';
 import {Title} from '@angular/platform-browser';
 import {MAT_DIALOG_DATA, MatDialog, MatDialogRef} from '@angular/material/dialog';
 import {FormBuilder, FormGroup, ValidationErrors, Validators} from '@angular/forms';
 import {filter, map, tap} from 'rxjs/operators';
+import {AuthService} from '../services/auth.service';
+import {Router} from '@angular/router';
+import {Subscription} from 'rxjs';
 
 export interface DialogData {
   animal: string;
   name: string;
 }
+
 const DB_COURSES: Course[] = [
   {id: 1, label: 'Applicazioni Internet', path: 'applicazioni-internet'},
   {id: 2, label: 'Programmazione di sistema', path: 'programmazione-di-sistema'},
@@ -23,44 +27,127 @@ const DB_COURSES: Course[] = [
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.css']
 })
-export class HomeComponent implements OnInit {
+export class HomeComponent implements OnInit, OnDestroy {
   title = 'VirtualLabs';
   courses = DB_COURSES;
-  loginOrLogout = 'Login';
+  isLogged = false;
   loggedUser = '';
+  subscription: Subscription;
 
   animal: string;
   name: string;
 
-  constructor(private titleService: Title, public dialog: MatDialog) {
+  constructor(private titleService: Title, public dialog: MatDialog, private auth: AuthService, private router: Router) {
     titleService.setTitle(this.title);
+    this.isLogged = this.auth.isLoggedIn();
+    this.subscription = this.auth.getSub().subscribe(x => {
+      this.isLogged = x;
+      if (x === true) {
+        this.loggedUser = localStorage.getItem('user');
+      } else {
+        localStorage.removeItem('user');
+      }
+    });
   }
   ngOnInit(): void {
     console.log('# HomeController.ngOninit START');
   }
   openLoginDialogTemplate(): void {
-    const dialogRef = this.dialog.open(HomeControllerLoginDialogTemplate, {
-      maxWidth: '600px',
+    const dialogRef = this.dialog.open(LoginDialogTemplateComponent, {
+      maxWidth: '600px', hasBackdrop: true,
       data: {name: this.name, animal: this.animal}
     });
     dialogRef.afterClosed().subscribe(result => {
       console.log('The dialog was closed');
-      this.animal = result;
     });
   }
+  ngOnDestroy(): void {
+    this.subscription.unsubscribe();
+  }
   openLoginDialogReactive(): void {
-    const dialogRef = this.dialog.open(HomeControllerLoginDialogReactive, {
+    const dialogRef = this.dialog.open(LoginDialogReactiveComponent, {
       maxWidth: '600px',
       autoFocus: true,
       disableClose: false, // Esc key will close it
       hasBackdrop: false, // clicking outside wont close it
-      data: {name: this.name, animal: this.animal}
     });
     dialogRef.afterClosed().subscribe(result => {
-      console.log('The dialog was closed');
-      this.animal = result;
+      console.log('The dialog was closed', result);
     });
   }
+  clickLoginLogout() {
+    if (this.isLogged) {
+      console.log('logout');
+      this.auth.logout();
+      this.router.navigateByUrl('/home');
+    } else {
+      console.log('login');
+      this.openLoginDialogReactive();
+    }
+  }
+}
+
+@Component({
+  selector: 'app-login-dialog',
+  styleUrls: ['./login-dialog.component.css'],
+  templateUrl: './login-dialog-reactive.component.html',
+})
+export class LoginDialogReactiveComponent {
+  public user;
+  form: FormGroup;
+
+  constructor(public dialogRef: MatDialogRef<LoginDialogReactiveComponent>,
+              private fb: FormBuilder, private authService: AuthService) {
+    this.form = this.fb.group({
+      email: ['olivier@mail.com', [forbiddenNameValidator(/bob/i), Validators.required]],
+      password: ['bestPassw0rd', [Validators.required]],
+    }, {
+      validators: fakeNameValidator,
+      // updateOn: 'blur'
+    }) as FormGroup;
+    this.form.valueChanges.pipe(
+      filter(() => this.form.valid),
+      tap(formValue => console.log('Valuechanges: ' + JSON.stringify(formValue))),
+      map(value => this.user = {id: value.email, password: value.password}), // , date: new Date()
+    ).subscribe((user) => {
+      this.user = user;
+      console.log(this.user);
+    });
+  }
+  onNoClick(): void {
+    this.dialogRef.close();
+  }
+  login() {
+    const val = this.form.value;
+    if (val.email && val.password) {
+      this.authService.login(val.email, val.password)
+        .subscribe((accessToken) => {
+            console.log('User is logged in. Received: ' + JSON.stringify(accessToken), accessToken);
+          }
+        );
+      this.dialogRef.close();
+    }
+  }
+  logout() {
+    this.authService.logout();
+  }
+}
+
+function forbiddenNameValidator(nameRe: RegExp) {
+  return (control) => {
+    const forbidden = nameRe.test(control.value);
+    // console.log(`is this name ${control.value} forbidden? ${forbidden}`);
+    return forbidden ? {forbiddenName: {value: control.value}} : null;
+  };
+}
+/** A hero's name can't match the hero's alter ego */
+function fakeNameValidator(control: FormGroup): ValidationErrors | null {
+  const email = control.get('password');
+  const password = control.get('email');
+  const ret = password && email && password.value === email.value ? {fakeName: true} : null;
+  // if (ret) { console.log(`${email.value} === ${password.value}`); }
+  // console.log(`are email and password equal? ${email.value} === ${password.value} ${email.value === password.value}`);
+  return ret;
 }
 
 @Component({
@@ -68,64 +155,10 @@ export class HomeComponent implements OnInit {
   styleUrls: ['./login-dialog.component.css'],
   templateUrl: './login-dialog-template.component.html',
 })
-export class HomeControllerLoginDialogTemplate {
+export class LoginDialogTemplateComponent {
   constructor(
-    public dialogRef: MatDialogRef<HomeControllerLoginDialogTemplate>,
+    public dialogRef: MatDialogRef<LoginDialogTemplateComponent>,
     @Inject(MAT_DIALOG_DATA) public data: DialogData) {
-  }
-  onNoClick(): void {
-    this.dialogRef.close();
-  }
-}
-
-
-function forbiddenNameValidator(nameRe: RegExp) {
-  return (control) => {
-    const forbidden = nameRe.test(control.value);
-    console.log(`is this name ${control.value} forbidden? ${forbidden}`);
-    return forbidden ? { forbiddenName: { value: control.value } } : null;
-  };
-}
-
-/** A hero's name can't match the hero's alter ego */
-function fakeNameValidator(control: FormGroup): ValidationErrors | null {
-  const firstName = control.get('lastName');
-  const lastName = control.get('firstName');
-
-  const ret = lastName && firstName && lastName.value === firstName.value ? { fakeName: true } : null;
-  // if (ret) { console.log(`${firstName.value} === ${lastName.value}`); }
-  console.log(`are firstName and lastName equal? ${firstName.value} === ${lastName.value} ${firstName.value === lastName.value}`);
-
-  return ret;
-}
-@Component({
-  selector: 'app-login-dialog',
-  styleUrls: ['./login-dialog.component.css'],
-  templateUrl: './login-dialog-reactive.component.html',
-})
-export class HomeControllerLoginDialogReactive {
-  public user;
-  profileForm = this.fb.group({
-    firstName: ['not matching bob and required', [forbiddenNameValidator(/bob/i), Validators.required]],
-    lastName: ['required', [Validators.required]],
-  }, {
-    validators: fakeNameValidator,
-    // updateOn: 'blur'
-  });
-
-  constructor(
-    public dialogRef: MatDialogRef<HomeControllerLoginDialogReactive>,
-    @Inject(MAT_DIALOG_DATA) public data: DialogData,
-    private fb: FormBuilder) {
-
-    this.profileForm.valueChanges.pipe(
-      filter(() => this.profileForm.valid),
-      tap(formValue => console.log('Valuechanges: ' + JSON.stringify(formValue))),
-      map(value => this.user = {firstName: value.firstName, lastName: value.lastName, date: new Date()}),
-    ).subscribe((user) => {
-      this.user = user;
-      console.log(this.user);
-    });
   }
   onNoClick(): void {
     this.dialogRef.close();

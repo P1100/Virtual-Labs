@@ -23,6 +23,8 @@ ng generate component auth/login-dialog --flat --module=app
 ng generate component auth/register-dialog --flat --module=app
 ng generate service auth/auth --flat
 
+npm install moment
+
 npm start (linux: npm run startAll-linux)
 
 ## Comandi browser
