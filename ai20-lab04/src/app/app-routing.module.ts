@@ -1,13 +1,13 @@
 import {NgModule} from '@angular/core';
 import {RouterModule, Routes} from '@angular/router';
-import {VmsContComponent} from '../tabs/vms-cont/vms-cont.component';
-import {StudentsContComponent} from '../tabs/students-cont.component';
+import {VmsContComponent} from './tabs/vms-cont/vms-cont.component';
+import {StudentsContComponent} from './tabs/students-cont.component';
 import {SidenavContComponent} from './home/sidenav-cont.component';
-import {PageNotFoundComponent} from '../tabs/page-not-found/page-not-found.component';
+import {PageNotFoundComponent} from './tabs/page-not-found/page-not-found.component';
 import {HomeRouteTabComponent} from './home/home-route-tab.component';
 import {AuthGuard} from './auth/auth.guard';
-import {AssignmentsContComponent} from '../tabs/assignments-cont/assignments-cont.component';
-import {GroupsContComponent} from '../tabs/groups-cont/groups-cont.component';
+import {AssignmentsContComponent} from './tabs/assignments-cont/assignments-cont.component';
+import {GroupsContComponent} from './tabs/groups-cont/groups-cont.component';
 
 // TODO: use this.router.navigate(['teacher','course'])
 // this.router.navigateByUrl(`/courses/${course.id}`);
