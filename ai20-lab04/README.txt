@@ -13,6 +13,7 @@ Come features aggiuntive o da menzionare:
 - SSL implementato come npm script (insieme a prod)
 
 # Istruzioni di avvio (vedere file package.json per altri comandi e dettagli)
+- npm install
 - npm start
 ---- ssl&prod: npm run startAll-windows-prod-ssl
 ---- linux/mac(?): npm run startAll-linux
