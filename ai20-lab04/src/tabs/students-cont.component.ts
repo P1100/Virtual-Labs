@@ -1,6 +1,6 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
-import {Student} from '../../model/student.model';
-import {StudentService} from '../../services/student.service';
+import {Student} from '../app/model/student.model';
+import {StudentService} from '../app/services/student.service';
 import {from, Observable, Subscription} from 'rxjs';
 import {ActivatedRoute} from '@angular/router';
 import {concatMap, tap, toArray} from 'rxjs/operators';
@@ -15,7 +15,7 @@ import {concatMap, tap, toArray} from 'rxjs/operators';
                   (disenrolledEvent)="onStudentsToDisenroll($event)"
     ></app-students>
   `,
-  styleUrls: ['../../../_unused/students-cont.component.css']
+  styleUrls: ['../_unused/students-cont.component.css']
 })
 export class StudentsContComponent implements OnInit, OnDestroy {
   allStudents: Student[] = [];

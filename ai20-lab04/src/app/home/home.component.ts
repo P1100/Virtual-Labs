@@ -20,7 +20,6 @@ const DB_COURSES: Course[] = [
 ];
 
 // TODO: integrate es1 into project dialog login/registration
-// TODO: turn Ivy on (angular 9)
 @Component({
   // selector changed from app-root, inserted in index.html!
   selector: 'app-home',
@@ -101,8 +100,8 @@ export class HomeComponent implements OnInit, OnDestroy {
 
 @Component({
   selector: 'app-login-dialog',
-  styleUrls: ['./login-dialog.component.css'],
-  templateUrl: './login-dialog-reactive.component.html',
+  styleUrls: ['../auth/login-dialog.component.css'],
+  templateUrl: '../auth/login-dialog-reactive.component.html',
 })
 export class LoginDialogReactiveComponent {
   public user;
@@ -167,8 +166,8 @@ function fakeNameValidator(control: FormGroup): ValidationErrors | null {
 
 @Component({
   selector: 'app-login-dialog',
-  styleUrls: ['./login-dialog.component.css'],
-  templateUrl: './login-dialog-template.component.html',
+  styleUrls: ['../auth/login-dialog.component.css'],
+  templateUrl: '../auth/login-dialog-template.component.html',
 })
 export class LoginDialogTemplateComponent {
   constructor(

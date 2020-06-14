@@ -1,13 +1,13 @@
 import {NgModule} from '@angular/core';
 import {RouterModule, Routes} from '@angular/router';
-import {StudentsContComponent} from './teacher/students-cont/students-cont.component';
-import {PageNotFoundComponent} from './page-not-found/page-not-found.component';
-import {AssignmentsContComponent} from './teacher/assignments-cont/assignments-cont.component';
-import {GroupsContComponent} from './teacher/groups-cont/groups-cont.component';
-import {VmsContComponent} from './teacher/vms-cont/vms-cont.component';
+import {VmsContComponent} from '../tabs/vms-cont/vms-cont.component';
+import {StudentsContComponent} from '../tabs/students-cont.component';
 import {SidenavContComponent} from './home/sidenav-cont.component';
+import {PageNotFoundComponent} from '../tabs/page-not-found/page-not-found.component';
+import {HomeRouteTabComponent} from './home/home-route-tab.component';
 import {AuthGuard} from './auth/auth.guard';
-import {HomeTabComponent} from './home/home-tab.component';
+import {AssignmentsContComponent} from '../tabs/assignments-cont/assignments-cont.component';
+import {GroupsContComponent} from '../tabs/groups-cont/groups-cont.component';
 
 // TODO: use this.router.navigate(['teacher','course'])
 // this.router.navigateByUrl(`/courses/${course.id}`);
@@ -26,7 +26,7 @@ const routes: Routes = [
     children: [
       {
         path: 'home',
-        component: HomeTabComponent
+        component: HomeRouteTabComponent
       },
       {
         path: 'teacher',

@@ -37,7 +37,8 @@
              routerLink="teacher/course/{{course.id}}"
              routerLinkActive="active-link"
              #rla="routerLinkActive">
-            {{course.label}} + {{rla.isActive}}
+            {{course.label}}
+            <!--+ {{rla.isActive}}-->
           </a>
           <!--          TODO: selected course should remain active/selected, even after clicking internal tabs-->
         </mat-list-item>
