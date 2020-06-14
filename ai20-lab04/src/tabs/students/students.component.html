@@ -3,8 +3,6 @@
   <br>
 
   <form class="example-form">
-    <!--TODO: rivedere codice autocomplete, e controllare che compaia quando si seleziona -->
-    <!--    TODO: c'é da rivedere la parte angular material su autocomplete, form field, angular reactive forms e slides form AI-->
     <mat-form-field>
       <input type="text" matInput #input
              [formControl]="myControl"
@@ -29,7 +27,6 @@
   <table mat-table [dataSource]="dataSource" matSort (matSortChange)="sortChange($event)">
     <ng-container matColumnDef="select">
       <th mat-header-cell *matHeaderCellDef>
-        <!--        TODO: codice checkbox da ricontrollare e verificare. Notare come master funziona su tutte le checkbox, anche quelle nascoste -->
         <mat-checkbox (click)="checkboxToggleMaster(); $event.preventDefault()"
                       [checked]="checkboxIsChecked('master')"
                       [indeterminate]="checkboxIsIndeterminate()"></mat-checkbox>

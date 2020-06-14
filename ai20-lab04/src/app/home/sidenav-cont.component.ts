@@ -19,7 +19,6 @@ const tabs = [
   {path: 'assignments', label: 'Assignments'}
 ];
 
-// TODO: da rivedere, anche in base al progetto
 const DBEs2pdf = {
   students: [{
     id: 1, serial: '265373', name: 'ALICINO', firstName:
@@ -37,7 +36,6 @@ const DBEs2pdf = {
 export class SidenavContComponent implements OnInit, OnChanges, OnDestroy {
   prefix = '/teacher';
   navLinks = [];
-  // TODO: need to get this value for a course service or routing
   activeCourse = 1;
   paramSubscription: Subscription;
 

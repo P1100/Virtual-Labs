@@ -5,7 +5,6 @@ import {from, Observable, Subscription} from 'rxjs';
 import {ActivatedRoute} from '@angular/router';
 import {concatMap, tap, toArray} from 'rxjs/operators';
 
-// TODO: muovere indietro a teacher folder prima di consegna
 @Component({
   selector: 'app-students-cont',
   template: `
@@ -19,7 +18,7 @@ import {concatMap, tap, toArray} from 'rxjs/operators';
 })
 export class StudentsContComponent implements OnInit, OnDestroy {
   allStudents: Student[] = [];
-  enrolledStudents: Student[] = []; // TODO: enrolledStudents should be course dependent
+  enrolledStudents: Student[] = [];
   subAllStudents: Subscription;
   subEnrolledStudentsCourse: Subscription = null;
   courseId = 1;

@@ -8,7 +8,6 @@ import {FormControl} from '@angular/forms';
 import {Observable} from 'rxjs';
 import {filter, map, startWith} from 'rxjs/operators';
 
-// TODO: classe molto incasinata, forse si puó migliorare leggibilitá separando e raggruppando funzioni per elemento HTML?
 @Component({
   selector: 'app-students',
   templateUrl: './students.component.html',
@@ -193,7 +192,6 @@ export class StudentsComponent implements OnInit, AfterViewInit {
     this.selectedStudentToAdd = (event).option.value;
     console.log('# StudentsComponent.autocompleSave added student' + JSON.stringify(this.selectedStudentToAdd));
   }
-// TODO: delete later, if things works without issues
   // @ViewChild(MatSidenav) matsidenav: MatSidenav;
 
   /*

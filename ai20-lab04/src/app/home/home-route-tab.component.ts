@@ -10,7 +10,6 @@ import {Component, OnInit} from '@angular/core';
   `,
   styles: []
 })
-// TODO: image loaded only if not logged? subject su auth service, variabile isLogged?
 export class HomeRouteTabComponent implements OnInit {
 
   constructor() {

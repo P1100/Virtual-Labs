@@ -5,11 +5,6 @@ import {HttpClient, HttpHeaders} from '@angular/common/http';
 import {catchError, retry, tap} from 'rxjs/operators';
 import {environment} from '../../environments/environment';
 
-// TODO: StudentsContComponent che conterrà le informazioni sul DB studenti e sugli studenti iscritti, informazioni che passerà al componente
-// StudentsComponent attraverso il property binding
-// TODO: confrontare dati client (struttura) e dati REST dell'esercitazione server
-// TODO: per progetto, questo é file DTO. Non c'é id, come id viene usata matricola/serial
-
 @Injectable({
   providedIn: 'root'
 })
@@ -64,16 +59,10 @@ export class StudentService {
       `${this.apiJsonServerProxyPath}/students/${student.id}`
     ).pipe(retry(0), catchError(this.formatErrors));
   }
-// TODO: codice sotto da rivedere per progetto
   enrollStudents(students: Student[], courseId: number) {
     const request$ = new Array<Observable<Student>>();
     students.forEach((student: Student) => request$.push(this.updateStudent(student)));
     return forkJoin(request$);
-
-    // return this.http.post(
-    //   `${this.apiJsonServerProxyPath}`,
-    //   JSON.stringify(students)
-    // ).pipe(retry(0), catchError(this.formatErrors));
   }
   deleteStudents(studentsToRemove: Student[]) {
   }

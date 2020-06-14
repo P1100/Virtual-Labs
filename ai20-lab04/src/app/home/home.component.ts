@@ -19,7 +19,6 @@ const DB_COURSES: Course[] = [
   {id: 3, label: 'Mobile development', path: 'mobile-development'}
 ];
 
-// TODO: integrate es1 into project dialog login/registration
 @Component({
   // selector changed from app-root, inserted in index.html!
   selector: 'app-home',
@@ -55,7 +54,7 @@ export class HomeComponent implements OnInit, OnDestroy {
     this.subscriptionRoute = this.route.queryParams.subscribe(params => {
       console.log('inside_Route', params, params.doLogin, params['doLogin']);
       // this.doLogin = params['doLogin'];
-      if (params.doLogin == 'true') {
+      if (params.doLogin === 'true') {
         console.log('inside_DoLogin');
         this.openLoginDialogReactive();
       }
@@ -100,7 +99,6 @@ export class HomeComponent implements OnInit, OnDestroy {
 
 @Component({
   selector: 'app-login-dialog',
-  styleUrls: ['../auth/login-dialog.component.css'],
   templateUrl: '../auth/login-dialog-reactive.component.html',
 })
 export class LoginDialogReactiveComponent {
@@ -166,7 +164,6 @@ function fakeNameValidator(control: FormGroup): ValidationErrors | null {
 
 @Component({
   selector: 'app-login-dialog',
-  styleUrls: ['../auth/login-dialog.component.css'],
   templateUrl: '../auth/login-dialog-template.component.html',
 })
 export class LoginDialogTemplateComponent {

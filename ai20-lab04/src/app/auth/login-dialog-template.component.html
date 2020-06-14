@@ -1,7 +1,6 @@
 <h1 mat-dialog-title>Login {{data.name}}</h1>
 <div mat-dialog-content>
 
-
   <mat-toolbar>
   </mat-toolbar>
   <mat-card>
@@ -15,11 +14,6 @@
           <input matInput type="text" placeholder="username" name="username" #field="ngModel" ngModel required>
         </mat-form-field>
         <mat-error *ngIf="field.invalid && !field.pristine">Username is required</mat-error>
-        <!--
-        <div [hidden]="field.valid || field.pristine">
-          Username is required
-        </div>
-        -->
         <br>
         <mat-form-field>
           <mat-label for="age">Age:</mat-label>
@@ -47,5 +41,3 @@ form value:  {{ f.value | json }}
   <button mat-button (click)="onNoClick()">No Thanks</button>
   <button mat-button [mat-dialog-close]="data.animal" cdkFocusInitial>Ok</button>
 </div>
-
-<!--<button mat-button tabindex="-1">Not Tabbable</button>-->

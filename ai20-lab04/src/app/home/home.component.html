@@ -11,11 +11,7 @@
   <!-- This fills the remaining space of the current row -->
   <span class="example-fill-remaining-space"></span>
 
-  <!--  <button mat-button type="button" *ngIf="loggedUser == ''">Register</button>-->
   <button mat-button type="button" *ngIf="isLogged">a{{loggedUser}}</button>
-  <!--  <button mat-button type="button" aria-label="login and logout"-->
-  <!--          (click)="openLoginDialogTemplate()">    {{isLogged}}-T-->
-  <!--  </button>-->
   <button mat-button
           type="button"
           aria-label="login and logout"
@@ -26,11 +22,9 @@
 
 <mat-toolbar>Applicazioni Internet</mat-toolbar>
 
-<!--TODO: rivedere codice sidenav (responsive) da material-->
 <mat-sidenav-container>
   <mat-sidenav #drawer mode="side" opened position="start">
     <div>
-      <!--      TODO: change from course manual course firstName, to :course_name. Need to update active course somewhere (using [()] ?) -->
       <mat-nav-list>
         <mat-list-item *ngFor="let course of courses">
           <a mat-list-item
@@ -40,7 +34,6 @@
             {{course.label}}
             <!--+ {{rla.isActive}}-->
           </a>
-          <!--          TODO: selected course should remain active/selected, even after clicking internal tabs-->
         </mat-list-item>
       </mat-nav-list>
 
@@ -50,18 +43,3 @@
   <router-outlet></router-outlet>
 
 </mat-sidenav-container>
-
-<!--So adding a new variable
-
-export class myComponent {
-        private dynamicParameter = '129';
-        public routerLinkVariable = "/home";
-
-Updating the [routerLink]
-
-  <a [routerLink]="[routerLinkVariable,dynamicParameter]"></a>
-
-When you want to click on this link, it would become:
-
-  <a href="/home/129"></a>
--->

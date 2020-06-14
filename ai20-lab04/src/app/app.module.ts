@@ -1,4 +1,3 @@
-// ToDO: Passare a SSL nel progetto finale (?!)
 // Removed Ivy support, in ./tsconfig.json, for compatibility with augury
 
 import {MatToolbarModule} from '@angular/material/toolbar';

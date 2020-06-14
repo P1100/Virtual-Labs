@@ -54,13 +54,6 @@ export class AuthService {
     localStorage.removeItem('user');
     localStorage.removeItem('expires_at');
     console.log('AuthService.logout: accessToken removed');
-    /*
-    return this.http.post('/api/logout', null).pipe(
-      shareReplay(),
-      // tap(user => this.isLoggedSubject.next(ANONYMOUS_USER)));
-      tap(user => this.user = ANONYMOUS_USER)
-    );
-    */
   }
   public getSub(): Subject<any> {
     return this.isLoggedSubject;

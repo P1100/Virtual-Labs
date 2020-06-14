@@ -9,7 +9,6 @@ import {AuthGuard} from './auth/auth.guard';
 import {AssignmentsContComponent} from '../tabs/assignments-cont/assignments-cont.component';
 import {GroupsContComponent} from '../tabs/groups-cont/groups-cont.component';
 
-// TODO: use this.router.navigate(['teacher','course'])
 // this.router.navigateByUrl(`/courses/${course.id}`);
 //     this.router.navigate(['/courses',course.id]);
 const routes: Routes = [

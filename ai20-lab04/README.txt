@@ -7,9 +7,9 @@ PIETRO GIASONE 160557
 L'applicazione sviluppata segue le indicazioni date per la stesura dell'esercitazione numero cinque. L'app é molto user friendly e l'uso dovrebbe essere facile ed istantaneo.
 Si allegano piú screenshots in modo da avere una visione chiara ed immediata dell'elaborato fatto (nella cartella _screenshots, perché sono molti)
 
-Come features degne di nota:
+Come features aggiuntive o da menzionare:
 - Il routing é stato implementato con una struttura nested a piú livelli, in un ottica di progetto e come suggerito nel testo
-- É stato implementato anche la logica per gestire corsi multipli, in modo completo.
+- É stato implementata anche la logica per gestire corsi multipli, in modo completo.
 - SSL implementato come npm script (insieme a prod)
 
 # Istruzioni di avvio (vedere file package.json per altri comandi e dettagli)
