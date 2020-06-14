@@ -33,6 +33,7 @@ export class HomeComponent implements OnInit, OnDestroy {
   loggedUser = '';
   subscription: Subscription;
   subscriptionRoute: Subscription;
+  dialogRef = undefined;
 
   animal: string;
   name: string;
@@ -40,7 +41,7 @@ export class HomeComponent implements OnInit, OnDestroy {
   constructor(private titleService: Title, public dialog: MatDialog, private auth: AuthService,
               private router: Router, private route: ActivatedRoute) {
     titleService.setTitle(this.title);
-    this.isLogged = this.auth.isLoggedIn();
+    console.log('constructor HomeComponent pre ' + this.isLogged);
     this.subscription = this.auth.getSub().subscribe(x => {
       this.isLogged = x;
       if (x === true) {
@@ -48,7 +49,9 @@ export class HomeComponent implements OnInit, OnDestroy {
       } else {
         localStorage.removeItem('user');
       }
+      console.log('constructor HomeComponent getSub().subscribe ' + this.isLogged);
     });
+    console.log('constructor HomeComponent post ' + this.isLogged);
   }
   ngOnInit(): void {
     console.log('# HomeController.ngOninit START');
@@ -67,7 +70,7 @@ export class HomeComponent implements OnInit, OnDestroy {
       data: {name: this.name, animal: this.animal}
     });
     dialogRef.afterClosed().subscribe(result => {
-      console.log('The dialog was closed');
+      console.log('openLoginDialogTemplate afterClosed().subscribe');
     });
   }
   ngOnDestroy(): void {
@@ -75,15 +78,21 @@ export class HomeComponent implements OnInit, OnDestroy {
     this.subscriptionRoute.unsubscribe();
   }
   openLoginDialogReactive(): void {
-    const dialogRef = this.dialog.open(LoginDialogReactiveComponent, {
+    if (this.dialogRef) { // if dialog exists
+      return;
+    }
+    this.dialogRef = this.dialog.open(LoginDialogReactiveComponent, {
       maxWidth: '600px',
       autoFocus: true,
       disableClose: false, // Esc key will close it
       hasBackdrop: false, // clicking outside wont close it
     });
-    dialogRef.afterClosed().subscribe(result => {
-      console.log('The dialog was closed', result);
-    });
+    // Settings what to do when dialog is closed
+    this.dialogRef.afterClosed().subscribe(result => {
+        this.dialogRef = undefined;
+        console.log('openLoginDialogReactive afterClosed().subscribe', result);
+      }
+    );
   }
   clickLoginLogout() {
     if (this.isLogged) {
@@ -92,8 +101,10 @@ export class HomeComponent implements OnInit, OnDestroy {
       this.router.navigateByUrl('/home');
     } else {
       console.log('login');
+      // navigando su doLogin apre in automatico la dialog in ngOnInit
       this.router.navigateByUrl('/home?doLogin=true');
-      // this.openLoginDialogReactive();
+      console.log(this.dialogRef);
+      this.openLoginDialogReactive();
     }
   }
 }
@@ -103,9 +114,10 @@ export class HomeComponent implements OnInit, OnDestroy {
   styleUrls: ['../auth/login-dialog.component.css'],
   templateUrl: '../auth/login-dialog-reactive.component.html',
 })
-export class LoginDialogReactiveComponent {
+export class LoginDialogReactiveComponent implements OnDestroy {
   public user;
   form: FormGroup;
+  subscriptionLogin: Subscription;
 
   constructor(public dialogRef: MatDialogRef<LoginDialogReactiveComponent>,
               private fb: FormBuilder, private authService: AuthService,
@@ -126,20 +138,27 @@ export class LoginDialogReactiveComponent {
       console.log(this.user);
     });
   }
-  onNoClick(): void {
-    this.dialogRef.close();
+  ngOnDestroy(): void {
+    console.log('LoginDialogReactiveComponent destroyed!');
+  }
+  onCancelClick(): void {
+    this.subscriptionLogin?.unsubscribe();
+    this.dialogRef.close(); // Destroys the dialog!
     this.router.navigateByUrl('/home');
   }
   login() {
     const val = this.form.value;
     if (val.email && val.password) {
-      this.authService.login(val.email, val.password)
+      this.subscriptionLogin = this.authService.login(val.email, val.password)
         .subscribe((accessToken) => {
             console.log('User is logged in. Received: ' + JSON.stringify(accessToken), accessToken);
+            console.log('LoginDialogReactiveComponent ended login http sub');
+            this.dialogRef.close();
+            console.log('LoginDialogReactiveComponent after dialogRef.close()');
+            this.router.navigateByUrl('/');
+            console.log('LoginDialogReactiveComponent after navigateByUrl!');
           }
         );
-      this.dialogRef.close();
-      this.router.navigateByUrl('/');
     }
   }
   logout() {
