@@ -30,13 +30,14 @@ import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {AssignmentsContComponent} from './teacher/assignments-cont/assignments-cont.component';
 import {BrowserModule} from '@angular/platform-browser';
 import {DragDropModule} from '@angular/cdk/drag-drop';
-import {StudentsContComponent} from './services/students-cont.component';
+import {StudentsContComponent} from './teacher/students-cont/students-cont.component';
 import {AppComponent} from '../_unused/app/app.component';
 import {MAT_DIALOG_DEFAULT_OPTIONS, MatDialogModule} from '@angular/material/dialog';
 import {SidenavContComponent} from './home/sidenav-cont.component';
 import {OtherCourseComponent} from './other-course/other-course.component';
 import {HTTP_INTERCEPTORS, HttpClientModule} from '@angular/common/http';
-import {AuthInterceptor} from './services/auth.interceptor';
+import {AuthInterceptor} from './auth/auth.interceptor';
+import {HomeTabComponent} from './home/home-tab.component';
 
 @NgModule({
   imports: [
@@ -78,7 +79,8 @@ import {AuthInterceptor} from './services/auth.interceptor';
     HomeComponent,
     SidenavContComponent,
     LoginDialogTemplateComponent,
-    LoginDialogReactiveComponent
+    LoginDialogReactiveComponent,
+    HomeTabComponent
   ],
   entryComponents: [
     HomeComponent, LoginDialogTemplateComponent, LoginDialogReactiveComponent

@@ -19,6 +19,7 @@ export class AuthService {
 
   constructor(private http: HttpClient) {
     console.log('new auth service');
+    localStorage.clear();
   }
 
   /* shareReplay
@@ -51,6 +52,7 @@ export class AuthService {
     this.isLoggedSubject.next(false);
     localStorage.removeItem('accessToken');
     localStorage.removeItem('user');
+    localStorage.removeItem('expires_at');
     console.log('AuthService.logout: accessToken removed');
     /*
     return this.http.post('/api/logout', null).pipe(
@@ -63,8 +65,9 @@ export class AuthService {
   public getSub(): Subject<any> {
     return this.isLoggedSubject;
   }
-  public isLoggedIn() {
-    return moment().isBefore(moment.unix(+localStorage.getItem('expires_at')));
+  public isLoggedIn(): boolean {
+    const exp = localStorage.getItem('expires_at');
+    return exp != null && moment().isBefore(moment.unix(+exp));
   }
   public isLoggedOut() {
     return !this.isLoggedIn();

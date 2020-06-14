@@ -4,8 +4,8 @@ import {Title} from '@angular/platform-browser';
 import {MAT_DIALOG_DATA, MatDialog, MatDialogRef} from '@angular/material/dialog';
 import {FormBuilder, FormGroup, ValidationErrors, Validators} from '@angular/forms';
 import {filter, map, tap} from 'rxjs/operators';
-import {AuthService} from '../services/auth.service';
-import {Router} from '@angular/router';
+import {AuthService} from '../auth/auth.service';
+import {ActivatedRoute, Router} from '@angular/router';
 import {Subscription} from 'rxjs';
 
 export interface DialogData {
@@ -33,11 +33,13 @@ export class HomeComponent implements OnInit, OnDestroy {
   isLogged = false;
   loggedUser = '';
   subscription: Subscription;
+  subscriptionRoute: Subscription;
 
   animal: string;
   name: string;
 
-  constructor(private titleService: Title, public dialog: MatDialog, private auth: AuthService, private router: Router) {
+  constructor(private titleService: Title, public dialog: MatDialog, private auth: AuthService,
+              private router: Router, private route: ActivatedRoute) {
     titleService.setTitle(this.title);
     this.isLogged = this.auth.isLoggedIn();
     this.subscription = this.auth.getSub().subscribe(x => {
@@ -51,6 +53,14 @@ export class HomeComponent implements OnInit, OnDestroy {
   }
   ngOnInit(): void {
     console.log('# HomeController.ngOninit START');
+    this.subscriptionRoute = this.route.queryParams.subscribe(params => {
+      console.log('inside_Route', params, params.doLogin, params['doLogin']);
+      // this.doLogin = params['doLogin'];
+      if (params.doLogin == 'true') {
+        console.log('inside_DoLogin');
+        this.openLoginDialogReactive();
+      }
+    });
   }
   openLoginDialogTemplate(): void {
     const dialogRef = this.dialog.open(LoginDialogTemplateComponent, {
@@ -63,6 +73,7 @@ export class HomeComponent implements OnInit, OnDestroy {
   }
   ngOnDestroy(): void {
     this.subscription.unsubscribe();
+    this.subscriptionRoute.unsubscribe();
   }
   openLoginDialogReactive(): void {
     const dialogRef = this.dialog.open(LoginDialogReactiveComponent, {
@@ -82,7 +93,8 @@ export class HomeComponent implements OnInit, OnDestroy {
       this.router.navigateByUrl('/home');
     } else {
       console.log('login');
-      this.openLoginDialogReactive();
+      this.router.navigateByUrl('/home?doLogin=true');
+      // this.openLoginDialogReactive();
     }
   }
 }
@@ -97,7 +109,8 @@ export class LoginDialogReactiveComponent {
   form: FormGroup;
 
   constructor(public dialogRef: MatDialogRef<LoginDialogReactiveComponent>,
-              private fb: FormBuilder, private authService: AuthService) {
+              private fb: FormBuilder, private authService: AuthService,
+              private router: Router, activatedRoute: ActivatedRoute) {
     this.form = this.fb.group({
       email: ['olivier@mail.com', [forbiddenNameValidator(/bob/i), Validators.required]],
       password: ['bestPassw0rd', [Validators.required]],
@@ -116,6 +129,7 @@ export class LoginDialogReactiveComponent {
   }
   onNoClick(): void {
     this.dialogRef.close();
+    this.router.navigateByUrl('/home');
   }
   login() {
     const val = this.form.value;
@@ -126,6 +140,7 @@ export class LoginDialogReactiveComponent {
           }
         );
       this.dialogRef.close();
+      this.router.navigateByUrl('/');
     }
   }
   logout() {

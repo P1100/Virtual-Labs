@@ -1,0 +1,51 @@
+<h1 mat-dialog-title>Login {{data.name}}</h1>
+<div mat-dialog-content>
+
+
+  <mat-toolbar>
+  </mat-toolbar>
+  <mat-card>
+    <mat-card-title>Create a new owner</mat-card-title>
+    <form #f="ngForm">
+      <mat-card-content>
+
+        <mat-form-field>
+          <mat-label for="username">Username:</mat-label>
+          <!-- put or delete required: changes valid poperty -->
+          <input matInput type="text" placeholder="username" name="username" #field="ngModel" ngModel required>
+        </mat-form-field>
+        <mat-error *ngIf="field.invalid && !field.pristine">Username is required</mat-error>
+        <!--
+        <div [hidden]="field.valid || field.pristine">
+          Username is required
+        </div>
+        -->
+        <br>
+        <mat-form-field>
+          <mat-label for="age">Age:</mat-label>
+          <!-- put or delete required: changes valid poperty -->
+          <input matInput type="text" placeholder="age" name="age" #age="ngModel" ngModel pattern="[0-9]+">
+          <mat-error *ngIf="age.invalid">Age allows only numbers</mat-error>
+        </mat-form-field>
+
+      </mat-card-content>
+    </form>
+    <pre>
+form value:  {{ f.value | json }}
+      form status: {{ f.status | json }}
+      field valid:  {{ field.valid | json }}
+</pre>
+  </mat-card>
+
+  <mat-form-field>
+    <mat-label>Favorite Animal</mat-label>
+    <input matInput [(ngModel)]="data.animal">
+  </mat-form-field>
+</div>
+
+<div mat-dialog-actions>
+  <button mat-button (click)="onNoClick()">No Thanks</button>
+  <button mat-button [mat-dialog-close]="data.animal" cdkFocusInitial>Ok</button>
+</div>
+
+<!--<button mat-button tabindex="-1">Not Tabbable</button>-->

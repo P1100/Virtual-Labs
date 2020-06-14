@@ -9,11 +9,12 @@ This project was generated with [Angular CLI](https://github.com/angular/angular
 - ng add @angular/material
 - npm install -D json-server json-server-auth
 - ng build –prod
+- npm start (linux: npm run startAll-linux)
 
 ng generate component teacher/studentsCont --flat --module app
 ng generate module app-routing-module --flat --module=app
 ng generate component PageNotFound --module=app --inlineTemplate --inlineStyle
-ng generate component OtherCourse --module=app --inlineTemplate --inlineStyle --minimal=true
+ng generate component OtherCourse --module=app --inlineTemplate --inlineStyle
 ng generate component VmsCont --module=app
 ng generate component GroupsCont --module=app
 ng generate component AssignmentsCont --module=app
@@ -25,7 +26,10 @@ ng generate service auth/auth --flat
 
 npm install moment
 
-npm start (linux: npm run startAll-linux)
+ng generate guard -d auth/auth --flat --implements CanActivate
+
+ng generate component HomeTab --module=app --inlineTemplate --inlineStyle --minimal
+
 
 ## Comandi browser
 http://localhost:3000/students?_expand=group
