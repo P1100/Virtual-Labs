@@ -1,7 +1,7 @@
 import {NgModule} from '@angular/core';
 import {RouterModule, Routes} from '@angular/router';
 import {VmsContComponent} from './tabs/vms-cont/vms-cont.component';
-import {StudentsContComponent} from './tabs/students-cont.component';
+import {StudentsContComponent} from './tabs/students/students-cont.component';
 import {SidenavContComponent} from './home/sidenav-cont.component';
 import {PageNotFoundComponent} from './tabs/page-not-found/page-not-found.component';
 import {HomeRouteTabComponent} from './home/home-route-tab.component';

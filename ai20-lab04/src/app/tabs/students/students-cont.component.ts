@@ -1,6 +1,6 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
-import {Student} from '../model/student.model';
-import {StudentService} from '../services/student.service';
+import {Student} from '../../model/student.model';
+import {StudentService} from '../../services/student.service';
 import {from, Observable, Subscription} from 'rxjs';
 import {ActivatedRoute} from '@angular/router';
 import {concatMap, tap, toArray} from 'rxjs/operators';
@@ -15,7 +15,7 @@ import {concatMap, tap, toArray} from 'rxjs/operators';
                   (disenrolledEvent)="onStudentsToDisenroll($event)"
     ></app-students>
   `,
-  styleUrls: ['../../_unused/students-cont.component.css']
+  styleUrls: ['../../../_unused/students-cont.component.css']
 })
 export class StudentsContComponent implements OnInit, OnDestroy {
   allStudents: Student[] = [];
@@ -26,8 +26,7 @@ export class StudentsContComponent implements OnInit, OnDestroy {
   private paramSubscription: Subscription;
 
   constructor(private studentService: StudentService, private route: ActivatedRoute) {
-    this.paramSubscription = this.route.url.subscribe(url => {
-    });
+    // this.paramSubscription = this.route.url.subscribe(url => { });
     this.paramSubscription = this.route.paramMap.subscribe(url => {
       this.courseId = +this.route.parent.snapshot.paramMap.get('id');
       console.log('student-cont route.paramMap activeCourse: ' + this.courseId);
@@ -42,9 +41,9 @@ export class StudentsContComponent implements OnInit, OnDestroy {
   }
   ngOnDestroy(): void {
     console.log('student-cont.ngOnDestroy');
+    this.paramSubscription.unsubscribe();
     this.subAllStudents.unsubscribe();
     this.subEnrolledStudentsCourse.unsubscribe();
-    this.paramSubscription.unsubscribe();
   }
 
   onStudentsToEnroll(studentsToEnroll: Student[]) {

@@ -61,7 +61,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                                         + "where email = ?");
    */
   }
-  
+  // TODO: dual form login con JWT authentication?
   @Override
   protected void configure(HttpSecurity httpSecurity) throws Exception {
     httpSecurity

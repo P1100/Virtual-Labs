@@ -70,5 +70,4 @@ export class AuthService {
     // json-server-auth token field exp contains epoch of exportation (last 1 hour)
     localStorage.setItem('expires_at', tkn.exp);
   }
-
 }

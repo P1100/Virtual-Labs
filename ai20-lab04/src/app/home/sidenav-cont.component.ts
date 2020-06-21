@@ -42,7 +42,7 @@ export class SidenavContComponent implements OnInit, OnChanges, OnDestroy {
   paramSubscription: Subscription;
 
   constructor(private route: ActivatedRoute) {
-    // Devo riaggiornare i tabs ad ogni cambio di corso. No observable =>  this.route.snapshot.paramMap.get("id");
+    // Devo riaggiornare i tabs ad ogni cambio di corso. Versione no observable =>  this.route.snapshot.paramMap.get("id");
     this.paramSubscription = this.route.url.subscribe(url => {
       this.activeCourse = +this.route.snapshot.paramMap.get('id');
       this.navLinks = [];

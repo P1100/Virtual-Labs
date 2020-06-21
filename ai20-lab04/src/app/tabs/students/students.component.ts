@@ -25,6 +25,7 @@ export class StudentsComponent implements OnInit, AfterViewInit {
   // Needed sort variable
   @ViewChild(MatSort) sort: MatSort;
   // displayedColumnsTable is based on Student class (manual synch), controls various formatting elements
+  // TODO: collegare a struttura DB in modo dinamico! Farsi passare dati da componente? Devo gestire dati provenienti da JWT Server
   displayedColumnsTable: string[] = ['select', 'id', 'firstName', 'lastName', 'group'];
   // MatPaginator Inputs
   length: number; // The current total number of items being paged. Read only
