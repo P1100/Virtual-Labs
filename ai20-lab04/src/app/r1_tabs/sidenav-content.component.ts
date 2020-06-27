@@ -31,10 +31,10 @@ const DBEs2pdf = {
 
 @Component({
   selector: 'app-sidenav-cont',
-  templateUrl: './sidenav-cont.component.html',
-  styleUrls: ['./sidenav-cont.component.css']
+  templateUrl: './sidenav-content.component.html',
+  styleUrls: ['./sidenav-content.component.css']
 })
-export class SidenavContComponent implements OnInit, OnChanges, OnDestroy {
+export class SidenavContentComponent implements OnInit, OnChanges, OnDestroy {
   prefix = '/teacher';
   navLinks = [];
   // TODO: need to get this value for a course service or routing
@@ -58,7 +58,7 @@ export class SidenavContComponent implements OnInit, OnChanges, OnDestroy {
   }
 
   ngOnChanges(changes: SimpleChanges): void {
-    console.log('°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°\nSidenavContComponent.ngOnChanges - activerCourse:\n' + this.activeCourse);
+    console.log('°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°\nSidenavContentComponent.ngOnChanges - activerCourse:\n' + this.activeCourse);
     // throw new Error('Sidenav-ngOnChanges Method is never called??');
   }
   ngOnDestroy(): void {

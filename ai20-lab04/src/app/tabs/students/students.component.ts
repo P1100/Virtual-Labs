@@ -1,12 +1,13 @@
-import {AfterViewInit, Component, EventEmitter, Input, OnInit, Output, ViewChild} from '@angular/core';
+import {AfterViewInit, Component, EventEmitter, Input, OnDestroy, OnInit, Output, ViewChild} from '@angular/core';
 import {Student} from '../../model/student.model';
 import {MatTableDataSource} from '@angular/material/table';
 import {MatSort} from '@angular/material/sort';
 import {MatPaginator} from '@angular/material/paginator';
 import {MatAutocompleteSelectedEvent} from '@angular/material/autocomplete';
 import {FormControl} from '@angular/forms';
-import {Observable} from 'rxjs';
+import {Observable, Subscription} from 'rxjs';
 import {filter, map, startWith} from 'rxjs/operators';
+import {ActivatedRoute} from '@angular/router';
 
 // TODO: classe molto incasinata, forse si puó migliorare leggibilitá separando e raggruppando funzioni per elemento HTML?
 @Component({
@@ -15,7 +16,7 @@ import {filter, map, startWith} from 'rxjs/operators';
   styleUrls: ['./students.component.css']
 })
 // Non vengono usati Observables in questa classe, perché tutta la comunicazione asincrona con server/servizio avviene nel componente container
-export class StudentsComponent implements OnInit, AfterViewInit {
+export class StudentsComponent implements OnInit, AfterViewInit, OnDestroy {
   @Output('enrolledEvent')
   enrolledEvent = new EventEmitter<Student[]>();
   @Output('disenrolledEvent')
@@ -45,9 +46,18 @@ export class StudentsComponent implements OnInit, AfterViewInit {
   @Input()
   private students: Student[];
   // filteredOptions: Student[] = [];
-  constructor() {
+
+  public id: string;
+  private paramSubscription: Subscription;
+
+  constructor(private route: ActivatedRoute) {
+    this.paramSubscription = this.route.parent.url.subscribe(url => {
+      this.id = this.route.parent.snapshot.paramMap.get('id');
+    });
+    // this.id = this.route.snapshot.paramMap.get('id');
     // console.log('# students.constuctor selectedStudentToAdd:\n' + this.selectedStudentToAdd);
   }
+
   get enrolled(): Student[] {
     return this.dataSource.data;
   }
@@ -193,6 +203,9 @@ export class StudentsComponent implements OnInit, AfterViewInit {
   autocompleteSaveOption(event: MatAutocompleteSelectedEvent) {
     this.selectedStudentToAdd = (event).option.value;
     console.log('# StudentsComponent.autocompleSave added student' + JSON.stringify(this.selectedStudentToAdd));
+  }
+  ngOnDestroy(): void {
+    this.paramSubscription.unsubscribe();
   }
 // TODO: delete later, if things works without issues
   // @ViewChild(MatSidenav) matsidenav: MatSidenav;

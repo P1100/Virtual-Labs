@@ -1,9 +1,7 @@
-// ToDO: Passare a SSL nel progetto finale (?!)
-// Removed Ivy support, in ./tsconfig.json, for compatibility with augury
-
+import {MatSidenavModule} from '@angular/material/sidenav';
 import {MatToolbarModule} from '@angular/material/toolbar';
 import {MatFormFieldModule} from '@angular/material/form-field';
-import {HomeComponent, LoginDialogReactiveComponent, LoginDialogTemplateComponent} from './home/home.component';
+import {HomeComponent, LoginDialogReactiveComponent, LoginDialogTemplateComponent} from './r0_home/home.component';
 import {MatPaginatorModule} from '@angular/material/paginator';
 import {AuthInterceptor} from './auth/auth.interceptor';
 import {NgModule} from '@angular/core';
@@ -21,23 +19,21 @@ import {StudentsComponent} from './tabs/students/students.component';
 import {MatTabsModule} from '@angular/material/tabs';
 import {PageNotFoundComponent} from './tabs/page-not-found/page-not-found.component';
 import {MatButtonModule} from '@angular/material/button';
-import {HomeRouteTabComponent} from './home/home-route-tab.component';
 import {GroupsContComponent} from './tabs/groups-cont/groups-cont.component';
+import {SidenavContentComponent} from './r1_tabs/sidenav-content.component';
 import {LayoutModule} from '@angular/cdk/layout';
 import {VmsContComponent} from './tabs/vms-cont/vms-cont.component';
 import {HTTP_INTERCEPTORS, HttpClientModule} from '@angular/common/http';
 import {MatIconModule} from '@angular/material/icon';
 import {MatListModule} from '@angular/material/list';
-import {MatSidenavModule} from '@angular/material/sidenav';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {AssignmentsContComponent} from './tabs/assignments-cont/assignments-cont.component';
 import {BrowserModule} from '@angular/platform-browser';
 import {DragDropModule} from '@angular/cdk/drag-drop';
+import {EmptyComponent} from './r1_tabs/empty.component';
 import {StudentsContComponent} from './tabs/students/students-cont.component';
 import {AppComponent} from '../_unused/app/app.component';
 import {MAT_DIALOG_DEFAULT_OPTIONS, MatDialogModule} from '@angular/material/dialog';
-import {SidenavContComponent} from './home/sidenav-cont.component';
-import {OtherCourseComponent} from './tabs/other-course/other-course.component';
 
 @NgModule({
   imports: [
@@ -71,16 +67,15 @@ import {OtherCourseComponent} from './tabs/other-course/other-course.component';
     AppComponent,
     StudentsComponent,
     StudentsContComponent,
-    OtherCourseComponent,
     PageNotFoundComponent,
     VmsContComponent,
     GroupsContComponent,
     AssignmentsContComponent,
     HomeComponent,
-    SidenavContComponent,
+    SidenavContentComponent,
     LoginDialogTemplateComponent,
     LoginDialogReactiveComponent,
-    HomeRouteTabComponent
+    EmptyComponent
   ],
   entryComponents: [
     HomeComponent, LoginDialogTemplateComponent, LoginDialogReactiveComponent

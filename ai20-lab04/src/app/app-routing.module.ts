@@ -2,9 +2,9 @@ import {NgModule} from '@angular/core';
 import {RouterModule, Routes} from '@angular/router';
 import {VmsContComponent} from './tabs/vms-cont/vms-cont.component';
 import {StudentsContComponent} from './tabs/students/students-cont.component';
-import {SidenavContComponent} from './home/sidenav-cont.component';
+import {SidenavContentComponent} from './r1_tabs/sidenav-content.component';
 import {PageNotFoundComponent} from './tabs/page-not-found/page-not-found.component';
-import {HomeRouteTabComponent} from './home/home-route-tab.component';
+import {EmptyComponent} from './r1_tabs/empty.component';
 import {AuthGuard} from './auth/auth.guard';
 import {AssignmentsContComponent} from './tabs/assignments-cont/assignments-cont.component';
 import {GroupsContComponent} from './tabs/groups-cont/groups-cont.component';
@@ -26,7 +26,7 @@ const routes: Routes = [
     children: [
       {
         path: 'home',
-        component: HomeRouteTabComponent
+        component: EmptyComponent
       },
       {
         path: 'teacher',
@@ -42,7 +42,7 @@ const routes: Routes = [
             children: [
               {
                 path: ':id',
-                component: SidenavContComponent,
+                component: SidenavContentComponent,
                 children: [
                   {
                     path: '',
@@ -75,7 +75,6 @@ const routes: Routes = [
   },
   // /student/course/:courseId/vms
   // {path: 'teacher/course/applicationi-internet/assignments', component: AssignmentsContComponent},
-  // {path: 'mobile-development', component: OtherCourseComponent},
   // {path: 'home', redirectTo: '/', pathMatch: 'full'}, // redirect to `first-component`, which is HomeComponent
   {path: '**', component: PageNotFoundComponent, pathMatch: 'full'},
 ];

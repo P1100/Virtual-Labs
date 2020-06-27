@@ -1,11 +1,11 @@
+// TODO: muovere indietro a teacher folder prima di consegna
 import {Component, OnDestroy, OnInit} from '@angular/core';
-import {Student} from '../../model/student.model';
-import {StudentService} from '../../services/student.service';
-import {from, Observable, Subscription} from 'rxjs';
 import {ActivatedRoute} from '@angular/router';
 import {concatMap, tap, toArray} from 'rxjs/operators';
+import {StudentService} from '../../services/student.service';
+import {from, Observable, Subscription} from 'rxjs';
+import {Student} from '../../model/student.model';
 
-// TODO: muovere indietro a teacher folder prima di consegna
 @Component({
   selector: 'app-students-cont',
   template: `

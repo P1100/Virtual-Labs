@@ -15,7 +15,8 @@ Come features degne di nota:
 ---- linux/mac(?): npm run startAll-linux
 
 # Comandi usati ~ (windows10)
-- npm install -g @angular/cli
+- npm init -y
+- npm install @angular/cli
 - ng new ai20-lab04
 - cd ai20-lab04
 - ng add @angular/material
@@ -23,6 +24,18 @@ Come features degne di nota:
 - npm install moment
 - ng build –prod
 
+=> usare SSL nel progetto finale
+
+[probably installed some other package, like moment.js angular@forms ...]
+
+# Update
+npm list -g
+npm install npm@latest -g
+ng update --all=true --allow-dirty --force
+
+npm i -D typescript@3.9.5
+
+# Creation
 ng generate component teacher/studentsCont --flat --module app
 ng generate module app-routing-module --flat --module=app
 ng generate component PageNotFound --module=app --inlineTemplate --inlineStyle
@@ -78,6 +91,12 @@ In environment.ts e environment.prod.ts (in assets)
      urlHttpOrHttpsPrefix: 'http'
      urlHttpOrHttpsPrefix: 'https'
 
+
+# Bugs fixes (tsconfig.json)
+    "baseUrl": "./",
+    "paths": {
+      "tslib" : ["node_modules/tslib/tslib.d.ts"]
+    },
 
 
 # version
