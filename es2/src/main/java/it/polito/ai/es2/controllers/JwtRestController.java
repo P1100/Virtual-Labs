@@ -36,6 +36,9 @@ public class JwtRestController {
   }
   
   // {"username":"admin","password":"a"}
+//  {
+//    "token": "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhZG1pbiIsImV4cCI6MTU5MzAzODM4MywiaWF0IjoxNTkzMDIwMzgzfQ.bQUxdDKJWPVOKM2g1LnR5ubFjs2GNhQutsh43ARNTmQ_44G2ZbHyxfcchY8DmoxqSwNpU6jfusewmWuKkMJAUQ"
+//  }
   @RequestMapping(value = "/authenticate", method = RequestMethod.POST)
   public ResponseEntity<?> createAuthenticationToken(@RequestBody JwtRequest authenticationRequest) throws Exception {
     authenticate(authenticationRequest.getUsername(), authenticationRequest.getPassword());

@@ -1,2 +1,1 @@
-# AI_2020_Es2
-Esercitazione 2
+# AI 2020 Progetto parte server side

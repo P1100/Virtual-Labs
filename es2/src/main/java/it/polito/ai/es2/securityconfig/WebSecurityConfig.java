@@ -15,6 +15,7 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 import javax.sql.DataSource;
 
@@ -29,7 +30,6 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
   @Autowired
   private JwtRequestFilter jwtRequestFilter;
   
-  //  @Autowired  --> with autowire i can change method name from configure to anything else
   @Bean
   public PasswordEncoder passwordEncoder() {
     return new BCryptPasswordEncoder();
@@ -41,15 +41,15 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     return super.authenticationManagerBean();
   }
   
-  @Autowired // non override perchè ho dichiarato prima il bean per AuthenticationManagerBuilder. Nota: nome metodo irrelevante con autowired
+  @Autowired // non override perchè ho dichiarato prima il bean per AuthenticationManagerBuilder. Nomee metodo irrelevante
   public void configure(AuthenticationManagerBuilder auth_builder, DataSource dataSource) throws Exception {
-        auth_builder.userDetailsService(userDetailsServiceImpl).passwordEncoder(passwordEncoder());
+    auth_builder.userDetailsService(userDetailsServiceImpl).passwordEncoder(passwordEncoder());
 
 //    auth_builder.inMemoryAuthentication()
 //        .withUser("mem")
 //        .password(passwordEncoder().encode("mem"))
 //        .roles("USER", "GUEST", "ADMIN");
-  
+    
     // remember to load schema.sql first!
 //    auth_builder.jdbcAuthentication().dataSource(dataSource)
 //        .withUser("jdbc").password(passwordEncoder().encode("jdbc")).roles("admin","Guest")
@@ -61,7 +61,11 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                                         + "where email = ?");
    */
   }
-  // TODO: dual form login con JWT authentication?
+  
+  /**
+   * Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhZG1pbiIsImV4cCI6MTU5MzAzODgwMiwiaWF0IjoxNTkzMDIwODAyfQ.eNvYEI3XidkaWBl9bt3wUPSEOlV4Yg3TA5C17eB6L0TRRW07U-lC8tv4nVBjBEIU5c4-USIIX4eZc4mDMexxeg
+   */
+  // TODO: dual form login con JWT authentication ---> DONE! Clean up now
   @Override
   protected void configure(HttpSecurity httpSecurity) throws Exception {
     httpSecurity
@@ -69,16 +73,14 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         .csrf().disable()
         .cors().disable()
         // If enabled, go to /login and use "u:admin, password:a"
-      .formLogin().and() //.antMatcher("/**") --> applies to all?
-// TODO: commentcode above (commented for testing client REST data format)
+        .formLogin().and() //.antMatcher("/**") --> applies to all?
         .authorizeRequests()
 //        .antMatchers("/jwt/authenticate", "/jwt/register").permitAll()
 //        .antMatchers("/notification/**").permitAll()
 //        .antMatchers("/testing/**").permitAll()
 //        .antMatchers("/API").hasRole("ADMIN")
 //        .antMatchers("/*").authenticated()
-//        .antMatchers("/users/**").authenticated()
-// TODO: uncomment commented authentication JWT code above (commented for testing client REST data format)
+        .antMatchers("/API").authenticated()
         .anyRequest().permitAll()
 //        .and()
 //        .exceptionHandling().authenticationEntryPoint(jwtAuthenticationEntryPoint)
@@ -86,9 +88,9 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 //        .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
 // TODO: uncomment commented authentication JWT code above (commented for testing client REST data format)
     ;
-  
+    
     // Add a filter to validate the tokens with every request
-//    httpSecurity.addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class);
+    httpSecurity.addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class);
 // TODO: uncomment commented authentication JWT code above (commented for testing client REST data format)
   }
   

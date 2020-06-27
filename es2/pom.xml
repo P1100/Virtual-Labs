@@ -10,11 +10,11 @@
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
     <groupId>it.polito.ai</groupId>
-    <artifactId>es3</artifactId>
+    <artifactId>VirtualLabs</artifactId>
     <version>0.1.0-SNAPSHOT</version>
-    <name>es3</name>
+    <name>VirtualLabs</name>
     <!--    Versione va specificata in: project structure (2 posti, più scelta jdk in vari (2) punti), e qui se 1.8 (1.11 e 1.14 non funzionano)-->
-    <description>AI 2020 - Esercitazione 3</description>
+    <description>AI 2020 - VirtualLabs</description>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
