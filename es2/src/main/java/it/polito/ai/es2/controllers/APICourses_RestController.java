@@ -26,7 +26,7 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
 @RestController
 @RequestMapping("/API/courses")
-public class CourseRestController {
+public class APICourses_RestController {
   @Autowired
   TeamService teamService;
   
@@ -37,7 +37,7 @@ public class CourseRestController {
     for (CourseDTO courseDTO : allCourses) {
       ModelHelper.enrich(courseDTO);
     }
-    Link link = linkTo(methodOn(CourseRestController.class)
+    Link link = linkTo(methodOn(APICourses_RestController.class)
                            .getAllCourses()).withSelfRel();
     CollectionModel<CourseDTO> result = new CollectionModel<>(allCourses, link);
     return result;
@@ -92,7 +92,7 @@ public class CourseRestController {
   @PostMapping({"", "/"})
   public CourseDTO addCourse(@RequestBody CourseDTO courseDTO) {
     if (!teamService.addCourse(courseDTO)) {
-      throw new ResponseStatusException(HttpStatus.CONFLICT, courseDTO.getName());
+      throw new ResponseStatusException(HttpStatus.CONFLICT, courseDTO.getId());
     } else
       return ModelHelper.enrich(courseDTO);
   }

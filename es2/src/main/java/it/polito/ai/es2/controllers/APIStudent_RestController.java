@@ -20,7 +20,7 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
 @RestController
 @RequestMapping("/API/students")
-public class StudentRestController {
+public class APIStudent_RestController {
   @Autowired
   TeamService teamService;
   
@@ -30,7 +30,7 @@ public class StudentRestController {
     for (StudentDTO studentDTO : allStudents) {
       ModelHelper.enrich(studentDTO);
     }
-    Link link = linkTo(methodOn(StudentRestController.class)
+    Link link = linkTo(methodOn(APIStudent_RestController.class)
                            .getAllStudents()).withSelfRel();
     CollectionModel<StudentDTO> result = new CollectionModel<>(allStudents, link);
     return result;

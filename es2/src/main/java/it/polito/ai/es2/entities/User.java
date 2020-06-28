@@ -14,6 +14,7 @@ import java.util.List;
 @Data
 @NoArgsConstructor
 @Entity
+// TODO: change to (name = "UserInfo") // "User" is a reserved word in some SQL implementations
 @Table(name = "user")
 public class User {
   @Id

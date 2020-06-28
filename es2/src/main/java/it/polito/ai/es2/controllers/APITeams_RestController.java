@@ -19,7 +19,7 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
 @RestController
 @RequestMapping("/API/teams")
-public class TeamRestController {
+public class APITeams_RestController {
   @Autowired
   TeamService teamService;
   
@@ -29,7 +29,7 @@ public class TeamRestController {
     for (TeamDTO teamDTO : allTeams) {
       ModelHelper.enrich(teamDTO);
     }
-    Link link = linkTo(methodOn(TeamRestController.class)
+    Link link = linkTo(methodOn(APITeams_RestController.class)
                            .getAllTeams()).withSelfRel();
     CollectionModel<TeamDTO> result = new CollectionModel<>(allTeams, link);
     return result;

@@ -10,16 +10,26 @@ import javax.persistence.OneToMany;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Corso
+ * Il corso universitario è caratterizzato da un nome, un acronimo, e ad esso sono associati gli
+ * studenti iscritti a quel corso. Il corso può essere attivo o spento (se è spento non si possono
+ * utilizzare le corrispondenti macchine virtuali). Su ogni corso è impostata la dimensione minima e
+ * massima di studenti che possono comporre un gruppo, per quel corso
+ * <p>
+ * \Id is the course acronym. If disabled you cant use the VM associated
+ */
 @Entity
 @Data
 public class Course {
-  // changed from "name" to "idname", since it was confusing me. Note: refractoring this field doesnt work very well, dont ever do it again.
   @Id
-  private String name;
-  private int min;
-  private int max;
-  boolean enabled;
-  String professor;
+  private String id;
+  private String fullName;
+  private int minEnrolled;
+  private int maxEnrolled;
+  private boolean enabled;
+  // TODO: change with a relationship
+  private String professor;
   @OneToMany(mappedBy = "course")
   @ToString.Exclude
   List<Team> teams = new ArrayList<>();

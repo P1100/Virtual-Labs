@@ -18,22 +18,13 @@ import java.security.Principal;
 import java.util.Arrays;
 
 @Controller
-public class HomeController {
+public class _Controller {
   @Autowired
   TeamService teamService;
   @Autowired
   UserDetailsServiceImpl userDetailsService;
   @Autowired
   private UserRepository userRepository;
-  
-  @RequestMapping(value = "/API", produces = "application/json; charset=UTF-8")
-  @ResponseBody
-  public String getAPI() {
-    String json = "{\"corsi\":\"http://localhost:8080/API/courses\","
-                      + "\"studenti\":\"http://localhost:8080/API/students\","
-                      + "\"teams\":\"http://localhost:8080/API/teams\"}";
-    return json;
-  }
   
   @GetMapping("/")
   @ResponseBody
@@ -45,6 +36,15 @@ public class HomeController {
                + "<br><br>@AuthenticationPrincipal User:<br>" + spring_security_user.toString()
                + "<br><br>UderDetails from userRepository.findTopByUsername(principal.getName())/db:<br>" + userRepository.findTopByUsername(principal.getName())
         ;
+  }
+  
+  @RequestMapping(value = "/API", produces = "application/json; charset=UTF-8")
+  @ResponseBody
+  public String getAPI() {
+    String json = "{\"corsi\":\"http://localhost:8080/API/courses\","
+                      + "\"studenti\":\"http://localhost:8080/API/students\","
+                      + "\"teams\":\"http://localhost:8080/API/teams\"}";
+    return json;
   }
   
   @PostMapping("/propose")

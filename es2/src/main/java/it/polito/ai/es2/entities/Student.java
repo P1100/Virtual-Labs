@@ -2,7 +2,6 @@ package it.polito.ai.es2.entities;
 
 import lombok.Data;
 import lombok.ToString;
-import org.springframework.web.multipart.MultipartFile;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
@@ -10,19 +9,25 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Each student can be associated with max one group per course
+ * Utente: Studente
+ * Lo studente dell’università è caratterizzato dall’email @studenti.polito.it, dal nome, cognome,
+ * matricola e foto. Lo studente, può essere associato ad uno e un solo ​gruppo​, può
+ * creare/cancellare/eseguire/arrestare/spegnere istanze di macchine virtuali di quel gruppo. Lo
+ * studente può essere iscritto a zero, uno o più corsi
+ * <p>
+ * Each student can be associated with max one group per course. Id is the matricola/serial
  */
 @Data
 @Entity
 public class Student {
-  @Id // matricola, serial
+  @Id
   private String id;
   @NotBlank
   private String name;
   private String firstName;
-  // TODO: search later how to make this work
-  @Transient
-  private MultipartFile imageData;
+  @Lob
+  @Basic(fetch = FetchType.LAZY)
+  private byte[] profilePicture;
   // TODO: check somewhere that for each course there is max one group associated
   @ManyToMany(mappedBy = "members", cascade = {CascadeType.MERGE, CascadeType.PERSIST})
   @ToString.Exclude

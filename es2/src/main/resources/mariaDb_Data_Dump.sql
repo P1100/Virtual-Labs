@@ -1,104 +1,105 @@
 # The SQL code below was generated automatically by Spring, run once on a new MariaDb container
-create schema virtuallabs collate latin1_swedish_ci;
-USE virtuallabs;
-create table course
-(
-    name      varchar(255) not null
-        primary key,
-    enabled   bit          not null,
-    max       int          not null,
-    min       int          not null,
-    professor varchar(255) null
-);
+# create schema virtuallabs collate latin1_swedish_ci;
+# USE virtuallabs;
 
-create table hibernate_sequence
-(
-    next_val bigint null
-);
-
-create table role
-(
-    name        varchar(255) not null
-        primary key,
-    description varchar(255) null
-);
-
-create table student
-(
-    id         varchar(255) not null
-        primary key,
-    first_name varchar(255) null,
-    name       varchar(255) null
-);
-
-create table student_course
-(
-    student_id  varchar(255) not null,
-    course_name varchar(255) not null,
-    constraint FKfplmnau8umrux0cy6n01792qd
-        foreign key (course_name) references course (name),
-    constraint FKq7yw2wg9wlt2cnj480hcdn6dq
-        foreign key (student_id) references student (id)
-);
-
-create table teacher
-(
-    id varchar(255) not null
-        primary key
-);
-
-create table team
-(
-    id        bigint       not null
-        primary key,
-    name      varchar(255) null,
-    status    int          not null,
-    course_id varchar(255) null,
-    constraint FKrdbahenwatuua698jkpnfufta
-        foreign key (course_id) references course (name)
-);
-
-create table teams_students
-(
-    team_id    bigint       not null,
-    student_id varchar(255) not null,
-    constraint FKarki525tmxnuk67piv1k9ioes
-        foreign key (student_id) references student (id),
-    constraint FKsvr6sg7agtmy6you2e96gihwc
-        foreign key (team_id) references team (id)
-);
-
-create table token
-(
-    id          varchar(255) not null
-        primary key,
-    expiry_date datetime     null,
-    team_id     bigint       null,
-    student_id  varchar(255) null,
-    constraint FK1j9myk0fjdutkio0tf3mne3u9
-        foreign key (student_id) references student (id)
-);
-
-create table user
-(
-    username                varchar(255) not null
-        primary key,
-    account_non_expired     bit          not null,
-    account_non_locked      bit          not null,
-    credentials_non_expired bit          not null,
-    enabled                 bit          not null,
-    password                varchar(255) null
-);
-
-create table users_roles
-(
-    username  varchar(255) not null,
-    authority varchar(255) not null,
-    constraint FK7bg096328bak930kijaur5qd7
-        foreign key (authority) references role (name),
-    constraint FKcb8cti77dleh7oatpahd6g9i3
-        foreign key (username) references user (username)
-);
+# create table course
+# (
+#     name      varchar(255) not null
+#         primary key,
+#     enabled   bit          not null,
+#     max       int          not null,
+#     min       int          not null,
+#     professor varchar(255) null
+# );
+#
+# create table hibernate_sequence
+# (
+#     next_val bigint null
+# );
+#
+# create table role
+# (
+#     name        varchar(255) not null
+#         primary key,
+#     description varchar(255) null
+# );
+#
+# create table student
+# (
+#     id         varchar(255) not null
+#         primary key,
+#     first_name varchar(255) null,
+#     name       varchar(255) null
+# );
+#
+# create table student_course
+# (
+#     student_id  varchar(255) not null,
+#     course_name varchar(255) not null,
+#     constraint FKfplmnau8umrux0cy6n01792qd
+#         foreign key (course_name) references course (name),
+#     constraint FKq7yw2wg9wlt2cnj480hcdn6dq
+#         foreign key (student_id) references student (id)
+# );
+#
+# create table teacher
+# (
+#     id varchar(255) not null
+#         primary key
+# );
+#
+# create table team
+# (
+#     id        bigint       not null
+#         primary key,
+#     name      varchar(255) null,
+#     status    int          not null,
+#     course_id varchar(255) null,
+#     constraint FKrdbahenwatuua698jkpnfufta
+#         foreign key (course_id) references course (name)
+# );
+#
+# create table teams_students
+# (
+#     team_id    bigint       not null,
+#     student_id varchar(255) not null,
+#     constraint FKarki525tmxnuk67piv1k9ioes
+#         foreign key (student_id) references student (id),
+#     constraint FKsvr6sg7agtmy6you2e96gihwc
+#         foreign key (team_id) references team (id)
+# );
+#
+# create table token
+# (
+#     id          varchar(255) not null
+#         primary key,
+#     expiry_date datetime     null,
+#     team_id     bigint       null,
+#     student_id  varchar(255) null,
+#     constraint FK1j9myk0fjdutkio0tf3mne3u9
+#         foreign key (student_id) references student (id)
+# );
+#
+# create table user
+# (
+#     username                varchar(255) not null
+#         primary key,
+#     account_non_expired     bit          not null,
+#     account_non_locked      bit          not null,
+#     credentials_non_expired bit          not null,
+#     enabled                 bit          not null,
+#     password                varchar(255) null
+# );
+#
+# create table users_roles
+# (
+#     username  varchar(255) not null,
+#     authority varchar(255) not null,
+#     constraint FK7bg096328bak930kijaur5qd7
+#         foreign key (authority) references role (name),
+#     constraint FKcb8cti77dleh7oatpahd6g9i3
+#         foreign key (username) references user (username)
+# );
 
 
 INSERT INTO virtuallabs.student (id, first_name, name)
@@ -123,9 +124,9 @@ INSERT INTO virtuallabs.student (id, first_name, name)
 VALUES ('S33', 'FirstName', 'name');
 INSERT INTO virtuallabs.student (id, first_name, name)
 VALUES ('S44', 's', 's');
-INSERT INTO virtuallabs.course (name, enabled, max, min, professor)
+INSERT INTO virtuallabs.course (id, enabled, max_enrolled, min_enrolled, professor)
 VALUES ('C0', true, 1000, 1, 'professor');
-INSERT INTO virtuallabs.course (name, enabled, max, min, professor)
+INSERT INTO virtuallabs.course (id, enabled, max_enrolled, min_enrolled, professor)
 VALUES ('C33', true, 100, 1, 'malnati');
 INSERT INTO virtuallabs.student_course (student_id, course_name)
 VALUES ('S33', 'C0');

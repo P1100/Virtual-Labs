@@ -12,7 +12,7 @@ import java.util.Map;
 
 @Controller
 @RequestMapping("/testing")
-public class _TestingController {
+public class Testing_Controller {
   @Autowired
   MyTestingService myTestingService;
   
