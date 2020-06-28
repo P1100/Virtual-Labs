@@ -21,6 +21,7 @@ import org.springframework.core.env.Environment;
 //TODO: passare a JDK14
 //TODO: Integrare con es1 (da sessione a jwt), mantenendo doppia struttura single page e multi page
 //TODO: fare tutti i test! importante
+// TODO List: aggiornare DTOs da entities dopo,
 @SpringBootApplication
 @Log
 public class VirtualLabsApplication {

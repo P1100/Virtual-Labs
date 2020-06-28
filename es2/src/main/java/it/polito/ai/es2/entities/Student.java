@@ -2,20 +2,28 @@ package it.polito.ai.es2.entities;
 
 import lombok.Data;
 import lombok.ToString;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Each student can be associated with max one group per course
+ */
 @Data
 @Entity
 public class Student {
-  @Id
+  @Id // matricola, serial
   private String id;
   @NotBlank
   private String name;
   private String firstName;
+  // TODO: search later how to make this work
+  @Transient
+  private MultipartFile imageData;
+  // TODO: check somewhere that for each course there is max one group associated
   @ManyToMany(mappedBy = "members", cascade = {CascadeType.MERGE, CascadeType.PERSIST})
   @ToString.Exclude
   List<Team> teams = new ArrayList<>();
