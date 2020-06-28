@@ -1,10 +1,6 @@
-## Ai20Lab05
+## AI 2020 Progetto
 
-# Indicazioni per la verifica delle funzionalità dell’applicazione sviluppata
-L'applicazione sviluppata segue le indicazioni date per la stesura dell'esercitazione numero cinque. L'app é molto user friendly e l'uso dovrebbe essere facile ed istantaneo.
-Si allegano piú screenshots in modo da avere una visione chiara ed immediata dell'elaborato fatto (nella cartella _screenshots, perché sono molti)
-
-Come features degne di nota:
+# Features degne di nota:
 - Il routing é stato implementato con una struttura nested a piú livelli, in un ottica di progetto e come suggerito nel testo
 - É stato implementato anche la logica per gestire corsi multipli, in modo completo.
 - SSL implementato come npm script (insieme a prod)
@@ -32,8 +28,7 @@ Come features degne di nota:
 npm list -g
 npm install npm@latest -g
 ng update --all=true --allow-dirty --force
-
-npm i -D typescript@3.9.5
+//ng update @angular/cli @angular/core
 
 # Creation
 ng generate component teacher/studentsCont --flat --module app
@@ -99,8 +94,9 @@ In environment.ts e environment.prod.ts (in assets)
     },
 
 
-# version
 
+
+# version
 This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 9.1.7.
 
 ## Development server

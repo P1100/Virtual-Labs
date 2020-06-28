@@ -111,8 +111,8 @@ export class HomeComponent implements OnInit, OnDestroy {
 
 @Component({
   selector: 'app-login-dialog',
-  styleUrls: ['../auth/login-dialog.component.css'],
-  templateUrl: '../auth/login-dialog-reactive.component.html',
+  styleUrls: ['../auth/auth-dialog.component.css'],
+  templateUrl: '../auth/auth-dialog-reactive.component.html',
 })
 export class LoginDialogReactiveComponent implements OnDestroy {
   public user;
@@ -185,8 +185,8 @@ function fakeNameValidator(control: FormGroup): ValidationErrors | null {
 
 @Component({
   selector: 'app-login-dialog',
-  styleUrls: ['../auth/login-dialog.component.css'],
-  templateUrl: '../auth/login-dialog-template.component.html',
+  styleUrls: ['../auth/auth-dialog.component.css'],
+  templateUrl: '../auth/auth-dialog-template.component.html',
 })
 export class LoginDialogTemplateComponent {
   constructor(

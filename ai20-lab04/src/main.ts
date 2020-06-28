@@ -8,6 +8,5 @@ if (environment.production) {
   enableProdMode();
 }
 
-// TODO: add command for json server    "start": "start npm run init-assets && start npm run init-server"
 platformBrowserDynamic().bootstrapModule(AppModule)
   .catch(err => console.error(err));

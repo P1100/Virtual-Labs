@@ -34,7 +34,7 @@ export class AuthService {
     return this.http.post<User>('/api/login', {email, password}).pipe(
       // tap(user => this.isLoggedSubject.next(user)));
       tap(res => console.log('AuthService.login() post before delay:')),
-      delay(8000), // testing correctnes code
+      delay(2000), // testing correctness code
       tap(res => console.log('AuthService.login() post before delay:')),
       tap(res => this.setSession(res, email)),
       // shareReplay(),

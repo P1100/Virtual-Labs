@@ -117,7 +117,7 @@ public class NotificationServiceImpl implements NotificationService {
       sb.append("\n\nLink to accept token:\n" + url + "/notification/confirm/" + token.getId());
       sb.append("\n\nLink to remove token:\n" + url + "/notification/reject/" + token.getId());
       System.out.println(sb);
-      // TODO: uncommentare in fase di prod
+      // TODO: uncommentare in fase di prod (attenzione!)
       if (forceOutputEmail_testing == false) {
         System.out.println("[regular email] s" + memberId + "@studenti.polito.it - Conferma iscrizione al team " + teamDTO.getId());
 //        sendMessage("s" + memberId + "@studenti.polito.it", "Conferma iscrizione al team " + teamDTO.getId(), sb.toString());
