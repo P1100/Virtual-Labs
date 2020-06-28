@@ -2,8 +2,8 @@ package it.polito.ai.es2.services;
 
 import it.polito.ai.es2.entities.Student;
 import it.polito.ai.es2.repositories.CourseRepository;
+import it.polito.ai.es2.repositories.GroupRepository;
 import it.polito.ai.es2.repositories.StudentRepository;
-import it.polito.ai.es2.repositories.TeamRepository;
 import lombok.extern.java.Log;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -20,7 +20,7 @@ public class MySecurityChecker {
   @Autowired
   CourseRepository courseRepository;
   @Autowired
-  TeamRepository teamRepositoryea;
+  GroupRepository groupRepositoryea;
   
   public boolean isCourseOwner(String course, String principal_username) {
     String professor_course = courseRepository.findById(course).map(x -> x.getProfessor()).orElse("");
@@ -28,7 +28,7 @@ public class MySecurityChecker {
   }
   
   public boolean isTeamOwner(Long id, String principal_username) {
-    List<Student> students = teamRepositoryea.findById(id).map(team -> team.getMembers()).orElse(null);
+    List<Student> students = groupRepositoryea.findById(id).map(group -> group.getMembers()).orElse(null);
     if (students == null)
       return false;
     return students.stream().anyMatch(student -> student.getId().equals(principal_username));

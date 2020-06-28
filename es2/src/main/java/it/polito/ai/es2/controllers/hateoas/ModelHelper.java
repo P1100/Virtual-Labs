@@ -25,7 +25,7 @@ public class ModelHelper {
     courseDTO.add(linkTo(methodOn(CourseRestController.class)
                              .getAvailableStudents(courseDTO.getName())).withRel("students_available"));
     courseDTO.add(linkTo(methodOn(CourseRestController.class)
-                             .getTeamsForCourse(courseDTO.getName())).withRel("teams"));
+                             .getTeamsForCourse(courseDTO.getName())).withRel("groups"));
     return courseDTO;
   }
   
@@ -35,15 +35,15 @@ public class ModelHelper {
     studentDTO.add(linkTo(methodOn(StudentRestController.class)
                               .getCourses(studentDTO.getId())).withRel("courses"));
     studentDTO.add(linkTo(methodOn(StudentRestController.class)
-                              .getTeamsForStudent(studentDTO.getId())).withRel("teams"));
+                              .getTeamsForStudent(studentDTO.getId())).withRel("groups"));
     return studentDTO;
   }
   
   public static TeamDTO enrich(TeamDTO teamDTO) {
-    teamDTO.add(new Link("http://localhost:8080/API/teams").withRel("teams"));
-    teamDTO.add(new Link("http://localhost:8080/API/teams/" + teamDTO.getId()).withSelfRel());
+    teamDTO.add(new Link("http://localhost:8080/API/groups").withRel("groups"));
+    teamDTO.add(new Link("http://localhost:8080/API/groups/" + teamDTO.getId()).withSelfRel());
     teamDTO.add(linkTo(methodOn(TeamRestController.class)
-                              .getMembers(teamDTO.getId())).withRel("members"));
+                           .getMembers(teamDTO.getId())).withRel("members"));
     return teamDTO;
   }
 }

@@ -51,13 +51,13 @@ public class StudentRestController {
     }
     return courses;
   }
-  @GetMapping("/{student_id}/teams")
+  @GetMapping("/{student_id}/groups")
   public List<TeamDTO> getTeamsForStudent(@PathVariable String student_id) {
-    List<TeamDTO> teams = teamService.getTeamsForStudent(student_id);
-    for (TeamDTO teamDTO : teams) {
+    List<TeamDTO> groups = teamService.getTeamsForStudent(student_id);
+    for (TeamDTO teamDTO : groups) {
       ModelHelper.enrich(teamDTO);
     }
-    return teams;
+    return groups;
   }
   
   //  {"id":"S33","name":"S33-name","firstName":"S33-FirstName"}

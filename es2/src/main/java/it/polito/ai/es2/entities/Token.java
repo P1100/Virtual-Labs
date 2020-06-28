@@ -14,7 +14,7 @@ import java.sql.Timestamp;
 public class Token {
   @Id
   String id;
-  Long teamId;
+  Long groupId;
   Timestamp expiryDate;
   @ManyToOne(fetch = FetchType.EAGER)
   @JoinColumn(name = "student_id", referencedColumnName = "id")

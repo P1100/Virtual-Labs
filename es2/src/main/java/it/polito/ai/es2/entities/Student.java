@@ -26,7 +26,7 @@ public class Student {
   // TODO: check somewhere that for each course there is max one group associated
   @ManyToMany(mappedBy = "members", cascade = {CascadeType.MERGE, CascadeType.PERSIST})
   @ToString.Exclude
-  List<Team> teams = new ArrayList<>();
+  List<Group> groups = new ArrayList<>();
   @ManyToMany(cascade = {CascadeType.MERGE, CascadeType.PERSIST})
   @JoinTable(name = "student_course", joinColumns = @JoinColumn(name = "student_id"),
       inverseJoinColumns = @JoinColumn(name = "course_name"))
@@ -43,13 +43,13 @@ public class Student {
     old_course.getStudents().remove(this);
   }
   
-  public void addTeam(Team team) {
-    teams.add(team);
-    team.getMembers().add(this);
+  public void addTeam(Group group) {
+    groups.add(group);
+    group.getMembers().add(this);
   }
   
-  public void removeTeam(@org.jetbrains.annotations.NotNull Team team) {
-    team.getMembers().remove(this);
-    teams.remove(team);
+  public void removeTeam(@org.jetbrains.annotations.NotNull Group group) {
+    group.getMembers().remove(this);
+    groups.remove(group);
   }
 }

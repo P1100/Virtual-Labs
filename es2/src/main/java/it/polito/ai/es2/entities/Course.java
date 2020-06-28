@@ -22,7 +22,7 @@ public class Course {
   String professor;
   @OneToMany(mappedBy = "course")
   @ToString.Exclude
-  List<Team> teams = new ArrayList<>();
+  List<Group> groups = new ArrayList<>();
   @ManyToMany(mappedBy = "courses") //cascade = CascadeType.ALL, orphanRemoval = true
   @ToString.Exclude
   private List<Student> students = new ArrayList<>();
@@ -37,12 +37,12 @@ public class Course {
     old_student.getCourses().remove(this);
   }
   
-  public void addTeam(Team new_team) {
-    new_team.setCourse(this);
+  public void addTeam(Group new_group) {
+    new_group.setCourse(this);
   }
   
-  public void removeTeam(Team old_team) {
-    teams.remove(old_team);
-    old_team.setCourse(null);
+  public void removeTeam(Group old_group) {
+    groups.remove(old_group);
+    old_group.setCourse(null);
   }
 }

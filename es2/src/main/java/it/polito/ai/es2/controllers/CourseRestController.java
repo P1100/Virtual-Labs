@@ -78,7 +78,7 @@ public class CourseRestController {
     return studentsInTeams;
   }
   
-  @GetMapping("/{courseName}/teams")
+  @GetMapping("/{courseName}/groups")
   public List<TeamDTO> getTeamsForCourse(@PathVariable String courseName) {
     List<TeamDTO> teamsForCourse = teamService.getTeamsForCourse(courseName);
     for (TeamDTO teamDTO : teamsForCourse) {
