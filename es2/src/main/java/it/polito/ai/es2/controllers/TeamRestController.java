@@ -18,7 +18,7 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
 @RestController
-@RequestMapping("/API/groups")
+@RequestMapping("/API/teams")
 public class TeamRestController {
   @Autowired
   TeamService teamService;
@@ -35,31 +35,31 @@ public class TeamRestController {
     return result;
   }
   
-  @GetMapping("/{groupId}")
-  public TeamDTO getTeam(@PathVariable Long groupId) {
-    Optional<TeamDTO> teamDTO = teamService.getTeam(groupId);
+  @GetMapping("/{teamId}")
+  public TeamDTO getTeam(@PathVariable Long teamId) {
+    Optional<TeamDTO> teamDTO = teamService.getTeam(teamId);
     if (!teamDTO.isPresent())
-      throw new ResponseStatusException(HttpStatus.CONFLICT, groupId.toString());
+      throw new ResponseStatusException(HttpStatus.CONFLICT, teamId.toString());
     return ModelHelper.enrich(teamDTO.get());
   }
   
-  @GetMapping("/{groupId}/members")
-  public List<StudentDTO> getMembers(@PathVariable Long groupId) {
-    List<StudentDTO> members = teamService.getMembers(groupId);
+  @GetMapping("/{teamId}/members")
+  public List<StudentDTO> getMembers(@PathVariable Long teamId) {
+    List<StudentDTO> members = teamService.getMembers(teamId);
     for (StudentDTO member : members) {
       ModelHelper.enrich(member);
     }
     return members;
   }
   
-  // http://localhost:8080/API/groups/propose/C0/Team0/100,101,S33
+  // http://localhost:8080/API/teams/propose/C0/Team0/100,101,S33
   @PostMapping("/propose/{courseName}/{team_name}/{memberIds}")
   public TeamDTO proposeTeam(@PathVariable String courseName, @PathVariable String team_name, @PathVariable List<String> memberIds) {
     return teamService.proposeTeam(courseName, team_name, memberIds);
   }
   
-  @PostMapping("/evict/{groupId}")
-  public boolean evictTeam(@PathVariable Long groupId) {
-    return teamService.evictTeam(groupId);
+  @PostMapping("/evict/{teamId}")
+  public boolean evictTeam(@PathVariable Long teamId) {
+    return teamService.evictTeam(teamId);
   }
 }

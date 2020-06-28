@@ -31,7 +31,7 @@ public class HomeController {
   public String getAPI() {
     String json = "{\"corsi\":\"http://localhost:8080/API/courses\","
                       + "\"studenti\":\"http://localhost:8080/API/students\","
-                      + "\"groups\":\"http://localhost:8080/API/groups\"}";
+                      + "\"teams\":\"http://localhost:8080/API/teams\"}";
     return json;
   }
   

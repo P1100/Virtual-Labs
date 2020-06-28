@@ -13,7 +13,7 @@ import java.util.List;
 //@Table(uniqueConstraints = @UniqueConstraint(columnNames = {"name", "course_id"}))
 @Data
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
-public class Group {
+public class Team {
   public static int status_inactive() {
     return 0;
   }
@@ -41,22 +41,22 @@ public class Group {
   
   public void setCourse(Course new_course) {
     if (this.course != null)
-      this.course.getGroups().remove(this);
+      this.course.getTeams().remove(this);
     if (new_course == null) {
       this.course = null;
     } else {
-      new_course.getGroups().add(this);
+      new_course.getTeams().add(this);
       this.course = new_course;
     }
   }
   
   public void addStudent(Student new_student) {
     members.add(new_student);
-    new_student.getGroups().add(this);
+    new_student.getTeams().add(this);
   }
   
   public void removetudent(@org.jetbrains.annotations.NotNull Student old_student) {
-    old_student.getGroups().remove(this);
+    old_student.getTeams().remove(this);
     this.members.remove(old_student);
   }
 }

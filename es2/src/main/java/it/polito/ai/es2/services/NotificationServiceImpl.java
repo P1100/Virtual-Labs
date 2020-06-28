@@ -2,10 +2,10 @@ package it.polito.ai.es2.services;
 
 import it.polito.ai.es2.dtos.TeamDTO;
 import it.polito.ai.es2.entities.Course;
-import it.polito.ai.es2.entities.Group;
+import it.polito.ai.es2.entities.Team;
 import it.polito.ai.es2.entities.Token;
-import it.polito.ai.es2.repositories.GroupRepository;
 import it.polito.ai.es2.repositories.StudentRepository;
+import it.polito.ai.es2.repositories.TeamRepository;
 import it.polito.ai.es2.repositories.TokenRepository;
 import it.polito.ai.es2.services.interfaces.NotificationService;
 import it.polito.ai.es2.services.interfaces.TeamService;
@@ -39,7 +39,7 @@ public class NotificationServiceImpl implements NotificationService {
   @Autowired
   TeamService teamService;
   @Autowired
-  GroupRepository groupRepository;
+  TeamRepository teamRepository;
   @Autowired
   StudentRepository studentRepository;
   @Value("${server.port}")
@@ -64,16 +64,16 @@ public class NotificationServiceImpl implements NotificationService {
   @Override
   @Transactional
   public boolean confirm(String idtoken) {
-    Optional<Group> optionalTeam = cleanupAndVerifyTokenExists(idtoken);
+    Optional<Team> optionalTeam = cleanupAndVerifyTokenExists(idtoken);
     if (!optionalTeam.isPresent())
       return false;
-    Group group = optionalTeam.get();
-    Long groupId = group.getId();
-    Course course = group.getCourse();
+    Team team = optionalTeam.get();
+    Long teamId = team.getId();
+    Course course = team.getCourse();
     tokenRepository.deleteById(idtoken);
-    List<Token> tokenList = tokenRepository.findAllByGroupId(groupId);
+    List<Token> tokenList = tokenRepository.findAllByTeamId(teamId);
     if (tokenList.size() == 0) {
-      teamService.setTeamStatus(groupId, Group.status_active());
+      teamService.setTeamStatus(teamId, Team.status_active());
       return true;
     }
     for (Token token : tokenList) {
@@ -88,12 +88,12 @@ public class NotificationServiceImpl implements NotificationService {
   @Override
   @Transactional
   public boolean reject(String idtoken) {
-    Optional<Group> optionalTeam = cleanupAndVerifyTokenExists(idtoken);
+    Optional<Team> optionalTeam = cleanupAndVerifyTokenExists(idtoken);
     if (!optionalTeam.isPresent())
       return false;
-    Long groupId = optionalTeam.get().getId();
-    tokenRepository.deleteAll(tokenRepository.findAllByGroupId(groupId));
-    return teamService.evictTeam(groupId);
+    Long teamId = optionalTeam.get().getId();
+    tokenRepository.deleteAll(tokenRepository.findAllByTeamId(teamId));
+    return teamService.evictTeam(teamId);
   }
   
   /**
@@ -129,9 +129,9 @@ public class NotificationServiceImpl implements NotificationService {
     }
   }
   
-  private Optional<Group> cleanupAndVerifyTokenExists(String idtoken) {
+  private Optional<Team> cleanupAndVerifyTokenExists(String idtoken) {
     cleanUpOldTokens();
-    return tokenRepository.findById(idtoken).map(token -> token.getGroupId()).map(groupId -> groupRepository.getOne(groupId));
+    return tokenRepository.findById(idtoken).map(token -> token.getTeamId()).map(teamId -> teamRepository.getOne(teamId));
   }
   
   private boolean cleanUpOldTokens() {

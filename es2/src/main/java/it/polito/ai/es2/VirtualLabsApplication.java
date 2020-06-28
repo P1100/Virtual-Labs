@@ -2,8 +2,8 @@ package it.polito.ai.es2;
 
 import it.polito.ai.es2._provecodicelearning.MyTestingService;
 import it.polito.ai.es2.repositories.CourseRepository;
-import it.polito.ai.es2.repositories.GroupRepository;
 import it.polito.ai.es2.repositories.StudentRepository;
+import it.polito.ai.es2.repositories.TeamRepository;
 import it.polito.ai.es2.repositories.TokenRepository;
 import it.polito.ai.es2.services.interfaces.NotificationService;
 import it.polito.ai.es2.services.interfaces.TeamService;
@@ -45,7 +45,7 @@ public class VirtualLabsApplication {
   
   @Bean
   CommandLineRunner runner(CourseRepository courseRepository, StudentRepository studentRepository,
-                           GroupRepository groupRepository, TeamService teamService,
+                           TeamRepository teamRepository, TeamService teamService,
                            ModelMapper modelMapper, MyTestingService testservice, TokenRepository tokenRepository,
                            NotificationService notificationService) {
     return new CommandLineRunner() {
@@ -74,49 +74,49 @@ public class VirtualLabsApplication {
         }
         notificationService.notifyTeam(new TeamDTO((long) 999, "Team_test_email", 1), Arrays.asList("S1", "S3"));
   
-        teamService.setTeamStatus((long) 14, Group.status_inactive());
+        teamService.setTeamStatus((long) 14, Team.status_inactive());
         notificationService.cleanUpOldTokens();*/
 
 //        teamService.proposeTeam("C0", "Team_Test_Evict", Arrays.asList("S0", "S1"));
 //        teamService.proposeTeam("C0", "Team_Test_Evict2", Collections.singletonList("S2"));
 //        teamService.proposeTeam("C0", "Team_Test_Evict3", Collections.singletonList("S3"));
 /*
-        teamService.setTeamStatus((long) 21, Group.status_active());
+        teamService.setTeamStatus((long) 21, Team.status_active());
         System.out.println(teamService.getTeamsForCourse("C0"));
         System.out.println("------------------------ EVICT TEAM NONEXISTENT TEAM ---------------");
         System.out.println(teamService.evictTeam(Long.valueOf(1203)));
         System.out.println("------------------------ EVICT TEAM TEST MANUAL ID ---------------");
         System.out.println(teamService.evictTeam(Long.valueOf(20)));
         
-        System.out.println("-------- TEST EQUALS GROUPS --------");
+        System.out.println("-------- TEST EQUALS TEAMS --------");
         System.out.println(tokenRepository.findAll());
         
-        System.out.println("---- TEST1 duplicate groups");
+        System.out.println("---- TEST1 duplicate teams");
         System.out.println(teamRepository.count());
-        List<Group> teamList = teamRepository.findAll();
-        System.out.println("################ TEST2 duplicate groups #########################");
-        for (Group team1 : teamList) {
-          for (Group team2 : teamList) {
+        List<Team> teamList = teamRepository.findAll();
+        System.out.println("################ TEST2 duplicate teams #########################");
+        for (Team team1 : teamList) {
+          for (Team team2 : teamList) {
             if (team1 != team2 && team1.equals(team2))
               System.out.println("Duplicate team:" + team1 + " | " + team2);
           }
         }
         System.out.println("---------------------------------1-----------------------------------");
-        List<Group> allByNameAndCourse_name = teamRepository.findAllByNameAndCourse_Idname("Team1", "C0");
-        System.out.println("################ TEST3 duplicate groups #########################");
+        List<Team> allByNameAndCourse_name = teamRepository.findAllByNameAndCourse_Idname("Team1", "C0");
+        System.out.println("################ TEST3 duplicate teams #########################");
         System.out.println(allByNameAndCourse_name);
         System.out.println("---------------------------------2-----------------------------------");
         ExampleMatcher caseInsensitiveExampleMatcher = ExampleMatcher.matchingAll().withIgnoreCase().withIgnorePaths("status");
-        Group team_mapped = modelMapper.map(new TeamDTO(null, "Team1", Group.status_active()), Group.class);
-        Example<Group> example = Example.of(team_mapped, caseInsensitiveExampleMatcher);
+        Team team_mapped = modelMapper.map(new TeamDTO(null, "Team1", Team.status_active()), Team.class);
+        Example<Team> example = Example.of(team_mapped, caseInsensitiveExampleMatcher);
   
-        List<Group> actual = teamRepository.findAll(example);
+        List<Team> actual = teamRepository.findAll(example);
         System.out.println("team mapped:" + team_mapped);
-        System.out.println("List Group di findAll(example) - Team1: " + actual);
+        System.out.println("List Team di findAll(example) - Team1: " + actual);
 //        actual.ifPresentOrElse(System.out::println, () -> System.out.println("------> null value of findOne(example)"));
         System.out.println("---------------------------------3-----------------------------------");
   
-        System.out.println("################ ALL GROUPS LIST #########################");
+        System.out.println("################ ALL TEAMS LIST #########################");
         System.out.println(teamList);
   
         System.out.println("§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§");
@@ -132,7 +132,7 @@ public class VirtualLabsApplication {
 //                courseRepository.findAll().stream().forEach(i -> System.out.println(i.toString()));
 //                studentRepository.findAll().stream().forEach(i -> System.out.println(i.toString()));
   
-        // NOT WORKING --> org.hibernate.LazyInitializationException: failed to lazily initialize a collection of role: it.polito.ai.es2.entities.Course.groups, could not initialize proxy - no Session
+        // NOT WORKING --> org.hibernate.LazyInitializationException: failed to lazily initialize a collection of role: it.polito.ai.es2.entities.Course.teams, could not initialize proxy - no Session
 //        testservice.entity_manager_test();
 //        if (true) return;
 //

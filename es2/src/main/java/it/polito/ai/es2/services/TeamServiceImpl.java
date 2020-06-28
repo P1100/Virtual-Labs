@@ -9,11 +9,11 @@ import it.polito.ai.es2.dtos.CourseDTO;
 import it.polito.ai.es2.dtos.StudentDTO;
 import it.polito.ai.es2.dtos.TeamDTO;
 import it.polito.ai.es2.entities.Course;
-import it.polito.ai.es2.entities.Group;
 import it.polito.ai.es2.entities.Student;
+import it.polito.ai.es2.entities.Team;
 import it.polito.ai.es2.repositories.CourseRepository;
-import it.polito.ai.es2.repositories.GroupRepository;
 import it.polito.ai.es2.repositories.StudentRepository;
+import it.polito.ai.es2.repositories.TeamRepository;
 import it.polito.ai.es2.repositories.TokenRepository;
 import it.polito.ai.es2.services.exceptions.*;
 import it.polito.ai.es2.services.interfaces.NotificationService;
@@ -34,7 +34,7 @@ import java.util.stream.Collectors;
 
 /**
  * Politica di sovrascrittura adottata: in quasi tutti i metodi add, se un id era già presente nel database non sovrascrivo i dati
- * già esistenti (tranne nel caso di proposeTeam, che poichè ha un id autogenerato, si è deciso di aggiornare il group vecchio usando
+ * già esistenti (tranne nel caso di proposeTeam, che poichè ha un id autogenerato, si è deciso di aggiornare il team vecchio usando
  * sempre la proposeTeam).
  */
 @Service
@@ -49,7 +49,7 @@ public class TeamServiceImpl implements TeamService {
   @Autowired
   StudentRepository studentRepository;
   @Autowired
-  GroupRepository groupRepository;
+  TeamRepository teamRepository;
   @Autowired
   TokenRepository tokenRepository;
   @Autowired
@@ -91,7 +91,7 @@ public class TeamServiceImpl implements TeamService {
   public List<StudentDTO> getStudentsInTeams(String courseName) {
     if (courseName == null) throw new TeamServiceException("null parameter");
     if (!courseRepository.existsById(courseName)) throw new CourseNotFoundException("getTeamForCourse - course not found");
-    return courseRepository.getStudentsInGroups(courseName).stream().map(x -> modelMapper.map(x, StudentDTO.class)).collect(Collectors.toList());
+    return courseRepository.getStudentsInTeams(courseName).stream().map(x -> modelMapper.map(x, StudentDTO.class)).collect(Collectors.toList());
   }
   /**
    * GET {@link it.polito.ai.es2.controllers.CourseRestController#getAvailableStudents(String)}
@@ -101,7 +101,7 @@ public class TeamServiceImpl implements TeamService {
   public List<StudentDTO> getAvailableStudents(String courseName) {
     if (courseName == null) throw new TeamServiceException("null parameter");
     if (!courseRepository.existsById(courseName)) throw new CourseNotFoundException("getTeamForCourse - course not found");
-    return courseRepository.getStudentsNotInGroups(courseName).stream().map(x -> modelMapper.map(x, StudentDTO.class)).collect(Collectors.toList());
+    return courseRepository.getStudentsNotInTeams(courseName).stream().map(x -> modelMapper.map(x, StudentDTO.class)).collect(Collectors.toList());
   }
   /**
    * GET {@link it.polito.ai.es2.controllers.CourseRestController#getTeamsForCourse(String)}
@@ -112,7 +112,7 @@ public class TeamServiceImpl implements TeamService {
     if (courseName == null) throw new TeamServiceException("null parameter");
     Optional<Course> co = courseRepository.findById(courseName);
     if (!co.isPresent()) throw new CourseNotFoundException("getTeamForCourse - course not found");
-    return co.get().getGroups().stream().map(x -> modelMapper.map(x, TeamDTO.class)).collect(Collectors.toList());
+    return co.get().getTeams().stream().map(x -> modelMapper.map(x, TeamDTO.class)).collect(Collectors.toList());
   }
   /**
    * GET {@link it.polito.ai.es2.controllers.StudentRestController#getAllStudents()}
@@ -147,7 +147,7 @@ public class TeamServiceImpl implements TeamService {
   @PreAuthorize("hasRole('ADMIN') or hasRole('PROFESSOR') or @mySecurityChecker.isOwner(#studentId,authentication.principal.username)")
   public List<TeamDTO> getTeamsForStudent(String studentId) {
     if (studentId == null) throw new TeamServiceException("getTeamsForStudent() - null parameters");
-    return studentRepository.getOne(studentId).getGroups().stream().map(x -> modelMapper.map(x, TeamDTO.class)).collect(Collectors.toList());
+    return studentRepository.getOne(studentId).getTeams().stream().map(x -> modelMapper.map(x, TeamDTO.class)).collect(Collectors.toList());
   }
   /**
    * GET {@link TeamRestController#getAllTeams()}
@@ -155,31 +155,31 @@ public class TeamServiceImpl implements TeamService {
   @Override
   @PreAuthorize("hasRole('ADMIN')")
   public List<TeamDTO> getAllTeams() {
-    return groupRepository.findAll().stream().map(x -> modelMapper.map(x, TeamDTO.class)).collect(Collectors.toList());
+    return teamRepository.findAll().stream().map(x -> modelMapper.map(x, TeamDTO.class)).collect(Collectors.toList());
   }
   
   /**
    * GET {@link it.polito.ai.es2.controllers.TeamRestController#getTeam(Long)}
    */
   @Override
-  @PreAuthorize("hasRole('ADMIN') or hasRole('PROFESSOR') or @mySecurityChecker.isTeamOwner(#groupId,authentication.principal.username)")
-  public Optional<TeamDTO> getTeam(Long groupId) {
-    if (groupId == null) throw new TeamServiceException("getTeam() - null parameter");
-    return groupRepository.findById(groupId).map(x -> modelMapper.map(x, TeamDTO.class));
+  @PreAuthorize("hasRole('ADMIN') or hasRole('PROFESSOR') or @mySecurityChecker.isTeamOwner(#teamId,authentication.principal.username)")
+  public Optional<TeamDTO> getTeam(Long teamId) {
+    if (teamId == null) throw new TeamServiceException("getTeam() - null parameter");
+    return teamRepository.findById(teamId).map(x -> modelMapper.map(x, TeamDTO.class));
   }
   
   /**
    * GET {@link it.polito.ai.es2.controllers.TeamRestController#getMembers(Long)}
    */
   @Override
-  @PreAuthorize("hasRole('ADMIN') or hasRole('PROFESSOR') or @mySecurityChecker.isTeamOwner(#groupId,authentication.principal.username)")
-  public List<StudentDTO> getMembers(Long groupId) {
-    if (groupId == null) throw new TeamServiceException("getMembers() - null parameters");
-    Optional<Group> group = groupRepository.findById(groupId);
-    if (group.isPresent())
-      return group.get().getMembers().stream().filter(Objects::nonNull).map(y -> modelMapper.map(y, StudentDTO.class)).collect(Collectors.toList());
+  @PreAuthorize("hasRole('ADMIN') or hasRole('PROFESSOR') or @mySecurityChecker.isTeamOwner(#teamId,authentication.principal.username)")
+  public List<StudentDTO> getMembers(Long teamId) {
+    if (teamId == null) throw new TeamServiceException("getMembers() - null parameters");
+    Optional<Team> team = teamRepository.findById(teamId);
+    if (team.isPresent())
+      return team.get().getMembers().stream().filter(Objects::nonNull).map(y -> modelMapper.map(y, StudentDTO.class)).collect(Collectors.toList());
     else
-      throw new TeamServiceException("getMembers() - group not found");
+      throw new TeamServiceException("getMembers() - team not found");
   }
   
   /**
@@ -387,11 +387,11 @@ public class TeamServiceImpl implements TeamService {
     List<Student> listStudentsProposal = streamopt_listStudentsProposal.stream().map(Optional::get).collect(Collectors.toList());
     if (!course.getStudents().containsAll(listStudentsProposal)) // !listStudentsProposal.stream().allMatch(x -> course.getStudents().contains(x))
       throw new StudentNotEnrolledException("proposeTeam() - non tutti gli studenti sono iscritti al corso " + course.getName());
-    // Controllo se tra gli studenti dei vari groups del corso, ce n'è qualcuno tra quelli presenti nella proposta
-    if (course.getGroups().size() != 0 &&
-            !course.getGroups()
+    // Controllo se tra gli studenti dei vari teams del corso, ce n'è qualcuno tra quelli presenti nella proposta
+    if (course.getTeams().size() != 0 &&
+            !course.getTeams()
                  .stream()
-                 .map(Group::getMembers)
+                 .map(Team::getMembers)
                  .flatMap(List::stream)
                  .distinct()
                  .noneMatch(student -> {
@@ -400,20 +400,20 @@ public class TeamServiceImpl implements TeamService {
     )
       throw new StudentInMultipleTeamsException("proposeTeam() - studenti fanno parte di altri gruppi nell’ambito dello stesso corso");
     if (listStudentsProposal.size() < course.getMin() || listStudentsProposal.size() > course.getMax())
-      throw new CourseCardinalConstrainsException("proposeTeam() - non rispettati i vincoli di cardinalità del corso su dimensioni group");
+      throw new CourseCardinalConstrainsException("proposeTeam() - non rispettati i vincoli di cardinalità del corso su dimensioni team");
     if (!listStudentsProposal.stream().allMatch(new HashSet<>()::add))
-      throw new StudentDuplicatesInProposalException("proposeTeam() - duplicati nell'elenco dei partecipanti della proposta group");
-    if (groupRepository.findFirstByNameAndCourse_name(team_name, courseName) != null)
-      throw new TeamAlreayCreatedException("proposeTeam() - group già creato");
+      throw new StudentDuplicatesInProposalException("proposeTeam() - duplicati nell'elenco dei partecipanti della proposta team");
+    if (teamRepository.findFirstByNameAndCourse_name(team_name, courseName) != null)
+      throw new TeamAlreayCreatedException("proposeTeam() - team già creato");
   
-    TeamDTO teamDTO = new TeamDTO(null, team_name, Group.status_inactive());
-    Group new_group = modelMapper.map(teamDTO, Group.class);
-    // aggiungo nuovo group, a studenti e al corso
+    TeamDTO teamDTO = new TeamDTO(null, team_name, Team.status_inactive());
+    Team new_team = modelMapper.map(teamDTO, Team.class);
+    // aggiungo nuovo team, a studenti e al corso
     for (Student student : new ArrayList<>(listStudentsProposal)) {
-      student.addTeam(new_group); // add su studenti
+      student.addTeam(new_team); // add su studenti
     }
-    course.addTeam(new_group); // add sul singolo corso
-    TeamDTO return_teamDTO = modelMapper.map(groupRepository.save(new_group), TeamDTO.class);
+    course.addTeam(new_team); // add sul singolo corso
+    TeamDTO return_teamDTO = modelMapper.map(teamRepository.save(new_team), TeamDTO.class);
     notificationService.notifyTeam(return_teamDTO, memberIds);
     return return_teamDTO;
   }
@@ -422,32 +422,32 @@ public class TeamServiceImpl implements TeamService {
    * {@link it.polito.ai.es2.controllers.TeamRestController#evictTeam(Long)}
    */
   @Override
-  @PreAuthorize("hasRole('ADMIN') or (hasRole('PROFESSOR') and @mySecurityChecker.isTeamOwner(#groupId,authentication.principal.username))")
-  public boolean evictTeam(Long groupId) {
-    Optional<Group> optionalTeam = groupRepository.findById(groupId);
+  @PreAuthorize("hasRole('ADMIN') or (hasRole('PROFESSOR') and @mySecurityChecker.isTeamOwner(#teamId,authentication.principal.username))")
+  public boolean evictTeam(Long teamId) {
+    Optional<Team> optionalTeam = teamRepository.findById(teamId);
     if (!optionalTeam.isPresent())
       return false;
-    Group group_to_delete = optionalTeam.get();
+    Team team_to_delete = optionalTeam.get();
     
-    for (Student student : group_to_delete.getMembers()) {
-      // usare "student.removeTeam()" rimuoverebbe studenti da group, il che creerebbe problemi in quanto modificherebbe il ciclo foreach enhanced in corso (java.util.ConcurrentModificationException)
-      student.getGroups().remove(group_to_delete);
+    for (Student student : team_to_delete.getMembers()) {
+      // usare "student.removeTeam()" rimuoverebbe studenti da team, il che creerebbe problemi in quanto modificherebbe il ciclo foreach enhanced in corso (java.util.ConcurrentModificationException)
+      student.getTeams().remove(team_to_delete);
     }
-    // --> non serve rimuovere students e course da group, perchè tanto lo cancello
-    group_to_delete.getCourse().getGroups().remove(group_to_delete);
-    groupRepository.delete(group_to_delete);
+    // --> non serve rimuovere students e course da team, perchè tanto lo cancello
+    team_to_delete.getCourse().getTeams().remove(team_to_delete);
+    teamRepository.delete(team_to_delete);
     return true;
   }
   
   /**
-   * @param status - Group.status_active() or Group.status_inactive()
+   * @param status - Team.status_active() or Team.status_inactive()
    */
   @Override
-  public boolean setTeamStatus(Long groupId, int status) {
-    Group group = groupRepository.findById(groupId).orElse(null);
-    if (group == null || group.getStatus() == status)
+  public boolean setTeamStatus(Long teamId, int status) {
+    Team team = teamRepository.findById(teamId).orElse(null);
+    if (team == null || team.getStatus() == status)
       return false;
-    group.setStatus(status); // no need to save, will be flushed automatically at the end of transaction (since not a new entity)
+    team.setStatus(status); // no need to save, will be flushed automatically at the end of transaction (since not a new entity)
     return true;
   }
 }

@@ -15,17 +15,17 @@ mysql> SET foreign_key_checks = 1;
 `docker run -d -v "//v/dockertbx:/var/mariadb" -p 3306:3306 --name es2 -e MYSQL_ROOT_PASSWORD=root -d mariadb`
 
 # SQL
-`CREATE DATABASE groups;`
+`CREATE DATABASE teams;`
 --> For mariaDb, use data dump sql script
 
 Select *
-FROM group t JOIN course c on t.course_id = c.name NATURAL JOIN teams_students ts JOIN student st ON ts.student_id = st.id ;
+FROM team t JOIN course c on t.course_id = c.name NATURAL JOIN teams_students ts JOIN student st ON ts.student_id = st.id ;
 
 # SQL VIEW
 create definer = root@`%` view MyTeamSummary as
-select `c`.`idname` AS `corso`, `t`.`name` AS `group`, `st`.`id` AS `studente`, tk.id
-from (((`groups`.`group` `t` join `groups`.`course` `c` on (`t`.`course_id` = `c`.`idname`)) join `groups`.`teams_students` `ts` on (`t`.`id` = `ts`.`team_id`))
-         join `groups`.`student` `st` on (`ts`.`student_id` = `st`.`id`)) left join token tk on (tk.student_id=st.id AND tk.team_id=t.id)
+select `c`.`idname` AS `corso`, `t`.`name` AS `team`, `st`.`id` AS `studente`, tk.id
+from (((`teams`.`team` `t` join `teams`.`course` `c` on (`t`.`course_id` = `c`.`idname`)) join `teams`.`teams_students` `ts` on (`t`.`id` = `ts`.`team_id`))
+         join `teams`.`student` `st` on (`ts`.`student_id` = `st`.`id`)) left join token tk on (tk.student_id=st.id AND tk.team_id=t.id)
 order by `c`.`idname`, `t`.`name`, `st`.`id`;
 
 
