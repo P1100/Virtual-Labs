@@ -28,7 +28,6 @@ const DBEs2pdf = {
   courses: [{id: 1, name: 'Applicazioni Internet', path: 'applicazioniinternet'}],
   groups: [{id: 1, name: 'Calvary'}]
 };
-
 @Component({
   selector: 'app-sidenav-cont',
   templateUrl: './sidenav-content.component.html',
