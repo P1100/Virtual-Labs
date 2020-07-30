@@ -101,6 +101,7 @@
 #         foreign key (username) references user (username)
 # );
 
+-- COMMENT
 
 INSERT INTO virtuallabs.student (id, first_name, name)
 VALUES ('100', 'atta@example.com', 'Atta Shah');

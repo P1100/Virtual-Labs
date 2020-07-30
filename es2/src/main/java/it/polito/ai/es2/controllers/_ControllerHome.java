@@ -18,7 +18,7 @@ import java.security.Principal;
 import java.util.Arrays;
 
 @Controller
-public class _Controller {
+public class _ControllerHome {
   @Autowired
   TeamService teamService;
   @Autowired
@@ -26,6 +26,9 @@ public class _Controller {
   @Autowired
   private UserRepository userRepository;
   
+  /**
+   * Test code
+   */
   @GetMapping("/")
   @ResponseBody
   public String getPrincipal(Principal principal, @AuthenticationPrincipal User spring_security_user) {

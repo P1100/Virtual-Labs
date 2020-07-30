@@ -17,7 +17,7 @@ import java.io.Serializable;
 @RestController
 @RequestMapping("/jwt")
 @CrossOrigin
-public class JwtRestController {
+public class Jwt_RestController {
   @Autowired
   private AuthenticationManager authenticationManager;
   @Autowired

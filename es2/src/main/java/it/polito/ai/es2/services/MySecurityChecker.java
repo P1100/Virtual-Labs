@@ -20,7 +20,7 @@ public class MySecurityChecker {
   @Autowired
   CourseRepository courseRepository;
   @Autowired
-  TeamRepository teamRepositoryea;
+  TeamRepository teamRepository;
   
   public boolean isCourseOwner(String course, String principal_username) {
     String professor_course = courseRepository.findById(course).map(x -> x.getProfessor()).orElse("");
@@ -28,7 +28,7 @@ public class MySecurityChecker {
   }
   
   public boolean isTeamOwner(Long id, String principal_username) {
-    List<Student> students = teamRepositoryea.findById(id).map(team -> team.getMembers()).orElse(null);
+    List<Student> students = teamRepository.findById(id).map(team -> team.getMembers()).orElse(null);
     if (students == null)
       return false;
     return students.stream().anyMatch(student -> student.getId().equals(principal_username));
