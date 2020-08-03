@@ -2,7 +2,9 @@
   "firstName": "ai20-lab04",
   "version": "0.0.0",
   "scripts": {
+    "jsonserver": "json-server-auth src/assets/db.json -r src/assets/routes.json --port 3000 --delay 1000",
     "start": "npm run startAll-windows",
+    "start:augury": "ng serve --prod false --base-href / --deploy-url / --proxy-config proxy.conf.json --configuration augury",
     "startAll-windows": "start npm run jsonserver & start npm run serve",
     "startAll-windows-prod-ssl": "start npm run jsonserver & start npm run serve-prod-ssl",
     "startAll-linux": "npm run jsonserver & npm run serve",
@@ -10,7 +12,6 @@
     "serve-relaunch-win": "start npm run serve",
     "serve": "ng serve --prod false --base-href / --deploy-url / --proxy-config proxy.conf.json",
     "serve-prod-ssl": "ng serve --prod true --ssl true --ssl-cert 'src/assets/server.crt' --ssl-key 'server.key' --proxy-config proxy.conf.json",
-    "jsonserver": "json-server-auth src/assets/db.json -r src/assets/routes.json --port 3000 --delay 1000",
     "build": "ng build",
     "test": "ng test",
     "lint": "ng lint",
