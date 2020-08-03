@@ -11,7 +11,7 @@
     </parent>
     <groupId>it.polito.ai</groupId>
     <artifactId>VirtualLabs</artifactId>
-    <version>0.2.0-SNAPSHOT</version>
+    <version>0.9.0-SNAPSHOT</version>
     <name>VirtualLabs</name>
     <!--    Versione va specificata in: project structure (2 posti, più scelta jdk in vari (2) punti), e qui se 1.8 (1.11 e 1.14 non funzionano)-->
     <description>AI 2020 - VirtualLabs</description>

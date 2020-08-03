@@ -23,8 +23,9 @@ public class Student {
   @Id
   private String id;
   @NotBlank
-  private String name;
   private String firstName;
+  @NotBlank
+  private String name;
   @Lob
   @Basic(fetch = FetchType.LAZY)
   private byte[] profilePicture;

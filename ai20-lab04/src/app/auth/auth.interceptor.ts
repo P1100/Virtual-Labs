@@ -4,12 +4,9 @@ import {Observable} from 'rxjs';
 
 @Injectable()
 export class AuthInterceptor implements HttpInterceptor {
-
   constructor() {
   }
-
   intercept(request: HttpRequest<unknown>, next: HttpHandler): Observable<HttpEvent<unknown>> {
-
     const accessToken = localStorage.getItem('accessToken');
     if (accessToken) {
       const cloned = request.clone({
@@ -21,8 +18,6 @@ export class AuthInterceptor implements HttpInterceptor {
       console.log('AuthInterceptor accessToken not found');
       return next.handle(request);
     }
-
   }
-
 }
 

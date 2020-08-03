@@ -8,6 +8,7 @@ import {AuthService} from '../auth/auth.service';
 import {ActivatedRoute, Router} from '@angular/router';
 import {Subscription} from 'rxjs';
 
+// TODO: remove it later, it was test code
 export interface DialogData {
   animal: string;
   name: string;
@@ -111,7 +112,7 @@ export class HomeComponent implements OnInit, OnDestroy {
 
 @Component({
   selector: 'app-login-dialog',
-  styleUrls: ['../auth/auth-dialog.component.css'],
+  styleUrls: ['../../_unused/auth-dialog.component.css'],
   templateUrl: '../auth/auth-dialog-reactive.component.html',
 })
 export class LoginDialogReactiveComponent implements OnDestroy {
@@ -185,7 +186,7 @@ function fakeNameValidator(control: FormGroup): ValidationErrors | null {
 
 @Component({
   selector: 'app-login-dialog',
-  styleUrls: ['../auth/auth-dialog.component.css'],
+  styleUrls: ['../../_unused/auth-dialog.component.css'],
   templateUrl: '../auth/auth-dialog-template.component.html',
 })
 export class LoginDialogTemplateComponent {

@@ -24,5 +24,4 @@ export class AuthGuard implements CanActivate, CanActivateChild {
     console.log('Auth CanActivateChild', b);
     return b;
   }
-
 }

@@ -21,7 +21,7 @@
       "serial": "123451",
       "firstName": "Pietro",
       "lastName": "Giasone",
-      "groupp": "none",
+      "group": "none",
       "courseId": 1,
       "groupId": 0
     },
@@ -30,7 +30,7 @@
       "serial": "123452",
       "firstName": "Paolo",
       "lastName": "Ferri",
-      "groupp": "Cavalry",
+      "group": "Cavalry",
       "courseId": 3,
       "groupId": 1
     },
@@ -39,7 +39,7 @@
       "serial": "123453",
       "firstName": "Gino",
       "lastName": "Rossi",
-      "groupp": "Cavalry",
+      "group": "Cavalry",
       "courseId": 1,
       "groupId": 1
     },
@@ -48,7 +48,7 @@
       "serial": "123454",
       "firstName": "Giovanni",
       "lastName": "Bianchi",
-      "groupp": "Cavalry2",
+      "group": "Cavalry2",
       "courseId": 1,
       "groupId": 2
     },

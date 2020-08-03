@@ -15,7 +15,6 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 import javax.sql.DataSource;
 
@@ -80,7 +79,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 //        .antMatchers("/testing/**").permitAll()
 //        .antMatchers("/API").hasRole("ADMIN")
 //        .antMatchers("/*").authenticated()
-        .antMatchers("/API").authenticated()
+//        .antMatchers("/API").authenticated()
         .anyRequest().permitAll()
 //        .and()
 //        .exceptionHandling().authenticationEntryPoint(jwtAuthenticationEntryPoint)
@@ -88,9 +87,9 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 //        .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
 // TODO: uncomment commented authentication JWT code above (commented for testing client REST data format)
     ;
-    
+  
     // Add a filter to validate the tokens with every request
-    httpSecurity.addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class);
+//    httpSecurity.addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class);
 // TODO: uncomment commented authentication JWT code above (commented for testing client REST data format)
   }
   
