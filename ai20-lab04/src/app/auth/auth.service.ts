@@ -1,9 +1,9 @@
 import {Injectable} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
 
-import {delay, tap} from 'rxjs/operators';
+import {tap} from 'rxjs/operators';
 import * as moment from 'moment';
-import {User} from '../model/user.model';
+import {User} from '../models/user.model';
 import {BehaviorSubject, Observable, Subject} from 'rxjs';
 
 export const ANONYMOUS_USER: User = {
@@ -18,7 +18,7 @@ export class AuthService {
   isLoggedSubject: BehaviorSubject<boolean>;
 
   constructor(private http: HttpClient) {
-    console.log('new auth service');
+    // console.log('new auth service');
     // localStorage.clear();
     if (this.isLoggedIn()) {
       this.isLoggedSubject = new BehaviorSubject(true);
@@ -33,9 +33,9 @@ export class AuthService {
   login(email: string, password: string): Observable<any> {  // returns object with accessToken
     return this.http.post<User>('/api/login', {email, password}).pipe(
       // tap(user => this.isLoggedSubject.next(user)));
-      tap(res => console.log('AuthService.login() post before delay:')),
-      delay(2000), // testing correctness code
-      tap(res => console.log('AuthService.login() post before delay:')),
+      // tap(res => console.log('AuthService.login() post before delay:')),
+      // delay(2000), // testing correctness code
+      // tap(res => console.log('AuthService.login() post before delay:')),
       tap(res => this.setSession(res, email)),
       // shareReplay(),
       tap(res => this.isLoggedSubject.next(true))

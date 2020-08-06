@@ -2,9 +2,9 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
 import {ActivatedRoute} from '@angular/router';
 import {concatMap, tap, toArray} from 'rxjs/operators';
-import {StudentService} from '../../services/student.service';
+import {BackendService} from '../../services/backend.service';
 import {from, Observable, Subscription} from 'rxjs';
-import {Student} from '../../model/student.model';
+import {Student} from '../../models/student.model';
 
 @Component({
   selector: 'app-students-cont',
@@ -25,16 +25,21 @@ export class StudentsContComponent implements OnInit, OnDestroy {
   courseId = 1;
   private paramSubscription: Subscription;
 
-  constructor(private studentService: StudentService, private route: ActivatedRoute) {
+  constructor(private studentService: BackendService, private route: ActivatedRoute) {
     // this.paramSubscription = this.route.url.subscribe(url => { });
     this.paramSubscription = this.route.paramMap.subscribe(url => {
-      this.courseId = +this.route.parent.snapshot.paramMap.get('id');
-      console.log('student-cont route.paramMap activeCourse: ' + this.courseId);
-      this.subAllStudents = this.studentService.getAllStudents()
-        .subscribe((students: Student[]) => this.allStudents = [...students]);
-      this.subEnrolledStudentsCourse = this.studentService.getEnrolledStudents(this.courseId)
-        .subscribe((students: Student[]) => this.enrolledStudents = [...students]);
-    });
+        this.courseId = +this.route.parent.snapshot.paramMap.get('id');
+        console.log('student-cont route.paramMap activeCourse: ' + this.courseId);
+        this.subAllStudents = this.studentService.getAllStudents()
+          .subscribe((students: Student[]) => this.allStudents = [...students]);
+        this.subEnrolledStudentsCourse = this.studentService.getEnrolledStudents(this.courseId)
+          .subscribe((
+            students: Student[]) => {
+            this.enrolledStudents = [...students];
+            console.log('this.enrolledStudents:', this.enrolledStudents);
+          });
+      }
+    );
   }
   ngOnInit(): void {
     console.log('student-cont.ngOnInit');

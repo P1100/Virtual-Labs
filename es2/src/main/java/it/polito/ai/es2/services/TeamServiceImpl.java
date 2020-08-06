@@ -33,7 +33,7 @@ import java.util.stream.Collectors;
 // TODO: collegare a dati client (uniformare), e poi fare parte di testing approfondita!
 
 /**
- * Politica di sovrascrittura adottata: in quasi tutti i metodi add, se un id era già presente nel database non sovrascrivo i dati
+ * Descrizione classe<p>Politica di sovrascrittura adottata: in quasi tutti i metodi add, se un id era già presente nel database non sovrascrivo i dati
  * già esistenti (tranne nel caso di proposeTeam, che poichè ha un id autogenerato, si è deciso di aggiornare il team vecchio usando
  * sempre la proposeTeam).
  */

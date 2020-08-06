@@ -66,6 +66,6 @@ public class _ControllerHome {
     }
     if (created_team == null)
       return "error_template";
-    return "home_csv";
+    return "csv_home";
   }
 }

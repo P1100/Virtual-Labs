@@ -17,7 +17,7 @@ public class Notification_Controller {
   public String confirm_token(@PathVariable String token) {
     boolean confirm = notificationService.confirm(token);
     if (confirm)
-      return "confirmed_token";
+      return "token_confirmed";
     else
       return "error_template";
   }
@@ -26,7 +26,7 @@ public class Notification_Controller {
   public String reject_token(@PathVariable String token) {
     boolean reject = notificationService.reject(token);
     if (reject)
-      return "rejcted_token";
+      return "token_rejcted";
     else
       return "error_template";
   }

@@ -7,8 +7,8 @@
 
 # Istruzioni di avvio (vedere file package.json per altri comandi e dettagli)
 - npm start 
----- ssl&prod: npm run startAll-windows-prod-ssl
----- linux/mac(?): npm run startAll-linux
+--- ssl&prod: npm run startAll-windows-prod-ssl
+--- linux/mac(?): npm run startAll-linux
 
 # Comandi usati ~ (windows10)
 - npm init -y
@@ -25,8 +25,8 @@
 [probably installed some other package, like moment.js angular@forms ...]
 
 # Update
+- To update npm on windows, install newer nodejs. Otherwise: `npm install npm@latest -g`
 npm list -g
-npm install npm@latest -g
 ng update --all=true --allow-dirty --force
 //ng update @angular/cli @angular/core
 
@@ -43,9 +43,7 @@ ng generate service services/student --flat
 ng generate component auth/login-dialog --flat --module=app
 ng generate component auth/register-dialog --flat --module=app
 ng generate service auth/auth --flat
-
 ng generate guard -d auth/auth --flat --implements CanActivate
-
 ng generate component HomeTab --module=app --inlineTemplate --inlineStyle --minimal
 
 ## Comandi browser

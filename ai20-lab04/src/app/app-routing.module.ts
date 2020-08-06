@@ -1,13 +1,12 @@
 import {NgModule} from '@angular/core';
 import {RouterModule, Routes} from '@angular/router';
-import {VmsContComponent} from './tabs/vms-cont/vms-cont.component';
+import {VmsContComponent} from './tabs/vms/vms-cont.component';
 import {StudentsContComponent} from './tabs/students/students-cont.component';
 import {SidenavContentComponent} from './r1_tabs/sidenav-content.component';
 import {PageNotFoundComponent} from './tabs/page-not-found/page-not-found.component';
 import {EmptyComponent} from './r1_tabs/empty.component';
-import {AuthGuard} from './auth/auth.guard';
-import {AssignmentsContComponent} from './tabs/assignments-cont/assignments-cont.component';
-import {GroupsContComponent} from './tabs/groups-cont/groups-cont.component';
+import {AssignmentsContComponent} from './tabs/assignments/assignments-cont.component';
+import {GroupsContComponent} from './tabs/groups/groups-cont.component';
 
 // TODO: use this.router.navigate(['teacher','course'])
 // this.router.navigateByUrl(`/courses/${course.id}`);
@@ -37,8 +36,8 @@ const routes: Routes = [
           },
           {
             path: 'course',
-            canActivate: [AuthGuard],
-            canActivateChild: [AuthGuard],
+            // canActivate: [AuthGuard],
+            // canActivateChild: [AuthGuard],
             children: [
               {
                 path: ':id',

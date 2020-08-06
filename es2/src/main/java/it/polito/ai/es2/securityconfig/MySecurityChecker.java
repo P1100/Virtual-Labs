@@ -1,6 +1,7 @@
-package it.polito.ai.es2.services;
+package it.polito.ai.es2.securityconfig;
 
 import it.polito.ai.es2.entities.Student;
+import it.polito.ai.es2.entities.Teacher;
 import it.polito.ai.es2.repositories.CourseRepository;
 import it.polito.ai.es2.repositories.StudentRepository;
 import it.polito.ai.es2.repositories.TeamRepository;
@@ -9,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -23,8 +25,8 @@ public class MySecurityChecker {
   TeamRepository teamRepository;
   
   public boolean isCourseOwner(String course, String principal_username) {
-    String professor_course = courseRepository.findById(course).map(x -> x.getProfessor()).orElse("");
-    return principal_username.equals(professor_course);
+    List<Teacher> teachers = courseRepository.findById(course).map(x -> x.getTeachers()).orElse(new ArrayList<Teacher>());
+    return teachers.stream().anyMatch(x -> principal_username.equals(x.getId()));
   }
   
   public boolean isTeamOwner(Long id, String principal_username) {

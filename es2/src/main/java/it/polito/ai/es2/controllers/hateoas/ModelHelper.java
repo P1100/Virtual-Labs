@@ -13,7 +13,7 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
 public class ModelHelper {
   public static CourseDTO enrich(CourseDTO courseDTO) {
-    courseDTO.add(new Link("http://localhost:8080/API/courses").withRel("courses"));
+    courseDTO.add(Link.of("http://localhost:8080/API/courses", "courses"));
     courseDTO.add(new Link("http://localhost:8080/API/courses/" + courseDTO.getId()).withSelfRel());
     courseDTO.add(new Link("http://localhost:8080/API/courses/" + courseDTO.getId() + "/enable").withRel("enable (POST)"));
     courseDTO.add(new Link("http://localhost:8080/API/courses/" + courseDTO.getId() + "/disable").withRel("disable (POST)"));

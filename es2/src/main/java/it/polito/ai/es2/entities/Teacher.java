@@ -1,7 +1,12 @@
 package it.polito.ai.es2.entities;
 
+import lombok.Data;
+import lombok.ToString;
+
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Utente: Docente
@@ -10,23 +15,25 @@ import javax.validation.constraints.NotBlank;
  * popola con gli studenti iscritti. Il docente non crea o gestisce macchine virtuali, ma può connettersi
  * a quelle degli studenti/gruppi dei corsi che gestisce. Attenzione: ci possono essere più docenti
  * gestori dello stesso corso
- * <p>
- * Id is the matricola/serial
  */
 @Entity
+@Data
 public class Teacher {
   @Id
-  private String id;
+  private String id; // matricola/serial
   @NotBlank
   private String firstName;
   @NotBlank
   private String lastName;
-  @Lob
-  @Basic(fetch = FetchType.LAZY)
-  private byte[] profilePicture;
-//  @ManyToMany(cascade = {CascadeType.MERGE, CascadeType.PERSIST})
-//  @JoinTable(name = "student_course", joinColumns = @JoinColumn(name = "student_id"),
-//      inverseJoinColumns = @JoinColumn(name = "course_name"))
-//  @ToString.Exclude
-//  private List<Course> courses = new ArrayList<>();
+  @NotBlank
+  private String email;
+  //  @Lob
+//  @Basic(fetch = FetchType.LAZY)
+//  private byte[] profilePhoto;
+  private String profilePhoto;
+  @ManyToMany(cascade = {CascadeType.MERGE, CascadeType.PERSIST})
+  @JoinTable(name = "teacher_course", joinColumns = @JoinColumn(name = "teacher_id"),
+      inverseJoinColumns = @JoinColumn(name = "course_id"))
+  @ToString.Exclude
+  private List<Course> courses = new ArrayList<>();
 }

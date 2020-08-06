@@ -29,7 +29,7 @@ public class Csv_Controller {
                       BindingResult bindingResult,
                       Model model) {
     model.addAttribute("command", new TeamViewModel(null, "Team_testing_email", "Course_testing_email", null));
-    return "home_csv";
+    return "csv_home";
   }
   
   @PostMapping("/upload-csv-file")
@@ -64,6 +64,6 @@ public class Csv_Controller {
         model.addAttribute("status", false);
       }
     }
-    return "file-upload-status";
+    return "csv_output";
   }
 }

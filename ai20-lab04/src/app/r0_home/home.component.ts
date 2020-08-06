@@ -1,5 +1,5 @@
 import {Component, Inject, OnDestroy, OnInit} from '@angular/core';
-import {Course} from '../model/course.model';
+import {Course} from '../models/course.model';
 import {Title} from '@angular/platform-browser';
 import {MAT_DIALOG_DATA, MatDialog, MatDialogRef} from '@angular/material/dialog';
 import {FormBuilder, FormGroup, ValidationErrors, Validators} from '@angular/forms';
@@ -15,9 +15,17 @@ export interface DialogData {
 }
 
 const DB_COURSES: Course[] = [
-  {id: 1, label: 'Applicazioni Internet', path: 'applicazioni-internet'},
-  {id: 2, label: 'Programmazione di sistema', path: 'programmazione-di-sistema'},
-  {id: 3, label: 'Mobile development', path: 'mobile-development'}
+  {id: 1, label: 'Applicazioni Internet', path: 'applicazioni-internet', fullName: '', minEnrolled: 0, maxEnrolled: 0, enabled: true},
+  {
+    id: 2,
+    label: 'Programmazione di sistema',
+    path: 'programmazione-di-sistema',
+    fullName: '',
+    minEnrolled: 0,
+    maxEnrolled: 0,
+    enabled: true
+  },
+  {id: 3, label: 'Mobile development', path: 'mobile-development', fullName: '', minEnrolled: 0, maxEnrolled: 0, enabled: true}
 ];
 
 // TODO: integrate es1 into project dialog login/registration
@@ -42,7 +50,7 @@ export class HomeComponent implements OnInit, OnDestroy {
   constructor(private titleService: Title, public dialog: MatDialog, private auth: AuthService,
               private router: Router, private route: ActivatedRoute) {
     titleService.setTitle(this.title);
-    console.log('constructor HomeComponent pre ' + this.isLogged);
+    // console.log('constructor HomeComponent pre ' + this.isLogged);
     this.subscription = this.auth.getSub().subscribe(x => {
       this.isLogged = x;
       if (x === true) {
@@ -50,17 +58,17 @@ export class HomeComponent implements OnInit, OnDestroy {
       } else {
         localStorage.removeItem('user');
       }
-      console.log('constructor HomeComponent getSub().subscribe ' + this.isLogged);
+      // console.log('constructor HomeComponent getSub().subscribe ' + this.isLogged);
     });
-    console.log('constructor HomeComponent post ' + this.isLogged);
+    // console.log('constructor HomeComponent post ' + this.isLogged);
   }
   ngOnInit(): void {
-    console.log('# HomeController.ngOninit START');
+    // console.log('# HomeController.ngOninit START');
     this.subscriptionRoute = this.route.queryParams.subscribe(params => {
-      console.log('inside_Route', params, params.doLogin, params['doLogin']);
+      // console.log('inside_Route', params, params.doLogin, params['doLogin']);
       // this.doLogin = params['doLogin'];
       if (params.doLogin == 'true') {
-        console.log('inside_DoLogin');
+        // console.log('inside_DoLogin');
         this.openLoginDialogReactive();
       }
     });
@@ -71,7 +79,7 @@ export class HomeComponent implements OnInit, OnDestroy {
       data: {name: this.name, animal: this.animal}
     });
     dialogRef.afterClosed().subscribe(result => {
-      console.log('openLoginDialogTemplate afterClosed().subscribe');
+      // console.log('openLoginDialogTemplate afterClosed().subscribe');
     });
   }
   ngOnDestroy(): void {
@@ -91,7 +99,7 @@ export class HomeComponent implements OnInit, OnDestroy {
     // Settings what to do when dialog is closed
     this.dialogRef.afterClosed().subscribe(result => {
         this.dialogRef = undefined;
-        console.log('openLoginDialogReactive afterClosed().subscribe', result);
+      // console.log('openLoginDialogReactive afterClosed().subscribe', result);
       }
     );
   }
@@ -113,7 +121,7 @@ export class HomeComponent implements OnInit, OnDestroy {
 @Component({
   selector: 'app-login-dialog',
   styleUrls: ['../../_unused/auth-dialog.component.css'],
-  templateUrl: '../auth/auth-dialog-reactive.component.html',
+  templateUrl: '../dialogs/auth-dialog-reactive.component.html',
 })
 export class LoginDialogReactiveComponent implements OnDestroy {
   public user;
@@ -187,7 +195,7 @@ function fakeNameValidator(control: FormGroup): ValidationErrors | null {
 @Component({
   selector: 'app-login-dialog',
   styleUrls: ['../../_unused/auth-dialog.component.css'],
-  templateUrl: '../auth/auth-dialog-template.component.html',
+  templateUrl: '../dialogs/auth-dialog-template.component.html',
 })
 export class LoginDialogTemplateComponent {
   constructor(

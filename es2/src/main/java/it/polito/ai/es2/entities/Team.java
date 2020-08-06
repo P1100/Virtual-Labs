@@ -42,7 +42,6 @@ public class Team {
   @NotBlank
   String name;
   int status;
-  // TODO: search later how to make this work (must be a docker configuration, see file)
   @Transient
   MultipartFile modelVM;
   Long maxVcpu;
@@ -76,7 +75,7 @@ public class Team {
     new_student.getTeams().add(this);
   }
   
-  public void removetudent(@org.jetbrains.annotations.NotNull Student old_student) {
+  public void removetudent(Student old_student) {
     old_student.getTeams().remove(this);
     this.members.remove(old_student);
   }

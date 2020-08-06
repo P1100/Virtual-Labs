@@ -17,7 +17,7 @@ import java.util.List;
  * utilizzare le corrispondenti macchine virtuali). Su ogni corso è impostata la dimensione minima e
  * massima di studenti che possono comporre un gruppo, per quel corso
  * <p>
- * \Id is the course acronym. If disabled you cant use the VM associated
+ * Id is the course acronym. If disabled you cant use the VM associated
  */
 @Entity
 @Data
@@ -28,14 +28,15 @@ public class Course {
   private int minEnrolled;
   private int maxEnrolled;
   private boolean enabled;
-  // TODO: change with a relationship
-  private String professor;
   @OneToMany(mappedBy = "course")
   @ToString.Exclude
   List<Team> teams = new ArrayList<>();
   @ManyToMany(mappedBy = "courses") //cascade = CascadeType.ALL, orphanRemoval = true
   @ToString.Exclude
   private List<Student> students = new ArrayList<>();
+  @ManyToMany(mappedBy = "courses")
+  @ToString.Exclude
+  private List<Teacher> teachers = new ArrayList<>();
   
   public void addStudent(Student new_student) {
     students.add(new_student);

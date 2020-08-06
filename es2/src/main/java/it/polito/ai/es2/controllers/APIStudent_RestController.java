@@ -65,7 +65,7 @@ public class APIStudent_RestController {
   @PostMapping({"", "/"})
   public StudentDTO addStudent(@RequestBody StudentDTO studentDTO) {
     if (!teamService.addStudent(studentDTO)) {
-      throw new ResponseStatusException(HttpStatus.CONFLICT, studentDTO.getName());
+      throw new ResponseStatusException(HttpStatus.CONFLICT, studentDTO.getLastName());
     } else
       return ModelHelper.enrich(studentDTO);
   }

@@ -18,10 +18,8 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.core.env.Environment;
 
-//TODO: passare a JDK14
-//TODO: Integrare con es1 (da sessione a jwt), mantenendo doppia struttura single page e multi page
-//TODO: fare tutti i test! importante
 // TODO List: aggiornare DTOs da entities dopo (risincronizzare e ricontrollare tutto),
+// TODO: check somewhere that for each course there is max one group associated
 @SpringBootApplication
 @Log
 public class VirtualLabsApplication {

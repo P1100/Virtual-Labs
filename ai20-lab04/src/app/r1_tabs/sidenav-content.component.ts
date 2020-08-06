@@ -1,12 +1,20 @@
 import {Component, OnChanges, OnDestroy, OnInit, SimpleChanges} from '@angular/core';
-import {Course} from '../model/course.model';
+import {Course} from '../models/course.model';
 import {ActivatedRoute} from '@angular/router';
 import {Subscription} from 'rxjs';
 
 const DB_COURSES: Course[] = [
-  {id: 1, label: 'Applicazioni Internet', path: 'applicazioni-internet'},
-  {id: 2, label: 'Programmazione di sistema', path: 'programmazione-di-sistema'},
-  {id: 3, label: 'Mobile development', path: 'mobile-development'}
+  {id: 1, label: 'Applicazioni Internet', path: 'applicazioni-internet', fullName: '', minEnrolled: 0, maxEnrolled: 0, enabled: true},
+  {
+    id: 2,
+    label: 'Programmazione di sistema',
+    path: 'programmazione-di-sistema',
+    fullName: '',
+    minEnrolled: 0,
+    maxEnrolled: 0,
+    enabled: true
+  },
+  {id: 3, label: 'Mobile development', path: 'mobile-development', fullName: '', minEnrolled: 0, maxEnrolled: 0, enabled: true}
 ];
 //   .map(y => {
 //   y.path = 'teacher/course/' + y.path;
@@ -48,12 +56,12 @@ export class SidenavContentComponent implements OnInit, OnChanges, OnDestroy {
       for (const tab of tabs) {
         this.navLinks.push({path: this.prefix + '/course/' + this.activeCourse + '/' + tab.path, label: tab.label});
       }
-      console.log('Sidenav-cont.constructor route.url activeCourse: ' + '\n' + this.activeCourse);
+      // console.log('Sidenav-cont.constructor route.url activeCourse: ' + '\n' + this.activeCourse);
     });
-    console.log('Sidenav-cont.constructor ending Routes:\n' + JSON.stringify(this.navLinks));
+    // console.log('Sidenav-cont.constructor ending Routes:\n' + JSON.stringify(this.navLinks));
   }
   ngOnInit(): void {
-    console.log('Sidenav-cont.ngOnInit');
+    // console.log('Sidenav-cont.ngOnInit');
   }
 
   ngOnChanges(changes: SimpleChanges): void {

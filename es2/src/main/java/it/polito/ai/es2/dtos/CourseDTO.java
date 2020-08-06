@@ -10,9 +10,9 @@ import org.springframework.hateoas.RepresentationModel;
 @Data
 public class CourseDTO extends RepresentationModel<CourseDTO> {
   private String id;
-  private int min;
-  private int max;
+  private String fullName;
+  private int minEnrolled;
+  private int maxEnrolled;
   private boolean enabled;
-  private String professor;
 }
 

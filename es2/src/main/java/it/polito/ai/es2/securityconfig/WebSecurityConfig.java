@@ -7,20 +7,23 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
-import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
-import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.web.servlet.config.annotation.CorsRegistry;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 
 import javax.sql.DataSource;
 
 @Configuration
-@EnableWebSecurity
-@EnableGlobalMethodSecurity(prePostEnabled = true, securedEnabled = true)
+//@EnableWebSecurity
+//@EnableGlobalMethodSecurity(prePostEnabled = true, securedEnabled = true)
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
   @Autowired
   private JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint;
@@ -40,7 +43,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     return super.authenticationManagerBean();
   }
   
-  @Autowired // non override perchè ho dichiarato prima il bean per AuthenticationManagerBuilder. Nomee metodo irrelevante
+  @Autowired // non override perchè ho dichiarato prima il bean per AuthenticationManagerBuilder. Nome metodo irrelevante
   public void configure(AuthenticationManagerBuilder auth_builder, DataSource dataSource) throws Exception {
     auth_builder.userDetailsService(userDetailsServiceImpl).passwordEncoder(passwordEncoder());
 
@@ -49,7 +52,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 //        .password(passwordEncoder().encode("mem"))
 //        .roles("USER", "GUEST", "ADMIN");
     
-    // remember to load schema.sql first!
+    // load schema.sql first
 //    auth_builder.jdbcAuthentication().dataSource(dataSource)
 //        .withUser("jdbc").password(passwordEncoder().encode("jdbc")).roles("admin","Guest")
 /*        .usersByUsernameQuery("select email,password,enabled "
@@ -60,19 +63,18 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                                         + "where email = ?");
    */
   }
-  
   /**
    * Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhZG1pbiIsImV4cCI6MTU5MzAzODgwMiwiaWF0IjoxNTkzMDIwODAyfQ.eNvYEI3XidkaWBl9bt3wUPSEOlV4Yg3TA5C17eB6L0TRRW07U-lC8tv4nVBjBEIU5c4-USIIX4eZc4mDMexxeg
    */
-  // TODO: dual form login con JWT authentication ---> DONE! Clean up now
   @Override
   protected void configure(HttpSecurity httpSecurity) throws Exception {
     httpSecurity
         .httpBasic().disable()
-        .csrf().disable()
+//        .csrf().disable()
         .cors().disable()
         // If enabled, go to /login and use "u:admin, password:a"
-        .formLogin().and() //.antMatcher("/**") --> applies to all?
+//       .formLogin()
+//       .and() //.antMatcher("/**")
         .authorizeRequests()
 //        .antMatchers("/jwt/authenticate", "/jwt/register").permitAll()
 //        .antMatchers("/notification/**").permitAll()
@@ -81,16 +83,26 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 //        .antMatchers("/*").authenticated()
 //        .antMatchers("/API").authenticated()
         .anyRequest().permitAll()
-//        .and()
-//        .exceptionHandling().authenticationEntryPoint(jwtAuthenticationEntryPoint)
-//        .and()
-//        .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-// TODO: uncomment commented authentication JWT code above (commented for testing client REST data format)
+        .and()
+        .exceptionHandling().authenticationEntryPoint(jwtAuthenticationEntryPoint)
+        .and()
+        .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
     ;
   
     // Add a filter to validate the tokens with every request
-//    httpSecurity.addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class);
-// TODO: uncomment commented authentication JWT code above (commented for testing client REST data format)
+    httpSecurity.addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class);
+  }
+  
+  @Bean
+  public WebMvcConfigurer corsConfigurer() {
+    return new WebMvcConfigurerAdapter() {
+      @Override
+      public void addCorsMappings(CorsRegistry registry) {
+        registry.addMapping("/**").allowedMethods("GET", "POST", "PUT", "DELETE")
+            .allowedOrigins("http://localhost:4200")
+            .allowedHeaders("*");
+      }
+    };
   }
   
   //configura la catena dei filtri di sicurezza

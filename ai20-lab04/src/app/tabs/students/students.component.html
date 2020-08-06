@@ -1,3 +1,19 @@
+<p *ngIf="selectAllDialog || removeAllDialog">
+  <mat-toolbar>
+    <div *ngIf="selectAllDialog; else elseRemoveAllDialog">All {{dataSource.data.length}} conversations on this page are selected.
+    <a (click)="checkboxSetAll(true)"
+       [routerLink]=""
+       queryParamsHandling="preserve">Select all 248 conversations in All Mail
+    </a>
+    </div>
+    <ng-template #elseRemoveAllDialog>All 249 conversations in All Mail are selected.
+    <a (click)="checkboxSetAll(false)"
+       [routerLink]=""
+       queryParamsHandling="preserve">Clear selection
+    </a>
+    </ng-template>
+  </mat-toolbar>
+</p>
 <div class="student_div">
   <!--  TODO: bisogna associare 1 2 3 a nome corso-->
   <h3>Students enrolled in the {{id}}</h3>
@@ -7,10 +23,10 @@
     <!--TODO: rivedere codice autocomplete, e controllare che compaia quando si seleziona -->
     <!--    TODO: c'é da rivedere la parte angular material su autocomplete, form field, angular reactive forms e slides form AI-->
     <mat-form-field>
-      <input type="text" matInput #input
-             [formControl]="myControl"
-             [matAutocomplete]="auto"
-             placeholder="Name of the student">
+      <input #input [formControl]="myControl" [matAutocomplete]="auto"
+             matInput
+             placeholder="Name of the student"
+             type="text">
       <mat-label>Add student</mat-label>
       <mat-autocomplete #auto="matAutocomplete"
                         (optionSelected)="autocompleteSaveOption($event)"
@@ -22,48 +38,38 @@
       </mat-autocomplete>
     </mat-form-field>
     <!--    tolto $event da parametro studentsAdd, perché prende il dato da aggiornare da saveOption. Forse-->
-    <button mat-button matSuffix (click)="studentsAdd(); input.value=''">Add</button>
+    <button (click)="studentsAdd(); input.value=''" mat-button matSuffix>Add</button>
     <br>
-    <button mat-button (click)="studentsRemove()">Delete selected</button>
+    <button (click)="studentsRemove()" mat-button>Delete selected</button>
   </form>
 
-  <table mat-table [dataSource]="dataSource" matSort (matSortChange)="sortChange($event)">
+  <table (matSortChange)="sortChange($event)" [dataSource]="dataSource" mat-table matSort>
     <ng-container matColumnDef="select">
-      <th mat-header-cell *matHeaderCellDef>
-        <!--        TODO: codice checkbox da ricontrollare e verificare. Notare come master funziona su tutte le checkbox, anche quelle nascoste -->
-        <mat-checkbox (click)="checkboxToggleMaster(); $event.preventDefault()"
-                      [checked]="checkboxIsChecked('master')"
-                      [indeterminate]="checkboxIsIndeterminate()"></mat-checkbox>
+      <th *matHeaderCellDef mat-header-cell>
+        <mat-checkbox (change)="checkboxSetAllPage($event.checked)"
+                      [checked]="allCompletePage"
+                      [indeterminate]="checkboxSomeComplete()">
+        </mat-checkbox>
       </th>
-      <!--                      (change)="checkboxToggleMaster($event)"-->
-      <td mat-cell *matCellDef="let element">
-        <mat-checkbox (change)="checkboxToggleRow($event,element.id)"
-                      [checked]="checkboxIsChecked(element.id)"></mat-checkbox>
+      <td *matCellDef="let element" mat-cell>
+        <mat-checkbox
+          (change)="checkboxChangeSelection($event,element.id)"
+          [checked]="checkboxIsChecked(element.id)"></mat-checkbox>
       </td>
     </ng-container>
-    <ng-container matColumnDef="{{displayedColumnsTable[1]}}">
-      <th mat-header-cell *matHeaderCellDef mat-sort-header> {{displayedColumnsTable[1]}}</th>
-      <td mat-cell *matCellDef="let element"> {{element[displayedColumnsTable[1]]}} </td>
-    </ng-container>
-    <ng-container matColumnDef="{{displayedColumnsTable[2]}}">
-      <th mat-header-cell *matHeaderCellDef mat-sort-header> {{displayedColumnsTable[2]}}</th>
-      <td mat-cell *matCellDef="let element"> {{element[displayedColumnsTable[2]]}} </td>
-    </ng-container>
-    <ng-container matColumnDef="{{displayedColumnsTable[3]}}">
-      <th mat-header-cell *matHeaderCellDef mat-sort-header> {{displayedColumnsTable[3]}}</th>
-      <td mat-cell *matCellDef="let element"> {{element[displayedColumnsTable[3]]}} </td>
-    </ng-container>
-    <ng-container matColumnDef="{{displayedColumnsTable[4]}}">
-      <th mat-header-cell *matHeaderCellDef mat-sort-header> {{displayedColumnsTable[4]}}</th>
-      <td mat-cell *matCellDef="let element"> {{element[displayedColumnsTable[4]]}} </td>
-    </ng-container>
-    <!--    matHeaderRowDef error/bug will be fixed in next version of webstorm-->
-    <tr mat-header-row *matHeaderRowDef="displayedColumnsTable"></tr>
-    <tr mat-row *matRowDef="let row; columns: displayedColumnsTable;"></tr>
+    <div *ngFor="let columm of displayedColumnsTable | slice:1;let i = index">
+      <ng-container matColumnDef="{{columm}}">
+        <th *matHeaderCellDef mat-header-cell mat-sort-header> {{columm}}</th>
+        <td *matCellDef="let element" mat-cell> {{element[[columm]]}} </td>
+      </ng-container>
+    </div>
+    <tr *matHeaderRowDef="displayedColumnsTable" mat-header-row></tr>
+    <tr *matRowDef="let row; columns: displayedColumnsTable;" mat-row></tr>
   </table>
 
   <mat-paginator [length]="length"
-                 [pageSize]="pageSize"
                  [pageSizeOptions]="pageSizeOptions"
-                 showFirstLastButtons></mat-paginator>
+                 [pageSize]="pageSize"
+                 showFirstLastButtons>
+  </mat-paginator>
 </div>

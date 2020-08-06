@@ -10,6 +10,7 @@ import org.springframework.hateoas.RepresentationModel;
 @Data
 public class StudentDTO extends RepresentationModel<CourseDTO> {
   private String id;
-  private String name;
+  private String lastName;
   private String firstName;
+  private String profilePhoto;
 }
