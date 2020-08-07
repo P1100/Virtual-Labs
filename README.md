@@ -1,12 +1,12 @@
 # AI_2020_MyLabs
-Esercitazioni in laboratorio di Applicazioni Internet - 2019/2020 Polito
+Assignments and Project of 'Applicazioni Internet' - 2019/2020 Polito
 
-* Es1: folder es1
+* Es1: es1
 * Es2: embedded inside commits...
 * Es3: branch lab3
 * Es4: embedded inside commits... 
-* Es5: branches lab5 o es5
-* Progetto Finale VirtualLabs: branch master, con vari backup su altri branch. "es2" è il back-end, "ai20-lab04" il front-end. 
+* Es5: branch lab5
+* Final project VirtualLabs: current branch master. "es2" folder is the back-end, "ai20-lab04" is the front-end. 
 
--- Nota: non è possibile rinominare directories senza perdere tutta la history dei commits, anche con "git mv"
+-- Note: it's not possible to rename the folders without removing also all the previous commits history, not even with "git mv". For this reason the folder names above are kept
 
