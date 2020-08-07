@@ -1,6 +1,6 @@
 import {async, ComponentFixture, TestBed} from '@angular/core/testing';
 
-import {SidenavContentComponent} from '../app/r1_tabs/sidenav-content.component';
+import {SidenavContentComponent} from '../app/r1-tabs/sidenav-content.component';
 
 describe('SidenavContComponent', () => {
   let component: SidenavContentComponent;

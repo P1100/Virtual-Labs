@@ -2,9 +2,9 @@ import {NgModule} from '@angular/core';
 import {RouterModule, Routes} from '@angular/router';
 import {VmsContComponent} from './tabs/vms/vms-cont.component';
 import {StudentsContComponent} from './tabs/students/students-cont.component';
-import {SidenavContentComponent} from './r1_tabs/sidenav-content.component';
+import {SidenavContentComponent} from './r1-tabs/sidenav-content.component';
 import {PageNotFoundComponent} from './tabs/page-not-found/page-not-found.component';
-import {EmptyComponent} from './r1_tabs/empty.component';
+import {EmptyComponent} from './r1-tabs/empty.component';
 import {AssignmentsContComponent} from './tabs/assignments/assignments-cont.component';
 import {GroupsContComponent} from './tabs/groups/groups-cont.component';
 
