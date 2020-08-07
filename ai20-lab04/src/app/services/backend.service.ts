@@ -4,7 +4,6 @@ import {forkJoin, Observable, throwError} from 'rxjs';
 import {HttpClient, HttpHeaders} from '@angular/common/http';
 import {catchError, map, retry, tap} from 'rxjs/operators';
 import {environment} from '../../environments/environment';
-import {StudentDto} from '../models/studentdto.model';
 
 @Injectable({
   providedIn: 'root'
@@ -18,10 +17,10 @@ export class BackendService {
     // responseType: 'json'|'text',
     // withCredentials: true  // Whether this request should be sent with outgoing credentials (cookies).
   };
-  private apiJsonServerProxyPath = environment.urlHttpOrHttpsPrefix + '://localhost:8080/API'; // URL to web api
+  private apiJsonServerProxyPath = environment.HttpOrHttpsPrefix + '://localhost:8080/API'; // URL to web api
 
   constructor(private http: HttpClient) {
-    // console.log('@@ BackendService.constructor - new service instance (http or htpps?)=' + environment.urlHttpOrHttpsPrefix);
+    // console.log('@@ BackendService.constructor - new service instance (http or htpps?)=' + environment.HttpOrHttpsPrefix);
   }
   private formatErrors(error: any) {
     console.error(error);
@@ -29,24 +28,35 @@ export class BackendService {
   }
 
   getAllStudents(): Observable<Student[]> {
-    return this.http.get<StudentDto>(`${this.apiJsonServerProxyPath}/students`, this.httpOptions)
+    return this.http.get<any>(`${this.apiJsonServerProxyPath}/students`, this.httpOptions)
       .pipe(
         tap(res => console.log('getAllStudents', res)),
+        tap(res => console.log('Student[0]', res)),
         retry(0), catchError(this.formatErrors),
         map(response => response._embedded.studentDTOList),
+        map(s => s.map(ss => {
+          delete ss.links;
+          delete ss._links;
+          return ss;
+        })),
         tap(res => console.log('getAllStudents._embedded.studentDTOList', res))
       );
   }
   getEnrolledStudents(courseId: number): Observable<Student[]> {
-    return this.http.get<Student[]>(`${this.apiJsonServerProxyPath}/courses/${courseId}/enrolled`, this.httpOptions)
+    return this.http.get<any[]>(`${this.apiJsonServerProxyPath}/courses/${courseId}/enrolled`, this.httpOptions)
       .pipe(
         tap(res => console.log('getEnrolledStudents', res)),
+        map(s => s.map(ss => {
+          delete ss.links;
+          delete ss._links;
+          return ss;
+        })),
         retry(0), catchError(this.formatErrors));
   }
   enroll(student: Student, courseId: number) {
-    // student.courseId = courseId;
+    console.log('enroll(student: Student, courseId: number)', courseId, student, JSON.stringify(student));
     return this.http.put(
-      `${this.apiJsonServerProxyPath}/students/${student.id}`,
+      `${this.apiJsonServerProxyPath}/courses/${courseId}/enroll`,
       JSON.stringify(student),
       this.httpOptions
     ).pipe(retry(0), catchError(this.formatErrors));

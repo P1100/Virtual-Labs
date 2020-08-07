@@ -1,4 +1,5 @@
 export const environment = {
   production: true,
-  urlHttpOrHttpsPrefix: 'https'
+  dev: false,
+  HttpOrHttpsPrefix: 'https'
 };

@@ -124,7 +124,7 @@ export class StudentsComponent implements OnInit, AfterViewInit, OnDestroy {
       const isAsc = !(this.sort.direction === 'asc'); // ASC: the sorting array (GUI) is more intuitive this way
       return sortCompare(a[this.sort.active], b[this.sort.active], isAsc);
     });
-    this.updateMaster();
+    this.updateMasterCheckbox();
   }
   // used in checkbox logic
   private getStudentsIdCurrentPage(): number[] {
@@ -141,7 +141,7 @@ export class StudentsComponent implements OnInit, AfterViewInit, OnDestroy {
     return arr;
   }
   // Used internally in change selection, in sort update, and in paginator update
-  private updateMaster() {
+  private updateMasterCheckbox() {
     const idStudentsPage: [number, boolean][] = [...this.checked.entries()]
       .filter(x => this.getStudentsIdCurrentPage().includes(x[0], 0));
     const checkboxsPage: boolean[] = idStudentsPage
@@ -151,7 +151,7 @@ export class StudentsComponent implements OnInit, AfterViewInit, OnDestroy {
   }
   checkboxChangeSelection({checked}, id) {
     this.checked.set(+id, checked);
-    this.updateMaster();
+    this.updateMasterCheckbox();
   }
   checkboxIsChecked(id: number) {
     return this.checked.get(+id);
@@ -188,7 +188,7 @@ export class StudentsComponent implements OnInit, AfterViewInit, OnDestroy {
 // delete later, if things works without issues
   // @ViewChild(MatSidenav) matsidenav: MatSidenav;
   paginatorUpdate() {
-    this.updateMaster();
+    this.updateMasterCheckbox();
     this.showCheckboxSelectAllToolbar = false;
     this.showCheckboxDeselectAllToolbar = false;
   }

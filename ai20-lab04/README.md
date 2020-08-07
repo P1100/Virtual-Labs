@@ -5,6 +5,9 @@
 - É stato implementato anche la logica per gestire corsi multipli, in modo completo.
 - SSL implementato come npm script (insieme a prod)
 
+-Update to angular 10, e last version Spring Boot
+-Checkbox gmail like
+
 # Istruzioni di avvio (vedere file package.json per altri comandi e dettagli)
 - npm start 
 --- ssl&prod: npm run startAll-windows-prod-ssl
@@ -81,8 +84,8 @@ In angular.json (aggiunto file proxy.conf.json) --> no, poi passato a usare scri
         }
 
 In environment.ts e environment.prod.ts (in assets)
-     urlHttpOrHttpsPrefix: 'http'
-     urlHttpOrHttpsPrefix: 'https'
+     HttpOrHttpsPrefix: 'http'
+     HttpOrHttpsPrefix: 'https'
 
 
 # Bugs fixes (tsconfig.json)

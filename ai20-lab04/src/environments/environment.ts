@@ -4,7 +4,8 @@
 
 export const environment = {
   production: false,
-  urlHttpOrHttpsPrefix: 'http'
+  dev: true,
+  HttpOrHttpsPrefix: 'http'
 };
 
 /*
