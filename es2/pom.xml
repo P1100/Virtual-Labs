@@ -10,8 +10,9 @@
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
     <groupId>it.polito.ai</groupId>
-    <artifactId>VirtualLabs</artifactId>
+    <artifactId>virtuallabs-server</artifactId>
     <version>1.0.0-SNAPSHOT</version>
+    <packaging>jar</packaging>
     <name>VirtualLabs</name>
     <description>AI 2020 - VirtualLabs</description>
 
