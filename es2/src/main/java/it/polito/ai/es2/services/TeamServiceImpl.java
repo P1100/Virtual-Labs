@@ -289,16 +289,16 @@ public class TeamServiceImpl implements TeamService {
   }
   
   /**
-   * {@link it.polito.ai.es2.controllers.APICourses_RestController#addStudentToCourse(String, Map)}
+   * {@link it.polito.ai.es2.controllers.APICourses_RestController#enrollStudent(String, Map)}
    */
   @Override
   @PreAuthorize("hasRole('ADMIN') or (hasRole('PROFESSOR') and @mySecurityChecker.isCourseOwner(#courseName,authentication.principal.username))")
-  public boolean addStudentToCourse(String studentId, String courseName) throws StudentNotFoundException, CourseNotFoundException {
-    if (studentId == null || courseName == null) throw new TeamServiceException("addStudentToCourse() - null parameters");
-    if (!studentRepository.existsById(studentId)) throw new StudentNotFoundException("addStudentToCourse() - student not found:" + studentId);
+  public boolean enrollStudent(String studentId, String courseName) throws StudentNotFoundException, CourseNotFoundException {
+    if (studentId == null || courseName == null) throw new TeamServiceException("enrollStudent() - null parameters");
+    if (!studentRepository.existsById(studentId)) throw new StudentNotFoundException("enrollStudent() - student not found:" + studentId);
     Optional<Course> courseOptional = courseRepository.findById(courseName);
-    if (!courseOptional.isPresent()) throw new CourseNotFoundException("addStudentToCourse() - course not found:" + courseName);
-    
+    if (!courseOptional.isPresent()) throw new CourseNotFoundException("enrollStudent() - course not found:" + courseName);
+  
     Course c = courseOptional.get();
     // Controllo che corso sia enabled
     if (!c.isEnabled())
@@ -307,23 +307,23 @@ public class TeamServiceImpl implements TeamService {
     // Controllo che studente non sia già iscritto al corso
     if (c.getStudents().stream().anyMatch(x -> x.getId().equals(studentId)))
       return false;
-    
-    log.info("addStudentToCourse ---> BEFORE ADD");
+  
+    log.info("enrollStudent ---> BEFORE ADD");
     c.addStudent(s);
-    log.info("addStudentToCourse(" + studentId + "," + courseName + "). " + c.getId() + "->ListStudents: " + c.getStudents());
+    log.info("enrollStudent(" + studentId + "," + courseName + "). " + c.getId() + "->ListStudents: " + c.getStudents());
     return true;
   }
   
   /**
-   * {@link it.polito.ai.es2.controllers.APICourses_RestController#enrollAll(List, String)}
+   * {@link it.polito.ai.es2.controllers.APICourses_RestController#enrollStudents(List, String)}
    */
   @Override
   @PreAuthorize("hasRole('ADMIN') or (hasRole('PROFESSOR') and @mySecurityChecker.isCourseOwner(#courseName,authentication.principal.username))")
-  public List<Boolean> enrollAll(List<String> studentIds, String courseName) {
+  public List<Boolean> enrollStudents(List<String> studentIds, String courseName) {
     if (studentIds == null || courseName == null)
-      throw new TeamServiceException("enrollAll(List<String> studentIds, String courseName) - null parameters");
+      throw new TeamServiceException("enrollStudents(List<String> studentIds, String courseName) - null parameters");
     if (!courseRepository.existsById(courseName))
-      throw new CourseNotFoundException("enrollAll(List<String> studentIds, String courseName) - course not found");
+      throw new CourseNotFoundException("enrollStudents(List<String> studentIds, String courseName) - course not found");
     
     Course course = courseRepository.getOne(courseName);
     List<Boolean> lb = new ArrayList<>();
@@ -333,7 +333,7 @@ public class TeamServiceImpl implements TeamService {
         continue;
       }
       if (!studentRepository.existsById(id))
-        throw new StudentNotFoundException("enrollAll(List<String> studentIds, String courseName) - student in list not found");
+        throw new StudentNotFoundException("enrollStudents(List<String> studentIds, String courseName) - student in list not found");
       Student student = studentRepository.getOne(id);
       // Controllo che lo studente corrente (id) non sià già presente nella lista degli studenti iscritti al corso
       if (course.getStudents().stream().anyMatch(x -> x.getId().equals(id))) {
@@ -344,12 +344,12 @@ public class TeamServiceImpl implements TeamService {
       course.addStudent(student);
 //      student.addCourse(course); // -> creerei duplicati
     }
-    log.info("enrollAll List<Boolean> ritornata:" + lb);
+    log.info("enrollStudents List<Boolean> ritornata:" + lb);
     return lb;
   }
   
   /**
-   * {@link it.polito.ai.es2.controllers.APICourses_RestController#enrollStudents(String, MultipartFile)}
+   * {@link it.polito.ai.es2.controllers.APICourses_RestController#enrollStudentsCSV(String, MultipartFile)}
    */
   @Override
   @PreAuthorize("hasRole('ADMIN') or (hasRole('PROFESSOR') and @mySecurityChecker.isCourseOwner(#courseName,authentication.principal.username))")
@@ -376,7 +376,7 @@ public class TeamServiceImpl implements TeamService {
                                 })
                                 .map(y -> y != null ? y.getId() : null).collect(Collectors.toList());
     log.info(courseName + " - CSV_Valid_Students: " + list_ids);
-    return enrollAll(list_ids, courseName);
+    return enrollStudents(list_ids, courseName);
   }
   
   /**

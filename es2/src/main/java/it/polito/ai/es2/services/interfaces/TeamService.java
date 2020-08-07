@@ -23,7 +23,7 @@ public interface TeamService {
   
   List<StudentDTO> getEnrolledStudents(String courseName);
   
-  boolean addStudentToCourse(String studentId, String courseName);
+  boolean enrollStudent(String studentId, String courseName);
   
   void enableCourse(String courseName);
   
@@ -31,7 +31,7 @@ public interface TeamService {
   
   List<Boolean> addAll(List<StudentDTO> students);
   
-  List<Boolean> enrollAll(List<String> studentIds, String courseName);
+  List<Boolean> enrollStudents(List<String> studentIds, String courseName);
   
   List<Boolean> addAndEroll(Reader r, String courseName);
   

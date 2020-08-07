@@ -40,15 +40,37 @@ public class APICourses_RestController {
     Link link = linkTo(methodOn(APICourses_RestController.class)
                            .getAllCourses()).withSelfRel();
     CollectionModel<CourseDTO> result = new CollectionModel<>(allCourses, link);
+//    CollectionModel<CourseDTO> dtos = CollectionModel.of(allCourses);
+//    dtos.add(link);
     return result;
   }
   
-  @GetMapping("/{courseName}")
-  public CourseDTO getCourse(@PathVariable String courseName) {
-    Optional<CourseDTO> courseDTO = teamService.getCourse(courseName);
+  @GetMapping("/{courseId}")
+  public CourseDTO getCourse(@PathVariable String courseId) {
+    Optional<CourseDTO> courseDTO = teamService.getCourse(courseId);
     if (!courseDTO.isPresent())
-      throw new ResponseStatusException(HttpStatus.CONFLICT, courseName);
+      throw new ResponseStatusException(HttpStatus.CONFLICT, courseId);
     return ModelHelper.enrich(courseDTO.get());
+  }
+  
+  @RequestMapping(value = "/{course}/enable", method = {RequestMethod.GET, RequestMethod.POST})
+  public void enableCourse(@PathVariable String course) {
+    teamService.enableCourse(course);
+  }
+  
+  @RequestMapping(value = "/{course}/disable", method = {RequestMethod.GET, RequestMethod.POST})
+  public void disableCourse(@PathVariable String course) {
+    teamService.disableCourse(course);
+  }
+  
+  //   {"name":"C33","min":1,"max":100,"enabled":true,"professor":"malnati"}
+  // ---> Nella POST settare ContentType: application/json
+  @PostMapping({"", "/"})
+  public CourseDTO addCourse(@RequestBody CourseDTO courseDTO) {
+    if (!teamService.addCourse(courseDTO)) {
+      throw new ResponseStatusException(HttpStatus.CONFLICT, courseDTO.getId());
+    } else
+      return ModelHelper.enrich(courseDTO);
   }
   
   @GetMapping("/{courseName}/enrolled")
@@ -60,7 +82,7 @@ public class APICourses_RestController {
     return studentDTOlist;
   }
   
-  @GetMapping("/{courseName}/students_inteams")
+  @GetMapping("/{courseName}/students-in-teams")
   public List<StudentDTO> getStudentsInTeams(@PathVariable String courseName) {
     List<StudentDTO> studentsInTeams = teamService.getStudentsInTeams(courseName);
     for (StudentDTO studentDTO : studentsInTeams) {
@@ -69,7 +91,7 @@ public class APICourses_RestController {
     return studentsInTeams;
   }
   
-  @GetMapping("/{courseName}/students_available")
+  @GetMapping("/{courseName}/students-available")
   public List<StudentDTO> getAvailableStudents(@PathVariable String courseName) {
     List<StudentDTO> studentsInTeams = teamService.getAvailableStudents(courseName);
     for (StudentDTO studentDTO : studentsInTeams) {
@@ -87,53 +109,34 @@ public class APICourses_RestController {
     return teamsForCourse;
   }
   
-  //   {"name":"C33","min":1,"max":100,"enabled":true,"professor":"malnati"}
-  // ---> Nella POST settare ContentType: application/json
-  @PostMapping({"", "/"})
-  public CourseDTO addCourse(@RequestBody CourseDTO courseDTO) {
-    if (!teamService.addCourse(courseDTO)) {
-      throw new ResponseStatusException(HttpStatus.CONFLICT, courseDTO.getId());
-    } else
-      return ModelHelper.enrich(courseDTO);
-  }
-  
-  @RequestMapping(value = "/{course}/enable", method = {RequestMethod.GET, RequestMethod.POST})
-  public void enableCourse(@PathVariable String course) {
-    teamService.enableCourse(course);
-  }
-  
-  @RequestMapping(value = "/{course}/disable", method = {RequestMethod.GET, RequestMethod.POST})
-  public void disableCourse(@PathVariable String course) {
-    teamService.disableCourse(course);
-  }
-  
   // ContentType:text/plain. Body:{"id":"S33","name":"S33-name","firstName":"S33-FirstName"}
-  @PostMapping("/{courseName}/enrollOne")
-  public void addStudentToCourse(@PathVariable String courseName, @RequestBody Map<String, String> studentMap) {
+  @RequestMapping(value = "/{courseName}/enroll", method = {RequestMethod.PUT, RequestMethod.POST})
+  public void enrollStudent(@PathVariable String courseName, @RequestBody Map<String, String> studentMap) {
+    System.out.println(studentMap);
     String studentId;
     if (studentMap.containsKey("id"))
       studentId = studentMap.get("id");
     else
       throw new ResponseStatusException(HttpStatus.PRECONDITION_FAILED, courseName + " - studentMapReceived:" + studentMap);
-    if (!teamService.addStudentToCourse(studentId, courseName)) {
+    if (!teamService.enrollStudent(studentId, courseName)) {
       throw new ResponseStatusException(HttpStatus.CONFLICT, courseName + "-" + studentId);
     }
   }
   
   //["S33","S44"]
-  @PostMapping("/{courseName}/enrollAll")
-  public List<Boolean> enrollAll(@RequestBody List<String> studentIds, @PathVariable String courseName) {
-    return teamService.enrollAll(studentIds, courseName);
+  @PostMapping("/{courseName}/enroll-all")
+  public List<Boolean> enrollStudents(@RequestBody List<String> studentIds, @PathVariable String courseName) {
+    return teamService.enrollStudents(studentIds, courseName);
   }
   
-  @PostMapping("/{courseName}/enrollMany")
-  public List<Boolean> enrollStudents(@PathVariable String courseName, @RequestParam("file") MultipartFile file) {
+  @PostMapping("/{courseName}/enroll-csv")
+  public List<Boolean> enrollStudentsCSV(@PathVariable String courseName, @RequestParam("file") MultipartFile file) {
     List<Boolean> booleanList = null;
     System.out.println(file.getContentType());
     if (!file.getContentType().equals("text/csv"))
-      throw new ResponseStatusException(HttpStatus.UNSUPPORTED_MEDIA_TYPE, courseName + " - CSV enrollStudents - Type:" + file.getContentType());
+      throw new ResponseStatusException(HttpStatus.UNSUPPORTED_MEDIA_TYPE, courseName + " - CSV enrollStudentsCSV - Type:" + file.getContentType());
     if (file.isEmpty()) {
-      throw new ResponseStatusException(HttpStatus.CONFLICT, courseName + " - CSV enrollStudents");
+      throw new ResponseStatusException(HttpStatus.CONFLICT, courseName + " - CSV enrollStudentsCSV");
     } else {
       // parse CSV file to create a list of `StudentViewModel` objects
       Reader reader;

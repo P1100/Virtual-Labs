@@ -212,29 +212,29 @@ public class VirtualLabsApplication {
         teamService.enableCourse("c_enroll_all");
         teamService.disableCourse("C7");
         
-        System.out.println("-------------------------  EnrollAll - C_enroll_all, C8 ------------------------------------");
-        System.out.println(teamService.enrollAll(Arrays.asList("S1", "S4", "S5"), "C_enroll_all"));
-        System.out.println(teamService.enrollAll(Arrays.asList("S1", "S4", "S5", "S6"), "C_enroll_all"));
-        System.out.println(teamService.enrollAll(Collections.singletonList("S8"), "C8"));
+        System.out.println("-------------------------  enrollStudents - C_enroll_all, C8 ------------------------------------");
+        System.out.println(teamService.enrollStudents(Arrays.asList("S1", "S4", "S5"), "C_enroll_all"));
+        System.out.println(teamService.enrollStudents(Arrays.asList("S1", "S4", "S5", "S6"), "C_enroll_all"));
+        System.out.println(teamService.enrollStudents(Collections.singletonList("S8"), "C8"));
         
-        System.out.println("-------------------------  AddStudentToCourse ------------------------------------");
-        System.out.println("#-Result_1_duplicate: " + teamService.addStudentToCourse("S1", "C0"));
-        System.out.println("#-Result_2_duplicate: " + teamService.addStudentToCourse("S2", "C0"));
+        System.out.println("-------------------------  enrollStudent ------------------------------------");
+        System.out.println("#-Result_1_duplicate: " + teamService.enrollStudent("S1", "C0"));
+        System.out.println("#-Result_2_duplicate: " + teamService.enrollStudent("S2", "C0"));
 //      teamService.disableCourse("C1"); // -> ritornerà falso dopo
-        //teamService.addStudentToCourse("S34124124", "C5"); //--> exception student not found
-        //teamService.addStudentToCourse("S6", "C13123123"); //--> exception course not found
-        teamService.addStudentToCourse("S0", "C0");
-        teamService.addStudentToCourse("S1", "C0");
-        teamService.addStudentToCourse("S2", "C0");
-        teamService.addStudentToCourse("S3", "C0");
-        teamService.addStudentToCourse("S3", "C3");
-        teamService.addStudentToCourse("S5", "C3");
-        teamService.addStudentToCourse("S6", "C3");
-        teamService.addStudentToCourse("S9", "C3");
-        teamService.addStudentToCourse("S6", "C5");
-        teamService.addStudentToCourse("S7", "C5");
-        teamService.addStudentToCourse("S8", "C5");
-        teamService.addStudentToCourse("S9", "C5");
+        //teamService.enrollStudent("S34124124", "C5"); //--> exception student not found
+        //teamService.enrollStudent("S6", "C13123123"); //--> exception course not found
+        teamService.enrollStudent("S0", "C0");
+        teamService.enrollStudent("S1", "C0");
+        teamService.enrollStudent("S2", "C0");
+        teamService.enrollStudent("S3", "C0");
+        teamService.enrollStudent("S3", "C3");
+        teamService.enrollStudent("S5", "C3");
+        teamService.enrollStudent("S6", "C3");
+        teamService.enrollStudent("S9", "C3");
+        teamService.enrollStudent("S6", "C5");
+        teamService.enrollStudent("S7", "C5");
+        teamService.enrollStudent("S8", "C5");
+        teamService.enrollStudent("S9", "C5");
         System.out.println("----- C0 getCourse() + GetEnrolledStudents() -----");
         System.out.println(teamService.getCourse("C0"));
         System.out.println(teamService.getEnrolledStudents("C0"));
@@ -267,7 +267,7 @@ public class VirtualLabsApplication {
 //        teamService.proposeTeam("C5", "TeamException7", Arrays.asList("S6","S7","S8","S9")); // vincolo max3
         teamService.proposeTeam("C5", "TeamExceptionOk", Arrays.asList("S8", "S9")); // ok
         teamService.proposeTeam("C5", "TeamExceptionOk", Arrays.asList("S7", "S8", "S9")); // ?
-        teamService.enrollAll(Arrays.asList("S0", "S1", "S2", "S4"), "C3");
+        teamService.enrollStudents(Arrays.asList("S0", "S1", "S2", "S4"), "C3");
         teamService.proposeTeam("C3", "Team3", Arrays.asList("S0", "S1", "S2", "S3", "S6")); // overwritten test
         
         System.out.println("------------------- getTeamsForStudent S1, S3, S6---------------");
