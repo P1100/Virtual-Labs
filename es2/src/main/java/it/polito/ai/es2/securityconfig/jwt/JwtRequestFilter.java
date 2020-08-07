@@ -30,6 +30,7 @@ public class JwtRequestFilter extends OncePerRequestFilter {
     boolean b = true;
     if (b) {
       chain.doFilter(request, response);
+      return;
     }
   
     final String requestTokenHeader = request.getHeader("Authorization");
