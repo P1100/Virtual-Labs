@@ -1,24 +1,21 @@
-<p *ngIf="selectAllDialog || removeAllDialog">
-  <mat-toolbar>
-    <div *ngIf="selectAllDialog; else elseRemoveAllDialog">All {{dataSource.data.length}} conversations on this page are selected.
-    <a (click)="checkboxSetAll(true)"
-       [routerLink]=""
-       queryParamsHandling="preserve">Select all 248 conversations in All Mail
-    </a>
+<p *ngIf="showCheckboxSelectAllToolbar || showCheckboxDeselectAllToolbar">
+  <mat-toolbar style="font-family: 'Roboto,RobotoDraft,Helvetica,Arial,sans-serif'; -webkit-justify-content: center;">
+    <div *ngIf="showCheckboxSelectAllToolbar; else elseRemoveAllDialog">All {{dataSource.paginator.pageSize}} students
+      on this page are selected.
+      <a (click)="checkboxSetAll(true)"
+         [routerLink]=""
+         queryParamsHandling="preserve">Select all {{dataSource.data.length}}
+      </a>
     </div>
-    <ng-template #elseRemoveAllDialog>All 249 conversations in All Mail are selected.
-    <a (click)="checkboxSetAll(false)"
-       [routerLink]=""
-       queryParamsHandling="preserve">Clear selection
-    </a>
+    <ng-template #elseRemoveAllDialog>All {{dataSource.data.length}} enrolled students are selected.
+      <a (click)="checkboxSetAll(false)"
+         [routerLink]=""
+         queryParamsHandling="preserve">Clear selection
+      </a>
     </ng-template>
   </mat-toolbar>
 </p>
 <div class="student_div">
-  <!--  TODO: bisogna associare 1 2 3 a nome corso-->
-  <h3>Students enrolled in the {{id}}</h3>
-  <br>
-
   <form class="example-form">
     <!--TODO: rivedere codice autocomplete, e controllare che compaia quando si seleziona -->
     <!--    TODO: c'é da rivedere la parte angular material su autocomplete, form field, angular reactive forms e slides form AI-->
@@ -47,8 +44,8 @@
     <ng-container matColumnDef="select">
       <th *matHeaderCellDef mat-header-cell>
         <mat-checkbox (change)="checkboxSetAllPage($event.checked)"
-                      [checked]="allCompletePage"
-                      [indeterminate]="checkboxSomeComplete()">
+                      [checked]="checkboxMasterCompleted"
+                      [indeterminate]="checkboxMasterIndeterminate">
         </mat-checkbox>
       </th>
       <td *matCellDef="let element" mat-cell>
@@ -60,7 +57,7 @@
     <div *ngFor="let columm of displayedColumnsTable | slice:1;let i = index">
       <ng-container matColumnDef="{{columm}}">
         <th *matHeaderCellDef mat-header-cell mat-sort-header> {{columm}}</th>
-        <td *matCellDef="let element" mat-cell> {{element[[columm]]}} </td>
+        <td *matCellDef="let element" mat-cell> {{element[columm]}} </td>
       </ng-container>
     </div>
     <tr *matHeaderRowDef="displayedColumnsTable" mat-header-row></tr>
@@ -70,6 +67,7 @@
   <mat-paginator [length]="length"
                  [pageSizeOptions]="pageSizeOptions"
                  [pageSize]="pageSize"
+                 (page)="paginatorUpdate()"
                  showFirstLastButtons>
   </mat-paginator>
 </div>

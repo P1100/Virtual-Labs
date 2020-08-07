@@ -31,19 +31,20 @@ export class StudentsComponent implements OnInit, AfterViewInit, OnDestroy {
   pageSize = 25;
   pageSizeOptions: number[] = [1, 2, 5, 10, 20];
   myControl = new FormControl();
-  // Table data, collegata direttamente a students enrolled tramite setter/getter (binding diretto di enrolledStudents dal padre)
+  // Table data, collegata direttamente a enrolled students tramite setter/getter (binding diretto di enrolledStudents dal padre)
   dataSource: MatTableDataSource<Student> = new MatTableDataSource<Student>();
   selectedStudentToAdd: Student = null;
-  // Checkbox
+  /* Checkbox */
+  checkboxMasterCompleted = false;
+  checkboxMasterIndeterminate = false;
+  showCheckboxSelectAllToolbar = false;
+  showCheckboxDeselectAllToolbar = false;
+  // number is the student's id (serial)
   checked: Map<number, boolean> = null;
-  allCompletePage = false;
   // Used in AutoComplete. It's the list of all students but at times filtered (so cant be merged in only one var)
   filteredOptions$: Observable<Student[]>;
   // Course id of current page
   public id: string;
-  // Checkbox dialog gmail style
-  selectAllDialog: boolean = false;
-  removeAllDialog: boolean = false;
   // Private variable used to get data from the service (superset of filteredOptions, used in autocomplete)
   @Input()
   private students: Student[];
@@ -52,18 +53,20 @@ export class StudentsComponent implements OnInit, AfterViewInit, OnDestroy {
     this.paramSubscription = this.route.parent.url.subscribe(url => {
       this.id = this.route.parent.snapshot.paramMap.get('id');
     });
-    // this.id = this.route.snapshot.paramMap.get('id');
-    // console.log('# students.constructor selectedStudentToAdd:\n' + this.selectedStudentToAdd);
   }
   get enrolled(): Student[] {
     return this.dataSource.data;
   }
+  // Change course, or enrolled students data. Reset all
   @Input()
   set enrolled(array: Student[]) {
     this.dataSource.data = [...array];
     this.sortData();
-    array.map(x => console.log('typeof arrayEnrolled.map', x.id, typeof x.id, +x.id, typeof (+x.id)));
     this.checked = new Map(array.map(x => [+x.id, false]));
+    this.checkboxMasterCompleted = false;
+    this.checkboxMasterIndeterminate = false;
+    this.showCheckboxDeselectAllToolbar = false;
+    this.showCheckboxDeselectAllToolbar = false;
   }
   ngOnInit() {
     // arrays students and enrolled are automatically passed by the parent component, studentsContainer
@@ -112,69 +115,68 @@ export class StudentsComponent implements OnInit, AfterViewInit, OnDestroy {
     this.sort = sort;
     this.sortData();
   }
-  // changes dataSource.data, which is linked by setter to the template component. As soon as data gets updated, sort is called again (look enrolled setter)
+  // changes dataSource.data, which is linked by setter to the template component. As soon as data gets updated, sort is called again (in enrolled setter)
   sortData() {
     if (!this.sort || !this.sort.active || this.sort.direction === '') {
       return;
     }
     this.dataSource.data = [...this.dataSource.data].sort((a, b) => {
-      const isAsc = !(this.sort.direction === 'asc'); // the sorting array (GUI) is more intuitive this way
-      // console.log(this.sort.active);
+      const isAsc = !(this.sort.direction === 'asc'); // ASC: the sorting array (GUI) is more intuitive this way
       return sortCompare(a[this.sort.active], b[this.sort.active], isAsc);
     });
+    this.updateMaster();
   }
-  checkboxChangeSelection({checked}, id) {
-    console.log('checkboxChangeSelection[id][checked]: ' + id + checked + typeof id);
-    this.checked.set(+id, checked);
-    this.allCompletePage = [...this.checked.values()].every(t => t === true);
-  }
-  checkboxSomeComplete(): boolean {
-    // console.log('checkboxSomeComplete[return boolean]: ' + ([...this.checked.values()].filter(t => t === true).length > 0 && !this.allCompletePage));
-    // console.log(this.allCompletePage);
-    // console.log(this.checked);
-    return [...this.checked.values()].filter(t => t === true).length > 0 && !this.allCompletePage;
-  }
-  checkboxIsChecked(id: number) {
-    // console.log('checkboxIsChecked[id][checked.get[id]]: ' + id + ' - ' + this.checked.get(id) + typeof id);
-    return this.checked.get(+id);
-  }
-  checkboxSetAll(completed: boolean) {
-    [...this.checked.entries()].forEach(t => this.checked.set(+t[0], completed));
-    this.allCompletePage = completed;
-    this.selectAllDialog = !completed && (this.removeAllDialog === false);
-    this.removeAllDialog = completed;
-  }
-  checkboxSetAllPage(completed: boolean) {
+  // used in checkbox logic
+  private getStudentsIdCurrentPage(): number[] {
     let endIndex: number;
-    console.log('length', this.dataSource.data.length);
-    console.log('pageIndex', this.dataSource.paginator.pageIndex);
-    console.log('pageSize', this.dataSource.paginator.pageSize);
+    const arr: number[] = [];
     if (this.dataSource.data.length > (this.dataSource.paginator.pageIndex + 1) * this.dataSource.paginator.pageSize) {
       endIndex = (this.dataSource.paginator.pageIndex + 1) * this.dataSource.paginator.pageSize;
     } else {
       endIndex = this.dataSource.data.length;
     }
-    for (let index: number = (this.dataSource.paginator.pageIndex * this.dataSource.paginator.pageSize); index < endIndex; index++) {
-      console.log('typedof index', index, typeof index, endIndex);
-      this.checked.set(+this.dataSource.data[+index].id, completed);
-      console.log('his.dataSource.data[+index]', this.dataSource.data[+index]);
+    for (let index: number = (this.dataSource.paginator.pageIndex * this.dataSource.paginator.pageSize), count = 0; index < endIndex; index++, count++) {
+      arr[count] = +this.dataSource.data[+index].id;
     }
-    // [...this.checked.entries()].forEach(t => this.checked.set(t[0], completed));
-    this.allCompletePage = true;
-    // console.log('checkboxSetAll: ' + completed);
-    // console.log([...this.checked.entries()]);
-    console.log(this.checked);
-    if (this.dataSource.data.length > this.paginator.pageSize) {
-      if (completed === true) {
-        this.selectAllDialog = true;
-        this.removeAllDialog = false;
-      }
+    return arr;
+  }
+  // Used internally in change selection, in sort update, and in paginator update
+  private updateMaster() {
+    const idStudentsPage: [number, boolean][] = [...this.checked.entries()]
+      .filter(x => this.getStudentsIdCurrentPage().includes(x[0], 0));
+    const checkboxsPage: boolean[] = idStudentsPage
+      .map(x => x[1]);
+    this.checkboxMasterCompleted = checkboxsPage.every(t => t === true);
+    this.checkboxMasterIndeterminate = !this.checkboxMasterCompleted && idStudentsPage.filter(x => x[1] === true).length > 0;
+  }
+  checkboxChangeSelection({checked}, id) {
+    this.checked.set(+id, checked);
+    this.updateMaster();
+  }
+  checkboxIsChecked(id: number) {
+    return this.checked.get(+id);
+  }
+  checkboxSetAll(completed: boolean) {
+    [...this.checked.entries()].forEach(t => this.checked.set(+t[0], completed));
+    this.checkboxMasterCompleted = completed;
+    this.checkboxMasterIndeterminate = false;
+    this.showCheckboxDeselectAllToolbar = completed;
+    this.showCheckboxSelectAllToolbar = false;
+  }
+  checkboxSetAllPage(completed: boolean) {
+    for (const id of this.getStudentsIdCurrentPage()) {
+      this.checked.set(+id, completed);
+    }
+    this.checkboxMasterCompleted = completed;
+    this.checkboxMasterIndeterminate = false;
+
+    if (completed === true && this.dataSource.data.length > [...this.checked.values()].filter(value => value === true).length) {
+      this.showCheckboxSelectAllToolbar = true;
+      this.showCheckboxDeselectAllToolbar = false;
     } else {
-      this.selectAllDialog = false;
-      this.removeAllDialog = true;
+      this.showCheckboxSelectAllToolbar = false;
+      this.showCheckboxDeselectAllToolbar = false;
     }
-    // console.log([...this.checked.entries()]);
-    // console.log(this.checked);
   }
   autocompleteDisplayFunction(student: Student): string {
     return student && student.firstName && student.lastName && student.id ? student.firstName + ' ' + student.lastName : '';
@@ -183,11 +185,16 @@ export class StudentsComponent implements OnInit, AfterViewInit, OnDestroy {
     this.selectedStudentToAdd = (event).option.value;
     // console.log('# StudentsComponent.autocompleSave added student' + JSON.stringify(this.selectedStudentToAdd));
   }
+// delete later, if things works without issues
+  // @ViewChild(MatSidenav) matsidenav: MatSidenav;
+  paginatorUpdate() {
+    this.updateMaster();
+    this.showCheckboxSelectAllToolbar = false;
+    this.showCheckboxDeselectAllToolbar = false;
+  }
   ngOnDestroy(): void {
     this.paramSubscription.unsubscribe();
   }
-// delete later, if things works without issues
-  // @ViewChild(MatSidenav) matsidenav: MatSidenav;
 }
 
 function sortCompare(a: number | string, b: number | string, isAsc: boolean): number {

@@ -19,9 +19,9 @@ VALUES ('3', 'Gennaro', 'Esposito', null, 'ge@polito.it');
 INSERT INTO virtuallabs.student (id, first_name, last_name, profile_photo, email)
 VALUES ('4', 'Alberto', 'Muti', null, 'am@polito.it');
 INSERT INTO virtuallabs.student (id, first_name, last_name, profile_photo, email)
-VALUES ('5', 'Gino', 'Rossi', null, 'gr@polito.it');
+VALUES ('556753', 'Gino', 'Rossi', null, 'gr@polito.it');
 INSERT INTO virtuallabs.student (id, first_name, last_name, profile_photo, email)
-VALUES ('6', 'Giovanni', 'Bianchi', null, 'gb@polito.it');
+VALUES ('667567', 'Giovanni', 'Bianchi', null, 'gb@polito.it');
 INSERT INTO virtuallabs.student (id, first_name, last_name, profile_photo, email)
 VALUES ('7', 'Tizio', 'Tizio', null, 'tt@polito.it');
 INSERT INTO virtuallabs.student (id, first_name, last_name, profile_photo, email)
@@ -51,15 +51,15 @@ VALUES ('4', '1');
 INSERT INTO virtuallabs.student_course (student_id, course_id)
 VALUES ('4', '2');
 INSERT INTO virtuallabs.student_course (student_id, course_id)
-VALUES ('5', '1');
+VALUES ('556753', '1');
 INSERT INTO virtuallabs.student_course (student_id, course_id)
-VALUES ('5', '2');
+VALUES ('556753', '2');
 INSERT INTO virtuallabs.student_course (student_id, course_id)
-VALUES ('5', '3');
+VALUES ('556753', '3');
 INSERT INTO virtuallabs.student_course (student_id, course_id)
-VALUES ('5', '4');
+VALUES ('556753', '4');
 INSERT INTO virtuallabs.student_course (student_id, course_id)
-VALUES ('6', '1');
+VALUES ('667567', '1');
 INSERT INTO virtuallabs.student_course (student_id, course_id)
 VALUES ('7', '1');
 INSERT INTO virtuallabs.student_course (student_id, course_id)
