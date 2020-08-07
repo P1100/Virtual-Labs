@@ -8,5 +8,5 @@ Assignments and Project of 'Applicazioni Internet' - 2019/2020 Polito
 * Es5: branch lab5
 * Final project VirtualLabs: current branch master. "es2" folder is the back-end, "ai20-lab04" is the front-end. 
 
--- Note: it's not possible to rename the folders without removing also all the previous commits history, not even with "git mv". For this reason the folder names above are kept
+-- Note: it's not possible to rename the folders without removing also all the previous commits history, not even with "git mv": [https://github.com/isaacs/github/issues/900](https://github.com/isaacs/github/issues/900)
 
