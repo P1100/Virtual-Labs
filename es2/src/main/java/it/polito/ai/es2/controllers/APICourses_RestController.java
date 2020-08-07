@@ -109,7 +109,7 @@ public class APICourses_RestController {
     return teamsForCourse;
   }
   
-  // ContentType:text/plain. Body:{"id":"S33","name":"S33-name","firstName":"S33-FirstName"}
+  // ContentType:json. Body:{"id":"S33","name":"S33-name","firstName":"S33-FirstName"}
   @RequestMapping(value = "/{courseName}/enroll", method = {RequestMethod.PUT, RequestMethod.POST})
   public void enrollStudent(@PathVariable String courseName, @RequestBody Map<String, String> studentMap) {
     System.out.println(studentMap);
