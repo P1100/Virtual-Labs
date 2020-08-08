@@ -7,7 +7,6 @@ import it.polito.ai.es2.dtos.TeamDTO;
 import it.polito.ai.es2.services.interfaces.TeamService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.hateoas.CollectionModel;
-import org.springframework.hateoas.Link;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -32,17 +31,14 @@ public class APICourses_RestController {
   
   @GetMapping({"", "/"})
   public CollectionModel<CourseDTO> getAllCourses() {
-    List<CourseDTO> allCourses = teamService.getAllCourses();
+    List<CourseDTO> courses = teamService.getAllCourses();
 //    teamService.getAllCourses().stream().map(ModelHelper::enrich).collect(Collectors.toList())
-    for (CourseDTO courseDTO : allCourses) {
-      ModelHelper.enrich(courseDTO);
+    for (CourseDTO course : courses) {
+      ModelHelper.enrich(course);
     }
-    Link link = linkTo(methodOn(APICourses_RestController.class)
-                           .getAllCourses()).withSelfRel();
-    CollectionModel<CourseDTO> result = new CollectionModel<>(allCourses, link);
-//    CollectionModel<CourseDTO> dtos = CollectionModel.of(allCourses);
-//    dtos.add(link);
-    return result;
+    CollectionModel<CourseDTO> coursesHAL = CollectionModel.of(courses,
+        linkTo(methodOn(APICourses_RestController.class).getAllCourses()).withSelfRel());
+    return coursesHAL;
   }
   
   @GetMapping("/{courseId}")
@@ -74,39 +70,47 @@ public class APICourses_RestController {
   }
   
   @GetMapping("/{courseName}/enrolled")
-  public List<StudentDTO> getEnrolledStudents(@PathVariable String courseName) {
-    List<StudentDTO> studentDTOlist = teamService.getEnrolledStudents(courseName);
-    for (StudentDTO studentDTO : studentDTOlist) {
-      ModelHelper.enrich(studentDTO);
+  public CollectionModel<StudentDTO> getEnrolledStudents(@PathVariable String courseName) {
+    List<StudentDTO> students = teamService.getEnrolledStudents(courseName);
+    for (StudentDTO student : students) {
+      ModelHelper.enrich(student);
     }
-    return studentDTOlist;
+    CollectionModel<StudentDTO> studentsHAL = CollectionModel.of(students,
+        linkTo(methodOn(APICourses_RestController.class).getEnrolledStudents(courseName)).withSelfRel());
+    return studentsHAL;
   }
   
   @GetMapping("/{courseName}/students-in-teams")
-  public List<StudentDTO> getStudentsInTeams(@PathVariable String courseName) {
-    List<StudentDTO> studentsInTeams = teamService.getStudentsInTeams(courseName);
-    for (StudentDTO studentDTO : studentsInTeams) {
-      ModelHelper.enrich(studentDTO);
+  public CollectionModel<StudentDTO> getStudentsInTeams(@PathVariable String courseName) {
+    List<StudentDTO> students = teamService.getStudentsInTeams(courseName);
+    for (StudentDTO student : students) {
+      ModelHelper.enrich(student);
     }
-    return studentsInTeams;
+    CollectionModel<StudentDTO> studentsHAL = CollectionModel.of(students,
+        linkTo(methodOn(APICourses_RestController.class).getStudentsInTeams(courseName)).withSelfRel());
+    return studentsHAL;
   }
   
   @GetMapping("/{courseName}/students-available")
-  public List<StudentDTO> getAvailableStudents(@PathVariable String courseName) {
-    List<StudentDTO> studentsInTeams = teamService.getAvailableStudents(courseName);
-    for (StudentDTO studentDTO : studentsInTeams) {
-      ModelHelper.enrich(studentDTO);
+  public CollectionModel<StudentDTO> getAvailableStudents(@PathVariable String courseName) {
+    List<StudentDTO> students = teamService.getAvailableStudents(courseName);
+    for (StudentDTO student : students) {
+      ModelHelper.enrich(student);
     }
-    return studentsInTeams;
+    CollectionModel<StudentDTO> studentsHAL = CollectionModel.of(students,
+        linkTo(methodOn(APICourses_RestController.class).getAvailableStudents(courseName)).withSelfRel());
+    return studentsHAL;
   }
   
   @GetMapping("/{courseName}/teams")
-  public List<TeamDTO> getTeamsForCourse(@PathVariable String courseName) {
-    List<TeamDTO> teamsForCourse = teamService.getTeamsForCourse(courseName);
-    for (TeamDTO teamDTO : teamsForCourse) {
-      ModelHelper.enrich(teamDTO);
+  public CollectionModel<TeamDTO> getTeamsForCourse(@PathVariable String courseName) {
+    List<TeamDTO> teams = teamService.getTeamsForCourse(courseName);
+    for (TeamDTO team : teams) {
+      ModelHelper.enrich(team);
     }
-    return teamsForCourse;
+    CollectionModel<TeamDTO> teamsHAL = CollectionModel.of(teams,
+        linkTo(methodOn(APICourses_RestController.class).getTeamsForCourse(courseName)).withSelfRel());
+    return teamsHAL;
   }
   
   // ContentType:json. Body:{"id":"S33","name":"S33-name","firstName":"S33-FirstName"}

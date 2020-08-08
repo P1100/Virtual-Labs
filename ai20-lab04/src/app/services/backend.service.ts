@@ -35,23 +35,25 @@ export class BackendService {
         retry(0), catchError(this.formatErrors),
         map(response => response._embedded.studentDTOList),
         map(s => s.map(ss => {
-          delete ss.links;
           delete ss._links;
+          delete ss.links; // only '_links' should show up
           return ss;
         })),
         tap(res => console.log('getAllStudents._embedded.studentDTOList', res))
       );
   }
   getEnrolledStudents(courseId: number): Observable<Student[]> {
-    return this.http.get<any[]>(`${this.apiJsonServerProxyPath}/courses/${courseId}/enrolled`, this.httpOptions)
+    return this.http.get<any>(`${this.apiJsonServerProxyPath}/courses/${courseId}/enrolled`, this.httpOptions)
       .pipe(
         tap(res => console.log('getEnrolledStudents', res)),
+        retry(0), catchError(this.formatErrors),
+        map(response => response._embedded.studentDTOList),
         map(s => s.map(ss => {
-          delete ss.links;
           delete ss._links;
+          delete ss.links; // only '_links' should show up
           return ss;
         })),
-        retry(0), catchError(this.formatErrors));
+      );
   }
   enroll(student: Student, courseId: number) {
     console.log('enroll(student: Student, courseId: number)', courseId, student, JSON.stringify(student));

@@ -44,20 +44,24 @@ public class APIStudent_RestController {
     return ModelHelper.enrich(studentDTO.get());
   }
   @GetMapping("/{student_id}/courses")
-  public List<CourseDTO> getCourses(@PathVariable String student_id) {
+  public CollectionModel<CourseDTO> getCourses(@PathVariable String student_id) {
     List<CourseDTO> courses = teamService.getCourses(student_id);
     for (CourseDTO courseDTO : courses) {
       ModelHelper.enrich(courseDTO);
     }
-    return courses;
+    CollectionModel<CourseDTO> courseDTOS = CollectionModel.of(courses,
+        linkTo(methodOn(APIStudent_RestController.class).getCourses(student_id)).withSelfRel());
+    return courseDTOS;
   }
   @GetMapping("/{student_id}/teams")
-  public List<TeamDTO> getTeamsForStudent(@PathVariable String student_id) {
+  public CollectionModel<TeamDTO> getTeamsForStudent(@PathVariable String student_id) {
     List<TeamDTO> teams = teamService.getTeamsForStudent(student_id);
-    for (TeamDTO teamDTO : teams) {
-      ModelHelper.enrich(teamDTO);
+    for (TeamDTO team : teams) {
+      ModelHelper.enrich(team);
     }
-    return teams;
+    CollectionModel<TeamDTO> teamsHAL = CollectionModel.of(teams,
+        linkTo(methodOn(APIStudent_RestController.class).getTeamsForStudent(student_id)).withSelfRel());
+    return teamsHAL;
   }
   
   //  {"id":"S33","name":"S33-name","firstName":"S33-FirstName"}
