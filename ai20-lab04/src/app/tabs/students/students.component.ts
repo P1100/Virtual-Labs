@@ -25,7 +25,7 @@ export class StudentsComponent implements OnInit, AfterViewInit, OnDestroy {
   // Needed sort variable
   @ViewChild(MatSort) sort: MatSort;
   // displayedColumnsTable is based on Student class (manual synch), controls various formatting elements
-  displayedColumnsTable: string[] = ['select', 'id', 'firstName', 'lastName', 'email', 'group'];
+  displayedColumnsTable: string[] = ['select', 'id', 'firstName', 'lastName', 'group']; // email removed
   // MatPaginator Inputs
   length: number; // The current total number of items being paged. Read only
   pageSize = 25;
