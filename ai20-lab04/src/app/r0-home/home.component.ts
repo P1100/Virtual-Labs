@@ -4,7 +4,7 @@ import {Title} from '@angular/platform-browser';
 import {MAT_DIALOG_DATA, MatDialog, MatDialogRef} from '@angular/material/dialog';
 import {FormBuilder, FormGroup, ValidationErrors, Validators} from '@angular/forms';
 import {filter, map, tap} from 'rxjs/operators';
-import {AuthService} from '../auth/auth.service';
+import {AuthService} from '../services/auth.service';
 import {ActivatedRoute, Router} from '@angular/router';
 import {Subscription} from 'rxjs';
 
@@ -28,7 +28,6 @@ const DB_COURSES: Course[] = [
   {id: 3, label: 'Mobile development', path: 'mobile-development', fullName: '', minEnrolled: 0, maxEnrolled: 0, enabled: true}
 ];
 
-// TODO: integrate es1 into project dialog login/registration
 @Component({
   // selector changed from app-root, inserted in index.html!
   selector: 'app-home',

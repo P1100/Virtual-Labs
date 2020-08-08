@@ -265,8 +265,23 @@ public class TeamServiceImpl implements TeamService {
   public void disableCourse(String courseName) throws CourseNotFoundException {
     if (courseName == null) throw new CourseNotFoundException("null parameter");
     if (!courseRepository.existsById(courseName)) throw new CourseNotFoundException("course not found");
-    
+  
     courseRepository.getOne(courseName).setEnabled(false);
+  }
+  
+  /**
+   * {@link it.polito.ai.es2.controllers.APICourses_RestController#disenrollStudent(String, Map)}
+   */
+  @Override
+  public void disenrollStudent(String studentId, String courseId) {
+    if (studentId == null || courseId == null) throw new TeamServiceException("disenrollStudent() - null parameters");
+    if (!studentRepository.existsById(studentId)) throw new StudentNotFoundException("disenrollStudent() - student not found:" + studentId);
+    Optional<Course> courseOptional = courseRepository.findById(courseId);
+    if (!courseOptional.isPresent()) throw new CourseNotFoundException("disenrollStudent() - course not found:" + courseId);
+    
+    Course c = courseOptional.get();
+    Student s = studentRepository.getOne(studentId);
+    c.removeDisenrollStudent(s);
   }
   
   /**
@@ -287,10 +302,8 @@ public class TeamServiceImpl implements TeamService {
     // Controllo che studente non sia già iscritto al corso
     if (c.getStudents().stream().anyMatch(x -> x.getId().equals(studentId)))
       return false;
-  
-    log.info("enrollStudent ---> BEFORE ADD");
-    c.addStudent(s);
-    log.info("enrollStudent(" + studentId + "," + courseName + "). " + c.getId() + "->ListStudents: " + c.getStudents());
+    
+    c.addEnrollStudent(s);
     return true;
   }
   
@@ -320,7 +333,7 @@ public class TeamServiceImpl implements TeamService {
         continue;
       }
       lb.add(true);
-      course.addStudent(student);
+      course.addEnrollStudent(student);
 //      student.addCourse(course); // -> creerei duplicati
     }
     log.info("enrollStudents List<Boolean> ritornata:" + lb);

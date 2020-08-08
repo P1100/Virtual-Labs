@@ -8,11 +8,11 @@ import {EmptyComponent} from './r1-tabs/empty.component';
 import {AssignmentsContComponent} from './tabs/assignments/assignments-cont.component';
 import {GroupsContComponent} from './tabs/groups/groups-cont.component';
 
-// TODO: use this.router.navigate(['teacher','course'])
+// this.router.navigate(['teacher','course'])
 // this.router.navigateByUrl(`/courses/${course.id}`);
 //     this.router.navigate(['/courses',course.id]);
 const routes: Routes = [
-  {
+  { // TODO: reactivate Auth logic later (look es5 commit to be sure, not everything is to uncomment...)
     path: '',
     // component: HomeComponent,
     // resolve: {

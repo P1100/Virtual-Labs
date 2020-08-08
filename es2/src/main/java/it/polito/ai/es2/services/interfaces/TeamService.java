@@ -49,7 +49,7 @@ public interface TeamService {
   
   List<StudentDTO> getAvailableStudents(String courseName);
 
-//  ---------------------------
+//  ------------- Added on es3 --------------
   
   List<TeamDTO> getAllTeams();
   
@@ -58,4 +58,8 @@ public interface TeamService {
   boolean setTeamStatus(Long teamId, int status);
   
   boolean evictTeam(Long teamId);
+
+//  ---------- Added after beginning project-----------------
+  
+  void disenrollStudent(String studentId, String courseId);
 }

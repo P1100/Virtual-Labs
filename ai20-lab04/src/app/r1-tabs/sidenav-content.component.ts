@@ -30,7 +30,7 @@ const tabs = [
 @Component({
   selector: 'app-sidenav-cont',
   templateUrl: './sidenav-content.component.html',
-  styleUrls: ['./sidenav-content.component.css']
+  styleUrls: ['../../_unused/sidenav-content.component.css']
 })
 export class SidenavContentComponent implements OnInit, OnChanges, OnDestroy {
   prefix = '/teacher';

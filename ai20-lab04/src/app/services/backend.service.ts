@@ -69,9 +69,8 @@ export class BackendService {
   disenroll(student: Student, courseId: number): Observable<any> {
     console.log('disenroll(student: Student, courseId: number)', courseId, student, JSON.stringify(student));
     return this.http.put(
-      `${this.apiJsonServerProxyPath}/students/${student.id}`,
-      JSON.stringify(student),
-      this.httpOptions
+      `${this.apiJsonServerProxyPath}/courses/${courseId}/disenroll/${student.id}`,
+      null
     ).pipe(
       tap(s => console.log('disenroll http.put:', s)),
       retry(0), catchError(this.formatErrors));

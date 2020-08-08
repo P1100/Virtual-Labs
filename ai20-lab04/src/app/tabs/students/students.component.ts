@@ -39,7 +39,8 @@ export class StudentsComponent implements OnInit, AfterViewInit, OnDestroy {
   checkboxMasterIndeterminate = false;
   showCheckboxSelectAllToolbar = false;
   showCheckboxDeselectAllToolbar = false;
-  // number is the student's id (serial)
+  // number is the student's id (serial). IMPORTANT: always add the + symbol before any number passed to checked, otherwise
+  // it will interpret it like a string resulting in a null result
   checked: Map<number, boolean> = null;
   // Used in AutoComplete. It's the list of all students but at times filtered (so cant be merged in only one var)
   filteredOptions$: Observable<Student[]>;
@@ -104,7 +105,7 @@ export class StudentsComponent implements OnInit, AfterViewInit, OnDestroy {
   }
   // Passing the students to remove (whole Students array, not just the id)
   studentsRemove() {
-    const selectedStudentToRemove = this.enrolled.filter(x => this.checked.get(x.id));
+    let selectedStudentToRemove = this.enrolled.filter(x => this.checked.get(+x.id));
     this.disenrolledEvent.emit(selectedStudentToRemove);
     this.checked = new Map(this.enrolled.map(x => [x.id, false]));
     // this.checkedCount = 0;

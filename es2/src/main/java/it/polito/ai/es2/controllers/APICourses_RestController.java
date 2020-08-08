@@ -48,12 +48,13 @@ public class APICourses_RestController {
       throw new ResponseStatusException(HttpStatus.CONFLICT, courseId);
     return ModelHelper.enrich(courseDTO.get());
   }
-  
+  // Should be only POST, get is there for testing purposes. TODO: remove on production
   @RequestMapping(value = "/{course}/enable", method = {RequestMethod.GET, RequestMethod.POST})
   public void enableCourse(@PathVariable String course) {
     teamService.enableCourse(course);
   }
   
+  // Should be only POST, get is there for testing purposes. TODO: remove on production
   @RequestMapping(value = "/{course}/disable", method = {RequestMethod.GET, RequestMethod.POST})
   public void disableCourse(@PathVariable String course) {
     teamService.disableCourse(course);
@@ -69,84 +70,88 @@ public class APICourses_RestController {
       return ModelHelper.enrich(courseDTO);
   }
   
-  @GetMapping("/{courseName}/enrolled")
-  public CollectionModel<StudentDTO> getEnrolledStudents(@PathVariable String courseName) {
-    List<StudentDTO> students = teamService.getEnrolledStudents(courseName);
+  @GetMapping("/{courseId}/enrolled")
+  public CollectionModel<StudentDTO> getEnrolledStudents(@PathVariable String courseId) {
+    List<StudentDTO> students = teamService.getEnrolledStudents(courseId);
     for (StudentDTO student : students) {
       ModelHelper.enrich(student);
     }
     CollectionModel<StudentDTO> studentsHAL = CollectionModel.of(students,
-        linkTo(methodOn(APICourses_RestController.class).getEnrolledStudents(courseName)).withSelfRel());
+        linkTo(methodOn(APICourses_RestController.class).getEnrolledStudents(courseId)).withSelfRel());
     return studentsHAL;
   }
   
-  @GetMapping("/{courseName}/students-in-teams")
-  public CollectionModel<StudentDTO> getStudentsInTeams(@PathVariable String courseName) {
-    List<StudentDTO> students = teamService.getStudentsInTeams(courseName);
+  @GetMapping("/{courseId}/students-in-teams")
+  public CollectionModel<StudentDTO> getStudentsInTeams(@PathVariable String courseId) {
+    List<StudentDTO> students = teamService.getStudentsInTeams(courseId);
     for (StudentDTO student : students) {
       ModelHelper.enrich(student);
     }
     CollectionModel<StudentDTO> studentsHAL = CollectionModel.of(students,
-        linkTo(methodOn(APICourses_RestController.class).getStudentsInTeams(courseName)).withSelfRel());
+        linkTo(methodOn(APICourses_RestController.class).getStudentsInTeams(courseId)).withSelfRel());
     return studentsHAL;
   }
   
-  @GetMapping("/{courseName}/students-available")
-  public CollectionModel<StudentDTO> getAvailableStudents(@PathVariable String courseName) {
-    List<StudentDTO> students = teamService.getAvailableStudents(courseName);
+  @GetMapping("/{courseId}/students-available")
+  public CollectionModel<StudentDTO> getAvailableStudents(@PathVariable String courseId) {
+    List<StudentDTO> students = teamService.getAvailableStudents(courseId);
     for (StudentDTO student : students) {
       ModelHelper.enrich(student);
     }
     CollectionModel<StudentDTO> studentsHAL = CollectionModel.of(students,
-        linkTo(methodOn(APICourses_RestController.class).getAvailableStudents(courseName)).withSelfRel());
+        linkTo(methodOn(APICourses_RestController.class).getAvailableStudents(courseId)).withSelfRel());
     return studentsHAL;
   }
   
-  @GetMapping("/{courseName}/teams")
-  public CollectionModel<TeamDTO> getTeamsForCourse(@PathVariable String courseName) {
-    List<TeamDTO> teams = teamService.getTeamsForCourse(courseName);
+  @GetMapping("/{courseId}/teams")
+  public CollectionModel<TeamDTO> getTeamsForCourse(@PathVariable String courseId) {
+    List<TeamDTO> teams = teamService.getTeamsForCourse(courseId);
     for (TeamDTO team : teams) {
       ModelHelper.enrich(team);
     }
     CollectionModel<TeamDTO> teamsHAL = CollectionModel.of(teams,
-        linkTo(methodOn(APICourses_RestController.class).getTeamsForCourse(courseName)).withSelfRel());
+        linkTo(methodOn(APICourses_RestController.class).getTeamsForCourse(courseId)).withSelfRel());
     return teamsHAL;
   }
   
+  @PutMapping("/{courseId}/disenroll/{studentId}")
+  public void disenrollStudent(@PathVariable String studentId, @PathVariable String courseId) {
+    teamService.disenrollStudent(studentId, courseId);
+  }
+  
   // ContentType:json. Body:{"id":"S33","name":"S33-name","firstName":"S33-FirstName"}
-  @RequestMapping(value = "/{courseName}/enroll", method = {RequestMethod.PUT, RequestMethod.POST})
-  public void enrollStudent(@PathVariable String courseName, @RequestBody Map<String, String> studentMap) {
-    System.out.println(studentMap);
+  @RequestMapping(value = "/{courseId}/enroll", method = {RequestMethod.PUT, RequestMethod.POST})
+  public void enrollStudent(@PathVariable String courseId, @RequestBody Map<String, String> studentMap) {
     String studentId;
     if (studentMap.containsKey("id"))
       studentId = studentMap.get("id");
     else
-      throw new ResponseStatusException(HttpStatus.PRECONDITION_FAILED, courseName + " - studentMapReceived:" + studentMap);
-    if (!teamService.enrollStudent(studentId, courseName)) {
-      throw new ResponseStatusException(HttpStatus.CONFLICT, courseName + "-" + studentId);
+      throw new ResponseStatusException(HttpStatus.PRECONDITION_FAILED, courseId + " - studentMapReceived:" + studentMap);
+    if (!teamService.enrollStudent(studentId, courseId)) {
+      throw new ResponseStatusException(HttpStatus.CONFLICT, courseId + "-" + studentId);
     }
   }
   
   //["S33","S44"]
-  @PostMapping("/{courseName}/enroll-all")
-  public List<Boolean> enrollStudents(@RequestBody List<String> studentIds, @PathVariable String courseName) {
-    return teamService.enrollStudents(studentIds, courseName);
+  @PostMapping("/{courseId}/enroll-all")
+  public List<Boolean> enrollStudents(@RequestBody List<String> studentIds, @PathVariable String courseId) {
+    return teamService.enrollStudents(studentIds, courseId);
   }
   
-  @PostMapping("/{courseName}/enroll-csv")
-  public List<Boolean> enrollStudentsCSV(@PathVariable String courseName, @RequestParam("file") MultipartFile file) {
+  @PostMapping("/{courseId}/enroll-csv")
+  public List<Boolean> enrollStudentsCSV(@PathVariable String courseId, @RequestParam("file") MultipartFile file) {
     List<Boolean> booleanList = null;
     System.out.println(file.getContentType());
     if (!file.getContentType().equals("text/csv"))
-      throw new ResponseStatusException(HttpStatus.UNSUPPORTED_MEDIA_TYPE, courseName + " - CSV enrollStudentsCSV - Type:" + file.getContentType());
+      throw new ResponseStatusException(HttpStatus.UNSUPPORTED_MEDIA_TYPE, courseId + " - CSV enrollStudentsCSV - Type:" + file.getContentType());
     if (file.isEmpty()) {
-      throw new ResponseStatusException(HttpStatus.CONFLICT, courseName + " - CSV enrollStudentsCSV");
+      throw new ResponseStatusException(HttpStatus.CONFLICT, courseId + " - CSV enrollStudentsCSV");
     } else {
       // parse CSV file to create a list of `StudentViewModel` objects
       Reader reader;
       try {
         reader = new BufferedReader(new InputStreamReader(file.getInputStream()));
-        booleanList = teamService.addAndEroll(reader, courseName);
+        booleanList = teamService.addAndEroll(reader, courseId);
       } catch (IOException e) {
         e.printStackTrace();
       }

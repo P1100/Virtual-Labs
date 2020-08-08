@@ -11,6 +11,7 @@ import java.sql.Timestamp;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
+// TODO: synch methods??
 public class Token {
   @Id
   String id;

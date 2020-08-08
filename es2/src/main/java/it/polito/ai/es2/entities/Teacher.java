@@ -19,6 +19,7 @@ import java.util.List;
 @Entity
 @Data
 public class Teacher {
+  // TODO: add synch methods
   @Id
   private String id; // matricola/serial
   @NotBlank

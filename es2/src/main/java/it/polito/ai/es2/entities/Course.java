@@ -38,12 +38,12 @@ public class Course {
   @ToString.Exclude
   private List<Teacher> teachers = new ArrayList<>();
   
-  public void addStudent(Student new_student) {
+  public void addEnrollStudent(Student new_student) {
     students.add(new_student);
     new_student.getCourses().add(this);
   }
   
-  public void removeStudent(Student old_student) {
+  public void removeDisenrollStudent(Student old_student) {
     students.remove(old_student);
     old_student.getCourses().remove(this);
   }
