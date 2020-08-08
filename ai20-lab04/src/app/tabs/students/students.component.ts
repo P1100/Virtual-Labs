@@ -105,7 +105,7 @@ export class StudentsComponent implements OnInit, AfterViewInit, OnDestroy {
   }
   // Passing the students to remove (whole Students array, not just the id)
   studentsRemove() {
-    let selectedStudentToRemove = this.enrolled.filter(x => this.checked.get(+x.id));
+    const selectedStudentToRemove = this.enrolled.filter(x => this.checked.get(+x.id));
     this.disenrolledEvent.emit(selectedStudentToRemove);
     this.checked = new Map(this.enrolled.map(x => [x.id, false]));
     // this.checkedCount = 0;

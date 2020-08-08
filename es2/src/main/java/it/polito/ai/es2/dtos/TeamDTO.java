@@ -5,8 +5,6 @@ import lombok.Data;
 import org.springframework.hateoas.RepresentationModel;
 import org.springframework.web.multipart.MultipartFile;
 
-//@NoArgsConstructor
-//@AllArgsConstructor
 @Data
 @Builder
 public class TeamDTO extends RepresentationModel<CourseDTO> {

@@ -11,17 +11,10 @@ import {GroupsContComponent} from './tabs/groups/groups-cont.component';
 // this.router.navigate(['teacher','course'])
 // this.router.navigateByUrl(`/courses/${course.id}`);
 //     this.router.navigate(['/courses',course.id]);
+// TODO: reactivate Auth logic later (look es5 commit to be sure, not everything is to uncomment...)
 const routes: Routes = [
-  { // TODO: reactivate Auth logic later (look es5 commit to be sure, not everything is to uncomment...)
+  {
     path: '',
-    // component: HomeComponent,
-    // resolve: {
-    //   profile: ProfileResolver
-    // },
-    // canDeactivate: [CanDeactivateGuard],
-    // resolve: {
-    //   crisis: CrisisDetailResolverService
-    // }
     children: [
       {
         path: 'home',
@@ -72,8 +65,6 @@ const routes: Routes = [
       }
     ]
   },
-  // /student/course/:courseId/vms
-  // {path: 'teacher/course/applicationi-internet/assignments', component: AssignmentsContComponent},
   // {path: 'home', redirectTo: '/', pathMatch: 'full'}, // redirect to `first-component`, which is HomeComponent
   {path: '**', component: PageNotFoundComponent, pathMatch: 'full'},
 ];
