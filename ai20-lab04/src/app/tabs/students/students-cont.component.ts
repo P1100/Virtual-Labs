@@ -30,22 +30,26 @@ export class StudentsContComponent implements OnInit, OnDestroy {
     this.paramSubscription = this.route.paramMap.subscribe(url => {
         this.courseId = +this.route.parent.snapshot.paramMap.get('id');
         console.log('student-cont route.paramMap activeCourse: ' + this.courseId);
-        this.subAllStudents = this.studentService.getAllStudents()
-          .subscribe((students: Student[]) => this.allStudents = [...students]);
-        this.subEnrolledStudentsCourse = this.studentService.getEnrolledStudents(this.courseId)
-          .subscribe((
-            students: Student[]) => {
-            this.enrolledStudents = [...students];
-            console.log('this.enrolledStudents:', this.enrolledStudents);
+      this.subAllStudents = this.studentService.getAllStudents()
+        .subscribe(
+          (students: Student[]) => {
+            this.allStudents = [...students];
+            console.log('Subscription allStudents:', this.enrolledStudents);
           });
+      this.subEnrolledStudentsCourse = this.studentService.getEnrolledStudents(this.courseId)
+        .subscribe((
+          students: Student[]) => {
+          this.enrolledStudents = [...students];
+          console.log('Subscription enrolledStudents:', this.enrolledStudents);
+        });
       }
     );
   }
   ngOnInit(): void {
-    console.log('student-cont.ngOnInit');
+    console.log('student-cont ngOnInit');
   }
   ngOnDestroy(): void {
-    console.log('student-cont.ngOnDestroy');
+    console.log('student-cont ngOnDestroy');
     this.paramSubscription.unsubscribe();
     this.subAllStudents.unsubscribe();
     this.subEnrolledStudentsCourse.unsubscribe();
@@ -66,7 +70,7 @@ export class StudentsContComponent implements OnInit, OnDestroy {
     this.updateData(observable);
   }
   onStudentsToDisenroll(studentsToDisenroll: Student[]) {
-    console.log('in studentsToDisenroll');
+    console.log('in studentsToDisenroll', studentsToDisenroll);
     const observable = from(studentsToDisenroll).pipe(
       tap(student => console.log('ConcatMap pipe in. Current student:', student)),
       concatMap((student: Student) =>
@@ -76,7 +80,7 @@ export class StudentsContComponent implements OnInit, OnDestroy {
       toArray(),
       tap(student => console.log('toArray pipe out'))
     ) as Observable<any>;
-    console.log('out onStudentsToDisenroll observable');
+    console.log('out onStudentsToDisenroll created observable');
     this.updateData(observable);
   }
   private updateData(o: Observable<any>) {

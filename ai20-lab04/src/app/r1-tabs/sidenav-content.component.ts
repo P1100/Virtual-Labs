@@ -27,15 +27,6 @@ const tabs = [
   {path: 'assignments', label: 'Assignments'}
 ];
 
-// TODO: da rivedere, anche in base al progetto
-const DBEs2pdf = {
-  students: [{
-    id: 1, serial: '265373', name: 'ALICINO', firstName:
-      'GIUSEPPE', courseId: 1, groupId: 0
-  }],
-  courses: [{id: 1, name: 'Applicazioni Internet', path: 'applicazioniinternet'}],
-  groups: [{id: 1, name: 'Calvary'}]
-};
 @Component({
   selector: 'app-sidenav-cont',
   templateUrl: './sidenav-content.component.html',
@@ -66,7 +57,6 @@ export class SidenavContentComponent implements OnInit, OnChanges, OnDestroy {
 
   ngOnChanges(changes: SimpleChanges): void {
     console.log('°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°\nSidenavContentComponent.ngOnChanges - activerCourse:\n' + this.activeCourse);
-    // throw new Error('Sidenav-ngOnChanges Method is never called??');
   }
   ngOnDestroy(): void {
     console.log('Sidenav-cont.ngOnDestroy');

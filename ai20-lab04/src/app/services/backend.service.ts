@@ -27,32 +27,33 @@ export class BackendService {
     return throwError(error.error);
   }
 
+  // Pipe functions to be pure. No pipe function should create any side effects that persist outside the execution of that function
   getAllStudents(): Observable<Student[]> {
     return this.http.get<any>(`${this.apiJsonServerProxyPath}/students`, this.httpOptions)
       .pipe(
-        tap(res => console.log('getAllStudents', res)),
-        tap(res => console.log('Student[0]', res)),
-        retry(0), catchError(this.formatErrors),
         map(response => response._embedded.studentDTOList),
         map(s => s.map(ss => {
-          delete ss._links;
-          delete ss.links; // only '_links' should show up
-          return ss;
+          const copy = {...ss};
+          delete copy._links;
+          delete copy.links; // only '_links' should show up
+          return copy;
         })),
+        retry(0), catchError(this.formatErrors),
         tap(res => console.log('getAllStudents._embedded.studentDTOList', res))
       );
   }
   getEnrolledStudents(courseId: number): Observable<Student[]> {
     return this.http.get<any>(`${this.apiJsonServerProxyPath}/courses/${courseId}/enrolled`, this.httpOptions)
       .pipe(
-        tap(res => console.log('getEnrolledStudents', res)),
         retry(0), catchError(this.formatErrors),
         map(response => response._embedded.studentDTOList),
         map(s => s.map(ss => {
-          delete ss._links;
-          delete ss.links; // only '_links' should show up
-          return ss;
+          const copy = {...ss};
+          delete copy._links;
+          delete copy.links; // only '_links' should show up
+          return copy;
         })),
+        tap(res => console.log('getEnrolledStudents._embedded.studentDTOList', res))
       );
   }
   enroll(student: Student, courseId: number) {
@@ -61,18 +62,19 @@ export class BackendService {
       `${this.apiJsonServerProxyPath}/courses/${courseId}/enroll`,
       JSON.stringify(student),
       this.httpOptions
-    ).pipe(retry(0), catchError(this.formatErrors));
+    ).pipe(
+      tap(res => console.log('enroll(student: Student, courseId: number)', res)),
+      retry(0), catchError(this.formatErrors));
   }
   disenroll(student: Student, courseId: number): Observable<any> {
-    // student.courseId = 0; // testing courseId === 2 ? 1 : 2;
+    console.log('disenroll(student: Student, courseId: number)', courseId, student, JSON.stringify(student));
     return this.http.put(
       `${this.apiJsonServerProxyPath}/students/${student.id}`,
       JSON.stringify(student),
       this.httpOptions
-    ).pipe(tap(s => console.log('disenroll http.put:')),
-      tap(s => console.log(s)),
-      retry(0),
-      catchError(this.formatErrors));
+    ).pipe(
+      tap(s => console.log('disenroll http.put:', s)),
+      retry(0), catchError(this.formatErrors));
   }
   queryAllStudents(queryTitle: string): Observable<Student[]> {
     return this.http.get<Student[]>(`${this.apiJsonServerProxyPath}/students?q=${queryTitle}`)
