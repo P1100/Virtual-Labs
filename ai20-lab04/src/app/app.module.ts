@@ -35,7 +35,11 @@ import {StudentsContComponent} from './tabs/students/students-cont.component';
 import {AppComponent} from './app.component';
 import {MAT_DIALOG_DEFAULT_OPTIONS, MatDialogModule} from '@angular/material/dialog';
 import {TestDialogComponent} from './dialogs/test-dialog/test-dialog.component';
-import {LoginDialogComponent} from './dialogs/login-dialog/login-dialog.component';
+import {LoginComponent} from './dialogs/login/login.component';
+import {ProfileComponent} from './dialogs/profile/profile.component';
+import {RegisterComponent} from './dialogs/register/register.component';
+import {EditRemoveCourseComponent} from './dialogs/edit-remove-course/edit-remove-course.component';
+import {AreYouSureComponent} from './dialogs/are-you-sure/are-you-sure.component';
 
 @NgModule({
   imports: [
@@ -78,13 +82,17 @@ import {LoginDialogComponent} from './dialogs/login-dialog/login-dialog.componen
     HomeComponent,
     SidenavContentComponent,
     TestDialogComponent,
-    LoginDialogComponent,
+    LoginComponent,
     EmptyComponent,
     TestDialogComponent,
-    LoginDialogComponent
+    LoginComponent,
+    ProfileComponent,
+    RegisterComponent,
+    EditRemoveCourseComponent,
+    AreYouSureComponent
   ],
   entryComponents: [
-    HomeComponent, TestDialogComponent, LoginDialogComponent
+    HomeComponent, TestDialogComponent, LoginComponent
   ],
   providers: [HttpClientModule, {provide: MAT_DIALOG_DEFAULT_OPTIONS, useValue: {hasBackdrop: false}},
     {provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true}],

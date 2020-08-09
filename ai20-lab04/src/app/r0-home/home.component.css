@@ -26,7 +26,7 @@ mat-list-item {
   font-weight: bold;
 }
 
-.example-fill-remaining-space {
+.fill-remaining-space-header {
   /* This fills the remaining space, by using flexbox.
      Every toolbar row uses a flexbox row layout. */
   flex: 1 1 auto;

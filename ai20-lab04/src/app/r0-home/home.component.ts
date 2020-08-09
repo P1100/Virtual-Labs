@@ -6,7 +6,7 @@ import {AuthService} from '../services/auth.service';
 import {ActivatedRoute, Router} from '@angular/router';
 import {Subscription} from 'rxjs';
 import {TestDialogComponent} from '../dialogs/test-dialog/test-dialog.component';
-import {LoginDialogComponent} from '../dialogs/login-dialog/login-dialog.component';
+import {LoginComponent} from '../dialogs/login/login.component';
 
 // TODO: remove it later, it was test code
 export interface DialogData {
@@ -89,7 +89,7 @@ export class HomeComponent implements OnInit, OnDestroy {
     if (this.dialogRef) { // if dialog exists
       return;
     }
-    this.dialogRef = this.dialog.open(LoginDialogComponent, {
+    this.dialogRef = this.dialog.open(LoginComponent, {
       maxWidth: '600px',
       autoFocus: true,
       disableClose: false, // Esc key will close it
@@ -114,5 +114,8 @@ export class HomeComponent implements OnInit, OnDestroy {
       console.log(this.dialogRef);
       this.openLoginDialogReactive();
     }
+  }
+  editCourse() {
+
   }
 }
