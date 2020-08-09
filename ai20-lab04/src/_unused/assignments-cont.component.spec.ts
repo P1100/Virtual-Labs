@@ -1,6 +1,6 @@
 import {async, ComponentFixture, TestBed} from '@angular/core/testing';
 
-import {AssignmentsContComponent} from './assignments-cont.component';
+import {AssignmentsContComponent} from '../app/tabs/assignments/assignments-cont.component';
 
 describe('AssignmentsContComponent', () => {
   let component: AssignmentsContComponent;

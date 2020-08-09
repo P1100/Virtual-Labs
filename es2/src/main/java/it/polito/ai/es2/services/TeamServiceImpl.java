@@ -270,7 +270,7 @@ public class TeamServiceImpl implements TeamService {
   }
   
   /**
-   * {@link it.polito.ai.es2.controllers.APICourses_RestController#disenrollStudent(String, Map)}
+   * {@link it.polito.ai.es2.controllers.APICourses_RestController#disenrollStudent(String, String)}
    */
   @Override
   public void disenrollStudent(String studentId, String courseId) {

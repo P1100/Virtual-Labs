@@ -44,12 +44,13 @@ export class StudentsComponent implements OnInit, AfterViewInit, OnDestroy {
   checked: Map<number, boolean> = null;
   // Used in AutoComplete. It's the list of all students but at times filtered (so cant be merged in only one var)
   filteredOptions$: Observable<Student[]>;
-  // Course id of current page
+  // Course id of current page (used in routing module)
   public id: string;
   // Private variable used to get data from the service (superset of filteredOptions, used in autocomplete)
   @Input()
   private students: Student[];
   private paramSubscription: Subscription;
+
   constructor(private route: ActivatedRoute) {
     this.paramSubscription = this.route.parent.url.subscribe(url => {
       this.id = this.route.parent.snapshot.paramMap.get('id');

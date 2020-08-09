@@ -15,7 +15,7 @@ import {Student} from '../../models/student.model';
                   (disenrolledEvent)="onStudentsToDisenroll($event)"
     ></app-students>
   `,
-  styleUrls: ['../../../_unused/students-cont.component.css']
+  styleUrls: []
 })
 export class StudentsContComponent implements OnInit, OnDestroy {
   // allStudents & enrolledStudents are updated: 1) when routing changes 2) when there are operations that modify these arrays

@@ -62,6 +62,8 @@ import {MAT_DIALOG_DEFAULT_OPTIONS, MatDialogModule} from '@angular/material/dia
     ReactiveFormsModule,
     HttpClientModule,
     MatDialogModule
+    // RouterTestingModule,
+    // HttpClientTestingModule
   ],
   declarations: [
     AppComponent,
