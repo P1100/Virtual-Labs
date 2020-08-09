@@ -1,7 +1,7 @@
 import {MatSidenavModule} from '@angular/material/sidenav';
 import {MatToolbarModule} from '@angular/material/toolbar';
 import {MatFormFieldModule} from '@angular/material/form-field';
-import {HomeComponent, LoginDialogReactiveComponent, LoginDialogTemplateComponent} from './r0-home/home.component';
+import {HomeComponent} from './r0-home/home.component';
 import {MatPaginatorModule} from '@angular/material/paginator';
 import {AuthInterceptor} from './auth/auth.interceptor';
 import {NgModule} from '@angular/core';
@@ -34,6 +34,8 @@ import {EmptyComponent} from './r1-tabs/empty.component';
 import {StudentsContComponent} from './tabs/students/students-cont.component';
 import {AppComponent} from './app.component';
 import {MAT_DIALOG_DEFAULT_OPTIONS, MatDialogModule} from '@angular/material/dialog';
+import {TestDialogComponent} from './dialogs/test-dialog/test-dialog.component';
+import {LoginDialogComponent} from './dialogs/login-dialog/login-dialog.component';
 
 @NgModule({
   imports: [
@@ -75,12 +77,14 @@ import {MAT_DIALOG_DEFAULT_OPTIONS, MatDialogModule} from '@angular/material/dia
     AssignmentsContComponent,
     HomeComponent,
     SidenavContentComponent,
-    LoginDialogTemplateComponent,
-    LoginDialogReactiveComponent,
-    EmptyComponent
+    TestDialogComponent,
+    LoginDialogComponent,
+    EmptyComponent,
+    TestDialogComponent,
+    LoginDialogComponent
   ],
   entryComponents: [
-    HomeComponent, LoginDialogTemplateComponent, LoginDialogReactiveComponent
+    HomeComponent, TestDialogComponent, LoginDialogComponent
   ],
   providers: [HttpClientModule, {provide: MAT_DIALOG_DEFAULT_OPTIONS, useValue: {hasBackdrop: false}},
     {provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true}],

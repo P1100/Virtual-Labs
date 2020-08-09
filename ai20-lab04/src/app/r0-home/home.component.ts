@@ -1,12 +1,12 @@
-import {Component, Inject, OnDestroy, OnInit} from '@angular/core';
+import {Component, OnDestroy, OnInit} from '@angular/core';
 import {Course} from '../models/course.model';
 import {Title} from '@angular/platform-browser';
-import {MAT_DIALOG_DATA, MatDialog, MatDialogRef} from '@angular/material/dialog';
-import {FormBuilder, FormGroup, ValidationErrors, Validators} from '@angular/forms';
-import {filter, map, tap} from 'rxjs/operators';
+import {MatDialog} from '@angular/material/dialog';
 import {AuthService} from '../services/auth.service';
 import {ActivatedRoute, Router} from '@angular/router';
 import {Subscription} from 'rxjs';
+import {TestDialogComponent} from '../dialogs/test-dialog/test-dialog.component';
+import {LoginDialogComponent} from '../dialogs/login-dialog/login-dialog.component';
 
 // TODO: remove it later, it was test code
 export interface DialogData {
@@ -73,7 +73,7 @@ export class HomeComponent implements OnInit, OnDestroy {
     });
   }
   openLoginDialogTemplate(): void {
-    const dialogRef = this.dialog.open(LoginDialogTemplateComponent, {
+    const dialogRef = this.dialog.open(TestDialogComponent, {
       maxWidth: '600px', hasBackdrop: true,
       data: {name: this.name, animal: this.animal}
     });
@@ -89,7 +89,7 @@ export class HomeComponent implements OnInit, OnDestroy {
     if (this.dialogRef) { // if dialog exists
       return;
     }
-    this.dialogRef = this.dialog.open(LoginDialogReactiveComponent, {
+    this.dialogRef = this.dialog.open(LoginDialogComponent, {
       maxWidth: '600px',
       autoFocus: true,
       disableClose: false, // Esc key will close it
@@ -114,94 +114,5 @@ export class HomeComponent implements OnInit, OnDestroy {
       console.log(this.dialogRef);
       this.openLoginDialogReactive();
     }
-  }
-}
-
-@Component({
-  selector: 'app-login-dialog',
-  styleUrls: [],
-  templateUrl: '../dialogs/auth-dialog-reactive.component.html',
-})
-export class LoginDialogReactiveComponent implements OnDestroy {
-  public user;
-  form: FormGroup;
-  subscriptionLogin: Subscription;
-
-  constructor(public dialogRef: MatDialogRef<LoginDialogReactiveComponent>,
-              private fb: FormBuilder, private authService: AuthService,
-              private router: Router, activatedRoute: ActivatedRoute) {
-    this.form = this.fb.group({
-      email: ['olivier@mail.com', [forbiddenNameValidator(/bob/i), Validators.required]],
-      password: ['bestPassw0rd', [Validators.required]],
-    }, {
-      validators: fakeNameValidator,
-      // updateOn: 'blur'
-    }) as FormGroup;
-    this.form.valueChanges.pipe(
-      filter(() => this.form.valid),
-      tap(formValue => console.log('Valuechanges: ' + JSON.stringify(formValue))),
-      map(value => this.user = {id: value.email, password: value.password}), // , date: new Date()
-    ).subscribe((user) => {
-      this.user = user;
-      console.log(this.user);
-    });
-  }
-  ngOnDestroy(): void {
-    console.log('LoginDialogReactiveComponent destroyed!');
-  }
-  onCancelClick(): void {
-    this.subscriptionLogin?.unsubscribe();
-    this.dialogRef.close(); // Destroys the dialog!
-    this.router.navigateByUrl('/home');
-  }
-  login() {
-    const val = this.form.value;
-    if (val.email && val.password) {
-      this.subscriptionLogin = this.authService.login(val.email, val.password)
-        .subscribe((accessToken) => {
-            console.log('User is logged in. Received: ' + JSON.stringify(accessToken), accessToken);
-            console.log('LoginDialogReactiveComponent ended login http sub');
-            this.dialogRef.close();
-            console.log('LoginDialogReactiveComponent after dialogRef.close()');
-            this.router.navigateByUrl('/');
-            console.log('LoginDialogReactiveComponent after navigateByUrl!');
-          }
-        );
-    }
-  }
-  logout() {
-    this.authService.logout();
-  }
-}
-
-function forbiddenNameValidator(nameRe: RegExp) {
-  return (control) => {
-    const forbidden = nameRe.test(control.value);
-    // console.log(`is this name ${control.value} forbidden? ${forbidden}`);
-    return forbidden ? {forbiddenName: {value: control.value}} : null;
-  };
-}
-/** A hero's name can't match the hero's alter ego */
-function fakeNameValidator(control: FormGroup): ValidationErrors | null {
-  const email = control.get('password');
-  const password = control.get('email');
-  const ret = password && email && password.value === email.value ? {fakeName: true} : null;
-  // if (ret) { console.log(`${email.value} === ${password.value}`); }
-  // console.log(`are email and password equal? ${email.value} === ${password.value} ${email.value === password.value}`);
-  return ret;
-}
-
-@Component({
-  selector: 'app-login-dialog',
-  styleUrls: [],
-  templateUrl: '../dialogs/auth-dialog-template.component.html',
-})
-export class LoginDialogTemplateComponent {
-  constructor(
-    public dialogRef: MatDialogRef<LoginDialogTemplateComponent>,
-    @Inject(MAT_DIALOG_DATA) public data: DialogData) {
-  }
-  onNoClick(): void {
-    this.dialogRef.close();
   }
 }

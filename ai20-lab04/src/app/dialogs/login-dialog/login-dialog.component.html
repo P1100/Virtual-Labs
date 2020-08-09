@@ -1,6 +1,6 @@
 <h1 mat-dialog-title>Login</h1>
 <div mat-dialog-content>
-<!--TODO: need to add * waiting for server response... * message under login-->
+  <!--TODO: need to add * waiting for server response... * message under login-->
   <form autocomplete="off" novalidate [formGroup]="form">
     <span *ngIf="form.controls.email.errors?.required"> Name is required. </span>
     <mat-form-field>
