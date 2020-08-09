@@ -4,6 +4,7 @@ import {forkJoin, Observable, throwError} from 'rxjs';
 import {HttpClient, HttpHeaders} from '@angular/common/http';
 import {catchError, map, retry, tap} from 'rxjs/operators';
 import {environment} from '../../environments/environment';
+import {Course} from '../models/course.model';
 
 @Injectable({
   providedIn: 'root'
@@ -75,6 +76,19 @@ export class BackendService {
       tap(s => console.log('disenroll http.put:', s)),
       retry(0), catchError(this.formatErrors));
   }
+  getCourses(): Observable<Course[]> {
+    return this.http.get<any>(`${this.apiJsonServerProxyPath}/courses`, this.httpOptions)
+      .pipe(retry(0), catchError(this.formatErrors),
+        map(response => response._embedded.courseDTOList),
+        map(s => s.map(ss => {
+          const copy = {...ss};
+          delete copy._links;
+          delete copy.links; // only '_links' should show up
+          return copy;
+        }))
+      );
+  }
+
   queryAllStudents(queryTitle: string): Observable<Student[]> {
     return this.http.get<Student[]>(`${this.apiJsonServerProxyPath}/students?q=${queryTitle}`)
       .pipe(retry(0), catchError(this.formatErrors));

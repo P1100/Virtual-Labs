@@ -11,6 +11,7 @@ describe('workspace-project App', () => {
   it('should display welcome message', () => {
     page.navigateTo();
     expect(page.getTitleText()).toEqual('ai20-lab04 app is running!');
+    browser.sleep(10000);
   });
 
   afterEach(async () => {

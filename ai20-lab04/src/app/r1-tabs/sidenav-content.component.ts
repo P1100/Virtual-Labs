@@ -2,24 +2,9 @@ import {Component, OnChanges, OnDestroy, OnInit, SimpleChanges} from '@angular/c
 import {Course} from '../models/course.model';
 import {ActivatedRoute} from '@angular/router';
 import {Subscription} from 'rxjs';
+import {BackendService} from '../services/backend.service';
 
-const DB_COURSES: Course[] = [
-  {id: 1, label: 'Applicazioni Internet', path: 'applicazioni-internet', fullName: '', minEnrolled: 0, maxEnrolled: 0, enabled: true},
-  {
-    id: 2,
-    label: 'Programmazione di sistema',
-    path: 'programmazione-di-sistema',
-    fullName: '',
-    minEnrolled: 0,
-    maxEnrolled: 0,
-    enabled: true
-  },
-  {id: 3, label: 'Mobile development', path: 'mobile-development', fullName: '', minEnrolled: 0, maxEnrolled: 0, enabled: true}
-];
-//   .map(y => {
-//   y.path = 'teacher/course/' + y.path;
-//   return y;
-// });
+// Costruzione dinamica delle tabs parte da qui
 const tabs = [
   {path: 'students', label: 'Students'},
   {path: 'vms', label: 'VMs'},
@@ -33,25 +18,31 @@ const tabs = [
   styleUrls: ['../../_unused/sidenav-content.component.css']
 })
 export class SidenavContentComponent implements OnInit, OnChanges, OnDestroy {
-  prefix = '/teacher';
+  // TODO: questo valore deve essere impostato dalla logica di auth
+  prefix = ['/teacher', '/student'];
   navLinks = [];
   // TODO: need to get this value for a course service or routing
-  activeCourse = 1;
+  activeCourse = null;
   paramSubscription: Subscription;
 
-  constructor(private route: ActivatedRoute) {
+  courses: Course[] = null;
+
+  constructor(private route: ActivatedRoute, private backendService: BackendService) {
+    // Primo e unico aggiornamento corsi. Altri updates solo nelle funzioni di modifica
+    this.backendService.getCourses().subscribe(x => this.courses = [...x]);
     // Devo riaggiornare i tabs ad ogni cambio di corso. Versione no observable =>  this.route.snapshot.paramMap.get("id");
     this.paramSubscription = this.route.url.subscribe(url => {
       this.activeCourse = +this.route.snapshot.paramMap.get('id');
       this.navLinks = [];
       for (const tab of tabs) {
-        this.navLinks.push({path: this.prefix + '/course/' + this.activeCourse + '/' + tab.path, label: tab.label});
+        this.navLinks.push({path: this.prefix[0] + '/course/' + this.activeCourse + '/' + tab.path, label: tab.label});
       }
       // console.log('Sidenav-cont.constructor route.url activeCourse: ' + '\n' + this.activeCourse);
     });
     // console.log('Sidenav-cont.constructor ending Routes:\n' + JSON.stringify(this.navLinks));
   }
   ngOnInit(): void {
+    // this.backendService.getCourses().subscribe(value => console.log(JSON.stringify(value)));
     // console.log('Sidenav-cont.ngOnInit');
   }
 
