@@ -15,7 +15,7 @@ const tabs = [
 @Component({
   selector: 'app-sidenav-cont',
   templateUrl: './sidenav-content.component.html',
-  styleUrls: ['../../_unused/sidenav-content.component.css']
+  styleUrls: []
 })
 export class SidenavContentComponent implements OnInit, OnChanges, OnDestroy {
   // TODO: questo valore deve essere impostato dalla logica di auth

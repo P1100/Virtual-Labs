@@ -32,7 +32,7 @@ import {BrowserModule} from '@angular/platform-browser';
 import {DragDropModule} from '@angular/cdk/drag-drop';
 import {EmptyComponent} from './r1-tabs/empty.component';
 import {StudentsContComponent} from './tabs/students/students-cont.component';
-import {AppComponent} from '../_unused/app/app.component';
+import {AppComponent} from './app.component';
 import {MAT_DIALOG_DEFAULT_OPTIONS, MatDialogModule} from '@angular/material/dialog';
 
 @NgModule({
