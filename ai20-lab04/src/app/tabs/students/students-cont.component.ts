@@ -1,4 +1,3 @@
-// TODO: muovere indietro a teacher folder prima di consegna
 import {Component, OnDestroy, OnInit} from '@angular/core';
 import {ActivatedRoute} from '@angular/router';
 import {concatMap, tap, toArray} from 'rxjs/operators';
@@ -6,6 +5,11 @@ import {BackendService} from '../../services/backend.service';
 import {from, Observable, Subscription} from 'rxjs';
 import {Student} from '../../models/student.model';
 
+/* API:
+* - Data taken from backend service: one new request each time active route changes.
+* --- Then passed to student component by html-template property binding
+* - Angular events are used to receive commands from the child student component
+*/
 @Component({
   selector: 'app-students-cont',
   template: `
@@ -18,20 +22,20 @@ import {Student} from '../../models/student.model';
   styleUrls: []
 })
 export class StudentsContComponent implements OnInit, OnDestroy {
-  // allStudents & enrolledStudents are updated: 1) when routing changes 2) when there are operations that modify these arrays
+  // updated after every route change, inside constructor
   allStudents: Student[] = [];
-  enrolledStudents: Student[] = []; // TODO: enrolledStudents should be course dependent
-  subAllStudents: Subscription;
+  enrolledStudents: Student[] = [];
+  courseId = 0;
+  // constructor subscriptions to Observable<ParamMap> of ActivatedRoute.paramMap()
+  subAllStudents: Subscription = null;
   subEnrolledStudentsCourse: Subscription = null;
-  courseId = 1;
-  private paramSubscription: Subscription;
+  subRouteParam: Subscription = null;
 
   // update students and enrolled on routing change (executed once, e.g. when changing course for the tab student)
-  constructor(private backendService: BackendService, private route: ActivatedRoute) {
-    // this.paramSubscription = this.route.url.subscribe(url => { });
-    this.paramSubscription = this.route.paramMap.subscribe(url => {
-        this.courseId = +this.route.parent.snapshot.paramMap.get('id');
-        console.log('student-cont route.paramMap activeCourse: ' + this.courseId);
+  constructor(private backendService: BackendService, private activatedRoute: ActivatedRoute) {
+    this.subRouteParam = this.activatedRoute.paramMap.subscribe(url => {
+        this.courseId = +this.activatedRoute.parent.snapshot.paramMap.get('id');
+        console.log('activeCourse: ' + this.courseId);
         this.subAllStudents = this.backendService.getAllStudents()
           .subscribe(
             (students: Student[]) => {
@@ -48,11 +52,9 @@ export class StudentsContComponent implements OnInit, OnDestroy {
     );
   }
   ngOnInit(): void {
-    console.log('student-cont ngOnInit');
   }
   ngOnDestroy(): void {
-    console.log('student-cont ngOnDestroy');
-    this.paramSubscription.unsubscribe();
+    this.subRouteParam.unsubscribe();
     this.subAllStudents.unsubscribe();
     this.subEnrolledStudentsCourse.unsubscribe();
   }
@@ -65,7 +67,7 @@ export class StudentsContComponent implements OnInit, OnDestroy {
       .pipe(
         tap(student => console.log('ConcatMap pipe in. Current student:', student)),
         concatMap((student: Student) =>
-          this.backendService.enroll(student, this.courseId) as Observable<any> // this.httpClient.get(`item/${student}`))
+          this.backendService.enroll(student, this.courseId) as Observable<any>
         ),
         toArray()  // so it waits for all inner observables to collect
       ) as Observable<any>;
@@ -78,13 +80,13 @@ export class StudentsContComponent implements OnInit, OnDestroy {
     const observable: Observable<Student[]> = from(studentsToDisenroll).pipe( // Observable<ObservedValueOf<Student[]>>
       tap(student => console.log('ConcatMap pipe in. Current student:', student)),
       concatMap((student: Student) =>
-        this.backendService.disenroll(student, this.courseId) as Observable<any> // this.httpClient.get(`item/${student}`))
+        this.backendService.disenroll(student, this.courseId) as Observable<any>
       ),
       toArray()  // so it waits for all inner observables to collect
     ) as Observable<any>;
     this.updateEnrolledStudents(observable);
   }
-  // I need to force the update on the tab modified data, which is EnrolledStudents in this case
+  // I need to force the update on the tab (modified data, EnrolledStudents in this case). Executed once
   private updateEnrolledStudents(o: Observable<Student[]>) {
     o.subscribe(array => {
         console.log('onEnroll update date subscribe outer: ', array);
