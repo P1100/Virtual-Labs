@@ -1,9 +1,10 @@
 import {Injectable} from '@angular/core';
-import {HttpClient, HttpHeaders} from '@angular/common/http';
+import {HttpClient} from '@angular/common/http';
 import {environment} from '../../environments/environment';
 import {Observable, throwError} from 'rxjs';
 import {Course} from '../models/course.model';
 import {catchError, map, retry, tap} from 'rxjs/operators';
+import {AppSettings} from '../app-settings';
 
 @Injectable({
   providedIn: 'root'
@@ -22,10 +23,7 @@ export class CourseService {
   }
 
   getCourses(): Observable<Course[]> {
-    return this.http.get<any>(`${this.baseUrl}/courses`, {
-      headers: new HttpHeaders({'Content-Type': 'application/json'}),
-      responseType: 'json'
-    })
+    return this.http.get<any>(`${this.baseUrl}/courses`, AppSettings.JSON_HTTP_OPTIONS)
       .pipe(
         map(response => response._embedded.courseDTOList),
         map(s => s.map(ss => {

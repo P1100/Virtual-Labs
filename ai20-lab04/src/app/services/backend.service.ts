@@ -10,7 +10,6 @@ import {AppSettings} from '../app-settings';
   providedIn: 'root'
 })
 export class BackendService {
-  private httpOptions = AppSettings.JSON_HTTP_OPTIONS;
   private baseUrl = environment.baseUrl;
 
   constructor(private http: HttpClient) {
@@ -22,7 +21,7 @@ export class BackendService {
 
   // Pipe functions to be pure. No pipe function should create any side effects that persist outside the execution of that function
   getAllStudents(): Observable<Student[]> {
-    return this.http.get<any>(`${this.baseUrl}/students`, this.httpOptions)
+    return this.http.get<any>(`${this.baseUrl}/students`, AppSettings.JSON_HTTP_OPTIONS)
       .pipe(
         map(response => response._embedded.studentDTOList),
         map(s => s.map(ss => {
@@ -36,7 +35,7 @@ export class BackendService {
       );
   }
   getEnrolledStudents(courseId: number): Observable<Student[]> {
-    return this.http.get<any>(`${this.baseUrl}/courses/${courseId}/enrolled`, this.httpOptions)
+    return this.http.get<any>(`${this.baseUrl}/courses/${courseId}/enrolled`, AppSettings.JSON_HTTP_OPTIONS)
       .pipe(
         retry(AppSettings.RETRIES), catchError(this.formatErrors),
         map(response => response._embedded.studentDTOList),
@@ -54,7 +53,7 @@ export class BackendService {
     return this.http.put(
       `${this.baseUrl}/courses/${courseId}/enroll`,
       JSON.stringify(student),
-      this.httpOptions
+      AppSettings.JSON_HTTP_OPTIONS
     ).pipe(
       tap(res => console.log('enroll(student: Student, courseId: number)', res)),
       retry(AppSettings.RETRIES), catchError(this.formatErrors));
@@ -68,7 +67,6 @@ export class BackendService {
       tap(s => console.log('disenroll http.put:', s)),
       retry(AppSettings.RETRIES), catchError(this.formatErrors));
   }
-
 
   queryAllStudents(queryTitle: string): Observable<Student[]> {
     return this.http.get<Student[]>(`${this.baseUrl}/students?q=${queryTitle}`)
@@ -100,14 +98,14 @@ export class BackendService {
     return this.http.put(
       `${this.baseUrl}`,
       JSON.stringify(body),
-      this.httpOptions
+      AppSettings.JSON_HTTP_OPTIONS
     ).pipe(retry(AppSettings.RETRIES), catchError(this.formatErrors));
   }
   createStudent(path: string, body: object = {}): Observable<any> {
     return this.http.post(
       `${this.baseUrl}${path}`,
       JSON.stringify(body),
-      this.httpOptions
+      AppSettings.JSON_HTTP_OPTIONS
     ).pipe(retry(AppSettings.RETRIES), catchError(this.formatErrors));
   }
   // create() {}
