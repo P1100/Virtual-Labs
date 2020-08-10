@@ -1,7 +1,7 @@
 <p *ngIf="showCheckboxSelectAllToolbar || showCheckboxDeselectAllToolbar">
   <mat-toolbar style="font-family: 'Roboto,RobotoDraft,Helvetica,Arial,sans-serif'; -webkit-justify-content: center;">
-    <div *ngIf="showCheckboxSelectAllToolbar; else elseRemoveAllDialog">All {{dataSource.paginator.pageSize}} students
-      on this page are selected.
+    <div *ngIf="showCheckboxSelectAllToolbar; else elseRemoveAllDialog">
+      All {{dataSource.paginator.pageSize}} students on this page are selected.
       <a (click)="checkboxSetAll(true)"
          [routerLink]=""
          queryParamsHandling="preserve">Select all {{dataSource.data.length}}
@@ -15,10 +15,9 @@
     </ng-template>
   </mat-toolbar>
 </p>
-<div class="student_div">
-  <form class="example-form">
-    <!--TODO: rivedere codice autocomplete, e controllare che compaia quando si seleziona -->
-    <!--    TODO: c'é da rivedere la parte angular material su autocomplete, form field, angular reactive forms e slides form AI-->
+
+<div class="student_tab">
+  <form>
     <mat-form-field>
       <input #input [formControl]="myControl" [matAutocomplete]="auto"
              matInput

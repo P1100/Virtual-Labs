@@ -10,16 +10,12 @@ input {
   border: transparent;
 }
 
-.example-form {
+form {
   min-width: 150px;
   max-width: 500px;
   width: 800%;
 }
 
-.example-full-width {
-  width: 100%;
-}
-
-.student_div {
+div.student_tab {
   padding: 20px;
 }

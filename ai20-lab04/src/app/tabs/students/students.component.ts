@@ -71,8 +71,6 @@ export class StudentsComponent implements OnInit, AfterViewInit, OnDestroy {
     this.showCheckboxDeselectAllToolbar = false;
   }
   ngOnInit() {
-    // arrays students and enrolled are automatically passed by the parent component, studentsContainer
-    // this.filteredOptions = this.students;
     this.filteredOptions$ = this.myControl.valueChanges
       .pipe(
         startWith(''),
@@ -85,6 +83,7 @@ export class StudentsComponent implements OnInit, AfterViewInit, OnDestroy {
           // console.log('@ value is type object ' + ((typeof value) === 'object'));
           // console.log('StudentsComponent.ngOnInit filteredOptions$ value:\ntypeof->' + typeof value + '(\"' + value + '\")');
           // console.log('@ filteredOptions$' + JSON.stringify(this.filteredOptions$)); --> no, é un observable, non viene stampato
+          console.log('students', this.students);
           return this.students.filter(x => x.firstName.toLowerCase().startsWith(value.trim().toLowerCase()));
         }),
       );

@@ -16,6 +16,7 @@
   <button mat-button type="button" aria-label="login and logout"
           (click)="openLoginDialogTemplate()">    {{isLogged}}-T
   </button>
+
   <button mat-button
           type="button"
           aria-label="login and logout"
@@ -29,7 +30,6 @@
 <mat-sidenav-container>
   <mat-sidenav #drawer mode="side" opened position="start">
     <div>
-      <!--      TODO: change from course manual course firstName, to :course_name. Need to update active course somewhere (using [()] ?) -->
       <mat-nav-list>
         <mat-list-item *ngFor="let course of courses">
           <button
@@ -44,9 +44,7 @@
              routerLinkActive="active-link"
              #rla="routerLinkActive">
             {{course.fullName}}
-            <!--+ {{rla.isActive}}-->
           </a>
-          <!--          TODO: selected course should remain active/selected, even after clicking internal tabs-->
         </mat-list-item>
       </mat-nav-list>
 

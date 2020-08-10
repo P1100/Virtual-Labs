@@ -39,13 +39,15 @@ export class StudentsContComponent implements OnInit, OnDestroy {
         this.subAllStudents = this.backendService.getAllStudents()
           .subscribe(
             (students: Student[]) => {
-              this.allStudents = [...students];
+              console.log('---- allStudents', students);
+              this.allStudents = [...(students || [])];
               console.log('Subscription allStudents:', this.enrolledStudents);
             });
         this.subEnrolledStudentsCourse = this.backendService.getEnrolledStudents(this.courseId)
           .subscribe((
             students: Student[]) => {
-            this.enrolledStudents = [...students];
+            console.log('---- enrolledStudents', students);
+            this.enrolledStudents = [...(students || [])];
             console.log('Subscription enrolledStudents:', this.enrolledStudents);
           });
       }
@@ -92,7 +94,7 @@ export class StudentsContComponent implements OnInit, OnDestroy {
         console.log('onEnroll update date subscribe outer: ', array);
         this.backendService.getEnrolledStudents(this.courseId).subscribe(
           (ss: Student[]) => {
-            this.enrolledStudents = [...ss];
+            this.enrolledStudents = [...(ss || [])];
             console.log('onEnroll date subscribe inner: ', ss);
           }
         );

@@ -33,7 +33,7 @@ export class CourseService {
           return copy;
         })),
         retry(5), catchError(this.formatErrors),
-        tap(res => console.log('http.get getCourses:', res))
+        tap(res => console.log('getCourses:', res))
       );
   }
 

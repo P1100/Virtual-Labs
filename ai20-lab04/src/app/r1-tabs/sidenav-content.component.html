@@ -1,7 +1,4 @@
-  <!--    <mat-tab-group>-->
   <nav mat-tab-nav-bar>
-    <!--    [routerLinkActiveOptions]="{ exact: true }"-->
-    <!--    "['/teacher", 'course', courseId, 'students', {details: true}]"-->
     <a mat-tab-link
        *ngFor="let link of navLinks"
        [routerLink]="[link.path]"
@@ -10,7 +7,6 @@
        [active]="rla.isActive"
        [routerLinkActiveOptions]="{exact:false}">
       {{link.label}}
-      <!-- + {{rla.isActive}}-->
     </a>
   </nav>
 <div class="container" name="tab_content">

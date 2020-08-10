@@ -23,11 +23,11 @@ export class BackendService {
   getAllStudents(): Observable<Student[]> {
     return this.http.get<any>(`${this.baseUrl}/students`, AppSettings.JSON_HTTP_OPTIONS)
       .pipe(
-        map(response => response._embedded.studentDTOList),
-        map(s => s.map(ss => {
+        map(response => response?._embedded?.studentDTOList),
+        map(s => s?.map(ss => {
           const copy = {...ss};
-          delete copy._links;
-          delete copy.links; // only '_links' should show up
+          delete copy?._links;
+          delete copy?.links; // only '_links' should show up
           return copy;
         })),
         retry(AppSettings.RETRIES), catchError(this.formatErrors),
@@ -38,11 +38,11 @@ export class BackendService {
     return this.http.get<any>(`${this.baseUrl}/courses/${courseId}/enrolled`, AppSettings.JSON_HTTP_OPTIONS)
       .pipe(
         retry(AppSettings.RETRIES), catchError(this.formatErrors),
-        map(response => response._embedded.studentDTOList),
-        map(s => s.map(ss => {
+        map(response => response?._embedded?.studentDTOList),
+        map(s => s?.map(ss => {
           const copy = {...ss};
-          delete copy._links;
-          delete copy.links; // only '_links' should show up
+          delete copy?._links;
+          delete copy?.links; // only '_links' should show up
           return copy;
         })),
         tap(res => console.log('getEnrolledStudents._embedded.studentDTOList', res))
