@@ -4,7 +4,7 @@ import {Title} from '@angular/platform-browser';
 import {MatDialog} from '@angular/material/dialog';
 import {AuthService} from '../services/auth.service';
 import {ActivatedRoute, NavigationEnd, Router} from '@angular/router';
-import {Subscription} from 'rxjs';
+import {of, Subscription} from 'rxjs';
 import {TestDialogComponent} from '../dialogs/test-dialog/test-dialog.component';
 import {LoginComponent} from '../dialogs/login/login.component';
 import {CourseService} from '../services/course-service';
@@ -61,36 +61,35 @@ export class HomeComponent implements OnInit, OnDestroy {
     this.router.events
       .pipe(
         filter((event) => event instanceof NavigationEnd),
-        tap(paramMap => console.log('NavEnd')),
         map(() => this.route),
-        tap(r => console.log(r)),
-        tap(r => console.log('test', r.firstChild.firstChild.firstChild.firstChild)),
-        // tap(r => console.log(r.firstChild.snapshot.params)),
-        // tap(r => console.log(r.firstChild.firstChild.snapshot.params)),
-        // tap(r => console.log('working?', r.firstChild.firstChild.firstChild.snapshot.params)),
-        // tap(r => console.log('test', r.firstChild.firstChild.firstChild.firstChild.snapshot.params)),
+        tap(r => console.log('NavEnd', r)),
         map((rout) => {
-          return rout.firstChild.firstChild.firstChild.firstChild;
+          return rout?.firstChild?.firstChild?.firstChild?.firstChild;
         }),
-        mergeMap((rout) => rout.params),
-        tap(paramMap => console.log('params', paramMap))
+        tap(r => console.log('Child', r)),
+        mergeMap((rout) => (rout != null || rout != undefined) ? rout.paramMap : of(null))
       ).subscribe((paramMap) => {
-      // this.courses = courseService.getCoursesSnapshot();
-      courseService.getCourses().subscribe(x => {
-        console.log('CoursesLoaded');
-        this.courses = x;
-        console.log(paramMap);
-        // const idActiveCourse = +paramAsMap.get('id');
-        const idActiveCourse = +paramMap.id;
-        console.log(idActiveCourse);
-        for (const course of this.courses) {
-          if (course.id == idActiveCourse) {
-            this.nameActiveCourse = course.fullName;
-          }
-        }
+        courseService.getCourses().subscribe(x => {
+          console.log();
+          this.courses = x;
+          console.log('CoursesLoaded - paramMap:', paramMap);
+          // const idActiveCourse = +paramAsMap.get('id');
 
-      });
-    }); // Get the params (paramAsMap.params) and use them to highlight or everything that meet your need
+          if (paramMap == null || paramMap === undefined) {
+            this.nameActiveCourse = '';
+          } else {
+            let idActiveCourse = +paramMap.get('id');
+            console.log('idActiveCourse', +paramMap.get('id'), paramMap.get('id'), paramMap, paramMap.id);
+            for (const course of this.courses) {
+              if (course.id == idActiveCourse) {
+                this.nameActiveCourse = course.fullName;
+              }
+            }
+          }
+
+        });
+      }
+    ); // Get the params (paramAsMap.params) and use them to highlight or everything that meet your need
 
     // console.log('constructor HomeComponent pre ' + this.isLogged);
     this.subscription = this.auth.getSub().subscribe(x => {
