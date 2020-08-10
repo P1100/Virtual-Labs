@@ -5,7 +5,7 @@
 export const environment = {
   production: false,
   dev: true,
-  prefixUrl: 'http://localhost:8080/API'
+  baseUrl: 'http://localhost:8080/API'
 };
 
 /*

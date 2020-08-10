@@ -9,19 +9,11 @@ import {catchError, map, retry, tap} from 'rxjs/operators';
   providedIn: 'root'
 })
 export class CourseService {
-  httpOptions = {
-    headers: new HttpHeaders({
-      'Content-Type': 'application/json'
-      // ,
-      // responseType: 'json'
-    })
-  };
-  private apiJsonServerProxyPath = environment.prefixUrl;
+  private baseUrl = environment.baseUrl;
   courses: Course[] = null;
 
   constructor(private http: HttpClient) {
-    console.log('CourseService costr');
-    // Primo e unico aggiornamento corsi. Altri updates solo nelle funzioni di modifica
+    // Primo e unico aggiornamento corsi. Altri updates solo nelle funzioni di modifica //TODO: rivedere, nell'home chiamo getCourses
     this.getCourses().subscribe(x => this.courses = [...x]);
   }
   private formatErrors(error: any) {
@@ -30,24 +22,24 @@ export class CourseService {
   }
 
   getCourses(): Observable<Course[]> {
-    return this.http.get<any>(`${this.apiJsonServerProxyPath}/courses`, this.httpOptions)
+    return this.http.get<any>(`${this.baseUrl}/courses`, {
+      headers: new HttpHeaders({'Content-Type': 'application/json'}),
+      responseType: 'json'
+    })
       .pipe(
-        tap(res => console.log('getCourses response._embedded.CourseDTOList', res)),
         map(response => response._embedded.courseDTOList),
-        tap(res => console.log('getCourses v2', res)),
         map(s => s.map(ss => {
           const copy = {...ss};
           delete copy._links;
           delete copy.links; // only '_links' should show up
           return copy;
         })),
-        retry(0), catchError(this.formatErrors),
-        tap(res => console.log('getCourses post', res))
+        retry(5), catchError(this.formatErrors),
+        tap(res => console.log('http.get getCourses:', res))
       );
   }
 
   getCoursesSnapshot(): Course[] {
-    console.log('snapshot courses', this.courses);
     return this.courses;
   }
 }

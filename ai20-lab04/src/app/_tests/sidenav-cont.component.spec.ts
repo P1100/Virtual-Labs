@@ -1,6 +1,6 @@
 import {async, ComponentFixture, TestBed} from '@angular/core/testing';
 
-import {SidenavContentComponent} from '../app/r1-tabs/sidenav-content.component';
+import {SidenavContentComponent} from '../r1-tabs/sidenav-content.component';
 import {RouterTestingModule} from '@angular/router/testing';
 import {HttpClientTestingModule} from '@angular/common/http/testing';
 

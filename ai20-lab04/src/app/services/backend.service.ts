@@ -1,28 +1,19 @@
 import {Injectable} from '@angular/core';
 import {Student} from '../models/student.model';
 import {forkJoin, Observable, throwError} from 'rxjs';
-import {HttpClient, HttpHeaders} from '@angular/common/http';
+import {HttpClient} from '@angular/common/http';
 import {catchError, map, retry, tap} from 'rxjs/operators';
 import {environment} from '../../environments/environment';
+import {AppSettings} from '../app-settings';
 
 @Injectable({
   providedIn: 'root'
 })
 export class BackendService {
-  httpOptions = {
-    headers: new HttpHeaders({
-      'Content-Type': 'application/json'
-      // observe?: 'body' | 'events' | 'response',
-      // params?: HttpParams|{[param: string]: string | string[]},
-      // reportProgress: true,
-      // responseType: 'json'|'text',
-      // withCredentials: true  // Whether this request should be sent with outgoing credentials (cookies).
-    }),
-  };
-  private apiJsonServerProxyPath = environment.prefixUrl;
+  private httpOptions = AppSettings.JSON_HTTP_OPTIONS;
+  private baseUrl = environment.baseUrl;
 
   constructor(private http: HttpClient) {
-    // console.log('@@ BackendService.constructor - new service instance (http or htpps?)=' + environment.HttpOrHttpsPrefix);
   }
   private formatErrors(error: any) {
     console.error(error);
@@ -31,7 +22,7 @@ export class BackendService {
 
   // Pipe functions to be pure. No pipe function should create any side effects that persist outside the execution of that function
   getAllStudents(): Observable<Student[]> {
-    return this.http.get<any>(`${this.apiJsonServerProxyPath}/students`, this.httpOptions)
+    return this.http.get<any>(`${this.baseUrl}/students`, this.httpOptions)
       .pipe(
         map(response => response._embedded.studentDTOList),
         map(s => s.map(ss => {
@@ -40,14 +31,14 @@ export class BackendService {
           delete copy.links; // only '_links' should show up
           return copy;
         })),
-        retry(0), catchError(this.formatErrors),
+        retry(AppSettings.RETRIES), catchError(this.formatErrors),
         tap(res => console.log('getAllStudents._embedded.studentDTOList', res))
       );
   }
   getEnrolledStudents(courseId: number): Observable<Student[]> {
-    return this.http.get<any>(`${this.apiJsonServerProxyPath}/courses/${courseId}/enrolled`, this.httpOptions)
+    return this.http.get<any>(`${this.baseUrl}/courses/${courseId}/enrolled`, this.httpOptions)
       .pipe(
-        retry(0), catchError(this.formatErrors),
+        retry(AppSettings.RETRIES), catchError(this.formatErrors),
         map(response => response._embedded.studentDTOList),
         map(s => s.map(ss => {
           const copy = {...ss};
@@ -61,31 +52,32 @@ export class BackendService {
   enroll(student: Student, courseId: number) {
     console.log('enroll(student: Student, courseId: number)', courseId, student, JSON.stringify(student));
     return this.http.put(
-      `${this.apiJsonServerProxyPath}/courses/${courseId}/enroll`,
+      `${this.baseUrl}/courses/${courseId}/enroll`,
       JSON.stringify(student),
       this.httpOptions
     ).pipe(
       tap(res => console.log('enroll(student: Student, courseId: number)', res)),
-      retry(0), catchError(this.formatErrors));
+      retry(AppSettings.RETRIES), catchError(this.formatErrors));
   }
   disenroll(student: Student, courseId: number): Observable<any> {
     console.log('disenroll(student: Student, courseId: number)', courseId, student, JSON.stringify(student));
     return this.http.put(
-      `${this.apiJsonServerProxyPath}/courses/${courseId}/disenroll/${student.id}`,
+      `${this.baseUrl}/courses/${courseId}/disenroll/${student.id}`,
       null
     ).pipe(
       tap(s => console.log('disenroll http.put:', s)),
-      retry(0), catchError(this.formatErrors));
+      retry(AppSettings.RETRIES), catchError(this.formatErrors));
   }
 
+
   queryAllStudents(queryTitle: string): Observable<Student[]> {
-    return this.http.get<Student[]>(`${this.apiJsonServerProxyPath}/students?q=${queryTitle}`)
-      .pipe(retry(0), catchError(this.formatErrors));
+    return this.http.get<Student[]>(`${this.baseUrl}/students?q=${queryTitle}`)
+      .pipe(retry(AppSettings.RETRIES), catchError(this.formatErrors));
   }
   deleteStudent(student: Student, courseId: number): Observable<any> {
     return this.http.delete(
-      `${this.apiJsonServerProxyPath}/students/${student.id}`
-    ).pipe(retry(0), catchError(this.formatErrors));
+      `${this.baseUrl}/students/${student.id}`
+    ).pipe(retry(AppSettings.RETRIES), catchError(this.formatErrors));
   }
 
   enrollStudents(students: Student[], courseId: number) {
@@ -94,31 +86,30 @@ export class BackendService {
     return forkJoin(request$);
 
     // return this.http.post(
-    //   `${this.apiJsonServerProxyPath}`,
+    //   `${this.baseUrl}`,
     //   JSON.stringify(students)
-    // ).pipe(retry(0), catchError(this.formatErrors));
+    // ).pipe(retry(AppSettings.RETRIES), catchError(this.formatErrors));
   }
   deleteStudents(studentsToRemove: Student[]) {
   }
   queryEnrolledStudents(courseId: number, queryTitle: string): Observable<Student[]> {
-    return this.http.get<Student[]>(`${this.apiJsonServerProxyPath}/courses/${courseId}/students?q=${queryTitle}`)
-      .pipe(retry(0), catchError(this.formatErrors));
+    return this.http.get<Student[]>(`${this.baseUrl}/courses/${courseId}/students?q=${queryTitle}`)
+      .pipe(retry(AppSettings.RETRIES), catchError(this.formatErrors));
   }
   updateStudent(student: Student, body: object = {}): Observable<any> {
     return this.http.put(
-      `${this.apiJsonServerProxyPath}`,
+      `${this.baseUrl}`,
       JSON.stringify(body),
       this.httpOptions
-    ).pipe(retry(0), catchError(this.formatErrors));
+    ).pipe(retry(AppSettings.RETRIES), catchError(this.formatErrors));
   }
   createStudent(path: string, body: object = {}): Observable<any> {
     return this.http.post(
-      `${this.apiJsonServerProxyPath}${path}`,
+      `${this.baseUrl}${path}`,
       JSON.stringify(body),
       this.httpOptions
-    ).pipe(retry(0), catchError(this.formatErrors));
+    ).pipe(retry(AppSettings.RETRIES), catchError(this.formatErrors));
   }
-
   // create() {}
   // find() {}
   // updateStudent(student: Student) {

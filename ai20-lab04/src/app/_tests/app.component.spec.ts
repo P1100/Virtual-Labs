@@ -1,5 +1,5 @@
 import {async, TestBed} from '@angular/core/testing';
-import {AppComponent} from '../app/app.component';
+import {AppComponent} from '../app.component';
 
 // x prefix is to disable test
 xdescribe('AppComponent', () => {

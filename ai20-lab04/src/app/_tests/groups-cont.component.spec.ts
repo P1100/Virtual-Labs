@@ -1,20 +1,20 @@
 import {async, ComponentFixture, TestBed} from '@angular/core/testing';
 
-import {PageNotFoundComponent} from '../app/tabs/page-not-found/page-not-found.component';
+import {GroupsContComponent} from '../tabs/groups/groups-cont.component';
 
-describe('PageNotFoundComponent', () => {
-  let component: PageNotFoundComponent;
-  let fixture: ComponentFixture<PageNotFoundComponent>;
+describe('GroupsContComponent', () => {
+  let component: GroupsContComponent;
+  let fixture: ComponentFixture<GroupsContComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [PageNotFoundComponent]
+      declarations: [GroupsContComponent]
     })
       .compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(PageNotFoundComponent);
+    fixture = TestBed.createComponent(GroupsContComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

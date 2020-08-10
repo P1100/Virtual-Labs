@@ -1,21 +1,20 @@
 import {async, ComponentFixture, TestBed} from '@angular/core/testing';
 
-import {StudentsComponent} from '../app/tabs/students/students.component';
+import {AssignmentsContComponent} from '../tabs/assignments/assignments-cont.component';
 
-// x prefix is to disable test
-xdescribe('StudentsComponent', () => {
-  let component: StudentsComponent;
-  let fixture: ComponentFixture<StudentsComponent>;
+describe('AssignmentsContComponent', () => {
+  let component: AssignmentsContComponent;
+  let fixture: ComponentFixture<AssignmentsContComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [StudentsComponent]
+      declarations: [AssignmentsContComponent]
     })
       .compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(StudentsComponent);
+    fixture = TestBed.createComponent(AssignmentsContComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });
