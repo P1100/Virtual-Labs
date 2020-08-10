@@ -24,7 +24,7 @@
   </button>
 </mat-toolbar>
 
-<mat-toolbar>Applicazioni Internet</mat-toolbar>
+<mat-toolbar>{{nameActiveCourse}}</mat-toolbar>
 
 <mat-sidenav-container>
   <mat-sidenav #drawer mode="side" opened position="start">
@@ -43,7 +43,7 @@
              routerLink="teacher/course/{{course.id}}"
              routerLinkActive="active-link"
              #rla="routerLinkActive">
-            {{course.label}}
+            {{course.fullName}}
             <!--+ {{rla.isActive}}-->
           </a>
           <!--          TODO: selected course should remain active/selected, even after clicking internal tabs-->
@@ -57,20 +57,5 @@
     <router-outlet></router-outlet>
   </mat-sidenav-content>
 
-
 </mat-sidenav-container>
 
-<!--So adding a new variable
-
-export class myComponent {
-        private dynamicParameter = '129';
-        public routerLinkVariable = "/home";
-
-Updating the [routerLink]
-
-  <a [routerLink]="[routerLinkVariable,dynamicParameter]"></a>
-
-When you want to click on this link, it would become:
-
-  <a href="/home/129"></a>
--->

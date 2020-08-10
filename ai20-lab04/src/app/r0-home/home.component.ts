@@ -3,10 +3,12 @@ import {Course} from '../models/course.model';
 import {Title} from '@angular/platform-browser';
 import {MatDialog} from '@angular/material/dialog';
 import {AuthService} from '../services/auth.service';
-import {ActivatedRoute, Router} from '@angular/router';
+import {ActivatedRoute, NavigationEnd, Router} from '@angular/router';
 import {Subscription} from 'rxjs';
 import {TestDialogComponent} from '../dialogs/test-dialog/test-dialog.component';
 import {LoginComponent} from '../dialogs/login/login.component';
+import {CourseService} from '../services/course-service';
+import {filter, map, mergeMap, tap} from 'rxjs/operators';
 
 // TODO: remove it later, it was test code
 export interface DialogData {
@@ -36,7 +38,7 @@ const DB_COURSES: Course[] = [
 })
 export class HomeComponent implements OnInit, OnDestroy {
   title = 'VirtualLabs';
-  courses = DB_COURSES;
+  courses: Course[] = null;
   isLogged = false;
   loggedUser = '';
   subscription: Subscription;
@@ -45,10 +47,51 @@ export class HomeComponent implements OnInit, OnDestroy {
 
   animal: string;
   name: string;
+  nameActiveCourse: any;
 
-  constructor(private titleService: Title, public dialog: MatDialog, private auth: AuthService,
-              private router: Router, private route: ActivatedRoute) {
+  constructor(private titleService: Title,
+              private courseService: CourseService,
+              public dialog: MatDialog,
+              private auth: AuthService,
+              private router: Router,
+              private route: ActivatedRoute) {
     titleService.setTitle(this.title);
+    // // Debug
+    // this.router.events.subscribe((event => console.log('Event:', event)));
+    this.router.events
+      .pipe(
+        filter((event) => event instanceof NavigationEnd),
+        tap(paramMap => console.log('NavEnd')),
+        map(() => this.route),
+        tap(r => console.log(r)),
+        tap(r => console.log('test', r.firstChild.firstChild.firstChild.firstChild)),
+        // tap(r => console.log(r.firstChild.snapshot.params)),
+        // tap(r => console.log(r.firstChild.firstChild.snapshot.params)),
+        // tap(r => console.log('working?', r.firstChild.firstChild.firstChild.snapshot.params)),
+        // tap(r => console.log('test', r.firstChild.firstChild.firstChild.firstChild.snapshot.params)),
+        map((rout) => {
+          return rout.firstChild.firstChild.firstChild.firstChild;
+        }),
+        mergeMap((rout) => rout.params),
+        tap(paramMap => console.log('params', paramMap))
+      ).subscribe((paramMap) => {
+      // this.courses = courseService.getCoursesSnapshot();
+      courseService.getCourses().subscribe(x => {
+        console.log('CoursesLoaded');
+        this.courses = x;
+        console.log(paramMap);
+        // const idActiveCourse = +paramAsMap.get('id');
+        const idActiveCourse = +paramMap.id;
+        console.log(idActiveCourse);
+        for (const course of this.courses) {
+          if (course.id == idActiveCourse) {
+            this.nameActiveCourse = course.fullName;
+          }
+        }
+
+      });
+    }); // Get the params (paramAsMap.params) and use them to highlight or everything that meet your need
+
     // console.log('constructor HomeComponent pre ' + this.isLogged);
     this.subscription = this.auth.getSub().subscribe(x => {
       this.isLogged = x;
@@ -66,7 +109,7 @@ export class HomeComponent implements OnInit, OnDestroy {
     this.subscriptionRoute = this.route.queryParams.subscribe(params => {
       // console.log('inside_Route', params, params.doLogin, params['doLogin']);
       // this.doLogin = params['doLogin'];
-      if (params.doLogin == 'true') {
+      if (params.doLogin === 'true') {
         // console.log('inside_DoLogin');
         this.openLoginDialogReactive();
       }

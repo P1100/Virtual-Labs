@@ -1,5 +1,5 @@
 export const environment = {
   production: true,
   dev: false,
-  HttpOrHttpsPrefix: 'https'
+  prefixUrl: 'https://localhost:8080/API'
 };

@@ -4,21 +4,22 @@ import {forkJoin, Observable, throwError} from 'rxjs';
 import {HttpClient, HttpHeaders} from '@angular/common/http';
 import {catchError, map, retry, tap} from 'rxjs/operators';
 import {environment} from '../../environments/environment';
-import {Course} from '../models/course.model';
 
 @Injectable({
   providedIn: 'root'
 })
 export class BackendService {
   httpOptions = {
-    headers: new HttpHeaders({'Content-Type': 'application/json'}), // ,  'Access-Control-Allow-Origin': '*'
-// observe?: 'body' | 'events' | 'response',
-//   params?: HttpParams|{[param: string]: string | string[]},
-//     reportProgress: true,
-    // responseType: 'json'|'text',
-    // withCredentials: true  // Whether this request should be sent with outgoing credentials (cookies).
+    headers: new HttpHeaders({
+      'Content-Type': 'application/json'
+      // observe?: 'body' | 'events' | 'response',
+      // params?: HttpParams|{[param: string]: string | string[]},
+      // reportProgress: true,
+      // responseType: 'json'|'text',
+      // withCredentials: true  // Whether this request should be sent with outgoing credentials (cookies).
+    }),
   };
-  private apiJsonServerProxyPath = environment.HttpOrHttpsPrefix + '://localhost:8080/API'; // URL to web api
+  private apiJsonServerProxyPath = environment.prefixUrl;
 
   constructor(private http: HttpClient) {
     // console.log('@@ BackendService.constructor - new service instance (http or htpps?)=' + environment.HttpOrHttpsPrefix);
@@ -75,18 +76,6 @@ export class BackendService {
     ).pipe(
       tap(s => console.log('disenroll http.put:', s)),
       retry(0), catchError(this.formatErrors));
-  }
-  getCourses(): Observable<Course[]> {
-    return this.http.get<any>(`${this.apiJsonServerProxyPath}/courses`, this.httpOptions)
-      .pipe(retry(0), catchError(this.formatErrors),
-        map(response => response._embedded.courseDTOList),
-        map(s => s.map(ss => {
-          const copy = {...ss};
-          delete copy._links;
-          delete copy.links; // only '_links' should show up
-          return copy;
-        }))
-      );
   }
 
   queryAllStudents(queryTitle: string): Observable<Student[]> {

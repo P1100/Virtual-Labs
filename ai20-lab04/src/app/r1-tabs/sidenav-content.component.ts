@@ -1,5 +1,4 @@
 import {Component, OnChanges, OnDestroy, OnInit, SimpleChanges} from '@angular/core';
-import {Course} from '../models/course.model';
 import {ActivatedRoute} from '@angular/router';
 import {Subscription} from 'rxjs';
 import {BackendService} from '../services/backend.service';
@@ -25,11 +24,8 @@ export class SidenavContentComponent implements OnInit, OnChanges, OnDestroy {
   activeCourse = null;
   paramSubscription: Subscription;
 
-  courses: Course[] = null;
 
   constructor(private route: ActivatedRoute, private backendService: BackendService) {
-    // Primo e unico aggiornamento corsi. Altri updates solo nelle funzioni di modifica
-    this.backendService.getCourses().subscribe(x => this.courses = [...x]);
     // Devo riaggiornare i tabs ad ogni cambio di corso. Versione no observable =>  this.route.snapshot.paramMap.get("id");
     this.paramSubscription = this.route.url.subscribe(url => {
       this.activeCourse = +this.route.snapshot.paramMap.get('id');
