@@ -15,6 +15,7 @@ import {Student} from '../../models/student.model';
   template: `
     <app-students [enrolled]="enrolledStudents"
                   [students]="allStudents"
+                  [setAutocompleteInit]="autocompleteInit"
                   (enrolledEvent)="onStudentsToEnroll($event)"
                   (disenrolledEvent)="onStudentsToDisenroll($event)"
     ></app-students>
@@ -30,6 +31,8 @@ export class StudentsContComponent implements OnInit, OnDestroy {
   subAllStudents: Subscription = null;
   subEnrolledStudentsCourse: Subscription = null;
   subRouteParam: Subscription = null;
+  // Needed to initialize autocomplete properly
+  autocompleteInit = false;
 
   // update students and enrolled on routing change (executed once, e.g. when changing course for the tab student)
   constructor(private backendService: BackendService, private activatedRoute: ActivatedRoute) {
@@ -40,7 +43,8 @@ export class StudentsContComponent implements OnInit, OnDestroy {
         .subscribe(
           (students: Student[]) => {
             this.allStudents = [...(students || [])];
-            console.log('---- allStudents:', this.enrolledStudents);
+            console.log('---- allStudents:', this.allStudents);
+            this.autocompleteInit = true;
           });
       this.subEnrolledStudentsCourse = this.backendService.getEnrolledStudents(this.courseId)
           .subscribe((

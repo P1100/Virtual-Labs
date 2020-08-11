@@ -6,7 +6,7 @@ import {MatPaginator} from '@angular/material/paginator';
 import {MatAutocompleteSelectedEvent} from '@angular/material/autocomplete';
 import {FormControl} from '@angular/forms';
 import {Observable, Subscription} from 'rxjs';
-import {filter, map, startWith} from 'rxjs/operators';
+import {filter, map, startWith, tap} from 'rxjs/operators';
 import {ActivatedRoute} from '@angular/router';
 
 @Component({
@@ -36,6 +36,27 @@ export class StudentsComponent implements OnInit, AfterViewInit, OnDestroy {
     this.showCheckboxDeselectAllToolbar = false;
     this.showCheckboxDeselectAllToolbar = false;
   }
+  // Used in AutoComplete. It's the list of all students but at times filtered (so cant be merged in only one var)
+  filteredOptions$: Observable<Student[]> = null;
+  // NEEDED logic to ensure student data is loaded at first click on the autocomplete
+  @Input()
+  set setAutocompleteInit(flag: boolean) {
+    if (flag === true && this.filteredOptions$ == null) {
+      this.filteredOptions$ = this.autocompleteControl.valueChanges
+        .pipe(
+          startWith(''),
+          // // WARNING: When option is selected, value becomes a Student object... not a string. Code below commented (console.logs) was to test that
+          filter(value => ((typeof value) === 'string')),
+          tap(() => console.log('filteredOptions$', this.students)),
+          map((value: string): Student[] => {
+            console.log('value:', value, typeof value, value?.length);
+            console.log('@ isNull ' + (value === null));
+            console.log('@ isUndefined ' + (value === undefined));
+            return this.students.filter(x => x.firstName.toLowerCase().startsWith(value.trim().toLowerCase()));
+          }),
+        );
+    }
+  }
   // Table data, connected directly to the data sent from the cont component (see above)
   dataSource: MatTableDataSource<Student> = new MatTableDataSource<Student>();
   @Output()
@@ -58,36 +79,18 @@ export class StudentsComponent implements OnInit, AfterViewInit, OnDestroy {
   // number is the student's id (serial).
   // IMPORTANT: always add the + symbol before any number passed to checked, otherwise it will interpret it like a string, resulting in an error
   checked: Map<number, boolean> = null;
-  // Used in AutoComplete. It's the list of all students but at times filtered (so cant be merged in only one var)
-  filteredOptions$: Observable<Student[]>;
   // Course id of current page (used in routing module)
   public id: string;
-  private paramSubscription: Subscription;
+  private urlParamSubscription: Subscription;
 
   flag = 'https://upload.wikimedia.org/wikipedia/commons/9/9d/Flag_of_Arkansas.svg';
 
   constructor(private route: ActivatedRoute) {
-    this.paramSubscription = this.route.parent.url.subscribe(() => {
+    this.urlParamSubscription = this.route.parent.url.subscribe(() => {
       this.id = this.route.parent.snapshot.paramMap.get('id');
     });
   }
   ngOnInit() {
-    this.filteredOptions$ = this.autocompleteControl.valueChanges
-      .pipe(
-        startWith(''),
-        // When option is selected, value becomes a Student object... not a string. Code below commented (console.logs) was to test that
-        filter(value => ((typeof value) === 'string')),
-        map((value: string): Student[] => {
-          // console.log('@ value isNull ' + (value === null));
-          // console.log('@ value isUndefined ' + (value === undefined));
-          // console.log('@ value is type string ' + ((typeof value) === 'string'));
-          // console.log('@ value is type object ' + ((typeof value) === 'object'));
-          // console.log('StudentsComponent.ngOnInit filteredOptions$ value:\n typeof->' + typeof value + '(\"' + value + '\")');
-          // console.log('@ filteredOptions$' + JSON.stringify(this.filteredOptions$)); --> no, é un observable, non viene stampato
-          console.log('students', this.students);
-          return this.students.filter(x => x.firstName.toLowerCase().startsWith(value.trim().toLowerCase()));
-        }),
-      );
   }
   ngAfterViewInit() {
     this.dataSource.paginator = this.paginator;
@@ -99,9 +102,6 @@ export class StudentsComponent implements OnInit, AfterViewInit, OnDestroy {
       this.enrolledEvent.emit([this.selectedStudentToAdd]);
       this.checked.set(this.selectedStudentToAdd.id, false);
       this.selectedStudentToAdd = null;
-      //   if (this.masterStatus === 1) {
-      //     this.masterStatus = 2;
-      //   }
     }
   }
   // Passing the students to remove (whole Students array, not just the id)
@@ -195,7 +195,7 @@ export class StudentsComponent implements OnInit, AfterViewInit, OnDestroy {
     this.showCheckboxDeselectAllToolbar = false;
   }
   ngOnDestroy(): void {
-    this.paramSubscription.unsubscribe();
+    this.urlParamSubscription.unsubscribe();
   }
 }
 
