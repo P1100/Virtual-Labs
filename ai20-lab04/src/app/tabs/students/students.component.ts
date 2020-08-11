@@ -98,6 +98,8 @@ export class StudentsComponent implements OnInit, AfterViewInit, OnDestroy {
       this.id = this.route.parent.snapshot.paramMap.get('id');
       // Every time I change the route, I make sure the automplete source data is updated.. (look setAutocompleteInit above)
       delete this.filteredOptions$;
+      // Needed to reset the input of autcomplete, after a route change
+      this.autocompleteControl.reset(null);
     });
   }
   ngOnInit() {
