@@ -91,7 +91,7 @@ http://localhost:3000/students?_expand=group
 `logLevel: config.LOG_INFO,`  
 `reporters: ['progress', 'kjhtml'],`
 
-## Bugs fixes (tsconfig.json)
+## Bugs fix (tsconfig.json)
     "baseUrl": "./",
     "paths": {
       "tslib" : ["node_modules/tslib/tslib.d.ts"]

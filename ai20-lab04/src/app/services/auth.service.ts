@@ -26,6 +26,17 @@ export class AuthService {
       this.isLoggedSubject = new BehaviorSubject(false);
     }
   }
+  private static setSession(authResult, email) {
+    const tkn = JSON.parse(atob(authResult.accessToken.split('.')[1]));
+    // const expiresAt = moment().add(authResult.expiresIn, 'second');
+    console.log('setSession:', atob(authResult.accessToken.split('.')[1]));
+    // console.log(JSONmoment.unix(tkn.exp));
+    localStorage.setItem('accessToken', authResult.accessToken);
+    localStorage.setItem('user', email);
+    // json-server-auth token field exp contains epoch of exportation (last 1 hour)
+    localStorage.setItem('expires_at', tkn.exp);
+  }
+
   /* shareReplay --> needs Subject
      We are calling shareReplay to prevent the receiver of this Observable
     from accidentally triggering multiple POST requests due to multiple subscriptions.
@@ -36,9 +47,9 @@ export class AuthService {
       // tap(res => console.log('AuthService.login() post before delay:')),
       // delay(2000), // testing correctness code
       // tap(res => console.log('AuthService.login() post before delay:')),
-      tap(res => this.setSession(res, email)),
+      tap(res => AuthService.setSession(res, email)),
       // shareReplay(),
-      tap(res => this.isLoggedSubject.next(true))
+      tap(() => this.isLoggedSubject.next(true))
     );
   }
   logout(): /* Observable<any> */ void {
@@ -59,15 +70,5 @@ export class AuthService {
   }
   public isLoggedOut() {
     return !this.isLoggedIn();
-  }
-  private setSession(authResult, email) {
-    const tkn = JSON.parse(atob(authResult.accessToken.split('.')[1]));
-    // const expiresAt = moment().add(authResult.expiresIn, 'second');
-    console.log('setSession:', atob(authResult.accessToken.split('.')[1]));
-    // console.log(JSONmoment.unix(tkn.exp));
-    localStorage.setItem('accessToken', authResult.accessToken);
-    localStorage.setItem('user', email);
-    // json-server-auth token field exp contains epoch of exportation (last 1 hour)
-    localStorage.setItem('expires_at', tkn.exp);
   }
 }

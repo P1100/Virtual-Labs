@@ -16,20 +16,6 @@ export interface DialogData {
   name: string;
 }
 
-const DB_COURSES: Course[] = [
-  {id: 1, label: 'Applicazioni Internet', path: 'applicazioni-internet', fullName: '', minEnrolled: 0, maxEnrolled: 0, enabled: true},
-  {
-    id: 2,
-    label: 'Programmazione di sistema',
-    path: 'programmazione-di-sistema',
-    fullName: '',
-    minEnrolled: 0,
-    maxEnrolled: 0,
-    enabled: true
-  },
-  {id: 3, label: 'Mobile development', path: 'mobile-development', fullName: '', minEnrolled: 0, maxEnrolled: 0, enabled: true}
-];
-
 @Component({
   // selector changed from app-root, inserted in index.html!
   selector: 'app-home',
@@ -67,7 +53,7 @@ export class HomeComponent implements OnInit, OnDestroy {
           return rout?.firstChild?.firstChild?.firstChild?.firstChild;
         }),
         tap(r => console.log('Child', r)),
-        mergeMap((rout) => (rout != null || rout != undefined) ? rout.paramMap : of(null))
+        mergeMap((rout) => (rout != null) ? rout?.paramMap : of(null))
       ).subscribe((paramMap) => {
         courseService.getCourses().subscribe(x => {
           console.log();
@@ -75,13 +61,14 @@ export class HomeComponent implements OnInit, OnDestroy {
           console.log('CoursesLoaded - paramMap:', paramMap);
           // const idActiveCourse = +paramAsMap.get('id');
 
-          if (paramMap == null || paramMap === undefined) {
+          if (paramMap == null) {
             this.nameActiveCourse = '';
           } else {
-            let idActiveCourse = +paramMap.get('id');
-            console.log('idActiveCourse', +paramMap.get('id'), paramMap.get('id'), paramMap, paramMap.id);
+            const idActiveCourse = +paramMap.get('id');
+            console.log('idActiveCourse', +paramMap.get('id'));
             for (const course of this.courses) {
-              if (course.id == idActiveCourse) {
+              // tslint:disable-next-line:triple-equals
+              if (course.id == idActiveCourse) { // dont use === here
                 this.nameActiveCourse = course.fullName;
               }
             }
@@ -89,7 +76,7 @@ export class HomeComponent implements OnInit, OnDestroy {
 
         });
       }
-    ); // Get the params (paramAsMap.params) and use them to highlight or everything that meet your need
+    );
 
     // console.log('constructor HomeComponent pre ' + this.isLogged);
     this.subscription = this.auth.getSub().subscribe(x => {
@@ -119,7 +106,7 @@ export class HomeComponent implements OnInit, OnDestroy {
       maxWidth: '600px', hasBackdrop: true,
       data: {name: this.name, animal: this.animal}
     });
-    dialogRef.afterClosed().subscribe(result => {
+    dialogRef.afterClosed().subscribe(() => {
       // console.log('openLoginDialogTemplate afterClosed().subscribe');
     });
   }
@@ -138,9 +125,9 @@ export class HomeComponent implements OnInit, OnDestroy {
       hasBackdrop: false, // clicking outside wont close it
     });
     // Settings what to do when dialog is closed
-    this.dialogRef.afterClosed().subscribe(result => {
+    this.dialogRef.afterClosed().subscribe(() => {
         this.dialogRef = undefined;
-      // console.log('openLoginDialogReactive afterClosed().subscribe', result);
+        // console.log('openLoginDialogReactive afterClosed().subscribe', result);
       }
     );
   }

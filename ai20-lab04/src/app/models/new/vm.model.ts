@@ -1,4 +1,4 @@
-import {Student} from './student.model';
+import {Student} from '../student.model';
 
 export class Vm {
     id: string;

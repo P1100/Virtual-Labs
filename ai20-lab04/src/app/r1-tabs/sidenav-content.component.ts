@@ -1,7 +1,6 @@
 import {Component, OnChanges, OnDestroy, OnInit, SimpleChanges} from '@angular/core';
 import {ActivatedRoute} from '@angular/router';
 import {Subscription} from 'rxjs';
-import {BackendService} from '../services/backend.service';
 
 // Costruzione dinamica delle tabs parte da qui
 const tabs = [
@@ -25,9 +24,9 @@ export class SidenavContentComponent implements OnInit, OnChanges, OnDestroy {
   paramSubscription: Subscription;
 
 
-  constructor(private route: ActivatedRoute, private backendService: BackendService) {
+  constructor(private route: ActivatedRoute) {
     // Devo riaggiornare i tabs ad ogni cambio di corso. Versione no observable =>  this.route.snapshot.paramMap.get("id");
-    this.paramSubscription = this.route.url.subscribe(url => {
+    this.paramSubscription = this.route.url.subscribe(() => {
       this.activeCourse = +this.route.snapshot.paramMap.get('id');
       this.navLinks = [];
       for (const tab of tabs) {

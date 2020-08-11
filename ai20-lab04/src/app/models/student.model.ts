@@ -9,5 +9,4 @@ export class Student {
     this.lastName = lastName;
     this.profilePhoto = profilePhoto;
   }
-  //     this.displayedColumnsTable = ['select', 'id', 'firstName', 'lastName', 'group'];
 }

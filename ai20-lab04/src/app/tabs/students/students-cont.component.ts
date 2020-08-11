@@ -39,16 +39,14 @@ export class StudentsContComponent implements OnInit, OnDestroy {
       this.subAllStudents = this.backendService.getAllStudents()
         .subscribe(
           (students: Student[]) => {
-            console.log('---- allStudents', students);
             this.allStudents = [...(students || [])];
-            console.log('Subscription allStudents:', this.enrolledStudents);
+            console.log('---- allStudents:', this.enrolledStudents);
           });
       this.subEnrolledStudentsCourse = this.backendService.getEnrolledStudents(this.courseId)
           .subscribe((
             students: Student[]) => {
-            console.log('---- enrolledStudents', students);
             this.enrolledStudents = [...(students || [])];
-            console.log('Subscription enrolledStudents:', this.enrolledStudents);
+            console.log('---- enrolledStudents:', this.enrolledStudents);
           });
       }
     );
