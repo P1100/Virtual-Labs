@@ -51,6 +51,8 @@ export class StudentsComponent implements OnInit, AfterViewInit, OnDestroy {
   private students: Student[];
   private paramSubscription: Subscription;
 
+  flag = 'https://upload.wikimedia.org/wikipedia/commons/9/9d/Flag_of_Arkansas.svg';
+
   constructor(private route: ActivatedRoute) {
     this.paramSubscription = this.route.parent.url.subscribe(url => {
       this.id = this.route.parent.snapshot.paramMap.get('id');

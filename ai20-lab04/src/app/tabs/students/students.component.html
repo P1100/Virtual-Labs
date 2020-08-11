@@ -27,9 +27,9 @@
       <mat-autocomplete #auto="matAutocomplete"
                         (optionSelected)="autocompleteSaveOption($event)"
                         [displayWith]="autocompleteDisplayFunction">
-        <mat-option *ngFor="let option of filteredOptions$ | async"
-                    [value]="option">{{option.firstName}} {{option.lastName}}
-          ({{option.id}})
+        <mat-option *ngFor="let option of filteredOptions$ | async" [value]="option">
+          <img aria-hidden [src]="flag" height="25">
+          {{option.firstName}} {{option.lastName}} ({{option.id}})
         </mat-option>
       </mat-autocomplete>
     </mat-form-field>
