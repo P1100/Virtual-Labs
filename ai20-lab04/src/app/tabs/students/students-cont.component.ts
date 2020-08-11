@@ -32,26 +32,26 @@ export class StudentsContComponent implements OnInit, OnDestroy {
   subEnrolledStudentsCourse: Subscription = null;
   subRouteParam: Subscription = null;
   // Needed to initialize autocomplete properly
-  autocompleteInit = false;
+  autocompleteInit = 0;
 
   // update students and enrolled on routing change (executed once, e.g. when changing course for the tab student)
   constructor(private backendService: BackendService, private activatedRoute: ActivatedRoute) {
     this.subRouteParam = this.activatedRoute.paramMap.subscribe(() => {
-      this.courseId = +this.activatedRoute.parent.snapshot.paramMap.get('id');
-      console.log('activeCourse: ' + this.courseId);
-      this.subAllStudents = this.backendService.getAllStudents()
-        .subscribe(
-          (students: Student[]) => {
-            this.allStudents = [...(students || [])];
-            console.log('---- allStudents:', this.allStudents);
-            this.autocompleteInit = true;
-          });
-      this.subEnrolledStudentsCourse = this.backendService.getEnrolledStudents(this.courseId)
+        this.courseId = +this.activatedRoute.parent.snapshot.paramMap.get('id');
+        console.log('activeCourse: ' + this.courseId);
+        this.subEnrolledStudentsCourse = this.backendService.getEnrolledStudents(this.courseId)
           .subscribe((
             students: Student[]) => {
             this.enrolledStudents = [...(students || [])];
             console.log('---- enrolledStudents:', this.enrolledStudents);
           });
+        this.subAllStudents = this.backendService.getAllStudents()
+          .subscribe(
+            (students: Student[]) => {
+              this.allStudents = [...(students || [])];
+              console.log('---- allStudents:', this.allStudents);
+              this.autocompleteInit = this.courseId; // ! dont move subAllStudents code before subEnrolledStudentsCourse
+            });
       }
     );
   }

@@ -40,19 +40,27 @@ export class StudentsComponent implements OnInit, AfterViewInit, OnDestroy {
   filteredOptions$: Observable<Student[]> = null;
   // NEEDED logic to ensure student data is loaded at first click on the autocomplete
   @Input()
-  set setAutocompleteInit(flag: boolean) {
-    if (flag === true && this.filteredOptions$ == null) {
+  set setAutocompleteInit(flag: number) {
+    if (flag > 0) {
       this.filteredOptions$ = this.autocompleteControl.valueChanges
         .pipe(
           startWith(''),
           // // WARNING: When option is selected, value becomes a Student object... not a string. Code below commented (console.logs) was to test that
           filter(value => ((typeof value) === 'string')),
-          tap(() => console.log('filteredOptions$', this.students)),
+          tap(() => console.log('filteredOptions$', this.students, this.enrolled)),
           map((value: string): Student[] => {
-            console.log('value:', value, typeof value, value?.length);
-            console.log('@ isNull ' + (value === null));
-            console.log('@ isUndefined ' + (value === undefined));
-            return this.students.filter(x => x.firstName.toLowerCase().startsWith(value.trim().toLowerCase()));
+            // console.log('map(value):', value, typeof value, value?.length);
+            // console.log('@ isNull ' + (value === null));
+            // console.log('@ isUndefined ' + (value === undefined));
+            return this.students.filter(s => {
+              let notcontains = true;
+              for (const student of this.enrolled) {
+                if (student.id == s.id) {
+                  notcontains = false;
+                }
+              }
+              return notcontains;
+            })?.filter(x => x.firstName.toLowerCase().startsWith(value.trim().toLowerCase()));
           }),
         );
     }
@@ -88,6 +96,8 @@ export class StudentsComponent implements OnInit, AfterViewInit, OnDestroy {
   constructor(private route: ActivatedRoute) {
     this.urlParamSubscription = this.route.parent.url.subscribe(() => {
       this.id = this.route.parent.snapshot.paramMap.get('id');
+      // Every time I change the route, I make sure the automplete source data is updated.. (look setAutocompleteInit above)
+      delete this.filteredOptions$;
     });
   }
   ngOnInit() {
