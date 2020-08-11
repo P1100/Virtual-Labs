@@ -8,10 +8,6 @@ import {EmptyComponent} from './r1-tabs/empty.component';
 import {AssignmentsContComponent} from './tabs/assignments/assignments-cont.component';
 import {GroupsContComponent} from './tabs/groups/groups-cont.component';
 
-// this.router.navigate(['teacher','course'])
-// this.router.navigateByUrl(`/courses/${course.id}`);
-//     this.router.navigate(['/courses',course.id]);
-// TODO: reactivate Auth logic later (look es5 commit to be sure, not everything is to uncomment...)
 const routes: Routes = [
   {
     path: '',
@@ -29,6 +25,7 @@ const routes: Routes = [
           },
           {
             path: 'course',
+// TODO: reactivate Auth logic later (look es5 commit to be sure, not everything is to uncomment...)
             // canActivate: [AuthGuard],
             // canActivateChild: [AuthGuard],
             children: [
@@ -75,3 +72,7 @@ const routes: Routes = [
 })
 export class AppRoutingModule {
 }
+
+// this.router.navigate(['teacher','course'])
+//     this.router.navigate(['/courses',course.id]);
+// this.router.navigateByUrl(`/courses/${course.id}`);

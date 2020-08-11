@@ -14,54 +14,18 @@ import {ActivatedRoute} from '@angular/router';
   templateUrl: './students.component.html',
   styleUrls: ['./students.component.css']
 })
-// Non vengono usati Observables in questa classe, perché tutta la comunicazione asincrona con server/servizio avviene nel componente container
+/* Data is always obtained from the container component, which calls the service, which calls the back end */
 export class StudentsComponent implements OnInit, AfterViewInit, OnDestroy {
-  @Output()
-  enrolledEvent = new EventEmitter<Student[]>();
-  @Output()
-  disenrolledEvent = new EventEmitter<Student[]>();
-  // Needed to get paginator instance
-  @ViewChild(MatPaginator) paginator: MatPaginator;
-  // Needed sort variable
-  @ViewChild(MatSort) sort: MatSort;
-  // displayedColumnsTable is based on Student class (manual sync), controls various formatting elements
-  displayedColumnsTable: string[] = ['select', 'id', 'firstName', 'lastName', 'group']; // email removed
-  // MatPaginator Inputs
-  length: number; // The current total number of items being paged. Read only
-  pageSize = 25;
-  pageSizeOptions: number[] = [1, 2, 5, 10, 20];
-  myControl = new FormControl();
-  // Table data, collegata direttamente a enrolled students tramite setter/getter (binding diretto di enrolledStudents dal padre)
-  dataSource: MatTableDataSource<Student> = new MatTableDataSource<Student>();
-  selectedStudentToAdd: Student = null;
-  /* Checkbox */
-  checkboxMasterCompleted = false;
-  checkboxMasterIndeterminate = false;
-  showCheckboxSelectAllToolbar = false;
-  showCheckboxDeselectAllToolbar = false;
-  // number is the student's id (serial). IMPORTANT: always add the + symbol before any number passed to checked, otherwise
-  // it will interpret it like a string resulting in a null result
-  checked: Map<number, boolean> = null;
-  // Used in AutoComplete. It's the list of all students but at times filtered (so cant be merged in only one var)
-  filteredOptions$: Observable<Student[]>;
-  // Course id of current page (used in routing module)
-  public id: string;
-  // Private variable used to get data from the service (superset of filteredOptions, used in autocomplete)
   @Input()
+  // Superset of filteredOptions, used in autocomplete
   private students: Student[];
-  private paramSubscription: Subscription;
-
-  flag = 'https://upload.wikimedia.org/wikipedia/commons/9/9d/Flag_of_Arkansas.svg';
-
-  constructor(private route: ActivatedRoute) {
-    this.paramSubscription = this.route.parent.url.subscribe(() => {
-      this.id = this.route.parent.snapshot.paramMap.get('id');
-    });
-  }
+  // displayedColumnsTable is based on Student model (manual sync). It controls various formatting elements
+  displayedColumnsTable: string[] = ['select', 'id', 'firstName', 'lastName', 'group']; // email removed
+  // enrolled is saved with a get/set syntax
   get enrolled(): Student[] {
     return this.dataSource.data;
   }
-  // Change course, or enrolled students data. Reset all
+  // Update enrolled students data from, when new one is sent by the container comp. Reset all
   @Input()
   set enrolled(array: Student[]) {
     this.dataSource.data = [...array];
@@ -72,8 +36,43 @@ export class StudentsComponent implements OnInit, AfterViewInit, OnDestroy {
     this.showCheckboxDeselectAllToolbar = false;
     this.showCheckboxDeselectAllToolbar = false;
   }
+  // Table data, connected directly to the data sent from the cont component (see above)
+  dataSource: MatTableDataSource<Student> = new MatTableDataSource<Student>();
+  @Output()
+  enrolledEvent = new EventEmitter<Student[]>();
+  @Output()
+  disenrolledEvent = new EventEmitter<Student[]>();
+  @ViewChild(MatSort) sort: MatSort;
+  @ViewChild(MatPaginator) paginator: MatPaginator;
+  // MatPaginator Inputs
+  length: number; // The current total number of items being paged. Read only
+  pageSize = 25;
+  pageSizeOptions: number[] = [1, 2, 5, 10, 20];
+  autocompleteControl = new FormControl();
+  selectedStudentToAdd: Student = null;
+  /* Checkbox */
+  checkboxMasterCompleted = false;
+  checkboxMasterIndeterminate = false;
+  showCheckboxSelectAllToolbar = false;
+  showCheckboxDeselectAllToolbar = false;
+  // number is the student's id (serial).
+  // IMPORTANT: always add the + symbol before any number passed to checked, otherwise it will interpret it like a string, resulting in an error
+  checked: Map<number, boolean> = null;
+  // Used in AutoComplete. It's the list of all students but at times filtered (so cant be merged in only one var)
+  filteredOptions$: Observable<Student[]>;
+  // Course id of current page (used in routing module)
+  public id: string;
+  private paramSubscription: Subscription;
+
+  flag = 'https://upload.wikimedia.org/wikipedia/commons/9/9d/Flag_of_Arkansas.svg';
+
+  constructor(private route: ActivatedRoute) {
+    this.paramSubscription = this.route.parent.url.subscribe(() => {
+      this.id = this.route.parent.snapshot.paramMap.get('id');
+    });
+  }
   ngOnInit() {
-    this.filteredOptions$ = this.myControl.valueChanges
+    this.filteredOptions$ = this.autocompleteControl.valueChanges
       .pipe(
         startWith(''),
         // When option is selected, value becomes a Student object... not a string. Code below commented (console.logs) was to test that

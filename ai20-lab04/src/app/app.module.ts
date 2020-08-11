@@ -68,6 +68,7 @@ import {AreYouSureComponent} from './dialogs/are-you-sure/are-you-sure.component
     ReactiveFormsModule,
     HttpClientModule,
     MatDialogModule
+    // Dont import, unless for test
     // RouterTestingModule,
     // HttpClientTestingModule
   ],
@@ -96,7 +97,7 @@ import {AreYouSureComponent} from './dialogs/are-you-sure/are-you-sure.component
   ],
   providers: [HttpClientModule, {provide: MAT_DIALOG_DEFAULT_OPTIONS, useValue: {hasBackdrop: false}},
     {provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true}],
-  bootstrap: [HomeComponent]
+  bootstrap: [AppComponent]
 })
 export class AppModule {
 }
