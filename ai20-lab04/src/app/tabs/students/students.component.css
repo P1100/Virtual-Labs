@@ -20,10 +20,6 @@ form {
   width: 100%;
 }
 
-mat-form {
-  width: auto;
-}
-
 mat-form-field {
   width: 70%;
 }

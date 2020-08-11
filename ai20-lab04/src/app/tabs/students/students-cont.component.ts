@@ -33,17 +33,17 @@ export class StudentsContComponent implements OnInit, OnDestroy {
 
   // update students and enrolled on routing change (executed once, e.g. when changing course for the tab student)
   constructor(private backendService: BackendService, private activatedRoute: ActivatedRoute) {
-    this.subRouteParam = this.activatedRoute.paramMap.subscribe(url => {
-        this.courseId = +this.activatedRoute.parent.snapshot.paramMap.get('id');
-        console.log('activeCourse: ' + this.courseId);
-        this.subAllStudents = this.backendService.getAllStudents()
-          .subscribe(
-            (students: Student[]) => {
-              console.log('---- allStudents', students);
-              this.allStudents = [...(students || [])];
-              console.log('Subscription allStudents:', this.enrolledStudents);
-            });
-        this.subEnrolledStudentsCourse = this.backendService.getEnrolledStudents(this.courseId)
+    this.subRouteParam = this.activatedRoute.paramMap.subscribe(() => {
+      this.courseId = +this.activatedRoute.parent.snapshot.paramMap.get('id');
+      console.log('activeCourse: ' + this.courseId);
+      this.subAllStudents = this.backendService.getAllStudents()
+        .subscribe(
+          (students: Student[]) => {
+            console.log('---- allStudents', students);
+            this.allStudents = [...(students || [])];
+            console.log('Subscription allStudents:', this.enrolledStudents);
+          });
+      this.subEnrolledStudentsCourse = this.backendService.getEnrolledStudents(this.courseId)
           .subscribe((
             students: Student[]) => {
             console.log('---- enrolledStudents', students);

@@ -1,7 +1,7 @@
 import {AfterViewInit, Component, EventEmitter, Input, OnDestroy, OnInit, Output, ViewChild} from '@angular/core';
 import {Student} from '../../models/student.model';
 import {MatTableDataSource} from '@angular/material/table';
-import {MatSort} from '@angular/material/sort';
+import {MatSort, Sort} from '@angular/material/sort';
 import {MatPaginator} from '@angular/material/paginator';
 import {MatAutocompleteSelectedEvent} from '@angular/material/autocomplete';
 import {FormControl} from '@angular/forms';
@@ -16,15 +16,15 @@ import {ActivatedRoute} from '@angular/router';
 })
 // Non vengono usati Observables in questa classe, perché tutta la comunicazione asincrona con server/servizio avviene nel componente container
 export class StudentsComponent implements OnInit, AfterViewInit, OnDestroy {
-  @Output('enrolledEvent')
+  @Output()
   enrolledEvent = new EventEmitter<Student[]>();
-  @Output('disenrolledEvent')
+  @Output()
   disenrolledEvent = new EventEmitter<Student[]>();
   // Needed to get paginator instance
   @ViewChild(MatPaginator) paginator: MatPaginator;
   // Needed sort variable
   @ViewChild(MatSort) sort: MatSort;
-  // displayedColumnsTable is based on Student class (manual synch), controls various formatting elements
+  // displayedColumnsTable is based on Student class (manual sync), controls various formatting elements
   displayedColumnsTable: string[] = ['select', 'id', 'firstName', 'lastName', 'group']; // email removed
   // MatPaginator Inputs
   length: number; // The current total number of items being paged. Read only
@@ -54,7 +54,7 @@ export class StudentsComponent implements OnInit, AfterViewInit, OnDestroy {
   flag = 'https://upload.wikimedia.org/wikipedia/commons/9/9d/Flag_of_Arkansas.svg';
 
   constructor(private route: ActivatedRoute) {
-    this.paramSubscription = this.route.parent.url.subscribe(url => {
+    this.paramSubscription = this.route.parent.url.subscribe(() => {
       this.id = this.route.parent.snapshot.paramMap.get('id');
     });
   }
@@ -83,7 +83,7 @@ export class StudentsComponent implements OnInit, AfterViewInit, OnDestroy {
           // console.log('@ value isUndefined ' + (value === undefined));
           // console.log('@ value is type string ' + ((typeof value) === 'string'));
           // console.log('@ value is type object ' + ((typeof value) === 'object'));
-          // console.log('StudentsComponent.ngOnInit filteredOptions$ value:\ntypeof->' + typeof value + '(\"' + value + '\")');
+          // console.log('StudentsComponent.ngOnInit filteredOptions$ value:\n typeof->' + typeof value + '(\"' + value + '\")');
           // console.log('@ filteredOptions$' + JSON.stringify(this.filteredOptions$)); --> no, é un observable, non viene stampato
           console.log('students', this.students);
           return this.students.filter(x => x.firstName.toLowerCase().startsWith(value.trim().toLowerCase()));
@@ -113,9 +113,9 @@ export class StudentsComponent implements OnInit, AfterViewInit, OnDestroy {
     // this.checkedCount = 0;
     // this.masterStatus = 0;
   }
-  sortChange(sort: MatSort) {
-    // console.log('# students.sortChange selectedStudentToAdd: ' + JSON.stringify(this.selectedStudentToAdd));
-    this.sort = sort;
+  sortChange(sort: Sort) {
+    // console.log('selectedStudentToAdd: ' + JSON.stringify(this.selectedStudentToAdd));
+    this.sort = sort as MatSort;
     this.sortData();
   }
   // changes dataSource.data, which is linked by setter to the template component. As soon as data gets updated, sort is called again (in enrolled setter)

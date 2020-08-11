@@ -1,5 +1,6 @@
 <p *ngIf="showCheckboxSelectAllToolbar || showCheckboxDeselectAllToolbar">
-  <mat-toolbar style="font-family: 'Roboto,RobotoDraft,Helvetica,Arial,sans-serif'; -webkit-justify-content: center;">
+  <mat-toolbar
+    style="font-family: 'Roboto,RobotoDraft,Helvetica,Arial,sans-serif', serif; -webkit-justify-content: center;">
     <div *ngIf="showCheckboxSelectAllToolbar; else elseRemoveAllDialog">
       All {{dataSource.paginator.pageSize}} students on this page are selected.
       <a (click)="checkboxSetAll(true)"
@@ -19,16 +20,16 @@
 <div class="student_tab">
   <form>
     <mat-form-field>
+      <mat-label>Add student</mat-label>
       <input #input [formControl]="myControl" [matAutocomplete]="auto"
              matInput
              placeholder="Name of the student"
              type="text">
-      <mat-label>Add student</mat-label>
       <mat-autocomplete #auto="matAutocomplete"
                         (optionSelected)="autocompleteSaveOption($event)"
                         [displayWith]="autocompleteDisplayFunction">
         <mat-option *ngFor="let option of filteredOptions$ | async" [value]="option">
-          <img aria-hidden [src]="flag" height="25">
+          <img aria-hidden="true" [src]="flag" height="25" alt="photo">
           {{option.firstName}} {{option.lastName}} ({{option.id}})
         </mat-option>
       </mat-autocomplete>
@@ -53,12 +54,10 @@
           [checked]="checkboxIsChecked(element.id)"></mat-checkbox>
       </td>
     </ng-container>
-    <div *ngFor="let columm of displayedColumnsTable | slice:1;let i = index">
-      <ng-container matColumnDef="{{columm}}">
-        <th *matHeaderCellDef mat-header-cell mat-sort-header> {{columm}}</th>
-        <td *matCellDef="let element" mat-cell> {{element[columm]}} </td>
-      </ng-container>
-    </div>
+    <ng-container *ngFor="let column of displayedColumnsTable | slice:1;let i = index" matColumnDef="{{column}}">
+      <th *matHeaderCellDef mat-header-cell mat-sort-header> {{column}}</th>
+      <td *matCellDef="let element" mat-cell> {{element[column]}} </td>
+    </ng-container>
     <tr *matHeaderRowDef="displayedColumnsTable" mat-header-row></tr>
     <tr *matRowDef="let row; columns: displayedColumnsTable;" mat-row></tr>
   </table>
