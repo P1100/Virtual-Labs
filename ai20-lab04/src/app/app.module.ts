@@ -1,14 +1,13 @@
-import {MatSidenavModule} from '@angular/material/sidenav';
 import {MatToolbarModule} from '@angular/material/toolbar';
 import {MatFormFieldModule} from '@angular/material/form-field';
 import {HomeComponent} from './r0-home/home.component';
 import {MatPaginatorModule} from '@angular/material/paginator';
+import {ProfileComponent} from './dialogs/profile/profile.component';
 import {AuthInterceptor} from './auth/auth.interceptor';
+import {LoginComponent} from './dialogs/login/login.component';
 import {NgModule} from '@angular/core';
 import {MatInputModule} from '@angular/material/input';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
-import {MatMenuModule} from '@angular/material/menu';
-import {MatGridListModule} from '@angular/material/grid-list';
 import {AppRoutingModule} from './app-routing.module';
 import {MatSortModule} from '@angular/material/sort';
 import {MatTableModule} from '@angular/material/table';
@@ -18,28 +17,26 @@ import {MatCardModule} from '@angular/material/card';
 import {StudentsComponent} from './tabs/students/students.component';
 import {MatTabsModule} from '@angular/material/tabs';
 import {PageNotFoundComponent} from './tabs/page-not-found/page-not-found.component';
-import {MatButtonModule} from '@angular/material/button';
 import {GroupsContComponent} from './tabs/groups/groups-cont.component';
 import {SidenavContentComponent} from './r1-tabs/sidenav-content.component';
-import {LayoutModule} from '@angular/cdk/layout';
 import {VmsContComponent} from './tabs/vms/vms-cont.component';
 import {HTTP_INTERCEPTORS, HttpClientModule} from '@angular/common/http';
 import {MatIconModule} from '@angular/material/icon';
+import {TestDialogComponent} from './dialogs/test-dialog/test-dialog.component';
 import {MatListModule} from '@angular/material/list';
+import {MatSidenavModule} from '@angular/material/sidenav';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {AssignmentsContComponent} from './tabs/assignments/assignments-cont.component';
+import {EditRemoveCourseComponent} from './dialogs/edit-remove-course/edit-remove-course.component';
 import {BrowserModule} from '@angular/platform-browser';
-import {DragDropModule} from '@angular/cdk/drag-drop';
+import {AreYouSureComponent} from './dialogs/are-you-sure/are-you-sure.component';
 import {EmptyComponent} from './r1-tabs/empty.component';
 import {StudentsContComponent} from './tabs/students/students-cont.component';
 import {AppComponent} from './app.component';
 import {MAT_DIALOG_DEFAULT_OPTIONS, MatDialogModule} from '@angular/material/dialog';
-import {TestDialogComponent} from './dialogs/test-dialog/test-dialog.component';
-import {LoginComponent} from './dialogs/login/login.component';
-import {ProfileComponent} from './dialogs/profile/profile.component';
 import {RegisterComponent} from './dialogs/register/register.component';
-import {EditRemoveCourseComponent} from './dialogs/edit-remove-course/edit-remove-course.component';
-import {AreYouSureComponent} from './dialogs/are-you-sure/are-you-sure.component';
+import {MatButtonModule} from '@angular/material/button';
+import {MatMenuModule} from '@angular/material/menu';
 
 @NgModule({
   imports: [
@@ -49,17 +46,12 @@ import {AreYouSureComponent} from './dialogs/are-you-sure/are-you-sure.component
     MatToolbarModule,
     MatSidenavModule,
     MatListModule,
-    LayoutModule,
-    MatButtonModule,
     MatIconModule,
     MatTabsModule,
     MatTableModule,
     MatPaginatorModule,
     MatSortModule,
-    DragDropModule,
-    MatGridListModule,
     MatCardModule,
-    MatMenuModule,
     MatAutocompleteModule,
     MatFormFieldModule,
     MatCheckboxModule,
@@ -67,8 +59,15 @@ import {AreYouSureComponent} from './dialogs/are-you-sure/are-you-sure.component
     AppRoutingModule,
     ReactiveFormsModule,
     HttpClientModule,
-    MatDialogModule
-    // Dont import, unless for test
+    // Removing these wont generate an error, but GUI wont display properly
+    MatDialogModule,
+    MatButtonModule,
+    MatMenuModule
+    /* Unused */
+    // LayoutModule,
+    // DragDropModule,
+    // MatGridListModule,
+    /* -- Dont import below, unless for test */
     // RouterTestingModule,
     // HttpClientTestingModule
   ],

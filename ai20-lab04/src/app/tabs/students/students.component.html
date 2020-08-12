@@ -54,6 +54,7 @@
           [checked]="checkboxIsChecked(element.id)"></mat-checkbox>
       </td>
     </ng-container>
+    <!-- Slice used because we dont need 'select' here -->
     <ng-container *ngFor="let column of displayedColumnsTable | slice:1;let i = index" matColumnDef="{{column}}">
       <th *matHeaderCellDef mat-header-cell mat-sort-header> {{column}}</th>
       <td *matCellDef="let element" mat-cell> {{element[column]}} </td>
