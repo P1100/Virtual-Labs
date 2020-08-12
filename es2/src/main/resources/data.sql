@@ -36,7 +36,13 @@ VALUES ('2', true, 'Mobile Development', 200, 1);
 INSERT INTO virtuallabs.course (id, enabled, full_name, max_enrolled, min_enrolled)
 VALUES ('3', true, 'Programmazione di sistema', 10000, 10);
 INSERT INTO virtuallabs.course (id, enabled, full_name, max_enrolled, min_enrolled)
-VALUES ('4', false, 'Advanced Genetic Coding', 10, 1);
+VALUES ('4', true, 'Software Engineering I', 10, 1);
+INSERT INTO virtuallabs.course (id, enabled, full_name, max_enrolled, min_enrolled)
+VALUES ('5', true, 'Software Engineering II', 1, 100);
+INSERT INTO virtuallabs.course (id, enabled, full_name, max_enrolled, min_enrolled)
+VALUES ('6', false, 'Disabled Course', 1, 100);
+INSERT INTO virtuallabs.course (id, enabled, full_name, max_enrolled, min_enrolled)
+VALUES ('7', true, 'Min Max 2 3', 2, 3);
 
 INSERT INTO virtuallabs.student_course (student_id, course_id)
 VALUES ('1', '1');
