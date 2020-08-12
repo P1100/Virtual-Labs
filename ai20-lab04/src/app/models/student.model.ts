@@ -9,4 +9,9 @@ export class Student {
     this.lastName = lastName;
     this.profilePhoto = profilePhoto;
   }
+  toString(): string {
+    return this.lastName + ' ' +
+      this.firstName + ' (' +
+      this.id + ')';
+  }
 }

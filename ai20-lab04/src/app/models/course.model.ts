@@ -4,11 +4,18 @@ export class Course {
   minEnrolled: number;
   maxEnrolled: number;
   enabled: boolean;
-  label: string;
-  path: string;
-  constructor(id: number, label: string, path: string) {
+  constructor(id: number, fullName: string, minEnrolled: number, maxEnrolled: number, enabled: boolean) {
     this.id = id;
-    this.label = label;
-    this.path = path;
+    this.fullName = fullName;
+    this.minEnrolled = minEnrolled;
+    this.maxEnrolled = maxEnrolled;
+    this.enabled = enabled;
+  }
+  toString(): string {
+    return this.id + ' ' +
+      this.fullName + ' ' +
+      this.minEnrolled + ' ' +
+      this.maxEnrolled + ' ' +
+      this.enabled;
   }
 }

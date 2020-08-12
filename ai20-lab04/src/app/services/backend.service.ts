@@ -30,8 +30,8 @@ export class BackendService {
           delete copy?.links; // only '_links' should show up
           return copy;
         })),
-        retry(AppSettings.RETRIES), catchError(this.formatErrors),
-        tap(res => console.log('getAllStudents._embedded.studentDTOList', res))
+        retry(AppSettings.RETRIES), catchError(this.formatErrors)
+        // ,tap(res => console.log('getAllStudents._embedded.studentDTOList', res))
       );
   }
   getEnrolledStudents(courseId: number): Observable<Student[]> {
@@ -44,8 +44,8 @@ export class BackendService {
           delete copy?._links;
           delete copy?.links; // only '_links' should show up
           return copy;
-        })),
-        tap(res => console.log('getEnrolledStudents._embedded.studentDTOList', res))
+        }))
+        // ,tap(res => console.log('getEnrolledStudents._embedded.studentDTOList', res))
       );
   }
   enroll(student: Student, courseId: number) {

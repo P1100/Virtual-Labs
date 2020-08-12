@@ -30,7 +30,7 @@
                         [displayWith]="autocompleteDisplayFunction">
         <mat-option *ngFor="let option of filteredOptions$ | async" [value]="option">
           <img aria-hidden="true" [src]="flag" height="25" alt="photo">
-          {{option.firstName}} {{option.lastName}} ({{option.id}})
+          {{option.lastName}} {{option.firstName}} ({{option.id}})
         </mat-option>
       </mat-autocomplete>
     </mat-form-field>

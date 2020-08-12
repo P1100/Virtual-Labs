@@ -55,13 +55,18 @@ export class StudentsComponent implements OnInit, AfterViewInit, OnDestroy {
             return this.students.filter(s => {
               let notcontains = true;
               for (const student of this.enrolled) {
+                // tslint:disable-next-line:triple-equals
                 if (student.id == s.id) {
                   notcontains = false;
                 }
               }
               return notcontains;
-            })?.filter(x => x.firstName.toLowerCase().startsWith(value.trim().toLowerCase()));
-          }),
+            })
+              ?.filter(x => x.firstName.toLowerCase().startsWith(value.trim().toLowerCase()))
+              ?.sort((a, b) => {
+                return sortCompare(a.lastName, b.lastName, true);
+              });
+          })
         );
     }
   }
