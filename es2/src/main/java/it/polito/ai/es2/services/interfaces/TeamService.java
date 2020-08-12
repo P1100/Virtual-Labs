@@ -29,7 +29,7 @@ public interface TeamService {
   
   void disableCourse(String courseName);
   
-  List<Boolean> addAll(List<StudentDTO> students);
+  List<Boolean> addAllStudents(List<StudentDTO> students);
   
   List<Boolean> enrollStudents(List<String> studentIds, String courseName);
   

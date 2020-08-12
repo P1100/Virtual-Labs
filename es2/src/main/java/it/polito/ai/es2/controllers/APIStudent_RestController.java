@@ -77,6 +77,6 @@ public class APIStudent_RestController {
   //  [{"id":"S44","name":"S33-name","firstName":"S33-FirstName"},{"id":"S55","name":"S33-name","firstName":"S33-FirstName"}]
   @PostMapping("/addall")
   public List<Boolean> addAll(@RequestBody List<StudentDTO> students) {
-    return teamService.addAll(students);
+    return teamService.addAllStudents(students);
   }
 }

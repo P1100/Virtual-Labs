@@ -45,7 +45,7 @@ public class APICourses_RestController {
   public CourseDTO getCourse(@PathVariable String courseId) {
     Optional<CourseDTO> courseDTO = teamService.getCourse(courseId);
     if (!courseDTO.isPresent())
-      throw new ResponseStatusException(HttpStatus.CONFLICT, courseId);
+      throw new ResponseStatusException(HttpStatus.CONFLICT, "Course not found - " + courseId);
     return ModelHelper.enrich(courseDTO.get());
   }
   // Should be only POST, get is there for testing purposes. TODO: remove on production
