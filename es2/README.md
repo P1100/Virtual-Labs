@@ -1,10 +1,11 @@
 # AI 2020 Progetto parte server side
 
+## Git
+git push origin :refs/tags/`tagname`
 ## Update Maven Dependencies
 - IDEA Maven Run Configuration:<br>
 `versions:display-dependency-updates`
 `versions:use-latest-versions`
-
 - Also update Maven indexed repositories on IDEA
 
 ## Docker
@@ -18,23 +19,18 @@
 ##### Toolbox: Se errore Protocol Error cant create dir (last used)
 `docker run -d -v "//v/dockertbx:/var/mariadb" -p 3306:3306 --name es2 -e MYSQL_ROOT_PASSWORD=root -d mariadb`
 
-
 ## SQL
-
 ### How to delete DB rows
 mysql> SET foreign_key_checks = 0;
 mysql> DROP table ...;
 mysql> SET foreign_key_checks = 1;
 GET http://localhost:8080/users/add/user/pass/
-
 ### DB Creation
 `CREATE DATABASE teams;`
 --> For mariaDb, use data dump sql script
-
 ### Query (?)
 Select *
 FROM team t JOIN course c on t.course_id = c.name NATURAL JOIN teams_students ts JOIN student st ON ts.student_id = st.id ;
-
 ## SQL VIEW
 create definer = root@`%` view MyTeamSummary as
 select `c`.`idname` AS `corso`, `t`.`name` AS `team`, `st`.`id` AS `studente`, tk.id

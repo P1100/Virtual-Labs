@@ -8,6 +8,7 @@ import java.io.Reader;
 import java.util.List;
 import java.util.Optional;
 
+// TODO: Security, move PreAuthorize statements here, on the the interface
 public interface TeamService {
   boolean addCourse(CourseDTO course);
   

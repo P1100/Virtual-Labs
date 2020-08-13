@@ -18,6 +18,7 @@ import java.io.InputStreamReader;
 import java.io.Reader;
 import java.util.List;
 
+// TODO: remove csv controller and csv html-thymeleaf pages in production! Use it momentarily for testing
 @Controller
 @RequestMapping("/csv")
 public class Csv_Controller {

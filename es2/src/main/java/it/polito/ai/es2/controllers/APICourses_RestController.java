@@ -19,6 +19,7 @@ import java.io.Reader;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
@@ -31,11 +32,7 @@ public class APICourses_RestController {
   
   @GetMapping({"", "/"})
   public CollectionModel<CourseDTO> getAllCourses() {
-    List<CourseDTO> courses = teamService.getAllCourses();
-//    teamService.getAllCourses().stream().map(ModelHelper::enrich).collect(Collectors.toList())
-    for (CourseDTO course : courses) {
-      ModelHelper.enrich(course);
-    }
+    List<CourseDTO> courses = teamService.getAllCourses().stream().map(ModelHelper::enrich).collect(Collectors.toList());
     CollectionModel<CourseDTO> coursesHAL = CollectionModel.of(courses,
         linkTo(methodOn(APICourses_RestController.class).getAllCourses()).withSelfRel());
     return coursesHAL;
@@ -48,20 +45,20 @@ public class APICourses_RestController {
       throw new ResponseStatusException(HttpStatus.CONFLICT, "Course not found - " + courseId);
     return ModelHelper.enrich(courseDTO.get());
   }
-  // Should be only POST, get is there for testing purposes. TODO: remove on production
+  
+  // Should be POST, get is there for testing purposes. TODO: remove on production
   @RequestMapping(value = "/{course}/enable", method = {RequestMethod.GET, RequestMethod.POST})
   public void enableCourse(@PathVariable String course) {
     teamService.enableCourse(course);
   }
   
-  // Should be only POST, get is there for testing purposes. TODO: remove on production
+  // Should be POST, get is there for testing purposes. TODO: remove on production
   @RequestMapping(value = "/{course}/disable", method = {RequestMethod.GET, RequestMethod.POST})
   public void disableCourse(@PathVariable String course) {
     teamService.disableCourse(course);
   }
   
-  //   {"name":"C33","min":1,"max":100,"enabled":true,"professor":"malnati"}
-  // ---> Nella POST settare ContentType: application/json
+  //   {"name":"C33","min":1,"max":100,"enabled":true,"professor":"malnati"} - ContentType: application/json
   @PostMapping({"", "/"})
   public CourseDTO addCourse(@RequestBody CourseDTO courseDTO) {
     if (!teamService.addCourse(courseDTO)) {

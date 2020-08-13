@@ -76,12 +76,12 @@ public class TeamServiceImpl implements TeamService {
    * GET {@link it.polito.ai.es2.controllers.APICourses_RestController#getEnrolledStudents(String)}
    */
   @Override
-  public List<StudentDTO> getEnrolledStudents(String courseName) throws CourseNotFoundException {
-    log.info("getEnrolledStudents(" + courseName + ")");
-    if (courseName == null) throw new TeamServiceException("getEnrolledStudents() - null parameters");
-    if (!courseRepository.existsById(courseName))
-      throw new CourseNotFoundException("getEnrolledStudents(String courseName):" + courseName);
-    Course c = courseRepository.getOne(courseName);
+  public List<StudentDTO> getEnrolledStudents(String courseId) throws CourseNotFoundException {
+    log.info("getEnrolledStudents(" + courseId + ")");
+    if (courseId == null) throw new TeamServiceException("getEnrolledStudents() - null parameters");
+    if (!courseRepository.existsById(courseId))
+      throw new CourseNotFoundException("getEnrolledStudents(String courseId):" + courseId);
+    Course c = courseRepository.getOne(courseId);
     return c.getStudents().stream().map(x -> modelMapper.map(x, StudentDTO.class)).collect(Collectors.toList());
   }
   
@@ -210,7 +210,7 @@ public class TeamServiceImpl implements TeamService {
       e.printStackTrace();
       return false;
     } catch (Exception e) {
-      log.warning("###### Other Exception:" + e.toString());
+      log.warning("# Other Exception:" + e.toString());
       e.printStackTrace();
       return false;
     }
