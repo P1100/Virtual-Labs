@@ -1,6 +1,6 @@
 import {async, ComponentFixture, TestBed} from '@angular/core/testing';
 
-import {GroupsContComponent} from '../tabs/groups/groups-cont.component';
+import {GroupsContComponent} from '../r2-inner-tab/groups/groups-cont.component';
 
 describe('GroupsContComponent', () => {
   let component: GroupsContComponent;

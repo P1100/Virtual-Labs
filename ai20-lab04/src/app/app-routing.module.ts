@@ -1,16 +1,18 @@
 import {NgModule} from '@angular/core';
 import {RouterModule, Routes} from '@angular/router';
-import {EmptyComponent} from './r1-tabs/empty.component';
-import {VmsContComponent} from './tabs/vms/vms-cont.component';
-import {StudentsContComponent} from './tabs/students/students-cont.component';
-import {PageNotFoundComponent} from './tabs/page-not-found/page-not-found.component';
-import {AssignmentsContComponent} from './tabs/assignments/assignments-cont.component';
-import {SidenavContentComponent} from './r1-tabs/sidenav-content.component';
-import {GroupsContComponent} from './tabs/groups/groups-cont.component';
+import {EmptyComponent} from './r1-content/empty.component';
+import {VmsContComponent} from './r2-inner-tab/vms/vms-cont.component';
+import {StudentsContComponent} from './r2-inner-tab/students/students-cont.component';
+import {PageNotFoundComponent} from './r0-topheader-leftsidebar/page-not-found.component';
+import {AssignmentsContComponent} from './r2-inner-tab/assignments/assignments-cont.component';
+import {TabsMenuComponent} from './r1-content/tabs-menu.component';
+import {GroupsContComponent} from './r2-inner-tab/groups/groups-cont.component';
+import {HomeComponent} from './r0-topheader-leftsidebar/home.component';
 
 const routes: Routes = [
   {
     path: '',
+    component: HomeComponent,
     children: [
       {
         path: 'home',
@@ -21,7 +23,7 @@ const routes: Routes = [
         children: [
           {
             path: '',
-            component: PageNotFoundComponent
+            component: EmptyComponent
           },
           {
             path: 'course',
@@ -31,7 +33,7 @@ const routes: Routes = [
             children: [
               {
                 path: ':id',
-                component: SidenavContentComponent,
+                component: TabsMenuComponent,
                 children: [
                   {
                     path: '',
@@ -62,7 +64,6 @@ const routes: Routes = [
       }
     ]
   },
-  // {path: 'home', redirectTo: '/', pathMatch: 'full'}, // redirect to `first-component`, which is HomeComponent
   {path: '**', component: PageNotFoundComponent, pathMatch: 'full'},
 ];
 
@@ -72,7 +73,3 @@ const routes: Routes = [
 })
 export class AppRoutingModule {
 }
-
-// this.router.navigate(['teacher','course'])
-//     this.router.navigate(['/courses',course.id]);
-// this.router.navigateByUrl(`/courses/${course.id}`);

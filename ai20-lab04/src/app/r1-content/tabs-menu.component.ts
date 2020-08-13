@@ -11,18 +11,17 @@ const tabs = [
 ];
 
 @Component({
-  selector: 'app-sidenav-cont',
-  templateUrl: './sidenav-content.component.html',
+  selector: 'app-tabs-menu',
+  templateUrl: './tabs-menu.component.html',
   styleUrls: []
 })
-export class SidenavContentComponent implements OnInit, OnChanges, OnDestroy {
+export class TabsMenuComponent implements OnInit, OnChanges, OnDestroy {
   // TODO: questo valore deve essere impostato dalla logica di auth
   prefix = ['/teacher', '/student'];
   navLinks = [];
   // TODO: need to get this value for a course service or routing
   activeCourse = null;
   paramSubscription: Subscription;
-
 
   constructor(private route: ActivatedRoute) {
     // Devo riaggiornare i tabs ad ogni cambio di corso. Versione no observable =>  this.route.snapshot.paramMap.get("id");
@@ -42,7 +41,7 @@ export class SidenavContentComponent implements OnInit, OnChanges, OnDestroy {
   }
 
   ngOnChanges(changes: SimpleChanges): void {
-    console.log('°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°\nSidenavContentComponent.ngOnChanges - activerCourse:\n' + this.activeCourse);
+    console.log('°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°\nTabsMenuComponent.ngOnChanges - activerCourse:\n' + this.activeCourse);
   }
   ngOnDestroy(): void {
     console.log('Sidenav-cont.ngOnDestroy');

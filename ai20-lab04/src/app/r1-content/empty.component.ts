@@ -1,7 +1,7 @@
 import {Component, OnInit} from '@angular/core';
 
 @Component({
-  selector: 'app-home-tab',
+  selector: 'app-empty',
   template: `
     <div style="padding: 25px">
       <h1>Welcome to the Virtual Labs!</h1><br>

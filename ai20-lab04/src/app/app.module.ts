@@ -1,6 +1,6 @@
 import {MatToolbarModule} from '@angular/material/toolbar';
 import {MatFormFieldModule} from '@angular/material/form-field';
-import {HomeComponent} from './r0-home/home.component';
+import {HomeComponent} from './r0-topheader-leftsidebar/home.component';
 import {MatPaginatorModule} from '@angular/material/paginator';
 import {ProfileComponent} from './dialogs/profile/profile.component';
 import {AuthInterceptor} from './auth/auth.interceptor';
@@ -14,24 +14,24 @@ import {MatTableModule} from '@angular/material/table';
 import {MatAutocompleteModule} from '@angular/material/autocomplete';
 import {MatCheckboxModule} from '@angular/material/checkbox';
 import {MatCardModule} from '@angular/material/card';
-import {StudentsComponent} from './tabs/students/students.component';
+import {StudentsComponent} from './r2-inner-tab/students/students.component';
 import {MatTabsModule} from '@angular/material/tabs';
-import {PageNotFoundComponent} from './tabs/page-not-found/page-not-found.component';
-import {GroupsContComponent} from './tabs/groups/groups-cont.component';
-import {SidenavContentComponent} from './r1-tabs/sidenav-content.component';
-import {VmsContComponent} from './tabs/vms/vms-cont.component';
+import {PageNotFoundComponent} from './r0-topheader-leftsidebar/page-not-found.component';
+import {GroupsContComponent} from './r2-inner-tab/groups/groups-cont.component';
+import {TabsMenuComponent} from './r1-content/tabs-menu.component';
+import {VmsContComponent} from './r2-inner-tab/vms/vms-cont.component';
 import {HTTP_INTERCEPTORS, HttpClientModule} from '@angular/common/http';
 import {MatIconModule} from '@angular/material/icon';
 import {TestDialogComponent} from './dialogs/test-dialog/test-dialog.component';
 import {MatListModule} from '@angular/material/list';
 import {MatSidenavModule} from '@angular/material/sidenav';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
-import {AssignmentsContComponent} from './tabs/assignments/assignments-cont.component';
+import {AssignmentsContComponent} from './r2-inner-tab/assignments/assignments-cont.component';
 import {EditRemoveCourseComponent} from './dialogs/edit-remove-course/edit-remove-course.component';
 import {BrowserModule} from '@angular/platform-browser';
 import {AreYouSureComponent} from './dialogs/are-you-sure/are-you-sure.component';
-import {EmptyComponent} from './r1-tabs/empty.component';
-import {StudentsContComponent} from './tabs/students/students-cont.component';
+import {EmptyComponent} from './r1-content/empty.component';
+import {StudentsContComponent} from './r2-inner-tab/students/students-cont.component';
 import {AppComponent} from './app.component';
 import {MAT_DIALOG_DEFAULT_OPTIONS, MatDialogModule} from '@angular/material/dialog';
 import {RegisterComponent} from './dialogs/register/register.component';
@@ -80,7 +80,7 @@ import {MatMenuModule} from '@angular/material/menu';
     GroupsContComponent,
     AssignmentsContComponent,
     HomeComponent,
-    SidenavContentComponent,
+    TabsMenuComponent,
     TestDialogComponent,
     LoginComponent,
     EmptyComponent,
