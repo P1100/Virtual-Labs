@@ -1,57 +1,17 @@
 <div id="testing_container">
-  <h2>Html form</h2>
-  <form action="http://localhost:8080/API/courses" method="post">
-    <div>
-      <label for="email">CorsoId:</label>
-      <div>
-        <input type="text" id="email">
-      </div>
-      <button type="submit">Submit</button>
+
+  <h2>GET</h2>
+  <form (ngSubmit)="onGetCoursesSubmit()" #heroForm="ngForm">
+    <div class="form-group">
+      <!--      <input type="text" class="form-control" #in placeholder="course id">-->
+      <button type="submit" class="btn btn-primary btn-sm">getCourses</button>
+    </div>
+  </form>
+  <form (ngSubmit)="onGetCourseSubmit(in.value)">
+    <div class="form-group">
+      <input type="text" class="form-control" #in placeholder="course id">
+      <button type="submit" class="btn btn-primary btn-sm">getCourse</button>
     </div>
   </form>
 
-  <!--  <h2>Angular form (ngSubmit)=onSubmit()</h2>-->
-  <!--  <form [formGroup]="checkoutForm" (ngSubmit)="onSubmit(checkoutForm.value)">-->
-  <!--    <div>-->
-  <!--      <label for="name">-->
-  <!--        Name-->
-  <!--      </label>-->
-  <!--      <input id="name" type="text" formControlName="name">-->
-  <!--    </div>-->
-  <!--    <div>-->
-  <!--      <label for="address">-->
-  <!--        Address-->
-  <!--      </label>-->
-  <!--      <input id="address" type="text" formControlName="address">-->
-  <!--    </div>-->
-  <!--    <button class="button" type="submit">Purchase</button>-->
-  <!--  </form>-->
-
-  <!--  <h2>Angular template form (no submit)</h2>-->
-  <!--  <form #f="ngForm">-->
-  <!--    <mat-card-content>-->
-
-  <!--      <mat-form-field>-->
-  <!--        <mat-label for="username">Username:</mat-label>-->
-  <!--        &lt;!&ndash; put or delete required: changes valid poperty &ndash;&gt;-->
-  <!--        <input matInput type="text" placeholder="username" name="username" #field="ngModel" ngModel required>-->
-  <!--      </mat-form-field>-->
-  <!--      <mat-error *ngIf="field.invalid && !field.pristine">Username is required</mat-error>-->
-  <!--      &lt;!&ndash;-->
-  <!--      <div [hidden]="field.valid || field.pristine">-->
-  <!--        Username is required-->
-  <!--      </div>-->
-  <!--      &ndash;&gt;-->
-  <!--      <br>-->
-  <!--      <mat-form-field>-->
-  <!--        <mat-label for="age">Age:</mat-label>-->
-  <!--        &lt;!&ndash; put or delete required: changes valid poperty &ndash;&gt;-->
-  <!--        <input matInput type="text" placeholder="age" name="age" #age="ngModel" ngModel pattern="[0-9]+">-->
-  <!--        <mat-error *ngIf="age.invalid">Age allows only numbers</mat-error>-->
-  <!--      </mat-form-field>-->
-  <!--    </mat-card-content>-->
-  <!--  </form>-->
-  <!--  <div mat-dialog-actions>-->
-  <!--    <button mat-button (click)="onNoClick()">GET</button>-->
-  <!--  </div>-->
-  <!--</div>-->
+</div>

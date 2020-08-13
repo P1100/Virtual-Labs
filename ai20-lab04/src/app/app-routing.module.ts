@@ -12,13 +12,16 @@ import {TestingComponent} from './r2-inner-tab/testing/testing.component';
 
 const routes: Routes = [
   {
+    path: 'testing',
+    component: TestingComponent
+  },
+  {
     path: '',
     component: HomeComponent,
     children: [
       {
         path: 'home',
-        // TODO: component: EmptyComponent
-        component: TestingComponent
+        component: EmptyComponent
       },
       {
         path: 'teacher',

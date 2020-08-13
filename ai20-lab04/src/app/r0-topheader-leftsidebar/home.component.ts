@@ -56,7 +56,6 @@ export class HomeComponent implements OnInit, OnDestroy {
         mergeMap((rout) => (rout != null) ? rout?.paramMap : of(null))
       ).subscribe((paramMap) => {
         courseService.getCourses().subscribe(x => {
-          console.log();
           this.courses = x;
           console.log('CoursesLoaded - paramMap:', paramMap);
           // const idActiveCourse = +paramAsMap.get('id');

@@ -36,8 +36,40 @@ export class CourseService {
         tap(res => console.log('getCourses:', res))
       );
   }
+  // getCourses(): Observable<Course[]> {
+  //   return this.http.get<any>(`${this.baseUrl}/courses`, AppSettings.JSON_HTTP_OPTIONS)
+  //     .pipe(
+  //       map(response => response._embedded.courseDTOList),
+  //       map(s => s.map(ss => this.removeHATEOAS(ss))),
+  //       retry(5), catchError(this.formatErrors),
+  //       tap(res => console.log('getCourses:', res))
+  //     );
+  // }
 
   getCoursesSnapshot(): Course[] {
     return this.courses;
+  }
+  getCourse(s: string): Observable<Course> {
+    return null;
+  }
+
+  private removeHATEOAS(o: any): any {
+    let x = {...o};
+    if (x?._embedded != null) {
+      x = x._embedded;
+    }
+    if (x?.courseDTOList != null) {
+      x = x.courseDTOList;
+    }
+    if (x?.studentDTOList != null) {
+      x = x.studentDTOList;
+    }
+    if (x?.studentDTOList != null) {
+      x = x.studentDTOList;
+    }
+    delete x._links;
+    delete x.links; // only '_links' should show up
+    console.log(x);
+    return x;
   }
 }
