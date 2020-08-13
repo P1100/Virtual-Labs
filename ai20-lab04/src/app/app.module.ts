@@ -18,7 +18,7 @@ import {StudentsComponent} from './r2-inner-tab/students/students.component';
 import {MatTabsModule} from '@angular/material/tabs';
 import {PageNotFoundComponent} from './r0-topheader-leftsidebar/page-not-found.component';
 import {GroupsContComponent} from './r2-inner-tab/groups/groups-cont.component';
-import {TabsMenuComponent} from './r1-content/tabs-menu.component';
+import {TabsNavComponent} from './r1-content/tabs-nav.component';
 import {VmsContComponent} from './r2-inner-tab/vms/vms-cont.component';
 import {HTTP_INTERCEPTORS, HttpClientModule} from '@angular/common/http';
 import {MatIconModule} from '@angular/material/icon';
@@ -37,6 +37,7 @@ import {MAT_DIALOG_DEFAULT_OPTIONS, MatDialogModule} from '@angular/material/dia
 import {RegisterComponent} from './dialogs/register/register.component';
 import {MatButtonModule} from '@angular/material/button';
 import {MatMenuModule} from '@angular/material/menu';
+import {TestingComponent} from './r2-inner-tab/testing/testing.component';
 
 @NgModule({
   imports: [
@@ -80,7 +81,7 @@ import {MatMenuModule} from '@angular/material/menu';
     GroupsContComponent,
     AssignmentsContComponent,
     HomeComponent,
-    TabsMenuComponent,
+    TabsNavComponent,
     TestDialogComponent,
     LoginComponent,
     EmptyComponent,
@@ -89,7 +90,8 @@ import {MatMenuModule} from '@angular/material/menu';
     ProfileComponent,
     RegisterComponent,
     EditRemoveCourseComponent,
-    AreYouSureComponent
+    AreYouSureComponent,
+    TestingComponent
   ],
   entryComponents: [
     HomeComponent, TestDialogComponent, LoginComponent

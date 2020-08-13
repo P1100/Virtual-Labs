@@ -9,3 +9,11 @@ export class AppSettings {
     })
   };
 }
+
+// Costruzione dinamica delle tabs parte da qui
+export const tabs = [
+  {path: 'students', label: 'Students'},
+  {path: 'vms', label: 'VMs'},
+  {path: 'groups', label: 'Groups'},
+  {path: 'assignments', label: 'Assignments'}
+];

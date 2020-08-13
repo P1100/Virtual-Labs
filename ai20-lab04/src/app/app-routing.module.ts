@@ -5,9 +5,10 @@ import {VmsContComponent} from './r2-inner-tab/vms/vms-cont.component';
 import {StudentsContComponent} from './r2-inner-tab/students/students-cont.component';
 import {PageNotFoundComponent} from './r0-topheader-leftsidebar/page-not-found.component';
 import {AssignmentsContComponent} from './r2-inner-tab/assignments/assignments-cont.component';
-import {TabsMenuComponent} from './r1-content/tabs-menu.component';
+import {TabsNavComponent} from './r1-content/tabs-nav.component';
 import {GroupsContComponent} from './r2-inner-tab/groups/groups-cont.component';
 import {HomeComponent} from './r0-topheader-leftsidebar/home.component';
+import {TestingComponent} from './r2-inner-tab/testing/testing.component';
 
 const routes: Routes = [
   {
@@ -16,7 +17,8 @@ const routes: Routes = [
     children: [
       {
         path: 'home',
-        component: EmptyComponent
+        // TODO: component: EmptyComponent
+        component: TestingComponent
       },
       {
         path: 'teacher',
@@ -33,7 +35,7 @@ const routes: Routes = [
             children: [
               {
                 path: ':id',
-                component: TabsMenuComponent,
+                component: TabsNavComponent,
                 children: [
                   {
                     path: '',

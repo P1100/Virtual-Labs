@@ -1,21 +1,14 @@
 import {Component, OnChanges, OnDestroy, OnInit, SimpleChanges} from '@angular/core';
 import {ActivatedRoute} from '@angular/router';
 import {Subscription} from 'rxjs';
-
-// Costruzione dinamica delle tabs parte da qui
-const tabs = [
-  {path: 'students', label: 'Students'},
-  {path: 'vms', label: 'VMs'},
-  {path: 'groups', label: 'Groups'},
-  {path: 'assignments', label: 'Assignments'}
-];
+import {tabs} from '../app-settings';
 
 @Component({
-  selector: 'app-tabs-menu',
-  templateUrl: './tabs-menu.component.html',
-  styleUrls: []
+  selector: 'app-tabs',
+  templateUrl: './tabs-nav.component.html',
+  styleUrls: ['./tabs-nav.component.css']
 })
-export class TabsMenuComponent implements OnInit, OnChanges, OnDestroy {
+export class TabsNavComponent implements OnInit, OnChanges, OnDestroy {
   // TODO: questo valore deve essere impostato dalla logica di auth
   prefix = ['/teacher', '/student'];
   navLinks = [];
@@ -41,7 +34,7 @@ export class TabsMenuComponent implements OnInit, OnChanges, OnDestroy {
   }
 
   ngOnChanges(changes: SimpleChanges): void {
-    console.log('°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°\nTabsMenuComponent.ngOnChanges - activerCourse:\n' + this.activeCourse);
+    console.log('°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°\nTabsNavComponent.ngOnChanges - activerCourse:\n' + this.activeCourse);
   }
   ngOnDestroy(): void {
     console.log('Sidenav-cont.ngOnDestroy');

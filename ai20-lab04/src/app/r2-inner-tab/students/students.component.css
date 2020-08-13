@@ -8,10 +8,6 @@ input {
   border: transparent;
 }
 
-div.student_tab {
-  padding: 20px;
-}
-
 form {
   min-width: 150px;
   max-width: 500px;
