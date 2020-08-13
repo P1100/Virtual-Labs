@@ -3,7 +3,6 @@
   "version": "0.0.0",
   "scripts": {
     "start": "npm run serve",
-    "start:augury": "ng serve --prod false --base-href / --deploy-url --configuration augury",
     "startAll-windows": "start npm run jsonserver & start npm run serve",
     "startAll-linux": "npm run jsonserver & npm run serve",
     "ng": "ng",
