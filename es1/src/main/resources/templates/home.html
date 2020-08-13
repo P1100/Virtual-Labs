@@ -22,7 +22,7 @@
 		<div th:if="${session.username == null}">
 			<p style="text-align:center"><a href="/register">Sign up here</a></p>
 			
-			<form method="post" th:action="@{/login}" th:object="${command}" novalidate><!--novalidate-->
+			<form method="get" th:action="@{/login}" th:object="${command}" novalidate><!--novalidate-->
 				<div class="form-row">
 					<div class="form-group col-md-3 mr-4">
 						<label th:for="email">Email</label>
