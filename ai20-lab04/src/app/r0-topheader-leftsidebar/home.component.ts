@@ -17,7 +17,6 @@ export interface DialogData {
 }
 
 @Component({
-  // selector changed from app-root, inserted in index.html!
   selector: 'app-home',
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.css'],
@@ -43,18 +42,16 @@ export class HomeComponent implements OnInit, OnDestroy {
               private route: ActivatedRoute) {
     titleService.setTitle(this.title);
     courseService.getCourses().subscribe(x => this.courses = x);
-    // // Debug
-    // this.router.events.subscribe((event => console.log('Event:', event)));
     this.router.events
       .pipe(
-        // Moving to the params child route (SidenavCont)
+        // Moving to the params child route ( StudentsContComponent)
         filter((event) => event instanceof NavigationEnd),
         map(() => this.route),
         tap(r => console.log('NavEnd', r)),
         map((rout) => {
           return rout?.firstChild?.firstChild?.firstChild?.firstChild;
         }),
-        tap(r => console.log('Child', r)),
+        // tap(r => console.log('Child', r)),
         mergeMap((rout) => (rout != null) ? rout?.paramMap : of(null))
       ).subscribe((paramMap) => {
         if (paramMap == null || this.courses == null) {
@@ -71,7 +68,6 @@ export class HomeComponent implements OnInit, OnDestroy {
       }
     );
 
-    // console.log('constructor HomeComponent pre ' + this.isLogged);
     this.subscription = this.auth.getSub().subscribe(x => {
       this.isLogged = x;
       if (x === true) {
@@ -79,17 +75,11 @@ export class HomeComponent implements OnInit, OnDestroy {
       } else {
         localStorage.removeItem('user');
       }
-      // console.log('constructor HomeComponent getSub().subscribe ' + this.isLogged);
     });
-    // console.log('constructor HomeComponent post ' + this.isLogged);
   }
   ngOnInit(): void {
-    // console.log('# HomeController.ngOninit START');
     this.subscriptionRoute = this.route.queryParams.subscribe(params => {
-      // console.log('inside_Route', params, params.doLogin, params['doLogin']);
-      // this.doLogin = params['doLogin'];
       if (params.doLogin === 'true') {
-        // console.log('inside_DoLogin');
         this.openLoginDialogReactive();
       }
     });
@@ -100,7 +90,6 @@ export class HomeComponent implements OnInit, OnDestroy {
       data: {name: this.name, animal: this.animal}
     });
     dialogRef.afterClosed().subscribe(() => {
-      // console.log('openLoginDialogTemplate afterClosed().subscribe');
     });
   }
   ngOnDestroy(): void {
@@ -120,7 +109,6 @@ export class HomeComponent implements OnInit, OnDestroy {
     // Settings what to do when dialog is closed
     this.dialogRef.afterClosed().subscribe(() => {
         this.dialogRef = undefined;
-        // console.log('openLoginDialogReactive afterClosed().subscribe', result);
       }
     );
   }

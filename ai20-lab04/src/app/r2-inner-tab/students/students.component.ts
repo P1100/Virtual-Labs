@@ -6,7 +6,7 @@ import {MatPaginator} from '@angular/material/paginator';
 import {MatAutocompleteSelectedEvent} from '@angular/material/autocomplete';
 import {FormControl} from '@angular/forms';
 import {Observable, Subscription} from 'rxjs';
-import {filter, map, startWith, tap} from 'rxjs/operators';
+import {filter, map, startWith} from 'rxjs/operators';
 import {ActivatedRoute} from '@angular/router';
 
 @Component({
@@ -36,9 +36,10 @@ export class StudentsComponent implements OnInit, AfterViewInit, OnDestroy {
     this.showCheckboxDeselectAllToolbar = false;
     this.showCheckboxDeselectAllToolbar = false;
   }
+  autocompleteControl = new FormControl();
   // Used in AutoComplete. It's the list of all students but at times filtered (so cant be merged in only one var)
   filteredOptions$: Observable<Student[]> = null;
-  // NEEDED logic to ensure student data is loaded at first click on the autocomplete
+  // NEEDED logic to ensure student data is loaded at first click on the autocomplete // TODO: review later, there are better ways besides valueChanges
   @Input()
   set setAutocompleteInit(flag: number) {
     if (flag > 0) {
@@ -47,11 +48,8 @@ export class StudentsComponent implements OnInit, AfterViewInit, OnDestroy {
           startWith(''),
           // // WARNING: When option is selected, value becomes a Student object... not a string. Code below commented (console.logs) was to test that
           filter(value => ((typeof value) === 'string')),
-          tap(() => console.log('filteredOptions$', this.students, this.enrolled)),
+          // tap(() => console.log('filteredOptions$', this.students, this.enrolled)),
           map((value: string): Student[] => {
-            // console.log('map(value):', value, typeof value, value?.length);
-            // console.log('@ isNull ' + (value === null));
-            // console.log('@ isUndefined ' + (value === undefined));
             return this.students.filter(s => {
               let notcontains = true;
               for (const student of this.enrolled) {
@@ -82,28 +80,25 @@ export class StudentsComponent implements OnInit, AfterViewInit, OnDestroy {
   length: number; // The current total number of items being paged. Read only
   pageSize = 25;
   pageSizeOptions: number[] = [1, 2, 5, 10, 20];
-  autocompleteControl = new FormControl();
-  selectedStudentToAdd: Student = null;
-  /* Checkbox */
+  /* Checkbox Logic */
   checkboxMasterCompleted = false;
   checkboxMasterIndeterminate = false;
   showCheckboxSelectAllToolbar = false;
   showCheckboxDeselectAllToolbar = false;
-  // number is the student's id (serial).
   // IMPORTANT: always add the + symbol before any number passed to checked, otherwise it will interpret it like a string, resulting in an error
-  checked: Map<number, boolean> = null;
-  // Course id of current page (used in routing module)
-  public id: string;
+  checked: Map<number, boolean> = null;   // number = student's id (serial)
+
+  selectedStudentToAdd: Student = null;
   private urlParamSubscription: Subscription;
 
+  // TODO: temp for images, delete later
   flag = 'https://upload.wikimedia.org/wikipedia/commons/9/9d/Flag_of_Arkansas.svg';
 
   constructor(private route: ActivatedRoute) {
     this.urlParamSubscription = this.route.parent.url.subscribe(() => {
-      this.id = this.route.parent.snapshot.paramMap.get('id');
-      // Every time I change the route, I make sure the automplete source data is updated.. (look setAutocompleteInit above)
+      // Every time I change the route, I make sure the autocomplete input data is updated.. (setAutocompleteInit)
       delete this.filteredOptions$;
-      // Needed to reset the input of autcomplete, after a route change
+      // Needed to reset the input of autocomplete, after a route change
       this.autocompleteControl.reset(null);
     });
   }
@@ -112,7 +107,7 @@ export class StudentsComponent implements OnInit, AfterViewInit, OnDestroy {
   ngAfterViewInit() {
     this.dataSource.paginator = this.paginator;
   }
-  // Data and sort update is done by the angular property binding, automatically (@Input() set enrolled)
+  // Data and sort update done automatically in '@Input() set enrolled'
   studentsAdd() {
     if (this.selectedStudentToAdd && this.students.includes(this.selectedStudentToAdd)
       && !this.enrolled.includes(this.selectedStudentToAdd)) {
@@ -121,13 +116,10 @@ export class StudentsComponent implements OnInit, AfterViewInit, OnDestroy {
       this.selectedStudentToAdd = null;
     }
   }
-  // Passing the students to remove (whole Students array, not just the id)
   studentsRemove() {
     const selectedStudentToRemove = this.enrolled.filter(x => this.checked.get(+x.id));
     this.disenrolledEvent.emit(selectedStudentToRemove);
     this.checked = new Map(this.enrolled.map(x => [x.id, false]));
-    // this.checkedCount = 0;
-    // this.masterStatus = 0;
   }
   sortChange(sort: Sort) {
     // console.log('selectedStudentToAdd: ' + JSON.stringify(this.selectedStudentToAdd));
@@ -145,7 +137,7 @@ export class StudentsComponent implements OnInit, AfterViewInit, OnDestroy {
     });
     this.updateMasterCheckbox();
   }
-  // used in checkbox logic
+  // checkbox logic
   private getStudentsIdCurrentPage(): number[] {
     let endIndex: number;
     const arr: number[] = [];
@@ -159,13 +151,13 @@ export class StudentsComponent implements OnInit, AfterViewInit, OnDestroy {
     }
     return arr;
   }
-  // Used internally in change selection, in sort update, and in paginator update
+  // change selection, sort update, paginator update
   private updateMasterCheckbox() {
     const idStudentsPage: [number, boolean][] = [...this.checked.entries()]
       .filter(x => this.getStudentsIdCurrentPage().includes(x[0], 0));
-    const checkboxsPage: boolean[] = idStudentsPage
+    const checkboxesPage: boolean[] = idStudentsPage
       .map(x => x[1]);
-    this.checkboxMasterCompleted = checkboxsPage.every(t => t === true);
+    this.checkboxMasterCompleted = checkboxesPage.every(t => t === true);
     this.checkboxMasterIndeterminate = !this.checkboxMasterCompleted && idStudentsPage.filter(x => x[1] === true).length > 0;
   }
   checkboxChangeSelection({checked}, id) {
@@ -202,10 +194,7 @@ export class StudentsComponent implements OnInit, AfterViewInit, OnDestroy {
   }
   autocompleteSaveOption(event: MatAutocompleteSelectedEvent) {
     this.selectedStudentToAdd = (event).option.value;
-    // console.log('# StudentsComponent.autocompleSave added student' + JSON.stringify(this.selectedStudentToAdd));
   }
-// delete later, if things works without issues
-  // @ViewChild(MatSidenav) matsidenav: MatSidenav;
   paginatorUpdate() {
     this.updateMasterCheckbox();
     this.showCheckboxSelectAllToolbar = false;

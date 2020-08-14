@@ -20,22 +20,7 @@ export class CourseService {
     console.error(error);
     return throwError(error.error);
   }
-  // getCourses(): Observable<Course[]> {
-  //   return this.http.get<any>(`${this.baseUrl}/courses`, AppSettings.JSON_HTTP_OPTIONS)
-  //     .pipe(
-  //       tap(res => console.log('getCoursesPRE:', res)),
-  //       map(response => response?._embedded?.courseDTOList),
-  //       map(s => s?.map(ss => {
-  //         const copy = {...ss};
-  //         delete copy._links;
-  //         delete copy.links; // only '_links' should show up
-  //         return copy;
-  //       })),
-  //       retry(5), catchError(this.formatErrors),
-  //       tap(res => console.log('getCourses:', res)),
-  //       map(r => Array.of(new Course(1, '', 2, 3, true)))
-  //     );
-  // }
+
   getCourses(): Observable<Course[]> {
     return this.http.get<HateoasModel>(`${this.baseUrl}/courses`, AppSettings.JSON_HTTP_OPTIONS)
       .pipe(
@@ -63,7 +48,6 @@ export class CourseService {
         tap(res => console.log('post:', res, typeof res))
       );
   }
-
 }
 
 function removeHATEOAS(i: HateoasModel): any {
