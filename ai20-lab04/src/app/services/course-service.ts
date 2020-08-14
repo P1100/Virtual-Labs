@@ -13,21 +13,13 @@ import {HateoasModel} from '../models/hateoas.model';
 })
 export class CourseService {
   private baseUrl = environment.baseUrl;
-  // TODO: rivedere uso variabile
-  courses: Course[] = null;
 
   constructor(private http: HttpClient) {
-    // Primo e unico aggiornamento corsi. Altri updates solo nelle funzioni di modifica //TODO: rivedere, nell'home chiamo getCourses
-    // this.getCourses().subscribe(x => this.courses = [...x]);
   }
   private formatErrors(error: any) {
     console.error(error);
     return throwError(error.error);
   }
-  //
-  // getCoursesSnapshot(): Course[] {
-  //   return this.courses;
-  // }
   // getCourses(): Observable<Course[]> {
   //   return this.http.get<any>(`${this.baseUrl}/courses`, AppSettings.JSON_HTTP_OPTIONS)
   //     .pipe(
@@ -47,36 +39,43 @@ export class CourseService {
   getCourses(): Observable<Course[]> {
     return this.http.get<HateoasModel>(`${this.baseUrl}/courses`, AppSettings.JSON_HTTP_OPTIONS)
       .pipe(
-        tap(res => console.log('getCoursesT pre:', res, typeof res)),
-        map(object => this.removeHATEOAS(object)),
+        tap(res => console.log('pre:', res, typeof res)),
+        map(object => removeHATEOAS(object)),
         retry(5), catchError(this.formatErrors),
-        tap(res => console.log('getCoursesT post:', res, typeof res))
+        tap(res => console.log('post:', res, typeof res))
       );
   }
   getCourse(s: string): Observable<Course[]> {
     return this.http.get<HateoasModel>(`${this.baseUrl}/courses/${s}`, AppSettings.JSON_HTTP_OPTIONS)
       .pipe(
-        tap(res => console.log('getCourses:', res, typeof res)),
-        map(object => this.removeHATEOAS(object)),
+        tap(res => console.log('pre:', res, typeof res)),
+        map(object => removeHATEOAS(object)),
         retry(5), catchError(this.formatErrors),
-        tap(res => console.log('getCourses:', res, typeof res))
+        tap(res => console.log('post:', res, typeof res))
       );
   }
   getEnrolledStudents(courseId: string): Observable<Student[]> {
-    return this.http.get<Student[]>(`${this.baseUrl}/courses/${{courseId}}/enrolled`, AppSettings.JSON_HTTP_OPTIONS);
+    return this.http.get<HateoasModel>(`${this.baseUrl}/courses/${{courseId}}/enrolled`, AppSettings.JSON_HTTP_OPTIONS)
+      .pipe(
+        tap(res => console.log('pre:', res, typeof res)),
+        map(object => removeHATEOAS(object)),
+        retry(5), catchError(this.formatErrors),
+        tap(res => console.log('post:', res, typeof res))
+      );
   }
 
-  private removeHATEOAS(i: HateoasModel): any {
-    let x: any = {...i};
-    x = x?._embedded;
-    if (x?.courseDTOList != null) {
-      x = x.courseDTOList;
-    }
-    if (x?.studentDTOList != null) {
-      x = x.studentDTOList;
-    }
-    delete x?._links;
-    delete x?.links; // only '_links' should show up
-    return x;
+}
+
+function removeHATEOAS(i: HateoasModel): any {
+  let x: any = {...i};
+  x = x?._embedded;
+  if (x?.courseDTOList != null) {
+    x = x.courseDTOList;
   }
+  if (x?.studentDTOList != null) {
+    x = x.studentDTOList;
+  }
+  delete x?._links;
+  delete x?.links; // only '_links' should show up
+  return x;
 }

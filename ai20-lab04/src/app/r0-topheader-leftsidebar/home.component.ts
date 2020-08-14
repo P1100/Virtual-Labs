@@ -42,10 +42,12 @@ export class HomeComponent implements OnInit, OnDestroy {
               private router: Router,
               private route: ActivatedRoute) {
     titleService.setTitle(this.title);
+    courseService.getCourses().subscribe(x => this.courses = x);
     // // Debug
     // this.router.events.subscribe((event => console.log('Event:', event)));
     this.router.events
       .pipe(
+        // Moving to the params child route (SidenavCont)
         filter((event) => event instanceof NavigationEnd),
         map(() => this.route),
         tap(r => console.log('NavEnd', r)),
@@ -55,25 +57,17 @@ export class HomeComponent implements OnInit, OnDestroy {
         tap(r => console.log('Child', r)),
         mergeMap((rout) => (rout != null) ? rout?.paramMap : of(null))
       ).subscribe((paramMap) => {
-        courseService.getCourses().subscribe(x => {
-          this.courses = x;
-          console.log('CoursesLoaded - paramMap:', paramMap);
-          // const idActiveCourse = +paramAsMap.get('id');
-
-          if (paramMap == null) {
-            this.nameActiveCourse = '';
-          } else {
-            const idActiveCourse = +paramMap.get('id');
-            console.log('idActiveCourse', +paramMap.get('id'));
-            for (const course of this.courses) {
-              // tslint:disable-next-line:triple-equals
-              if (course.id == idActiveCourse) { // dont use === here
-                this.nameActiveCourse = course.fullName;
-              }
+        if (paramMap == null || this.courses == null) {
+          this.nameActiveCourse = '';
+        } else {
+          const idActiveCourse = +paramMap.get('id');
+          for (const course of this.courses) {
+            // tslint:disable-next-line:triple-equals
+            if (course.id == idActiveCourse) { // dont use === here
+              this.nameActiveCourse = course.fullName;
             }
           }
-
-        });
+        }
       }
     );
 
