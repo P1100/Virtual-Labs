@@ -4,6 +4,8 @@ export class Course {
   minEnrolled: number;
   maxEnrolled: number;
   enabled: boolean;
+  _embedded: object;
+
   constructor(id: number, fullName: string, minEnrolled: number, maxEnrolled: number, enabled: boolean) {
     this.id = id;
     this.fullName = fullName;

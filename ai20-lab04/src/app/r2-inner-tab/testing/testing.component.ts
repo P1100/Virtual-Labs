@@ -26,9 +26,12 @@ export class TestingComponent implements OnInit {
   }
 
   onGetCoursesSubmit() {
-    this.courseService.getCourses().subscribe(x => console.log(x));
+    this.courseService.getCourses().subscribe(x => console.log('TT', x));
   }
   onGetCourseSubmit(s: string) {
-    this.courseService.getCourse(s).subscribe(x => console.log(x, s));
+    this.courseService.getCourse(s).subscribe(x => console.log('TT', s, x));
+  }
+  getEnrolledStudents(s: string) {
+    this.courseService.getEnrolledStudents(s).subscribe(x => console.log('TT', s, x));
   }
 }

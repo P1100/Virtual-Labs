@@ -4,13 +4,19 @@
   <form (ngSubmit)="onGetCoursesSubmit()" #heroForm="ngForm">
     <div class="form-group">
       <!--      <input type="text" class="form-control" #in placeholder="course id">-->
-      <button type="submit" class="btn btn-primary btn-sm">getCourses</button>
+      <button type="submit" class="btn btn-primary btn-sm">getAllCourses</button>
     </div>
   </form>
   <form (ngSubmit)="onGetCourseSubmit(in.value)">
     <div class="form-group">
       <input type="text" class="form-control" #in placeholder="course id">
       <button type="submit" class="btn btn-primary btn-sm">getCourse</button>
+    </div>
+  </form>
+  <form (ngSubmit)="getEnrolledStudents(in.value)">
+    <div class="form-group">
+      <input type="text" class="form-control" #in placeholder="course id">
+      <button type="submit" class="btn btn-primary btn-sm">getEnrolledStudents</button>
     </div>
   </form>
 
