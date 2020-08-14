@@ -60,7 +60,7 @@ export class StudentsComponent implements OnInit, AfterViewInit, OnDestroy {
               }
               return notcontains;
             })
-              ?.filter(x => x.firstName.toLowerCase().startsWith(value.trim().toLowerCase()))
+              ?.filter(x => (x.firstName + ' ' + x.lastName + ' ' + x.firstName + x.id).toLowerCase().includes(value.trim().toLowerCase()))
               ?.sort((a, b) => {
                 return sortCompare(a.lastName, b.lastName, true);
               });
