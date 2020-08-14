@@ -1,5 +1,6 @@
-# create DATABASE virtuallabs;
+# create DATABASE virtuallabstest;
 create schema virtuallabs collate latin1_swedish_ci;
+
 USE virtuallabs;
 
 create table course

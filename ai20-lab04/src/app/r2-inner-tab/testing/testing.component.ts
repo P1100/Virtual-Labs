@@ -8,7 +8,7 @@ import {Course} from '../../models/course.model';
 @Component({
   selector: 'app-testing',
   templateUrl: './testing.component.html',
-  styleUrls: ['./testing.component.css']
+  styles: ['#testing_container {\n  margin: 30px;\n}', 'input {  margin: 5px;}', 'button {margin: 2px}']
 })
 export class TestingComponent implements OnInit {
   getCourses: FormGroup;
@@ -28,10 +28,13 @@ export class TestingComponent implements OnInit {
   onGetCoursesSubmit() {
     this.courseService.getCourses().subscribe(x => console.log('TT', x));
   }
-  onGetCourseSubmit(s: string) {
+  getCourse(s: string) {
     this.courseService.getCourse(s).subscribe(x => console.log('TT', s, x));
   }
   getEnrolledStudents(s: string) {
     this.courseService.getEnrolledStudents(s).subscribe(x => console.log('TT', s, x));
+  }
+  getAllStudents(s: string) {
+
   }
 }

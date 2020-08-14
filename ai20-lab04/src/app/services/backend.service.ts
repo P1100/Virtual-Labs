@@ -4,7 +4,8 @@ import {forkJoin, Observable, throwError} from 'rxjs';
 import {HttpClient} from '@angular/common/http';
 import {catchError, map, retry, tap} from 'rxjs/operators';
 import {environment} from '../../environments/environment';
-import {AppSettings} from '../app-settings';
+import {AppSettings, removeHATEOAS} from '../app-settings';
+import {HateoasModel} from '../models/hateoas.model';
 
 @Injectable({
   providedIn: 'root'
@@ -19,32 +20,19 @@ export class BackendService {
     return throwError(error.error);
   }
 
-  // Pipe functions to be pure. No pipe function should create any side effects that persist outside the execution of that function
   getAllStudents(): Observable<Student[]> {
-    return this.http.get<any>(`${this.baseUrl}/students`, AppSettings.JSON_HTTP_OPTIONS)
+    return this.http.get<HateoasModel>(`${this.baseUrl}/students`, AppSettings.JSON_HTTP_OPTIONS)
       .pipe(
-        map(response => response?._embedded?.studentDTOList),
-        map(s => s?.map(ss => {
-          const copy = {...ss};
-          delete copy?._links;
-          delete copy?.links; // only '_links' should show up
-          return copy;
-        })),
+        map(object => removeHATEOAS(object)),
         retry(AppSettings.RETRIES), catchError(this.formatErrors)
-        // ,tap(res => console.log('getAllStudents._embedded.studentDTOList', res))
+        , tap(res => console.log('getAllStudents._embedded.studentDTOList', res))
       );
   }
   getEnrolledStudents(courseId: number): Observable<Student[]> {
-    return this.http.get<any>(`${this.baseUrl}/courses/${courseId}/enrolled`, AppSettings.JSON_HTTP_OPTIONS)
+    return this.http.get<HateoasModel>(`${this.baseUrl}/courses/${courseId}/enrolled`, AppSettings.JSON_HTTP_OPTIONS)
       .pipe(
-        retry(AppSettings.RETRIES), catchError(this.formatErrors),
-        map(response => response?._embedded?.studentDTOList),
-        map(s => s?.map(ss => {
-          const copy = {...ss};
-          delete copy?._links;
-          delete copy?.links; // only '_links' should show up
-          return copy;
-        }))
+        map(object => removeHATEOAS(object)),
+        retry(AppSettings.RETRIES), catchError(this.formatErrors)
         // ,tap(res => console.log('getEnrolledStudents._embedded.studentDTOList', res))
       );
   }

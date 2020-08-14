@@ -1,23 +1,20 @@
 <div id="testing_container">
-
-  <h2>GET</h2>
   <form (ngSubmit)="onGetCoursesSubmit()" #heroForm="ngForm">
     <div class="form-group">
-      <!--      <input type="text" class="form-control" #in placeholder="course id">-->
       <button type="submit" class="btn btn-primary btn-sm">getAllCourses</button>
-    </div>
-  </form>
-  <form (ngSubmit)="onGetCourseSubmit(in.value)">
-    <div class="form-group">
-      <input type="text" class="form-control" #in placeholder="course id">
-      <button type="submit" class="btn btn-primary btn-sm">getCourse</button>
-    </div>
-  </form>
-  <form (ngSubmit)="getEnrolledStudents(in.value)">
-    <div class="form-group">
-      <input type="text" class="form-control" #in placeholder="course id">
-      <button type="submit" class="btn btn-primary btn-sm">getEnrolledStudents</button>
+      <button class="btn btn-primary btn-sm" (click)="getAllStudents(course.value)">getAllStudents</button>
     </div>
   </form>
 
+  <form>
+    <div class="form-group">
+      <input type="text" class="form-control" #course placeholder="course id">
+      <button mat-raised-button class="btn btn-light btn-sm" (click)="getCourse(course.value)">getCourse</button>
+      <button mat-raised-button class="btn btn-light btn-sm" (click)="getEnrolledStudents(course.value)">
+        getEnrolledStudents
+      </button>
+      <button mat-raised-button class="btn btn-light btn-sm" (click)="getCourse(course.value)">getCourse</button>
+      <button mat-raised-button class="btn btn-light btn-sm" (click)="getCourse(course.value)">getCourse</button>
+    </div>
+  </form>
 </div>
