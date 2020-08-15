@@ -42,12 +42,13 @@ export class HomeComponent implements OnInit, OnDestroy {
               private route: ActivatedRoute) {
     titleService.setTitle(this.title);
     courseService.getCourses().subscribe(x => this.courses = x);
+    // At every routing change, update nameActiveCourse (top toolbar)
     this.router.events
       .pipe(
-        // Moving to the params child route ( StudentsContComponent)
+        // Moving to params child route (StudentsContComponent)
         filter((event) => event instanceof NavigationEnd),
         map(() => this.route),
-        tap(r => console.log('NavEnd', r)),
+        tap(r => console.log(r)),
         map((rout) => {
           return rout?.firstChild?.firstChild?.firstChild?.firstChild;
         }),
@@ -126,6 +127,5 @@ export class HomeComponent implements OnInit, OnDestroy {
     }
   }
   editCourse() {
-
   }
 }

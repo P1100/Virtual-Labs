@@ -34,7 +34,7 @@ export class CourseService {
       .pipe(
         map(object => removeHATEOAS(object)),
         retry(AppSettings.RETRIES), catchError(this.formatErrors),
-        tap(res => console.log('--getCourse:', res, typeof res, Array.isArray(res)))
+        tap(res => console.log('--getCourse:', res))
       );
   }
   getEnrolledStudents(courseId: string): Observable<Student[]> {
@@ -42,7 +42,7 @@ export class CourseService {
       .pipe(
         map(object => removeHATEOAS(object)),
         retry(AppSettings.RETRIES), catchError(this.formatErrors),
-        tap(res => console.log('--getEnrolledStudents:', res, typeof res, Array.isArray(res)))
+        tap(res => console.log('--getEnrolledStudents:', res))
       );
   }
 }

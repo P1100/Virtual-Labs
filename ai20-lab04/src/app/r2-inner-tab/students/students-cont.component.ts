@@ -34,7 +34,7 @@ export class StudentsContComponent implements OnInit, OnDestroy {
   // Needed to initialize autocomplete properly
   autocompleteInit = 0;
 
-  // update students and enrolled on routing change (executed once, e.g. when changing course for the tab student)
+  // update students and enrolled on routing change (e.g. when changing course)
   constructor(private backendService: BackendService, private activatedRoute: ActivatedRoute) {
     this.subRouteParam = this.activatedRoute.paramMap.subscribe(() => {
         this.courseId = +this.activatedRoute.parent.snapshot.paramMap.get('id');
@@ -90,7 +90,7 @@ export class StudentsContComponent implements OnInit, OnDestroy {
     ) as Observable<any>;
     this.updateEnrolledStudents(observable);
   }
-  // I need to force the update on the tab (modified data, EnrolledStudents in this case). Executed once
+
   private updateEnrolledStudents(o: Observable<Student[]>) {
     o.subscribe(array => {
         console.log('onEnroll update date subscribe outer: ', array);

@@ -1,4 +1,4 @@
-import {Component, OnInit, ViewChild} from '@angular/core';
+import {Component, ViewChild} from '@angular/core';
 import {BackendService} from '../../services/backend.service';
 import {CourseService} from '../../services/course-service';
 import {FormGroup, NgForm} from '@angular/forms';
@@ -10,7 +10,7 @@ import {Course} from '../../models/course.model';
   templateUrl: './testing.component.html',
   styles: ['#testing_container {\n  margin: 30px;\n}', 'input {  margin: 5px;}', 'button {margin: 2px}']
 })
-export class TestingComponent implements OnInit {
+export class TestingComponent {
   getCourses: FormGroup;
   student: Student;
   arrs: Student[];
@@ -20,9 +20,6 @@ export class TestingComponent implements OnInit {
   heroForm: NgForm; // ElementRef;
 
   constructor(private backendService: BackendService, private courseService: CourseService) {
-  }
-
-  ngOnInit(): void {
   }
 
   onGetCoursesSubmit() {
@@ -35,6 +32,5 @@ export class TestingComponent implements OnInit {
     this.courseService.getEnrolledStudents(s).subscribe(x => console.log('TT', s, x));
   }
   getAllStudents(s: string) {
-
   }
 }

@@ -25,7 +25,6 @@ export class BackendService {
       .pipe(
         map(object => removeHATEOAS(object)),
         retry(AppSettings.RETRIES), catchError(this.formatErrors)
-        , tap(res => console.log('getAllStudents._embedded.studentDTOList', res))
       );
   }
   getEnrolledStudents(courseId: number): Observable<Student[]> {
@@ -33,7 +32,6 @@ export class BackendService {
       .pipe(
         map(object => removeHATEOAS(object)),
         retry(AppSettings.RETRIES), catchError(this.formatErrors)
-        // ,tap(res => console.log('getEnrolledStudents._embedded.studentDTOList', res))
       );
   }
   enroll(student: Student, courseId: number) {
@@ -43,7 +41,7 @@ export class BackendService {
       JSON.stringify(student),
       AppSettings.JSON_HTTP_OPTIONS
     ).pipe(
-      tap(res => console.log('enroll(student: Student, courseId: number)', res)),
+      tap(res => console.log('--enroll:', res)),
       retry(AppSettings.RETRIES), catchError(this.formatErrors));
   }
   disenroll(student: Student, courseId: number): Observable<any> {
@@ -52,7 +50,7 @@ export class BackendService {
       `${this.baseUrl}/courses/${courseId}/disenroll/${student.id}`,
       null
     ).pipe(
-      tap(s => console.log('disenroll http.put:', s)),
+      tap(s => console.log('--disenroll:', s)),
       retry(AppSettings.RETRIES), catchError(this.formatErrors));
   }
 

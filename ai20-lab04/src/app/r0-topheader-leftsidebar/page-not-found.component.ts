@@ -1,4 +1,4 @@
-import {Component, OnInit} from '@angular/core';
+import {Component} from '@angular/core';
 
 @Component({
   selector: 'app-page-not-found',
@@ -9,12 +9,7 @@ import {Component, OnInit} from '@angular/core';
   `,
   styles: []
 })
-export class PageNotFoundComponent implements OnInit {
-
+export class PageNotFoundComponent {
   constructor() {
   }
-
-  ngOnInit(): void {
-  }
-
 }
