@@ -1,9 +1,9 @@
 package it.polito.ai.es2.entities;
 
 import lombok.Data;
-import lombok.ToString;
 
 import javax.persistence.*;
+import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import java.util.ArrayList;
 import java.util.List;
@@ -18,8 +18,7 @@ import java.util.List;
  */
 @Entity
 @Data
-public class Teacher {
-  // TODO: add synch methods
+public class Professor {
   @Id
   private String id; // matricola/serial
   @NotBlank
@@ -27,14 +26,13 @@ public class Teacher {
   @NotBlank
   private String lastName;
   @NotBlank
+  @Email
   private String email;
-  //  @Lob
-//  @Basic(fetch = FetchType.LAZY)
-//  private byte[] profilePhoto;
-  private String profilePhoto;
   @ManyToMany(cascade = {CascadeType.MERGE, CascadeType.PERSIST})
   @JoinTable(name = "teacher_course", joinColumns = @JoinColumn(name = "teacher_id"),
       inverseJoinColumns = @JoinColumn(name = "course_id"))
-  @ToString.Exclude
   private List<Course> courses = new ArrayList<>();
+  @OneToOne
+  @JoinColumn
+  private Image profilePhoto;
 }

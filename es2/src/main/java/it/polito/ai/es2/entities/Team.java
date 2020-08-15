@@ -3,7 +3,6 @@ package it.polito.ai.es2.entities;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
-import org.springframework.web.multipart.MultipartFile;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
@@ -21,10 +20,10 @@ import java.util.List;
  * <p>
  * Didn"t use group, instead of team, because 'group' is a reserved MySQL word
  */
-@Entity
-//@Table(uniqueConstraints = @UniqueConstraint(columnNames = {"name", "course_id"}))
 @Data
-@EqualsAndHashCode(onlyExplicitlyIncluded = true)
+@EqualsAndHashCode(of = {"course", "id", "name"})
+@ToString(exclude = {"members"})
+@Entity
 public class Team {
   public static int status_inactive() {
     return 0;
@@ -35,29 +34,20 @@ public class Team {
   }
   
   @Id
-  @EqualsAndHashCode.Include
   @GeneratedValue
-  Long id;
-  @EqualsAndHashCode.Include
+  private Long id;
   @NotBlank
-  String name;
-  int status;
-  @Transient
-  MultipartFile modelVM;
-  Long maxVcpu;
-  Long maxDiskSpace;
-  Long maxRam;
-  Long maxVmIstancesEnabled;
-  Long maxVmIstancesAvailable; // sum of enabled and disabled
+  private String name;
+  private int status;
   @ManyToOne(cascade = {CascadeType.MERGE, CascadeType.PERSIST})
   @JoinColumn(name = "course_id")
-  @EqualsAndHashCode.Include
   Course course;
   @ManyToMany(cascade = {CascadeType.MERGE, CascadeType.PERSIST})
   @JoinTable(name = "teams_students", joinColumns = @JoinColumn(name = "team_id"),
       inverseJoinColumns = @JoinColumn(name = "student_id"))
-  @ToString.Exclude
   List<Student> members = new ArrayList<>();
+  @OneToMany
+  private List<VM> vms = new ArrayList<>();
   
   public void setCourse(Course new_course) {
     if (this.course != null)

@@ -14,10 +14,10 @@ import java.sql.Timestamp;
 // TODO: synch methods??
 public class Token {
   @Id
-  String id;
-  Long teamId;
-  Timestamp expiryDate;
+  private String id;
+  private Long teamId;
+  private Timestamp expiryDate;
   @ManyToOne(fetch = FetchType.EAGER)
   @JoinColumn(name = "student_id", referencedColumnName = "id")
-  Student student;
+  private Student student;
 }

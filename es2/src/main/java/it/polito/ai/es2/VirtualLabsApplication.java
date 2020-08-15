@@ -1,6 +1,8 @@
 package it.polito.ai.es2;
 
 import it.polito.ai.es2._provecodicelearning.MyTestingService;
+import it.polito.ai.es2.entities.Assignment;
+import it.polito.ai.es2.entities.Image;
 import it.polito.ai.es2.repositories.CourseRepository;
 import it.polito.ai.es2.repositories.StudentRepository;
 import it.polito.ai.es2.repositories.TeamRepository;
@@ -49,6 +51,8 @@ public class VirtualLabsApplication {
     return new CommandLineRunner() {
       @Override
       public void run(String... args) {
+        Image i = new Image();
+        Assignment a = new Assignment();
 /*        List<Token> allByTeamId = tokenRepository.findAllByTeamId(Long.valueOf(18));
         System.out.println("allByTeamId-" + allByTeamId);
         
