@@ -11,7 +11,7 @@ import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
 @ControllerAdvice
-public class RestResponseEntityExceptionHandler
+public class ResponseExceptionHandler
     extends ResponseEntityExceptionHandler {
   @ExceptionHandler(value = {IllegalArgumentException.class, IllegalStateException.class})
   protected ResponseEntity<Object> genericError(
@@ -24,8 +24,8 @@ public class RestResponseEntityExceptionHandler
   @ExceptionHandler(value = {CourseNotFoundException.class, StudentNotFoundException.class})
   protected ResponseEntity<Object> notFound(
       RuntimeException ex, WebRequest request) {
-    String bodyOfResponse = "Not Found";
+    String bodyOfResponse = ex.getMessage();
     return handleExceptionInternal(ex, bodyOfResponse,
-        new HttpHeaders(), HttpStatus.PRECONDITION_FAILED, request);
+        new HttpHeaders(), HttpStatus.NOT_FOUND, request);
   }
 }

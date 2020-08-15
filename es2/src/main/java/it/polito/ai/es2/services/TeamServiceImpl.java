@@ -80,7 +80,7 @@ public class TeamServiceImpl implements TeamService {
     log.info("getEnrolledStudents(" + courseId + ")");
     if (courseId == null) throw new TeamServiceException("getEnrolledStudents() - null parameters");
     if (!courseRepository.existsById(courseId))
-      throw new CourseNotFoundException("getEnrolledStudents(String courseId):" + courseId);
+      throw new CourseNotFoundException("Course not found! " + courseId);
     Course c = courseRepository.getOne(courseId);
     return c.getStudents().stream().map(x -> modelMapper.map(x, StudentDTO.class)).collect(Collectors.toList());
   }

@@ -1,11 +1,11 @@
-# AI 2020 Progetto parte server side
+# AI 2020 VirtualLabs Project - Back end
 
-## Git
+## Git tags
 git push origin :refs/tags/`tagname`
 ## Update Maven Dependencies
 - IDEA Maven Run Configuration:<br>
-`versions:display-dependency-updates`
-`versions:use-latest-versions`
+`mvn versions:display-dependency-updates`
+`mvn versions:use-latest-versions`
 - Also update Maven indexed repositories on IDEA
 
 ## Docker
