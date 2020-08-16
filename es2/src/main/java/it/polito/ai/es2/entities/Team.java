@@ -2,7 +2,6 @@ package it.polito.ai.es2.entities;
 
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-import lombok.ToString;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
@@ -22,9 +21,16 @@ import java.util.List;
  */
 @Data
 @EqualsAndHashCode(of = {"course", "id", "name"})
-@ToString(exclude = {"members"})
 @Entity
 public class Team {
+  @Id
+  @GeneratedValue
+  private Long id;
+  @NotBlank
+  private String name;
+  private int status = 0; //0 inactive, 1 active
+  private int maxVcpu, maxDiskSpace, maxRam, maxRunningVM, maxTotVM; // sum of enabled and disabled
+  
   public static int status_inactive() {
     return 0;
   }
@@ -33,12 +39,6 @@ public class Team {
     return 1;
   }
   
-  @Id
-  @GeneratedValue
-  private Long id;
-  @NotBlank
-  private String name;
-  private int status;
   @ManyToOne(cascade = {CascadeType.MERGE, CascadeType.PERSIST})
   @JoinColumn(name = "course_id")
   Course course;
@@ -46,7 +46,7 @@ public class Team {
   @JoinTable(name = "teams_students", joinColumns = @JoinColumn(name = "team_id"),
       inverseJoinColumns = @JoinColumn(name = "student_id"))
   List<Student> members = new ArrayList<>();
-  @OneToMany
+  @OneToMany(mappedBy = "team")
   private List<VM> vms = new ArrayList<>();
   
   public void setCourse(Course new_course) {

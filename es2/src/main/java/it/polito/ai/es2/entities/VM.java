@@ -15,10 +15,15 @@ public class VM {
   private int diskSpace;
   private int ram;
   private boolean active;
+//  private String vmModel; // -> saved in course
   @ManyToOne
-  private Team team; // get course from team
-  @ManyToMany
-  private List<Student> owners = new ArrayList<>();
+  @JoinColumn
+  private Team team; // -> obtain course from team
+  // TODO: check on add, students must be in same team
+  @ManyToMany(mappedBy = "vms")
+  @JoinTable
+  private List<Student> studentOwners = new ArrayList<>();
   @OneToOne
-  private Image screenshotVM;
+  @JoinColumn
+  private Image imageVm;
 }

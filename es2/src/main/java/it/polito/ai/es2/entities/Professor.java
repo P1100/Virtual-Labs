@@ -16,8 +16,8 @@ import java.util.List;
  * a quelle degli studenti/gruppi dei corsi che gestisce. Attenzione: ci possono essere più docenti
  * gestori dello stesso corso
  */
-@Entity
 @Data
+@Entity
 public class Professor {
   @Id
   private String id; // matricola/serial
@@ -29,10 +29,11 @@ public class Professor {
   @Email
   private String email;
   @ManyToMany(cascade = {CascadeType.MERGE, CascadeType.PERSIST})
-  @JoinTable(name = "teacher_course", joinColumns = @JoinColumn(name = "teacher_id"),
-      inverseJoinColumns = @JoinColumn(name = "course_id"))
+  @JoinTable
   private List<Course> courses = new ArrayList<>();
   @OneToOne
   @JoinColumn
   private Image profilePhoto;
+  @OneToMany(mappedBy = "owner")
+  private List<Assignment> assignments;
 }

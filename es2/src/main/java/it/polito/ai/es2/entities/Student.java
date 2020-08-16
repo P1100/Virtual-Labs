@@ -40,6 +40,10 @@ public class Student {
   @OneToOne
   @JoinColumn
   private Image profilePhoto;
+  @ManyToMany(mappedBy = "studentOwners")
+  private List<VM> vms;
+  @OneToMany(mappedBy = "student")
+  private List<Homework> homeworks;
   
   public void addCourse(Course new_course) {
     courses.add(new_course);

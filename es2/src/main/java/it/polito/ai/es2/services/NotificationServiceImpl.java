@@ -76,9 +76,10 @@ public class NotificationServiceImpl implements NotificationService {
       teamService.setTeamStatus(teamId, Team.status_active());
       return true;
     }
-    for (Token token : tokenList) {
-      tokenRepository.delete(token);
-    }
+//    TODO: (??) commented, review later
+//    for (Token token : tokenList) {
+//      tokenRepository.delete(token);
+//    }
     return false;
   }
   

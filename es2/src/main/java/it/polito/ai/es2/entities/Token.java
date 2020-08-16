@@ -1,23 +1,17 @@
 package it.polito.ai.es2.entities;
 
-import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.NoArgsConstructor;
 
-import javax.persistence.*;
+import javax.persistence.Entity;
+import javax.persistence.Id;
 import java.sql.Timestamp;
 
 @Data
-@NoArgsConstructor
-@AllArgsConstructor
 @Entity
-// TODO: synch methods??
 public class Token {
   @Id
   private String id;
+  // TODO: no need to link to team table? Review later
   private Long teamId;
   private Timestamp expiryDate;
-  @ManyToOne(fetch = FetchType.EAGER)
-  @JoinColumn(name = "student_id", referencedColumnName = "id")
-  private Student student;
 }

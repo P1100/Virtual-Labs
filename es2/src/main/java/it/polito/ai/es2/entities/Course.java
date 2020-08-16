@@ -11,6 +11,7 @@ import javax.validation.constraints.PositiveOrZero;
 import java.util.ArrayList;
 import java.util.List;
 
+
 /**
  * Corso
  * Il corso universitario è caratterizzato da un nome, un acronimo, e ad esso sono associati gli
@@ -20,9 +21,9 @@ import java.util.List;
  * <p>
  * Id is the course acronym. If course disabled, you cant use the VM associated
  */
-@Entity
 @Data
 @ToString(exclude = {"teams", "students", "professors"})
+@Entity
 public class Course {
   @Id
   private String id;
@@ -34,15 +35,16 @@ public class Course {
   private int maxEnrolled;
   @NotNull
   private boolean enabled;
-  String pathModelVM;
-  private int maxVcpu, maxDiskSpace, maxRam, maxRunningVM,
-      maxTotVM; // sum of enabled and disabled
+  private String vmModelPath;
   @OneToMany(mappedBy = "course")
   private List<Team> teams = new ArrayList<>();
   @ManyToMany(mappedBy = "courses", cascade = {CascadeType.MERGE, CascadeType.PERSIST})
   private List<Student> students = new ArrayList<>();
   @ManyToMany(mappedBy = "courses", cascade = {CascadeType.MERGE, CascadeType.PERSIST})
   private List<Professor> professors = new ArrayList<>();
+
+//  @OneToMany(mappedBy = "course")
+//  private List<Assignment> assignments;
   
   public void addEnrollStudent(Student new_student) {
     students.add(new_student);

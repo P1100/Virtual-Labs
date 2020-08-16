@@ -1,4 +1,4 @@
-package it.polito.ai.es2.services;
+package it.polito.ai.es2.services.exceptions.handler;
 
 import it.polito.ai.es2.services.exceptions.CourseNotFoundException;
 import it.polito.ai.es2.services.exceptions.StudentNotFoundException;
@@ -11,7 +11,7 @@ import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
 @ControllerAdvice
-public class ResponseExceptionHandler
+public class GlobalExceptionHandler
     extends ResponseEntityExceptionHandler {
   @ExceptionHandler(value = {IllegalArgumentException.class, IllegalStateException.class})
   protected ResponseEntity<Object> genericError(

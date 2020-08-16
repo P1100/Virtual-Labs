@@ -1,18 +1,9 @@
 package it.polito.ai.es2;
 
-import it.polito.ai.es2._provecodicelearning.MyTestingService;
-import it.polito.ai.es2.entities.Assignment;
-import it.polito.ai.es2.entities.Image;
-import it.polito.ai.es2.repositories.CourseRepository;
-import it.polito.ai.es2.repositories.StudentRepository;
-import it.polito.ai.es2.repositories.TeamRepository;
-import it.polito.ai.es2.repositories.TokenRepository;
-import it.polito.ai.es2.services.interfaces.NotificationService;
 import it.polito.ai.es2.services.interfaces.TeamService;
 import lombok.extern.java.Log;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -38,21 +29,20 @@ public class VirtualLabsApplication {
   Environment environment;
   @Autowired
   private ApplicationContext applicationContext;
-  @Value("${server.port}")
-  String port;
+  @Autowired
+  private TeamService teamService;
+//  @Value("${server.port}")
+//  String port;
 //  @Value("${server.address}")
 //  String address;
   
   @Bean
-  CommandLineRunner runner(CourseRepository courseRepository, StudentRepository studentRepository,
-                           TeamRepository teamRepository, TeamService teamService,
-                           ModelMapper modelMapper, MyTestingService testservice, TokenRepository tokenRepository,
-                           NotificationService notificationService) {
+  CommandLineRunner runner() {
     return new CommandLineRunner() {
       @Override
       public void run(String... args) {
-        Image i = new Image();
-        Assignment a = new Assignment();
+        teamService.testing();
+        
 /*        List<Token> allByTeamId = tokenRepository.findAllByTeamId(Long.valueOf(18));
         System.out.println("allByTeamId-" + allByTeamId);
         

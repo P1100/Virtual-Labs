@@ -14,6 +14,11 @@ public interface TeamService {
   
   Optional<CourseDTO> getCourse(String name);
   
+  void testing(
+//CourseDTO c, StudentDTO s,ProfessorDTO professorDTO, TeamDTO teamDTO,
+//AssignmentDTO assignmentDTO, ImageDTO imageDTO, HomeworkDTO submissionDTO, VmDTO vmDTO
+  );
+  
   List<CourseDTO> getAllCourses();
   
   boolean addStudent(StudentDTO student);
@@ -53,11 +58,8 @@ public interface TeamService {
 //  ------------- Added on es3 --------------
   
   List<TeamDTO> getAllTeams();
-  
   Optional<TeamDTO> getTeam(Long teamId);
-  
   boolean setTeamStatus(Long teamId, int status);
-  
   boolean evictTeam(Long teamId);
 
 //  ---------- Added after beginning project-----------------

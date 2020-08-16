@@ -1,4 +1,4 @@
-package it.polito.ai.es2._provecodicelearning;
+package it.polito.ai.es2.repositories;
 
 import it.polito.ai.es2.entities.Course;
 import org.springframework.stereotype.Repository;
@@ -12,7 +12,7 @@ import java.util.Map;
 
 // TODO: find a way to add this in the final project, add some queries somewhere
 @Repository
-public class MyTestingCustomCourseRepositoryImpl implements MyTestingCustomCourseRepository {
+public class CourseCustomRepositoryImpl implements CourseCustomRepository {
   @PersistenceContext
   private EntityManager entityManager;
   

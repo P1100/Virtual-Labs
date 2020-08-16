@@ -11,10 +11,7 @@ import it.polito.ai.es2.dtos.TeamDTO;
 import it.polito.ai.es2.entities.Course;
 import it.polito.ai.es2.entities.Student;
 import it.polito.ai.es2.entities.Team;
-import it.polito.ai.es2.repositories.CourseRepository;
-import it.polito.ai.es2.repositories.StudentRepository;
-import it.polito.ai.es2.repositories.TeamRepository;
-import it.polito.ai.es2.repositories.TokenRepository;
+import it.polito.ai.es2.repositories.*;
 import it.polito.ai.es2.services.exceptions.*;
 import it.polito.ai.es2.services.interfaces.NotificationService;
 import it.polito.ai.es2.services.interfaces.TeamService;
@@ -29,7 +26,6 @@ import java.io.Reader;
 import java.util.*;
 import java.util.stream.Collectors;
 
-// TODO: collegare a dati client (uniformare), e poi fare parte di testing approfondita!
 
 /**
  * Descrizione classe<p>Politica di sovrascrittura adottata: in quasi tutti i metodi add, se un id era già presente nel database non sovrascrivo i dati
@@ -52,6 +48,20 @@ public class TeamServiceImpl implements TeamService {
   TokenRepository tokenRepository;
   @Autowired
   NotificationService notificationService;
+  @Autowired
+  AssignmentRepository assignmentRepository;
+  @Autowired
+  ImageRepository imageRepository;
+  @Autowired
+  HomeworkRepository homeworkRepository;
+  @Autowired
+  VMRepository vmRepository;
+  
+  @Override
+  public void testing(
+  ) {
+  
+  }
   
   /**
    * GET {@link APICourses_RestController#getAllCourses()}
