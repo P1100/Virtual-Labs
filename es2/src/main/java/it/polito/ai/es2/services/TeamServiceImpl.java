@@ -9,6 +9,7 @@ import it.polito.ai.es2.dtos.CourseDTO;
 import it.polito.ai.es2.dtos.StudentDTO;
 import it.polito.ai.es2.dtos.TeamDTO;
 import it.polito.ai.es2.entities.Course;
+import it.polito.ai.es2.entities.Image;
 import it.polito.ai.es2.entities.Student;
 import it.polito.ai.es2.entities.Team;
 import it.polito.ai.es2.repositories.*;
@@ -53,14 +54,20 @@ public class TeamServiceImpl implements TeamService {
   @Autowired
   ImageRepository imageRepository;
   @Autowired
-  HomeworkRepository homeworkRepository;
+  ImplementationRepository implementationRepository;
   @Autowired
   VMRepository vmRepository;
   
   @Override
   public void testing(
   ) {
-  
+    Image test = new Image();
+//    test.setNome("helloimage2");
+    test.setRevisionCycle(0);
+    imageRepository.saveAndFlush(test);
+//    Token test = new Token();
+//    test.setId("4242f423f4");
+//    tokenRepository.saveAndFlush(test);
   }
   
   /**

@@ -33,17 +33,21 @@ public class Student {
    */
   @ManyToMany(mappedBy = "members", cascade = {CascadeType.MERGE, CascadeType.PERSIST})
   List<Team> teams = new ArrayList<>();
+  
   @ManyToMany(cascade = {CascadeType.MERGE, CascadeType.PERSIST})
   @JoinTable(name = "student_course", joinColumns = @JoinColumn(name = "student_id"),
       inverseJoinColumns = @JoinColumn(name = "course_id"))
   private List<Course> courses = new ArrayList<>();
+  
   @OneToOne
   @JoinColumn
   private Image profilePhoto;
+  
   @ManyToMany(mappedBy = "studentOwners")
   private List<VM> vms;
+  
   @OneToMany(mappedBy = "student")
-  private List<Homework> homeworks;
+  private List<Implementation> homeworks;
   
   public void addCourse(Course new_course) {
     courses.add(new_course);

@@ -20,7 +20,7 @@ public class VM {
   @JoinColumn
   private Team team; // -> obtain course from team
   // TODO: check on add, students must be in same team
-  @ManyToMany(mappedBy = "vms")
+  @ManyToMany
   @JoinTable
   private List<Student> studentOwners = new ArrayList<>();
   @OneToOne

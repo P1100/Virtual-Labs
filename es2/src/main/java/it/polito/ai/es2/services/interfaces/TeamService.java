@@ -15,8 +15,6 @@ public interface TeamService {
   Optional<CourseDTO> getCourse(String name);
   
   void testing(
-//CourseDTO c, StudentDTO s,ProfessorDTO professorDTO, TeamDTO teamDTO,
-//AssignmentDTO assignmentDTO, ImageDTO imageDTO, HomeworkDTO submissionDTO, VmDTO vmDTO
   );
   
   List<CourseDTO> getAllCourses();

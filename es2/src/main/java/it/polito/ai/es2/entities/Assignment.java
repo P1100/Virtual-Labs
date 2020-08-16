@@ -12,17 +12,17 @@ public class Assignment {
   @Id
   @GeneratedValue
   private Long id;
+  private String name;
   private Timestamp releaseDate;
   private Timestamp expireDate;
+  
   @ManyToOne
   @JoinColumn
   private Professor owner;
-  // TODO: redundant?
-//  @ManyToOne
-//  @JoinColumn
-//  private Course course;
-  @OneToOne(mappedBy = "")
-  private Image contentAssignment;
+  
+  @OneToOne
+  private Image content;
+  
   @OneToMany(mappedBy = "assignment")
-  private List<Homework> homeworks;
+  private List<Implementation> implementations;
 }

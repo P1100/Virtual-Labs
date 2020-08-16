@@ -4,5 +4,5 @@ import lombok.Data;
 
 @Data
 public class ImageDTO {
-  String test;
+  int revisionCycle;
 }

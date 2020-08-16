@@ -26,7 +26,7 @@ import java.util.List;
 @Entity
 public class Course {
   @Id
-  private String id;
+  private String id; // acronym
   @NotBlank
   private String fullName;
   @PositiveOrZero
@@ -36,10 +36,13 @@ public class Course {
   @NotNull
   private boolean enabled;
   private String vmModelPath;
+  
   @OneToMany(mappedBy = "course")
   private List<Team> teams = new ArrayList<>();
+  
   @ManyToMany(mappedBy = "courses", cascade = {CascadeType.MERGE, CascadeType.PERSIST})
   private List<Student> students = new ArrayList<>();
+  
   @ManyToMany(mappedBy = "courses", cascade = {CascadeType.MERGE, CascadeType.PERSIST})
   private List<Professor> professors = new ArrayList<>();
 
