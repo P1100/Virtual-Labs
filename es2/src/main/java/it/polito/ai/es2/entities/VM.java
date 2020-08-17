@@ -28,7 +28,7 @@ public class VM {
   
   @ManyToMany
   @JoinTable
-  private List<Student> owners = new ArrayList<>();
+  private List<Student> sharedOwners = new ArrayList<>();
   
   @OneToOne
   @JoinColumn

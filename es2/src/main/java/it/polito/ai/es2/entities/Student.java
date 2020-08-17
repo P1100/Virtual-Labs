@@ -46,7 +46,7 @@ public class Student {
   @OneToMany(mappedBy = "creator")
   private List<VM> vmsCreated;
   
-  @ManyToMany(mappedBy = "owners")
+  @ManyToMany(mappedBy = "sharedOwners")
   private List<VM> vmsOwned; // --> vms group from teams
   
   @OneToMany(mappedBy = "student")
