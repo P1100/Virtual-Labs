@@ -35,25 +35,4 @@ public class CourseCustomRepositoryImpl implements CourseCustomRepository {
     
     return query.getResultList();
   }
-    
-    /* --> NOT WORKING (????), class not interface
-  @Repository
-  public class EmployeeDao {
-    
-    @PersistenceContext
-    private EntityManager entityManager;
-    
-// not working?
-    public List<?> getListOfStates(int userId) {
-      
-      String hql = "FROM states s WHERE " + "s.userid = :userId";
-      Session session = entityManager.unwrap(Session.class);
-      Query query = (Query) session.createQuery(hql);
-      query..setParameter("userId", userId);
-      session.flush();
-      session.clear();
-      return query.list();
-    }
-  }
-  * */
 }

@@ -18,6 +18,7 @@ public class Token {
   private Long teamId;
   private Timestamp expiryDate;
   
+  // TODO: ??? Link to student other way?
   @ManyToOne(fetch = FetchType.EAGER)
   @JoinColumn(name = "student_id", referencedColumnName = "id")
   Student student;

@@ -15,14 +15,28 @@ public class Assignment {
   private String name;
   private Timestamp releaseDate;
   private Timestamp expireDate;
+  @OneToOne
+  @JoinColumn
+  private Image content;
   
   @ManyToOne
   @JoinColumn
-  private Professor owner;
+  private Course course;
   
-  @OneToOne
-  private Image content;
+  @ManyToOne
+  @JoinColumn
+  private Professor creator;
   
   @OneToMany(mappedBy = "assignment")
   private List<Implementation> implementations;
+  
+  // Parameters needed at creation
+  void init(Course c, Professor p, Image i) {
+    course = c;
+    c.getAssignments().add(this);
+    creator = p;
+    p.getAssignments().add(this);
+    content = i;
+    i.setAssignment(this);
+  }
 }

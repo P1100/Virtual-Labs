@@ -15,12 +15,15 @@ public class Implementation {
   private Status status = Status.NULL; // initial state
   private Boolean permanent = false;
   private String grade;
-  @ManyToOne
+  
+  @ManyToOne //
   @JoinColumn
   private Student student;
+  
   @ManyToOne
   @JoinColumn
   private Assignment assignment; // --> course, professor
+  
   @OneToMany(mappedBy = "submission")
   private List<Image> imageSubmissions;
 }

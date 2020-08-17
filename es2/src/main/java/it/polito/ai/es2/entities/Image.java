@@ -9,23 +9,18 @@ import java.sql.Timestamp;
 
 @Data
 @Entity(name = "image")
-//@MappedSuperclass
 public class Image {
   @Id
   @GeneratedValue
   private Long id;
-  
-  // number of iterations for Implementation
+  // number of iteration for Implementation
   private int revisionCycle;
-  
   @CreationTimestamp
   @Column(name = "create_date")
   private Timestamp createDate; // LocalDateTime
-  
   @UpdateTimestamp
   @Column(name = "modify_date")
   private Timestamp modifyDate;
-  
   @Lob
   @Basic(fetch = FetchType.LAZY)
   private byte[] data;

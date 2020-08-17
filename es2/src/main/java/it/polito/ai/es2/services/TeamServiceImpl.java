@@ -46,8 +46,6 @@ public class TeamServiceImpl implements TeamService {
   @Autowired
   TeamRepository teamRepository;
   @Autowired
-  TokenRepository tokenRepository;
-  @Autowired
   NotificationService notificationService;
   @Autowired
   AssignmentRepository assignmentRepository;
@@ -65,9 +63,6 @@ public class TeamServiceImpl implements TeamService {
 //    test.setNome("helloimage2");
     test.setRevisionCycle(0);
     imageRepository.saveAndFlush(test);
-//    Token test = new Token();
-//    test.setId("4242f423f4");
-//    tokenRepository.saveAndFlush(test);
   }
   
   /**

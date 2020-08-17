@@ -37,17 +37,17 @@ public class Course {
   private boolean enabled;
   private String vmModelPath;
   
+  @ManyToMany(mappedBy = "courses", cascade = {CascadeType.MERGE, CascadeType.PERSIST})
+  private List<Professor> professors = new ArrayList<>();
+  
   @OneToMany(mappedBy = "course")
-  private List<Team> teams = new ArrayList<>();
+  private List<Assignment> assignments = new ArrayList<>();
   
   @ManyToMany(mappedBy = "courses", cascade = {CascadeType.MERGE, CascadeType.PERSIST})
   private List<Student> students = new ArrayList<>();
   
-  @ManyToMany(mappedBy = "courses", cascade = {CascadeType.MERGE, CascadeType.PERSIST})
-  private List<Professor> professors = new ArrayList<>();
-
-//  @OneToMany(mappedBy = "course")
-//  private List<Assignment> assignments;
+  @OneToMany(mappedBy = "course")
+  private List<Team> teams = new ArrayList<>(); // -> vms
   
   public void addEnrollStudent(Student new_student) {
     students.add(new_student);
@@ -67,4 +67,9 @@ public class Course {
     teams.remove(old_team);
     old_team.setCourse(null);
   }
+
+//  public void addAssignment(Assignment a) {
+//    assignments.add(a);
+//    a.setCourse(this);
+//  }
 }

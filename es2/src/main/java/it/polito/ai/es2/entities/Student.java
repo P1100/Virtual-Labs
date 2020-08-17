@@ -28,23 +28,26 @@ public class Student {
   @NotBlank
   @Email
   private String email;
-  /**
-   * Multiple teams because each student might be enrolled in multiple courses at the same time
-   */
-  @ManyToMany(mappedBy = "members", cascade = {CascadeType.MERGE, CascadeType.PERSIST})
-  List<Team> teams = new ArrayList<>();
+  @OneToOne
+  @JoinColumn
+  private Image profilePhoto;
   
   @ManyToMany(cascade = {CascadeType.MERGE, CascadeType.PERSIST})
   @JoinTable(name = "student_course", joinColumns = @JoinColumn(name = "student_id"),
       inverseJoinColumns = @JoinColumn(name = "course_id"))
   private List<Course> courses = new ArrayList<>();
   
-  @OneToOne
-  @JoinColumn
-  private Image profilePhoto;
+  /**
+   * Multiple teams because each student might be enrolled in multiple courses at the same time
+   */
+  @ManyToMany(mappedBy = "members", cascade = {CascadeType.MERGE, CascadeType.PERSIST})
+  List<Team> teams = new ArrayList<>();
   
-  @ManyToMany(mappedBy = "studentOwners")
-  private List<VM> vms;
+  @OneToMany(mappedBy = "creator")
+  private List<VM> vmsCreated;
+  
+  @ManyToMany(mappedBy = "owners")
+  private List<VM> vmsOwned; // --> vms group from teams
   
   @OneToMany(mappedBy = "student")
   private List<Implementation> homeworks;

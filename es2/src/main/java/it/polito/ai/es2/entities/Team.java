@@ -39,13 +39,15 @@ public class Team {
     return 1;
   }
   
-  @ManyToOne(cascade = {CascadeType.MERGE, CascadeType.PERSIST})
+  @ManyToOne(cascade = {CascadeType.MERGE, CascadeType.PERSIST}) //
   @JoinColumn(name = "course_id")
-  Course course;
+  Course course; // --> model vm
+  
   @ManyToMany(cascade = {CascadeType.MERGE, CascadeType.PERSIST})
   @JoinTable(name = "teams_students", joinColumns = @JoinColumn(name = "team_id"),
       inverseJoinColumns = @JoinColumn(name = "student_id"))
   List<Student> members = new ArrayList<>();
+  
   @OneToMany(mappedBy = "team")
   private List<VM> vms = new ArrayList<>();
   

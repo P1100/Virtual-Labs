@@ -12,17 +12,24 @@ public class VM {
   @Id
   private Long id;
   private int vcpu;
-  private int diskSpace;
+  private int disk;
   private int ram;
   private boolean active;
 //  private String vmModel; // -> saved in course
+  
   @ManyToOne
   @JoinColumn
-  private Team team; // -> obtain course from team
+  private Team team; // --> course
+  
   // TODO: check on add, students must be in same team
+  @ManyToOne
+  @JoinColumn
+  private Student creator;
+  
   @ManyToMany
   @JoinTable
-  private List<Student> studentOwners = new ArrayList<>();
+  private List<Student> owners = new ArrayList<>();
+  
   @OneToOne
   @JoinColumn
   private Image imageVm;

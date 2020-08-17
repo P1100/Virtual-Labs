@@ -28,12 +28,14 @@ public class Professor {
   @NotBlank
   @Email
   private String email;
-  @ManyToMany(cascade = {CascadeType.MERGE, CascadeType.PERSIST})
-  @JoinTable
-  private List<Course> courses = new ArrayList<>();
   @OneToOne
   @JoinColumn
   private Image profilePhoto;
-  @OneToMany(mappedBy = "owner")
+  
+  @ManyToMany(cascade = {CascadeType.MERGE, CascadeType.PERSIST})
+  @JoinTable
+  private List<Course> courses = new ArrayList<>(); // --> teams, vms
+  
+  @OneToMany(mappedBy = "creator")
   private List<Assignment> assignments;
 }
