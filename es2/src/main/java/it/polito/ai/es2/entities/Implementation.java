@@ -16,11 +16,11 @@ public class Implementation {
   private Boolean permanent = false;
   private String grade;
   
-  @ManyToOne //
+  @ManyToOne(optional = false)
   @JoinColumn
   private Student student;
   
-  @ManyToOne
+  @ManyToOne(optional = false)
   @JoinColumn
   private Assignment assignment; // --> course, professor
   

@@ -6,7 +6,7 @@ import lombok.Data;
 public class VmDTO {
   private Long id;
   private int vcpu;
-  private int diskSpace;
+  private int disk;
   private int ram;
   private boolean active;
 }

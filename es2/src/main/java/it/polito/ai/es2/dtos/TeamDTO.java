@@ -3,19 +3,17 @@ package it.polito.ai.es2.dtos;
 import lombok.Builder;
 import lombok.Data;
 import org.springframework.hateoas.RepresentationModel;
-import org.springframework.web.multipart.MultipartFile;
 
 @Data
 @Builder
 public class TeamDTO extends RepresentationModel<CourseDTO> {
   private Long id;
   private String name;
-  private int status;
-  // TODO: check again with entities, not sure
-  private MultipartFile modelVM;
-  private Long maxVcpu;
-  private Long maxDiskSpace;
-  private Long maxRam;
-  private Long maxVmIstancesEnabled;
-  private Long maxVmIstancesAvailable;
+  private int status = 0; //0 inactive, 1 active
+  private int
+      maxVcpu,
+      maxDisk,
+      maxRam,
+      maxRunningVM,
+      maxTotVM; // sum of enabled and disabled
 }

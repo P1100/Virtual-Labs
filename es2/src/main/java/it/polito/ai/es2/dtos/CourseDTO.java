@@ -9,10 +9,11 @@ import org.springframework.hateoas.RepresentationModel;
 @AllArgsConstructor
 @Data
 public class CourseDTO extends RepresentationModel<CourseDTO> {
-  private String id;
+  private String id; // acronym
   private String fullName;
   private int minEnrolled;
   private int maxEnrolled;
   private boolean enabled;
+  private String vmModelPath;
 }
 

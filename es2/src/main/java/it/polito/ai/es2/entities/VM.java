@@ -17,7 +17,7 @@ public class VM {
   private boolean active;
 //  private String vmModel; // -> saved in course
   
-  @ManyToOne
+  @ManyToOne(optional = false)
   @JoinColumn
   private Team team; // --> course
   

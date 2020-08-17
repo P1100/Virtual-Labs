@@ -29,7 +29,7 @@ public class Team {
   @NotBlank
   private String name;
   private int status = 0; //0 inactive, 1 active
-  private int maxVcpu, maxDiskSpace, maxRam, maxRunningVM, maxTotVM; // sum of enabled and disabled
+  private int maxVcpu, maxDisk, maxRam, maxRunningVM, maxTotVM; // sum of enabled and disabled
   
   public static int status_inactive() {
     return 0;
@@ -39,7 +39,7 @@ public class Team {
     return 1;
   }
   
-  @ManyToOne(cascade = {CascadeType.MERGE, CascadeType.PERSIST}) //
+  @ManyToOne(cascade = {CascadeType.MERGE, CascadeType.PERSIST}, optional = false)
   @JoinColumn(name = "course_id")
   Course course; // --> model vm
   

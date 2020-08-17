@@ -15,7 +15,7 @@ public class Assignment {
   private String name;
   private Timestamp releaseDate;
   private Timestamp expireDate;
-  @OneToOne
+  @OneToOne(optional = false)
   @JoinColumn
   private Image content;
   
@@ -23,7 +23,7 @@ public class Assignment {
   @JoinColumn
   private Course course;
   
-  @ManyToOne
+  @ManyToOne(optional = false)
   @JoinColumn
   private Professor creator;
   
