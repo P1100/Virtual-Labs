@@ -31,12 +31,11 @@ public class APICourses_RestController {
   @Autowired
   TeamService teamService;
   
-  @GetMapping({"", "/"})
+  @GetMapping()
   public CollectionModel<CourseDTO> getAllCourses() {
     List<CourseDTO> courses = teamService.getAllCourses().stream().map(ModelHelper::enrich).collect(Collectors.toList());
-    CollectionModel<CourseDTO> coursesHAL = CollectionModel.of(courses,
+    return CollectionModel.of(courses,
         linkTo(methodOn(APICourses_RestController.class).getAllCourses()).withSelfRel());
-    return coursesHAL;
   }
   
   @GetMapping("/{courseId}")
@@ -60,12 +59,26 @@ public class APICourses_RestController {
   }
   
   //   {"name":"C33","min":1,"max":100,"enabled":true,"professor":"malnati"} - ContentType: application/json
-  @PostMapping({"", "/"})
+  @PostMapping()
   public CourseDTO addCourse(@RequestBody CourseDTO courseDTO) {
     if (!teamService.addCourse(courseDTO)) {
-      throw new ResponseStatusException(HttpStatus.CONFLICT, courseDTO.getId());
+      throw new ResponseStatusException(HttpStatus.CONFLICT, "Cannot add course " + courseDTO);
     } else
       return ModelHelper.enrich(courseDTO);
+  }
+  
+  @PutMapping()
+  public CourseDTO updateCourse(@RequestBody CourseDTO courseDTO) {
+    if (!teamService.updateCourse(courseDTO)) {
+      throw new ResponseStatusException(HttpStatus.CONFLICT, "Cannot update course " + courseDTO);
+    } else
+      return ModelHelper.enrich(courseDTO);
+  }
+  
+  @DeleteMapping("/{courseId}")
+  public void deleteCourse(@PathVariable String courseId) {
+    if(!teamService.deleteCourse(courseId))
+      throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
   }
   
   @GetMapping("/{courseId}/enrolled")
@@ -74,9 +87,8 @@ public class APICourses_RestController {
     for (StudentDTO student : students) {
       ModelHelper.enrich(student);
     }
-    CollectionModel<StudentDTO> studentsHAL = CollectionModel.of(students,
+    return CollectionModel.of(students,
         linkTo(methodOn(APICourses_RestController.class).getEnrolledStudents(courseId)).withSelfRel());
-    return studentsHAL;
   }
   
   @GetMapping("/{courseId}/students-in-teams")
@@ -85,9 +97,8 @@ public class APICourses_RestController {
     for (StudentDTO student : students) {
       ModelHelper.enrich(student);
     }
-    CollectionModel<StudentDTO> studentsHAL = CollectionModel.of(students,
+    return CollectionModel.of(students,
         linkTo(methodOn(APICourses_RestController.class).getStudentsInTeams(courseId)).withSelfRel());
-    return studentsHAL;
   }
   
   @GetMapping("/{courseId}/students-available")
@@ -96,9 +107,8 @@ public class APICourses_RestController {
     for (StudentDTO student : students) {
       ModelHelper.enrich(student);
     }
-    CollectionModel<StudentDTO> studentsHAL = CollectionModel.of(students,
+    return CollectionModel.of(students,
         linkTo(methodOn(APICourses_RestController.class).getAvailableStudents(courseId)).withSelfRel());
-    return studentsHAL;
   }
   
   @GetMapping("/{courseId}/teams")
@@ -107,9 +117,8 @@ public class APICourses_RestController {
     for (TeamDTO team : teams) {
       ModelHelper.enrich(team);
     }
-    CollectionModel<TeamDTO> teamsHAL = CollectionModel.of(teams,
+    return CollectionModel.of(teams,
         linkTo(methodOn(APICourses_RestController.class).getTeamsForCourse(courseId)).withSelfRel());
-    return teamsHAL;
   }
   
   @PutMapping("/{courseId}/disenroll/{studentId}")
@@ -149,7 +158,7 @@ public class APICourses_RestController {
       Reader reader;
       try {
         reader = new BufferedReader(new InputStreamReader(file.getInputStream()));
-        booleanList = teamService.addAndEroll(reader, courseId);
+        booleanList = teamService.enrollStudentsCSV(reader, courseId);
       } catch (IOException e) {
         e.printStackTrace();
       }

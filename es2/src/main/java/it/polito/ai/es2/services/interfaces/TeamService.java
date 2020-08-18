@@ -22,7 +22,7 @@ public interface TeamService {
   void disableCourse(String courseName);
   List<Boolean> addAllStudents(List<StudentDTO> students);
   List<Boolean> enrollStudents(List<Long> studentIds, String courseName);
-  List<Boolean> addAndEroll(Reader r, String courseName);
+  List<Boolean> enrollStudentsCSV(Reader r, String courseName);
   List<CourseDTO> getCourses(Long studentId);
   List<TeamDTO> getTeamsForStudent(Long studentId);
   List<StudentDTO> getMembers(Long TeamId);
@@ -43,6 +43,8 @@ public interface TeamService {
   void testing();
   
   void disenrollStudent(Long studentId, String courseId);
+  boolean updateCourse(CourseDTO courseDTO);
+  boolean deleteCourse(String courseId);
 //  boolean updateCourse();
 //  boolean deleteCourse(); //cascade all di: teams, assignments, submissions...
 }

@@ -20,20 +20,25 @@ export const tabs = [
   {path: 'assignments', label: 'Assignments'}
 ];
 
-export function removeHATEOAS(i: HateoasModel): [] {
-  let x: any = i?._embedded;
-  if (x?.courseDTOList != null) {
-    x = x.courseDTOList;
+export function removeHATEOAS(i: HateoasModel): any {
+  delete i?._links;
+  delete i?.links;
+  let container: any = i?._embedded;
+  if (container?.courseDTOList != null) {
+    container = container.courseDTOList;
   }
-  if (x?.studentDTOList != null) {
-    x = x.studentDTOList;
+  if (container?.studentDTOList != null) {
+    container = container.studentDTOList;
   }
-  const courses: any = x?.map((course: any) => {
-    delete course?._links;
-    delete course?.links;
-    return course;
+  const innerList: any = container?.map((element: any) => {
+    delete element?._links;
+    delete element?.links;
+    return element;
   });
-  delete courses?._links;
-  delete courses?.links; // only '_links' should show up
-  return courses;
+  delete innerList?._links;
+  delete innerList?.links; // only '_links' should show up
+  if (innerList == null) {
+    return i;
+  }
+  return innerList;
 }

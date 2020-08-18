@@ -26,7 +26,7 @@ export class CourseService {
       .pipe(
         map(object => removeHATEOAS(object)),
         retry(AppSettings.RETRIES), catchError(this.formatErrors),
-        tap(res => console.log('--getCourses:', res, typeof res, Array.isArray(res)))
+        tap(res => console.log('--getCourses:', res))
       );
   }
   getCourse(s: string): Observable<Course[]> {
@@ -44,5 +44,39 @@ export class CourseService {
         retry(AppSettings.RETRIES), catchError(this.formatErrors),
         tap(res => console.log('--getEnrolledStudents:', res))
       );
+  }
+  enableCourse(courseId: string) {
+    return this.http.put(
+      `${this.baseUrl}/courses/${courseId}/enable`,
+      null,
+      AppSettings.JSON_HTTP_OPTIONS
+    );
+  }
+  disableCourse(courseId: string) {
+    return this.http.put(
+      `${this.baseUrl}/courses/${courseId}/disable`,
+      null,
+      AppSettings.JSON_HTTP_OPTIONS
+    );
+  }
+  addCourse(course: Course) {
+    return this.http.post(
+      `${this.baseUrl}/courses`,
+      JSON.stringify(course),
+      AppSettings.JSON_HTTP_OPTIONS
+    );
+  }
+  updateCourse(course: Course) {
+    return this.http.put(
+      `${this.baseUrl}/courses`,
+      JSON.stringify(course),
+      AppSettings.JSON_HTTP_OPTIONS
+    );
+  }
+  deleteCourse(courseId: string) {
+    return this.http.delete(
+      `${this.baseUrl}/courses/${courseId}`,
+      AppSettings.JSON_HTTP_OPTIONS
+    );
   }
 }

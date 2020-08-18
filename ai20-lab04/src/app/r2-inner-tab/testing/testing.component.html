@@ -10,11 +10,16 @@
     <div class="form-group">
       <input type="text" class="form-control" #course placeholder="course id">
       <button mat-raised-button class="btn btn-light btn-sm" (click)="getCourse(course.value)">getCourse</button>
+      <button mat-raised-button class="btn btn-light btn-sm" (click)="enableCourse(course.value)">enableCourse</button>
+      <button mat-raised-button class="btn btn-light btn-sm" (click)="disableCourse(course.value)">disableCourse
+      </button>
       <button mat-raised-button class="btn btn-light btn-sm" (click)="getEnrolledStudents(course.value)">
         getEnrolledStudents
       </button>
-      <button mat-raised-button class="btn btn-light btn-sm" (click)="getCourse(course.value)">getCourse</button>
-      <button mat-raised-button class="btn btn-light btn-sm" (click)="getCourse(course.value)">getCourse</button>
+      <br>
+      <button mat-raised-button class="btn btn-light btn-sm" (click)="addCourse(course.value)">addCourse</button>
+      <button mat-raised-button class="btn btn-light btn-sm" (click)="updateCourse(course.value)">updateCourse</button>
+      <button mat-raised-button class="btn btn-light btn-sm" (click)="deleteCourse(course.value)">deleteCourse</button>
     </div>
   </form>
 </div>

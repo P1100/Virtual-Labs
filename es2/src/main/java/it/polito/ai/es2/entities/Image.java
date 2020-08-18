@@ -34,7 +34,7 @@ public class Image {
   @OneToOne(mappedBy = "content")
   private Assignment assignment;
   
-  @ManyToOne
+  @ManyToOne(cascade = CascadeType.MERGE)
   @JoinColumn
   private Implementation submission;
   

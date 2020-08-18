@@ -38,6 +38,8 @@ import {RegisterComponent} from './dialogs/register/register.component';
 import {MatButtonModule} from '@angular/material/button';
 import {MatMenuModule} from '@angular/material/menu';
 import {TestingComponent} from './r2-inner-tab/testing/testing.component';
+import {MatTooltipModule} from '@angular/material/tooltip';
+import {MatSelectModule} from '@angular/material/select';
 
 @NgModule({
   imports: [
@@ -63,7 +65,10 @@ import {TestingComponent} from './r2-inner-tab/testing/testing.component';
     // Removing these wont generate an error, but GUI wont display properly
     MatDialogModule,
     MatButtonModule,
-    MatMenuModule
+    MatMenuModule,
+    MatTooltipModule,
+    // New / temp / test
+    MatSelectModule,
     /* Unused */
     // LayoutModule,
     // DragDropModule,

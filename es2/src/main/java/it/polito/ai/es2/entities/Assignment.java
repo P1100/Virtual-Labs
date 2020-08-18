@@ -19,11 +19,11 @@ public class Assignment {
   @JoinColumn
   private Image content;
   
-  @ManyToOne
+  @ManyToOne(cascade = CascadeType.MERGE)
   @JoinColumn
   private Course course;
   
-  @ManyToOne(optional = false)
+  @ManyToOne(optional = false, cascade = CascadeType.MERGE)
   @JoinColumn
   private Professor creator;
   

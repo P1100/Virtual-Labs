@@ -18,11 +18,11 @@ public class Implementation {
   private String grade;
   private Timestamp read_status, definitive_status; // cant use 'read' as column name, mariadb error
   
-  @ManyToOne(optional = false)
+  @ManyToOne(optional = false, cascade = CascadeType.MERGE)
   @JoinColumn
   private Student student;
   
-  @ManyToOne(optional = false)
+  @ManyToOne(optional = false, cascade = CascadeType.MERGE)
   @JoinColumn
   private Assignment assignment; // --> course, professor
   

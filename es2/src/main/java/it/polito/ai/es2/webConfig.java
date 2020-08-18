@@ -1,4 +1,4 @@
-package it.polito.ai.es2.services;
+package it.polito.ai.es2;
 
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;

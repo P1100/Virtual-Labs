@@ -58,7 +58,7 @@ public class Csv_Controller {
         model.addAttribute("status", true);
         
         Reader reader2 = new BufferedReader(new InputStreamReader(file.getInputStream()));
-        teamService.addAndEroll(reader2, corso);
+        teamService.enrollStudentsCSV(reader2, corso);
       } catch (IOException e) {
         e.printStackTrace();
         model.addAttribute("message", "An error occurred while processing the CSV file.");

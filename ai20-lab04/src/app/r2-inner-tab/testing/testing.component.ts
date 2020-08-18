@@ -33,4 +33,20 @@ export class TestingComponent {
   }
   getAllStudents(s: string) {
   }
+
+  enableCourse(c: string) {
+    this.courseService.enableCourse(c).subscribe();
+  }
+  disableCourse(c: string) {
+    this.courseService.disableCourse(c).subscribe();
+  }
+  addCourse(c: string) {
+    this.courseService.addCourse(new Course(c, 'testCourse', 1, 11, true, 'Dockerfile')).subscribe();
+  }
+  updateCourse(c: string) {
+    this.courseService.updateCourse(new Course(c, 'testCourseUpdate', 1, 22, false, 'Dockerfile')).subscribe();
+  }
+  deleteCourse(c: string) {
+    this.courseService.deleteCourse(c).subscribe();
+  }
 }

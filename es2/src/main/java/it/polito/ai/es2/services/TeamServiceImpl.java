@@ -26,7 +26,6 @@ import java.io.Reader;
 import java.util.*;
 import java.util.stream.Collectors;
 
-
 /**
  * Descrizione classe<p>Politica di sovrascrittura adottata: in quasi tutti i metodi add, se un id era già presente nel database non sovrascrivo i dati
  * già esistenti (tranne nel caso di proposeTeam, che poichè ha un id autogenerato, si è deciso di aggiornare il team vecchio usando
@@ -78,8 +77,63 @@ public class TeamServiceImpl implements TeamService {
   @Override
   public Optional<CourseDTO> getCourse(String courseId) {
     log.info("getCourse(" + courseId + ")");
-    if (courseId == null) throw new TeamServiceException("null course parameter");
+    if (courseId == null) return Optional.empty();
     return courseRepository.findById(courseId).map(x -> modelMapper.map(x, CourseDTO.class));
+  }
+  
+  /**
+   * {@link it.polito.ai.es2.controllers.APICourses_RestController#enableCourse(String)}
+   */
+  @Override
+  public void enableCourse(String courseId) {
+    log.info("enableCourse(" + courseId + ")");
+    if (courseId == null) throw new CourseNotFoundException("null parameter");
+    Optional<Course> optionalCourse = courseRepository.findById(courseId);
+    if (optionalCourse.isEmpty()) throw new CourseNotFoundException("Course not found! " + courseId);
+    optionalCourse.get().setEnabled(true);
+  }
+  
+  /**
+   * {@link it.polito.ai.es2.controllers.APICourses_RestController#disableCourse(String)}
+   */
+  @Override
+  public void disableCourse(String courseId) {
+    log.info("disableCourse(" + courseId + ")");
+    if (courseId == null) throw new CourseNotFoundException("null parameter");
+    Optional<Course> optionalCourse = courseRepository.findById(courseId);
+    if (optionalCourse.isEmpty()) throw new CourseNotFoundException("Course not found! " + courseId);
+    optionalCourse.get().setEnabled(false);
+  }
+  
+  /**
+   * POST {@link it.polito.ai.es2.controllers.APICourses_RestController#addCourse(CourseDTO)}
+   */
+  @Override
+  public boolean addCourse(CourseDTO courseDTO) {
+    log.info("addCourse(" + courseDTO + ")");
+    if (courseDTO == null || courseDTO.getId() == null) return false;
+    Course c = modelMapper.map(courseDTO, Course.class);
+    if (!courseRepository.existsById(courseDTO.getId())) {
+      courseRepository.save(c);
+      return true;
+    }
+    return false;
+  }
+  @Override
+  public boolean updateCourse(CourseDTO courseDTO) {
+    log.info("updateCourse(" + courseDTO + ")");
+    if (courseDTO == null || courseDTO.getId() == null) return false;
+    Course c = modelMapper.map(courseDTO, Course.class);
+    courseRepository.save(c);
+    return true;
+  }
+  
+  @Override
+  public boolean deleteCourse(String courseId) {
+    log.info("deleteCourse(" + courseId + ")");
+    if (courseId == null) return false;
+    courseRepository.deleteById(courseId);
+    return true;
   }
   
   /**
@@ -127,6 +181,111 @@ public class TeamServiceImpl implements TeamService {
     Optional<Course> co = courseRepository.findById(courseId);
     if (co.isEmpty()) throw new CourseNotFoundException("getTeamForCourse - course not found");
     return co.get().getTeams().stream().map(x -> modelMapper.map(x, TeamDTO.class)).collect(Collectors.toList());
+  }
+  
+  /**
+   * {@link it.polito.ai.es2.controllers.APICourses_RestController#disenrollStudent(Long, String)}
+   */
+  @Override
+  public void disenrollStudent(Long studentId, String courseId) {
+    log.info("disenrollStudent(" + studentId + ", " + courseId + ")");
+    if (studentId == null || courseId == null) throw new TeamServiceException("null student or course parameter");
+    if (!studentRepository.existsById(studentId)) throw new StudentNotFoundException("disenrollStudent() - student not found:" + studentId);
+    Optional<Course> courseOptional = courseRepository.findById(courseId);
+    if (courseOptional.isEmpty()) throw new CourseNotFoundException("disenrollStudent() - course not found:" + courseId);
+    
+    Course c = courseOptional.get();
+    Student s = studentRepository.getOne(studentId);
+    c.removeStudent(s);
+  }
+  
+  /**
+   * {@link it.polito.ai.es2.controllers.APICourses_RestController#enrollStudent(String, Map)}
+   */
+  @Override
+  public boolean enrollStudent(Long studentId, String courseId) {
+    log.info("disenrollStudent(" + studentId + ", " + courseId + ")");
+    if (studentId == null || courseId == null) throw new TeamServiceException("null student or course parameter");
+    if (!studentRepository.existsById(studentId)) throw new StudentNotFoundException("enrollStudent() - student not found:" + studentId);
+    Optional<Course> courseOptional = courseRepository.findById(courseId);
+    if (courseOptional.isEmpty()) throw new CourseNotFoundException("enrollStudent() - course not found:" + courseId);
+    
+    Course c = courseOptional.get();
+    // Controllo che corso sia enabled
+    if (!c.isEnabled())
+      return false;
+    Student s = studentRepository.getOne(studentId);
+    // Controllo che studente non sia già iscritto al corso
+    if (c.getStudents().stream().anyMatch(x -> x.getId().equals(studentId)))
+      return false;
+    
+    c.addStudent(s);
+    return true;
+  }
+  
+  /**
+   * {@link it.polito.ai.es2.controllers.APICourses_RestController#enrollStudents(List, String)}
+   */
+  @Override
+  public List<Boolean> enrollStudents(List<Long> studentIds, String courseId) {
+    log.info("enrollStudents(" + studentIds + ", " + courseId + ")");
+    if (studentIds == null || courseId == null)
+      throw new TeamServiceException("null list of students or course parameter");
+    if (!courseRepository.existsById(courseId))
+      throw new CourseNotFoundException("enrollStudents(List<Long> studentIds, String courseId) - course not found");
+    
+    Course course = courseRepository.getOne(courseId);
+    List<Boolean> lb = new ArrayList<>();
+    for (Long id : studentIds) {
+      if (id == null) { // null was put by AddAndReroll function
+        lb.add(false);
+        continue;
+      }
+      if (!studentRepository.existsById(id))
+        throw new StudentNotFoundException("enrollStudents(List<Long> studentIds, String courseId) - student in list not found");
+      Student student = studentRepository.getOne(id);
+      // Controllo che lo studente corrente (id) non sià già presente nella lista degli studenti iscritti al corso
+      if (course.getStudents().stream().anyMatch(x -> x.getId().equals(id))) {
+        lb.add(false);
+        continue;
+      }
+      lb.add(true);
+      course.addStudent(student);
+//      student.addCourse(course); // -> creerei duplicati
+    }
+    log.info("enrollStudents List<Boolean> ritornata:" + lb);
+    return lb;
+  }
+  
+  /**
+   * {@link it.polito.ai.es2.controllers.APICourses_RestController#enrollStudentsCSV(String, MultipartFile)}
+   */
+  @Override
+  public List<Boolean> enrollStudentsCSV(Reader reader, String courseName) {
+    log.info("addAndEroll(" + reader + ", " + courseName + ")");
+    if (reader == null || courseName == null) throw new TeamServiceException("null reader or course parameter");
+    Optional<Course> courseOptional = courseRepository.findById(courseName);
+    if (courseOptional.isEmpty()) throw new CourseNotFoundException("addAndEroll(Reader reader, String courseName) - course not found");
+    
+    CsvToBean<StudentViewModel> csvToBean = new CsvToBeanBuilder(reader)
+                                                .withType(StudentViewModel.class)
+                                                .withIgnoreLeadingWhiteSpace(true)
+                                                .build();
+    List<StudentViewModel> users = csvToBean.parse();
+    log.info(String.valueOf(users));
+    List<Long> list_ids = users.stream()
+                              .map(new_studentViewModel -> modelMapper.map(new_studentViewModel, StudentDTO.class))
+                              .map(new_studentDTO ->
+                              {
+                                Optional<Student> optionalStudent_fromDb = studentRepository.findById(new_studentDTO.getId());
+                                if (optionalStudent_fromDb.isPresent())
+                                  return null;
+                                Student newStudent = modelMapper.map(new_studentDTO, Student.class);
+                                return studentRepository.save(newStudent);
+                              })
+                              .map(y -> y != null ? y.getId() : null).collect(Collectors.toList());
+    log.info(courseName + " - CSV_Valid_Students: " + list_ids);
+    return enrollStudents(list_ids, courseName);
   }
   
   /**
@@ -202,31 +361,6 @@ public class TeamServiceImpl implements TeamService {
   }
   
   /**
-   * POST {@link it.polito.ai.es2.controllers.APICourses_RestController#addCourse(CourseDTO)}
-   */
-  @Override
-  public boolean addCourse(CourseDTO course) {
-    log.info("addCourse(" + course + ")");
-    if (course == null || course.getId() == null) return false;
-    Course c = modelMapper.map(course, Course.class);
-    try {
-      if (!courseRepository.existsById(course.getId())) {
-        courseRepository.save(c);
-        return true;
-      }
-      return false;
-    } catch (IllegalArgumentException e) {
-      log.warning("IllegalArgumentException:" + e.toString());
-      e.printStackTrace();
-      return false;
-    } catch (Exception e) {
-      log.warning("# Other Exception:" + e.toString());
-      e.printStackTrace();
-      return false;
-    }
-  }
-  
-  /**
    * POST {@link it.polito.ai.es2.controllers.APIStudent_RestController#addStudent(StudentDTO)}
    */
   @Override
@@ -274,135 +408,6 @@ public class TeamServiceImpl implements TeamService {
   }
   
   /**
-   * {@link it.polito.ai.es2.controllers.APICourses_RestController#enableCourse(String)}
-   */
-  @Override
-  public void enableCourse(String courseId) {
-    log.info("enableCourse(" + courseId + ")");
-    if (courseId == null) throw new CourseNotFoundException("null parameter");
-    Optional<Course> optionalCourse = courseRepository.findById(courseId);
-    if (optionalCourse.isEmpty()) throw new CourseNotFoundException("Course not found! " + courseId);
-    optionalCourse.get().setEnabled(true);
-  }
-  
-  /**
-   * {@link it.polito.ai.es2.controllers.APICourses_RestController#disableCourse(String)}
-   */
-  @Override
-  public void disableCourse(String courseId) {
-    log.info("disableCourse(" + courseId + ")");
-    if (courseId == null) throw new CourseNotFoundException("null parameter");
-    Optional<Course> optionalCourse = courseRepository.findById(courseId);
-    if (optionalCourse.isEmpty()) throw new CourseNotFoundException("Course not found! " + courseId);
-    optionalCourse.get().setEnabled(false);
-  }
-  
-  /**
-   * {@link it.polito.ai.es2.controllers.APICourses_RestController#disenrollStudent(Long, String)}
-   */
-  @Override
-  public void disenrollStudent(Long studentId, String courseId) {
-    log.info("disenrollStudent(" + studentId + ", " + courseId + ")");
-    if (studentId == null || courseId == null) throw new TeamServiceException("null student or course parameter");
-    if (!studentRepository.existsById(studentId)) throw new StudentNotFoundException("disenrollStudent() - student not found:" + studentId);
-    Optional<Course> courseOptional = courseRepository.findById(courseId);
-    if (courseOptional.isEmpty()) throw new CourseNotFoundException("disenrollStudent() - course not found:" + courseId);
-    
-    Course c = courseOptional.get();
-    Student s = studentRepository.getOne(studentId);
-    c.removeStudent(s);
-  }
-  
-  /**
-   * {@link it.polito.ai.es2.controllers.APICourses_RestController#enrollStudent(String, Map)}
-   */
-  @Override
-  public boolean enrollStudent(Long studentId, String courseId) {
-    log.info("disenrollStudent(" + studentId + ", " + courseId + ")");
-    if (studentId == null || courseId == null) throw new TeamServiceException("null student or course parameter");
-    if (!studentRepository.existsById(studentId)) throw new StudentNotFoundException("enrollStudent() - student not found:" + studentId);
-    Optional<Course> courseOptional = courseRepository.findById(courseId);
-    if (courseOptional.isEmpty()) throw new CourseNotFoundException("enrollStudent() - course not found:" + courseId);
-    
-    Course c = courseOptional.get();
-    // Controllo che corso sia enabled
-    if (!c.isEnabled())
-      return false;
-    Student s = studentRepository.getOne(studentId);
-    // Controllo che studente non sia già iscritto al corso
-    if (c.getStudents().stream().anyMatch(x -> x.getId().equals(studentId)))
-      return false;
-  
-    c.addStudent(s);
-    return true;
-  }
-  
-  /**
-   * {@link it.polito.ai.es2.controllers.APICourses_RestController#enrollStudents(List, String)}
-   */
-  @Override
-  public List<Boolean> enrollStudents(List<Long> studentIds, String courseId) {
-    log.info("enrollStudents(" + studentIds + ", " + courseId + ")");
-    if (studentIds == null || courseId == null)
-      throw new TeamServiceException("null list of students or course parameter");
-    if (!courseRepository.existsById(courseId))
-      throw new CourseNotFoundException("enrollStudents(List<Long> studentIds, String courseId) - course not found");
-    
-    Course course = courseRepository.getOne(courseId);
-    List<Boolean> lb = new ArrayList<>();
-    for (Long id : studentIds) {
-      if (id == null) { // null was put by AddAndReroll function
-        lb.add(false);
-        continue;
-      }
-      if (!studentRepository.existsById(id))
-        throw new StudentNotFoundException("enrollStudents(List<Long> studentIds, String courseId) - student in list not found");
-      Student student = studentRepository.getOne(id);
-      // Controllo che lo studente corrente (id) non sià già presente nella lista degli studenti iscritti al corso
-      if (course.getStudents().stream().anyMatch(x -> x.getId().equals(id))) {
-        lb.add(false);
-        continue;
-      }
-      lb.add(true);
-      course.addStudent(student);
-//      student.addCourse(course); // -> creerei duplicati
-    }
-    log.info("enrollStudents List<Boolean> ritornata:" + lb);
-    return lb;
-  }
-  
-  /**
-   * {@link it.polito.ai.es2.controllers.APICourses_RestController#enrollStudentsCSV(String, MultipartFile)}
-   */
-  @Override
-  public List<Boolean> addAndEroll(Reader reader, String courseName) {
-    log.info("addAndEroll(" + reader + ", " + courseName + ")");
-    if (reader == null || courseName == null) throw new TeamServiceException("null reader or course parameter");
-    Optional<Course> courseOptional = courseRepository.findById(courseName);
-    if (courseOptional.isEmpty()) throw new CourseNotFoundException("addAndEroll(Reader reader, String courseName) - course not found");
-  
-    CsvToBean<StudentViewModel> csvToBean = new CsvToBeanBuilder(reader)
-                                                .withType(StudentViewModel.class)
-                                                .withIgnoreLeadingWhiteSpace(true)
-                                                .build();
-    List<StudentViewModel> users = csvToBean.parse();
-    log.info(String.valueOf(users));
-    List<Long> list_ids = users.stream()
-                              .map(new_studentViewModel -> modelMapper.map(new_studentViewModel, StudentDTO.class))
-                              .map(new_studentDTO ->
-                              {
-                                Optional<Student> optionalStudent_fromDb = studentRepository.findById(new_studentDTO.getId());
-                                if (optionalStudent_fromDb.isPresent())
-                                  return null;
-                                Student newStudent = modelMapper.map(new_studentDTO, Student.class);
-                                return studentRepository.save(newStudent);
-                              })
-                              .map(y -> y != null ? y.getId() : null).collect(Collectors.toList());
-    log.info(courseName + " - CSV_Valid_Students: " + list_ids);
-    return enrollStudents(list_ids, courseName);
-  }
-  
-  /**
    * {@link it.polito.ai.es2.controllers.APITeams_RestController#proposeTeam(String, String, List)}
    */
   // TODO: credo di aver fatto in modo che non ci possono essere piú gruppi con lo stesso nome per lo stesso corso, check in fase di creazione
@@ -424,14 +429,12 @@ public class TeamServiceImpl implements TeamService {
       throw new StudentNotEnrolledException("proposeTeam() - non tutti gli studenti sono iscritti al corso " + course.getId());
     // Controllo se tra gli studenti dei vari teams del corso, ce n'è qualcuno tra quelli presenti nella proposta
     if (course.getTeams().size() != 0 &&
-            !course.getTeams()
-                 .stream()
-                 .map(Team::getMembers)
-                 .flatMap(List::stream)
-                 .distinct()
-                 .noneMatch(student -> {
-                   return listStudentsProposal.stream().anyMatch(student::equals);
-                 })
+            course.getTeams()
+                .stream()
+                .map(Team::getMembers)
+                .flatMap(List::stream)
+                .distinct()
+                .anyMatch(student -> listStudentsProposal.stream().anyMatch(student::equals))
     )
       throw new StudentInMultipleTeamsException("proposeTeam() - studenti fanno parte di altri gruppi nell’ambito dello stesso corso");
     if (listStudentsProposal.size() < course.getMinEnrolled() || listStudentsProposal.size() > course.getMaxEnrolled())
@@ -440,8 +443,7 @@ public class TeamServiceImpl implements TeamService {
       throw new StudentDuplicatesInProposalException("proposeTeam() - duplicati nell'elenco dei partecipanti della proposta team");
     if (teamRepository.findFirstByNameAndCourse_id(team_name, courseName) != null)
       throw new TeamAlreayCreatedException("proposeTeam() - team già creato");
-  
-    // TODO: update this
+    
     TeamDTO teamDTO = new TeamDTO();
     teamDTO.setName(team_name);
     teamDTO.setStatus(Team.status_inactive());
