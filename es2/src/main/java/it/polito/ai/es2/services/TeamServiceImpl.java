@@ -440,9 +440,9 @@ public class TeamServiceImpl implements TeamService {
       throw new StudentDuplicatesInProposalException("proposeTeam() - duplicati nell'elenco dei partecipanti della proposta team");
     if (teamRepository.findFirstByNameAndCourse_id(team_name, courseName) != null)
       throw new TeamAlreayCreatedException("proposeTeam() - team già creato");
-
-//    TeamDTO teamDTO = new TeamDTO(null, team_name, Team.status_inactive());
-    TeamDTO teamDTO = TeamDTO.builder().id(null).name(team_name).status(Team.status_inactive()).build();
+  
+    // TODO: update this
+    TeamDTO teamDTO = new TeamDTO(null, team_name, Team.status_inactive(), 0, 0, 0, 0, 0);
     Team new_team = modelMapper.map(teamDTO, Team.class);
     // aggiungo nuovo team, a studenti e al corso
     for (Student student : new ArrayList<>(listStudentsProposal)) {

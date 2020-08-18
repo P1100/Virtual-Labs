@@ -1,11 +1,13 @@
 package it.polito.ai.es2.dtos;
 
-import lombok.Builder;
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.springframework.hateoas.RepresentationModel;
 
-@Data
-@Builder // Note that it doesn't work with modelMapper!
+@NoArgsConstructor
+@AllArgsConstructor
+@Data // Note that it doesn't work with modelMapper!
 public class TeamDTO extends RepresentationModel<CourseDTO> {
   private Long id;
   private String name;
