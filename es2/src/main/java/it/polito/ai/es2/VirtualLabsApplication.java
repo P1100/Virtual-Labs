@@ -1,5 +1,7 @@
 package it.polito.ai.es2;
 
+import it.polito.ai.es2.dtos.CourseDTO;
+import it.polito.ai.es2.dtos.StudentDTO;
 import it.polito.ai.es2.services.interfaces.TeamService;
 import lombok.extern.java.Log;
 import org.modelmapper.ModelMapper;
@@ -10,6 +12,9 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.core.env.Environment;
+
+import java.util.Arrays;
+import java.util.Collections;
 
 // TODO List: aggiornare DTOs da entities dopo (risincronizzare e ricontrollare tutto),
 // TODO: check somewhere that for each course there is max one group associated
@@ -31,6 +36,7 @@ public class VirtualLabsApplication {
   private ApplicationContext applicationContext;
   @Autowired
   private TeamService teamService;
+
 //  @Value("${server.port}")
 //  String port;
 //  @Value("${server.address}")
@@ -42,7 +48,72 @@ public class VirtualLabsApplication {
       @Override
       public void run(String... args) {
         teamService.testing();
-        
+//        ***************** DB INITIALIZATION (check order of fields!) **********************
+        teamService.addCourse(new CourseDTO("c1", "Internet Applications", 1, 500, true, null));
+        teamService.addCourse(new CourseDTO("c2", "Mobile Development", 1, 500, true, null));
+        teamService.addCourse(new CourseDTO("c3", "System and device programming", 1, 500, true, null));
+        teamService.addCourse(new CourseDTO("c4", "Software Engineering I", 1, 500, true, null));
+        teamService.addCourse(new CourseDTO("c5", "Software Engineering II", 1, 500, true, null));
+        teamService.addCourse(new CourseDTO("c6", "Test: Disabled Course", 1, 500, false, null));
+        teamService.addCourse(new CourseDTO("c7", "Test: min2 max3", 2, 3, true, null));
+  
+        teamService.addStudent(new StudentDTO(1L, "Pietro", "Giasone", "p1g@polito.it"));
+        teamService.addStudent(new StudentDTO(2L, "Giuseppe", "Rossi", "@2polito.it"));
+        teamService.addStudent(new StudentDTO(3L, "Antonio", "Bianchi", "@3polito.it"));
+        teamService.addStudent(new StudentDTO(4L, "Angelo", "Verdi", "@4polito.it"));
+        teamService.addStudent(new StudentDTO(5L, "Domenico", "Gialli", "@5polito.it"));
+        teamService.addStudent(new StudentDTO(6L, "Bruno", "Ferri", "@6polito.it"));
+        teamService.addStudent(new StudentDTO(7L, "Paola", "Paleta", "@7polito.it"));
+        teamService.addStudent(new StudentDTO(8L, "Sergio", "Limari", "@8polito.it"));
+        teamService.addStudent(new StudentDTO(9L, "Luciano", "Benterri", "@9polito.it"));
+        teamService.addStudent(new StudentDTO(10L, "Francesco", "Cavinni", "@10polito.it"));
+        teamService.addStudent(new StudentDTO(11L, "Maria", "Pasolani", "@11polito.it"));
+  
+        System.out.println(teamService.addAllStudents(
+            Arrays.asList(new StudentDTO(12L, "Valentina", "Gennari", "12@polito.it"),
+                new StudentDTO(13L, "Francesca", "Tulini", "13@polito.it"),
+                new StudentDTO(14L, "Elena", "Casellari", "14@polito.it"),
+                new StudentDTO(15L, "Anna", "Rodieni", "15@polito.it"),
+                new StudentDTO(100L, "Last", "One", "16@polito.it")
+            )));
+        System.out.println((teamService.enrollStudent(1L, "c1")));
+        System.out.println((teamService.enrollStudent(1L, "c6")));
+        System.out.println((teamService.enrollStudent(1L, "c7")));
+        System.out.println(teamService.enrollStudents(Collections.singletonList(2L), "c5"));
+        System.out.println(teamService.enrollStudents(Arrays.asList(2L, 3L, 4L, 5L, 10L, 11L), "c1"));
+        System.out.println((teamService.proposeTeam("c1", "Team1", Arrays.asList(2L, 3L, 4L))));
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 /*        List<Token> allByTeamId = tokenRepository.findAllByTeamId(Long.valueOf(18));
         System.out.println("allByTeamId-" + allByTeamId);
         

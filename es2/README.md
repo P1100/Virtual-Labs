@@ -20,7 +20,7 @@ git push origin :refs/tags/`tagname`
 `docker run -d -v "//v/dockertbx:/var/mariadb" -p 3306:3306 --name es2 -e MYSQL_ROOT_PASSWORD=root -d mariadb`
 
 ## SQL
-### How to delete DB rows
+### How to manually delete DB rows
 mysql> SET foreign_key_checks = 0;
 mysql> DROP table ...;
 mysql> SET foreign_key_checks = 1;
@@ -28,6 +28,9 @@ GET http://localhost:8080/users/add/user/pass/
 ### DB Creation
 `CREATE DATABASE teams;`
 --> For mariaDb, use data dump sql script
+### DB Rebuild
+DROP SCHEMA virtuallbas;
+CREATE DATABASE virtuallbas;
 ### Query (?)
 Select *
 FROM team t JOIN course c on t.course_id = c.name NATURAL JOIN teams_students ts JOIN student st ON ts.student_id = st.id ;
