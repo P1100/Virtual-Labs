@@ -9,8 +9,9 @@ import org.springframework.hateoas.RepresentationModel;
 @AllArgsConstructor
 @Data
 public class StudentDTO extends RepresentationModel<CourseDTO> {
-  private String id;
+  private Long id;
   private String lastName;
   private String firstName;
-  private String profilePhoto;
+  private String email;
 }
+

@@ -9,7 +9,7 @@ import javax.validation.constraints.NotBlank;
 public class StudentViewModel {
   @CsvBindByName
   @NotBlank
-  private String id;
+  private Long id;
   @CsvBindByName
   @NotBlank
   private String name;

@@ -18,5 +18,5 @@ public class TeamViewModel {
   @NotBlank
   private String courseId;
   @NotBlank
-  List<String> memberIds;
+  List<Long> memberIds;
 }

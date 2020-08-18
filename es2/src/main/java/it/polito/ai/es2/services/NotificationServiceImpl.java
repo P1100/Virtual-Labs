@@ -46,6 +46,8 @@ public class NotificationServiceImpl implements NotificationService {
   String port;
   @Autowired
   Environment environment;
+//  @Value("mail.dontSendPrintToConsole")
+//  private boolean isForceOutputEmail_testing;
   
   @Override
   public void sendMessage(String emailAddress, String subject, String body) {
@@ -101,8 +103,8 @@ public class NotificationServiceImpl implements NotificationService {
    * Non c'è bisogno di controlli, poichè viene chiamato direttamente da propose team (che fa lui tutti i controlli)
    */
   @Override
-  public void notifyTeam(TeamDTO teamDTO, List<String> memberIds) {
-    for (String memberId : memberIds) {
+  public void notifyTeam(TeamDTO teamDTO, List<Long> memberIds) {
+    for (Long memberId : memberIds) {
       Token token = new Token((UUID.randomUUID().toString()), teamDTO.getId(),
           Timestamp.valueOf(LocalDateTime.now().plusHours(1)), studentRepository.findById(memberId).orElseGet(() -> null));
       String url = null;

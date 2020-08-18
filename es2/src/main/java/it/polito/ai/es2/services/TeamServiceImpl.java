@@ -60,7 +60,6 @@ public class TeamServiceImpl implements TeamService {
   public void testing(
   ) {
     Image test = new Image();
-//    test.setNome("helloimage2");
     test.setRevisionCycle(0);
     imageRepository.saveAndFlush(test);
   }
@@ -127,7 +126,7 @@ public class TeamServiceImpl implements TeamService {
     log.info("getTeamsForCourse(" + courseName + ")");
     if (courseName == null) throw new TeamServiceException("null parameter");
     Optional<Course> co = courseRepository.findById(courseName);
-    if (!co.isPresent()) throw new CourseNotFoundException("getTeamForCourse - course not found");
+    if (co.isEmpty()) throw new CourseNotFoundException("getTeamForCourse - course not found");
     return co.get().getTeams().stream().map(x -> modelMapper.map(x, TeamDTO.class)).collect(Collectors.toList());
   }
   
@@ -144,7 +143,7 @@ public class TeamServiceImpl implements TeamService {
    * GET {@link it.polito.ai.es2.controllers.APIStudent_RestController#getStudent(String)}
    */
   @Override
-  public Optional<StudentDTO> getStudent(String studentId) {
+  public Optional<StudentDTO> getStudent(Long studentId) {
     log.info("getStudent(" + studentId + ")");
     if (studentId == null) throw new TeamServiceException("getStudent() - null parameter");
     return studentRepository.findById(studentId).map(x -> modelMapper.map(x, StudentDTO.class));
@@ -154,7 +153,7 @@ public class TeamServiceImpl implements TeamService {
    * GET {@link it.polito.ai.es2.controllers.APIStudent_RestController#getCourses(String)}
    */
   @Override
-  public List<CourseDTO> getCourses(String studentId) {
+  public List<CourseDTO> getCourses(Long studentId) {
     log.info("getCourses(" + studentId + ")");
     if (studentId == null) throw new TeamServiceException("null parameters");
     return studentRepository.getOne(studentId).getCourses().stream().map(x -> modelMapper.map(x, CourseDTO.class)).collect(Collectors.toList());
@@ -164,7 +163,7 @@ public class TeamServiceImpl implements TeamService {
    * GET {@link it.polito.ai.es2.controllers.APIStudent_RestController#getTeamsForStudent(String)}
    */
   @Override
-  public List<TeamDTO> getTeamsForStudent(String studentId) {
+  public List<TeamDTO> getTeamsForStudent(Long studentId) {
     log.info("getTeamsForStudent(" + studentId + ")");
     if (studentId == null) throw new TeamServiceException("getTeamsForStudent() - null parameters");
     return studentRepository.getOne(studentId).getTeams().stream().map(x -> modelMapper.map(x, TeamDTO.class)).collect(Collectors.toList());
@@ -254,7 +253,7 @@ public class TeamServiceImpl implements TeamService {
   }
   
   /**
-   * POST {@link it.polito.ai.es2.controllers.APIStudent_RestController#addAll(List<StudentDTO>)}
+   * POST {@link it.polito.ai.es2.controllers.APIStudent_RestController#addAll(List)}
    */
   @Override
   public List<Boolean> addAllStudents(List<StudentDTO> students) {
@@ -303,12 +302,12 @@ public class TeamServiceImpl implements TeamService {
    * {@link it.polito.ai.es2.controllers.APICourses_RestController#disenrollStudent(String, String)}
    */
   @Override
-  public void disenrollStudent(String studentId, String courseId) {
+  public void disenrollStudent(Long studentId, String courseId) {
     log.info("disenrollStudent(" + studentId + ", " + courseId + ")");
     if (studentId == null || courseId == null) throw new TeamServiceException("disenrollStudent() - null parameters");
     if (!studentRepository.existsById(studentId)) throw new StudentNotFoundException("disenrollStudent() - student not found:" + studentId);
     Optional<Course> courseOptional = courseRepository.findById(courseId);
-    if (!courseOptional.isPresent()) throw new CourseNotFoundException("disenrollStudent() - course not found:" + courseId);
+    if (courseOptional.isEmpty()) throw new CourseNotFoundException("disenrollStudent() - course not found:" + courseId);
     
     Course c = courseOptional.get();
     Student s = studentRepository.getOne(studentId);
@@ -319,12 +318,12 @@ public class TeamServiceImpl implements TeamService {
    * {@link it.polito.ai.es2.controllers.APICourses_RestController#enrollStudent(String, Map)}
    */
   @Override
-  public boolean enrollStudent(String studentId, String courseId) {
+  public boolean enrollStudent(Long studentId, String courseId) {
     log.info("disenrollStudent(" + studentId + ", " + courseId + ")");
     if (studentId == null || courseId == null) throw new TeamServiceException("enrollStudent() - null parameters");
     if (!studentRepository.existsById(studentId)) throw new StudentNotFoundException("enrollStudent() - student not found:" + studentId);
     Optional<Course> courseOptional = courseRepository.findById(courseId);
-    if (!courseOptional.isPresent()) throw new CourseNotFoundException("enrollStudent() - course not found:" + courseId);
+    if (courseOptional.isEmpty()) throw new CourseNotFoundException("enrollStudent() - course not found:" + courseId);
     
     Course c = courseOptional.get();
     // Controllo che corso sia enabled
@@ -343,22 +342,22 @@ public class TeamServiceImpl implements TeamService {
    * {@link it.polito.ai.es2.controllers.APICourses_RestController#enrollStudents(List, String)}
    */
   @Override
-  public List<Boolean> enrollStudents(List<String> studentIds, String courseId) {
+  public List<Boolean> enrollStudents(List<Long> studentIds, String courseId) {
     log.info("enrollStudents(" + studentIds + ", " + courseId + ")");
     if (studentIds == null || courseId == null)
-      throw new TeamServiceException("enrollStudents(List<String> studentIds, String courseId) - null parameters");
+      throw new TeamServiceException("enrollStudents(List<Long> studentIds, String courseId) - null parameters");
     if (!courseRepository.existsById(courseId))
-      throw new CourseNotFoundException("enrollStudents(List<String> studentIds, String courseId) - course not found");
+      throw new CourseNotFoundException("enrollStudents(List<Long> studentIds, String courseId) - course not found");
     
     Course course = courseRepository.getOne(courseId);
     List<Boolean> lb = new ArrayList<>();
-    for (String id : studentIds) {
+    for (Long id : studentIds) {
       if (id == null) { // null was put by AddAndReroll function
         lb.add(false);
         continue;
       }
       if (!studentRepository.existsById(id))
-        throw new StudentNotFoundException("enrollStudents(List<String> studentIds, String courseId) - student in list not found");
+        throw new StudentNotFoundException("enrollStudents(List<Long> studentIds, String courseId) - student in list not found");
       Student student = studentRepository.getOne(id);
       // Controllo che lo studente corrente (id) non sià già presente nella lista degli studenti iscritti al corso
       if (course.getStudents().stream().anyMatch(x -> x.getId().equals(id))) {
@@ -381,7 +380,7 @@ public class TeamServiceImpl implements TeamService {
     log.info("addAndEroll(" + reader + ", " + courseName + ")");
     if (reader == null || courseName == null) throw new TeamServiceException("addAndEroll(Reader reader, String courseName) - null parameters");
     Optional<Course> courseOptional = courseRepository.findById(courseName);
-    if (!courseOptional.isPresent()) throw new CourseNotFoundException("addAndEroll(Reader reader, String courseName) - course not found");
+    if (courseOptional.isEmpty()) throw new CourseNotFoundException("addAndEroll(Reader reader, String courseName) - course not found");
   
     CsvToBean<StudentViewModel> csvToBean = new CsvToBeanBuilder(reader)
                                                 .withType(StudentViewModel.class)
@@ -389,17 +388,17 @@ public class TeamServiceImpl implements TeamService {
                                                 .build();
     List<StudentViewModel> users = csvToBean.parse();
     log.info(String.valueOf(users));
-    List<String> list_ids = users.stream()
-                                .map(new_studentViewModel -> modelMapper.map(new_studentViewModel, StudentDTO.class))
-                                .map(new_studentDTO ->
-                                {
-                                  Optional<Student> optionalStudent_fromDb = studentRepository.findById(new_studentDTO.getId());
-                                  if (optionalStudent_fromDb.isPresent())
-                                    return null;
-                                  Student newStudent = modelMapper.map(new_studentDTO, Student.class);
-                                  return studentRepository.save(newStudent);
-                                })
-                                .map(y -> y != null ? y.getId() : null).collect(Collectors.toList());
+    List<Long> list_ids = users.stream()
+                              .map(new_studentViewModel -> modelMapper.map(new_studentViewModel, StudentDTO.class))
+                              .map(new_studentDTO ->
+                              {
+                                Optional<Student> optionalStudent_fromDb = studentRepository.findById(new_studentDTO.getId());
+                                if (optionalStudent_fromDb.isPresent())
+                                  return null;
+                                Student newStudent = modelMapper.map(new_studentDTO, Student.class);
+                                return studentRepository.save(newStudent);
+                              })
+                              .map(y -> y != null ? y.getId() : null).collect(Collectors.toList());
     log.info(courseName + " - CSV_Valid_Students: " + list_ids);
     return enrollStudents(list_ids, courseName);
   }
@@ -409,11 +408,11 @@ public class TeamServiceImpl implements TeamService {
    */
   // TODO: credo di aver fatto in modo che non ci possono essere piú gruppi con lo stesso nome per lo stesso corso, check in fase di creazione
   @Override
-  public TeamDTO proposeTeam(String courseName, String team_name, List<String> memberIds) {
+  public TeamDTO proposeTeam(String courseName, String team_name, List<Long> memberIds) {
     log.info("proposeTeam(" + courseName + ", " + team_name + ", " + memberIds + ")");
     if (courseName == null || team_name == null || memberIds == null) throw new TeamServiceException("null parameter");
     Optional<Course> oc = courseRepository.findById(courseName);
-    if (!oc.isPresent()) throw new CourseNotFoundException("proposeTeam - course not found");
+    if (oc.isEmpty()) throw new CourseNotFoundException("proposeTeam - course not found");
     if (!oc.get().isEnabled()) throw new CourseNotEnabledException("proposeTeam() - course not enabled");
     List<Optional<Student>> streamopt_listStudentsProposal = memberIds.stream().map(x -> studentRepository.findById(x)).collect(Collectors.toList());
     if (!streamopt_listStudentsProposal.stream().allMatch(Optional::isPresent))
@@ -462,7 +461,7 @@ public class TeamServiceImpl implements TeamService {
   public boolean evictTeam(Long teamId) {
     log.info("evictTeam(" + teamId + ")");
     Optional<Team> optionalTeam = teamRepository.findById(teamId);
-    if (!optionalTeam.isPresent())
+    if (optionalTeam.isEmpty())
       return false;
     Team team_to_delete = optionalTeam.get();
     

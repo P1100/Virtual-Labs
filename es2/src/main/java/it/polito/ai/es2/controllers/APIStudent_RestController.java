@@ -37,14 +37,15 @@ public class APIStudent_RestController {
   }
   
   @GetMapping("/{student_id}")
-  public StudentDTO getStudent(@PathVariable String student_id) {
+  public StudentDTO getStudent(@PathVariable Long student_id) {
     Optional<StudentDTO> studentDTO = teamService.getStudent(student_id);
     if (!studentDTO.isPresent())
-      throw new ResponseStatusException(HttpStatus.CONFLICT, student_id);
+      throw new ResponseStatusException(HttpStatus.CONFLICT, student_id.toString());
     return ModelHelper.enrich(studentDTO.get());
   }
+  
   @GetMapping("/{student_id}/courses")
-  public CollectionModel<CourseDTO> getCourses(@PathVariable String student_id) {
+  public CollectionModel<CourseDTO> getCourses(@PathVariable Long student_id) {
     List<CourseDTO> courses = teamService.getCourses(student_id);
     for (CourseDTO courseDTO : courses) {
       ModelHelper.enrich(courseDTO);
@@ -53,8 +54,9 @@ public class APIStudent_RestController {
         linkTo(methodOn(APIStudent_RestController.class).getCourses(student_id)).withSelfRel());
     return courseDTOS;
   }
+  
   @GetMapping("/{student_id}/teams")
-  public CollectionModel<TeamDTO> getTeamsForStudent(@PathVariable String student_id) {
+  public CollectionModel<TeamDTO> getTeamsForStudent(@PathVariable Long student_id) {
     List<TeamDTO> teams = teamService.getTeamsForStudent(student_id);
     for (TeamDTO team : teams) {
       ModelHelper.enrich(team);

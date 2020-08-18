@@ -20,7 +20,7 @@ import java.util.List;
 @Entity
 public class Student {
   @Id
-  private String id;  // matricola/serial
+  private Long id;  // matricola/serial
   @NotBlank
   private String firstName;
   @NotBlank

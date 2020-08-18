@@ -1,8 +1,12 @@
 package it.polito.ai.es2.dtos;
 
 import it.polito.ai.es2.entities.Implementation;
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
+@NoArgsConstructor
+@AllArgsConstructor
 @Data
 public class ImplementationDTO {
   private Long id;

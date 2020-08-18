@@ -16,7 +16,7 @@ public class Implementation {
   private Status status = Status.NULL; // initial state
   private Boolean permanent = false;
   private String grade;
-  private Timestamp read, definitive;
+  private Timestamp read_status, definitive_status; // cant use 'read' as column name, mariadb error
   
   @ManyToOne(optional = false)
   @JoinColumn

@@ -5,7 +5,7 @@ import lombok.Data;
 import org.springframework.hateoas.RepresentationModel;
 
 @Data
-@Builder
+@Builder // Note that it doesn't work with modelMapper!
 public class TeamDTO extends RepresentationModel<CourseDTO> {
   private Long id;
   private String name;

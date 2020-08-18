@@ -14,19 +14,19 @@ public interface TeamService {
   Optional<CourseDTO> getCourse(String name);
   List<CourseDTO> getAllCourses();
   boolean addStudent(StudentDTO student);
-  Optional<StudentDTO> getStudent(String studentId);
+  Optional<StudentDTO> getStudent(Long studentId);
   List<StudentDTO> getAllStudents();
   List<StudentDTO> getEnrolledStudents(String courseName);
-  boolean enrollStudent(String studentId, String courseName);
+  boolean enrollStudent(Long studentId, String courseName);
   void enableCourse(String courseName);
   void disableCourse(String courseName);
   List<Boolean> addAllStudents(List<StudentDTO> students);
-  List<Boolean> enrollStudents(List<String> studentIds, String courseName);
+  List<Boolean> enrollStudents(List<Long> studentIds, String courseName);
   List<Boolean> addAndEroll(Reader r, String courseName);
-  List<CourseDTO> getCourses(String studentId);
-  List<TeamDTO> getTeamsForStudent(String studentId);
+  List<CourseDTO> getCourses(Long studentId);
+  List<TeamDTO> getTeamsForStudent(Long studentId);
   List<StudentDTO> getMembers(Long TeamId);
-  TeamDTO proposeTeam(String courseId, String name, List<String> memberIds);
+  TeamDTO proposeTeam(String courseId, String name, List<Long> memberIds);
   List<TeamDTO> getTeamsForCourse(String courseName);
   List<StudentDTO> getStudentsInTeams(String courseName);
   List<StudentDTO> getAvailableStudents(String courseName);
@@ -42,7 +42,7 @@ public interface TeamService {
   
   void testing();
   
-  void disenrollStudent(String studentId, String courseId);
+  void disenrollStudent(Long studentId, String courseId);
 //  boolean updateCourse();
 //  boolean deleteCourse(); //cascade all di: teams, assignments, submissions...
 }

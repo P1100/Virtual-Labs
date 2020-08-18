@@ -113,14 +113,14 @@ public class APICourses_RestController {
   }
   
   @PutMapping("/{courseId}/disenroll/{studentId}")
-  public void disenrollStudent(@PathVariable String studentId, @PathVariable String courseId) {
+  public void disenrollStudent(@PathVariable Long studentId, @PathVariable String courseId) {
     teamService.disenrollStudent(studentId, courseId);
   }
   
   // ContentType:json. Body:{"id":"S33","name":"S33-name","firstName":"S33-FirstName"}
   @RequestMapping(value = "/{courseId}/enroll", method = {RequestMethod.PUT, RequestMethod.POST})
-  public void enrollStudent(@PathVariable String courseId, @RequestBody Map<String, String> studentMap) {
-    String studentId;
+  public void enrollStudent(@PathVariable String courseId, @RequestBody Map<String, Long> studentMap) {
+    Long studentId;
     if (studentMap.containsKey("id"))
       studentId = studentMap.get("id");
     else
@@ -132,7 +132,7 @@ public class APICourses_RestController {
   
   //["S33","S44"]
   @PostMapping("/{courseId}/enroll-all")
-  public List<Boolean> enrollStudents(@RequestBody List<String> studentIds, @PathVariable String courseId) {
+  public List<Boolean> enrollStudents(@RequestBody List<Long> studentIds, @PathVariable String courseId) {
     return teamService.enrollStudents(studentIds, courseId);
   }
   
