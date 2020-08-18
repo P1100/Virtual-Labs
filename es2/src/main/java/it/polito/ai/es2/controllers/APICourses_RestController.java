@@ -24,7 +24,7 @@ import java.util.stream.Collectors;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
-// TODO: test empty db, empty courses/tables, runtime errors, null, invalid inputs and constrains
+// TODO: test empty db, empty courses/tables, runtime errors, null values, invalid inputs and constrains, conversion and arithmetic errors, sub methods errors
 @RestController
 @RequestMapping("/API/courses")
 public class APICourses_RestController {
@@ -42,19 +42,19 @@ public class APICourses_RestController {
   @GetMapping("/{courseId}")
   public CourseDTO getCourse(@PathVariable String courseId) {
     Optional<CourseDTO> courseDTO = teamService.getCourse(courseId);
-    if (!courseDTO.isPresent())
-      throw new ResponseStatusException(HttpStatus.CONFLICT, "Course not found - " + courseId);
+    if (courseDTO.isEmpty())
+      throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Course not found - " + courseId);
     return ModelHelper.enrich(courseDTO.get());
   }
   
-  // Should be POST, get is there for testing purposes. TODO: remove on production
-  @RequestMapping(value = "/{course}/enable", method = {RequestMethod.GET, RequestMethod.POST})
+  // TODO: remove GET in production
+  @RequestMapping(value = "/{course}/enable", method = {RequestMethod.GET, RequestMethod.POST, RequestMethod.PUT})
   public void enableCourse(@PathVariable String course) {
     teamService.enableCourse(course);
   }
   
-  // Should be POST, get is there for testing purposes. TODO: remove on production
-  @RequestMapping(value = "/{course}/disable", method = {RequestMethod.GET, RequestMethod.POST})
+  // TODO: remove GET in production
+  @RequestMapping(value = "/{course}/disable", method = {RequestMethod.GET, RequestMethod.POST, RequestMethod.PUT})
   public void disableCourse(@PathVariable String course) {
     teamService.disableCourse(course);
   }

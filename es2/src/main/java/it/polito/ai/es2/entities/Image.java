@@ -26,10 +26,10 @@ public class Image {
   private byte[] data;
   
   @OneToOne(mappedBy = "profilePhoto")
-  private Student student;
+  private Student avatarStudent;
   
   @OneToOne(mappedBy = "profilePhoto")
-  private Professor professor;
+  private Professor avatarProfessor;
   
   @OneToOne(mappedBy = "content")
   private Assignment assignment;

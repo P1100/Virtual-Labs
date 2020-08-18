@@ -32,7 +32,7 @@ public class Student {
   @JoinColumn
   private Image profilePhoto;
   
-  @ManyToMany(cascade = {CascadeType.MERGE, CascadeType.PERSIST})
+  @ManyToMany
   @JoinTable(name = "student_course", joinColumns = @JoinColumn(name = "student_id"),
       inverseJoinColumns = @JoinColumn(name = "course_id"))
   private List<Course> courses = new ArrayList<>();
@@ -40,7 +40,7 @@ public class Student {
   /**
    * Multiple teams because each student might be enrolled in multiple courses at the same time
    */
-  @ManyToMany(mappedBy = "members", cascade = {CascadeType.MERGE, CascadeType.PERSIST})
+  @ManyToMany(mappedBy = "members")
   List<Team> teams = new ArrayList<>();
   
   @OneToMany(mappedBy = "creator")
@@ -49,7 +49,7 @@ public class Student {
   @ManyToMany(mappedBy = "sharedOwners")
   private List<VM> vmsOwned; // --> vms group from teams
   
-  @OneToMany(mappedBy = "student")
+  @OneToMany(mappedBy = "student", cascade = CascadeType.ALL)
   private List<Implementation> homeworks;
   
   public void addCourse(Course new_course) {

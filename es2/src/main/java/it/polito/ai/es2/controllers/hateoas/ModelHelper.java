@@ -14,6 +14,8 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
 public class ModelHelper {
   public static CourseDTO enrich(CourseDTO courseDTO) {
+    if (courseDTO == null)
+      return new CourseDTO();
     courseDTO.add(Link.of("http://localhost:8080/API/courses", "courses"));
     courseDTO.add(Link.of("http://localhost:8080/API/courses/" + courseDTO.getId(), IanaLinkRelations.SELF));
     courseDTO.add(Link.of("http://localhost:8080/API/courses/" + courseDTO.getId() + "/enable").withRel("enable (POST)"));
@@ -31,6 +33,8 @@ public class ModelHelper {
   }
   
   public static StudentDTO enrich(StudentDTO studentDTO) {
+    if (studentDTO == null)
+      return new StudentDTO();
     studentDTO.add(Link.of("http://localhost:8080/API/students").withRel("students"));
     studentDTO.add(Link.of("http://localhost:8080/API/students/" + studentDTO.getId()).withSelfRel());
     studentDTO.add(linkTo(methodOn(APIStudent_RestController.class)
@@ -41,6 +45,8 @@ public class ModelHelper {
   }
   
   public static TeamDTO enrich(TeamDTO teamDTO) {
+    if (teamDTO == null)
+      return new TeamDTO();
     teamDTO.add(Link.of("http://localhost:8080/API/teams").withRel("teams"));
     teamDTO.add(Link.of("http://localhost:8080/API/teams/" + teamDTO.getId()).withSelfRel());
     teamDTO.add(linkTo(methodOn(APITeams_RestController.class)

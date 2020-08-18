@@ -36,6 +36,6 @@ public class Professor {
   @JoinTable
   private List<Course> courses = new ArrayList<>(); // --> teams, vms
   
-  @OneToMany(mappedBy = "creator")
+  @OneToMany(mappedBy = "creator", cascade = {CascadeType.MERGE, CascadeType.PERSIST})
   private List<Assignment> assignments;
 }

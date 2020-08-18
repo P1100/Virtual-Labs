@@ -40,21 +40,21 @@ public class Course {
   @ManyToMany(mappedBy = "courses", cascade = {CascadeType.MERGE, CascadeType.PERSIST})
   private List<Professor> professors = new ArrayList<>();
   
-  @OneToMany(mappedBy = "course")
+  @OneToMany(mappedBy = "course", cascade = CascadeType.ALL)
   private List<Assignment> assignments = new ArrayList<>();
   
   @ManyToMany(mappedBy = "courses", cascade = {CascadeType.MERGE, CascadeType.PERSIST})
   private List<Student> students = new ArrayList<>();
   
-  @OneToMany(mappedBy = "course")
+  @OneToMany(mappedBy = "course", cascade = CascadeType.ALL)
   private List<Team> teams = new ArrayList<>(); // -> vms
   
-  public void addEnrollStudent(Student new_student) {
+  public void addStudent(Student new_student) {
     students.add(new_student);
     new_student.getCourses().add(this);
   }
   
-  public void removeDisenrollStudent(Student old_student) {
+  public void removeStudent(Student old_student) {
     students.remove(old_student);
     old_student.getCourses().remove(this);
   }
