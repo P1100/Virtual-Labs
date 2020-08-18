@@ -105,8 +105,11 @@ public class NotificationServiceImpl implements NotificationService {
   @Override
   public void notifyTeam(TeamDTO teamDTO, List<Long> memberIds) {
     for (Long memberId : memberIds) {
-      Token token = new Token((UUID.randomUUID().toString()), teamDTO.getId(),
-          Timestamp.valueOf(LocalDateTime.now().plusHours(1)), studentRepository.findById(memberId).orElseGet(() -> null));
+      Token token = new Token();
+      token.setId((UUID.randomUUID().toString()));
+      token.setTeamId(teamDTO.getId());
+      token.setStudent(studentRepository.findById(memberId).orElseGet(() -> null));
+      token.setExpiryDate(Timestamp.valueOf(LocalDateTime.now().plusHours(1)));
       String url = null;
       try {
         url = "http://" + InetAddress.getLocalHost().getHostAddress() + ":" + port;

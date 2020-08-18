@@ -140,7 +140,7 @@ public class TeamServiceImpl implements TeamService {
   }
   
   /**
-   * GET {@link it.polito.ai.es2.controllers.APIStudent_RestController#getStudent(String)}
+   * GET {@link it.polito.ai.es2.controllers.APIStudent_RestController#getStudent(Long)}
    */
   @Override
   public Optional<StudentDTO> getStudent(Long studentId) {
@@ -150,7 +150,7 @@ public class TeamServiceImpl implements TeamService {
   }
   
   /**
-   * GET {@link it.polito.ai.es2.controllers.APIStudent_RestController#getCourses(String)}
+   * GET {@link it.polito.ai.es2.controllers.APIStudent_RestController#getCourses(Long)}
    */
   @Override
   public List<CourseDTO> getCourses(Long studentId) {
@@ -160,7 +160,7 @@ public class TeamServiceImpl implements TeamService {
   }
   
   /**
-   * GET {@link it.polito.ai.es2.controllers.APIStudent_RestController#getTeamsForStudent(String)}
+   * GET {@link it.polito.ai.es2.controllers.APIStudent_RestController#getTeamsForStudent(Long)}
    */
   @Override
   public List<TeamDTO> getTeamsForStudent(Long studentId) {
@@ -299,7 +299,7 @@ public class TeamServiceImpl implements TeamService {
   }
   
   /**
-   * {@link it.polito.ai.es2.controllers.APICourses_RestController#disenrollStudent(String, String)}
+   * {@link it.polito.ai.es2.controllers.APICourses_RestController#disenrollStudent(Long, String)}
    */
   @Override
   public void disenrollStudent(Long studentId, String courseId) {
@@ -442,7 +442,9 @@ public class TeamServiceImpl implements TeamService {
       throw new TeamAlreayCreatedException("proposeTeam() - team già creato");
   
     // TODO: update this
-    TeamDTO teamDTO = new TeamDTO(null, team_name, Team.status_inactive(), 0, 0, 0, 0, 0);
+    TeamDTO teamDTO = new TeamDTO();
+    teamDTO.setName(team_name);
+    teamDTO.setStatus(Team.status_inactive());
     Team new_team = modelMapper.map(teamDTO, Team.class);
     // aggiungo nuovo team, a studenti e al corso
     for (Student student : new ArrayList<>(listStudentsProposal)) {
