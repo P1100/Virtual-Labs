@@ -27,14 +27,14 @@ export class BackendService {
         retry(AppSettings.RETRIES), catchError(this.formatErrors)
       );
   }
-  getEnrolledStudents(courseId: number): Observable<Student[]> {
+  getEnrolledStudents(courseId: string): Observable<Student[]> {
     return this.http.get<HateoasModel>(`${this.baseUrl}/courses/${courseId}/enrolled`, AppSettings.JSON_HTTP_OPTIONS)
       .pipe(
         map(object => removeHATEOAS(object)),
         retry(AppSettings.RETRIES), catchError(this.formatErrors)
       );
   }
-  enroll(student: Student, courseId: number) {
+  enroll(student: Student, courseId: string) {
     console.log('enroll(student: Student, courseId: number)', courseId, student, JSON.stringify(student));
     return this.http.put(
       `${this.baseUrl}/courses/${courseId}/enroll`,
@@ -44,7 +44,7 @@ export class BackendService {
       tap(res => console.log('--enroll:', res)),
       retry(AppSettings.RETRIES), catchError(this.formatErrors));
   }
-  disenroll(student: Student, courseId: number): Observable<any> {
+  disenroll(student: Student, courseId: string): Observable<any> {
     console.log('disenroll(student: Student, courseId: number)', courseId, student, JSON.stringify(student));
     return this.http.put(
       `${this.baseUrl}/courses/${courseId}/disenroll/${student.id}`,
@@ -58,13 +58,13 @@ export class BackendService {
     return this.http.get<Student[]>(`${this.baseUrl}/students?q=${queryTitle}`)
       .pipe(retry(AppSettings.RETRIES), catchError(this.formatErrors));
   }
-  deleteStudent(student: Student, courseId: number): Observable<any> {
+  deleteStudent(student: Student, courseId: string): Observable<any> {
     return this.http.delete(
       `${this.baseUrl}/students/${student.id}`
     ).pipe(retry(AppSettings.RETRIES), catchError(this.formatErrors));
   }
 
-  enrollStudents(students: Student[], courseId: number) {
+  enrollStudents(students: Student[], courseId: string) {
     const request$ = new Array<Observable<Student>>();
     students.forEach((student: Student) => request$.push(this.updateStudent(student)));
     return forkJoin(request$);
@@ -76,7 +76,7 @@ export class BackendService {
   }
   deleteStudents(studentsToRemove: Student[]) {
   }
-  queryEnrolledStudents(courseId: number, queryTitle: string): Observable<Student[]> {
+  queryEnrolledStudents(courseId: string, queryTitle: string): Observable<Student[]> {
     return this.http.get<Student[]>(`${this.baseUrl}/courses/${courseId}/students?q=${queryTitle}`)
       .pipe(retry(AppSettings.RETRIES), catchError(this.formatErrors));
   }

@@ -26,18 +26,18 @@ export class StudentsContComponent implements OnInit, OnDestroy {
   // updated after every route change, inside constructor
   allStudents: Student[] = [];
   enrolledStudents: Student[] = [];
-  courseId = 0;
+  courseId = '0';
   // constructor subscriptions to Observable<ParamMap> of ActivatedRoute.paramMap()
   subAllStudents: Subscription = null;
   subEnrolledStudentsCourse: Subscription = null;
   subRouteParam: Subscription = null;
   // Needed to initialize autocomplete properly
-  autocompleteInit = 0;
+  autocompleteInit = '0';
 
   // update students and enrolled on routing change (e.g. when changing course)
   constructor(private backendService: BackendService, private activatedRoute: ActivatedRoute) {
     this.subRouteParam = this.activatedRoute.paramMap.subscribe(() => {
-        this.courseId = +this.activatedRoute.parent.snapshot.paramMap.get('id');
+        this.courseId = this.activatedRoute.parent.snapshot.paramMap.get('id');
         console.log('activeCourse: ' + this.courseId);
         this.subEnrolledStudentsCourse = this.backendService.getEnrolledStudents(this.courseId)
           .subscribe((

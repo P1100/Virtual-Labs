@@ -58,7 +58,7 @@ export class HomeComponent implements OnInit, OnDestroy {
         if (paramMap == null || this.courses == null) {
           this.nameActiveCourse = '';
         } else {
-          const idActiveCourse = +paramMap.get('id');
+          const idActiveCourse = paramMap.get('id');
           for (const course of this.courses) {
             // tslint:disable-next-line:triple-equals
             if (course.id == idActiveCourse) { // dont use === here

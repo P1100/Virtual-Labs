@@ -1,12 +1,13 @@
 export class Course {
-  id: number;
+  id: string;
   fullName: string;
   minEnrolled: number;
   maxEnrolled: number;
   enabled: boolean;
-  _embedded: object;
+  vmModelPath: string;
+  // _embedded?: object;
 
-  constructor(id: number, fullName: string, minEnrolled: number, maxEnrolled: number, enabled: boolean) {
+  constructor(id: string, fullName: string, minEnrolled: number, maxEnrolled: number, enabled: boolean, vmmodelPath: string) {
     this.id = id;
     this.fullName = fullName;
     this.minEnrolled = minEnrolled;
@@ -18,6 +19,7 @@ export class Course {
       this.fullName + ' ' +
       this.minEnrolled + ' ' +
       this.maxEnrolled + ' ' +
-      this.enabled;
+      this.enabled + ' ' +
+      this.vmModelPath;
   }
 }
