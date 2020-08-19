@@ -11,7 +11,7 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.core.env.Environment;
 
-// TODO List: aggiornare DTOs da entities dopo (risincronizzare e ricontrollare tutto),
+// TODO: test empty db, empty courses/tables, runtime errors, null values, invalid inputs and constrains, conversion and arithmetic errors, sub methods errors
 // TODO: check somewhere that for each course there is max one group associated
 @SpringBootApplication
 @Log

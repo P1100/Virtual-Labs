@@ -126,8 +126,12 @@ public class TeamServiceImpl implements TeamService {
     if (courseDTO == null || courseDTO.getId() == null) return false;
     if (!courseRepository.existsById(courseDTO.getId()))
       throw new CourseNotFoundException(courseDTO.getId());
-    if (courseDTO.getMaxSizeGroup() < courseDTO.getMinSizeGroup())
-      throw new CourseCardinalityConstrainsException(courseDTO.getMinSizeGroup() + " < " + courseDTO.getMaxSizeGroup());
+    int min = courseDTO.getMinSizeGroup();
+    int max = courseDTO.getMaxSizeGroup();
+    if (max < min)
+      throw new CourseCardinalityConstrainsException(min + " < " + max);
+    if (courseRepository.countTeamsThatViolateCardinality(courseDTO.getId(), min, max) != 0)
+      throw new CourseCardinalityConstrainsException("New cardinalities incompatible with existing teams");
     courseRepository.save(modelMapper.map(courseDTO, Course.class));
     return true;
   }

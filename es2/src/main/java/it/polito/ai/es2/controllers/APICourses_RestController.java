@@ -25,7 +25,6 @@ import java.util.stream.Collectors;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
-// TODO: test empty db, empty courses/tables, runtime errors, null values, invalid inputs and constrains, conversion and arithmetic errors, sub methods errors
 @RestController
 @RequestMapping("/API/courses")
 public class APICourses_RestController {
