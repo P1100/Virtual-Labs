@@ -42,14 +42,12 @@ export class StudentsContComponent implements OnInit, OnDestroy {
         this.subEnrolledStudentsCourse = this.backendService.getEnrolledStudents(this.courseId)
           .subscribe((
             students: Student[]) => {
-            this.enrolledStudents = [...(students || [])];
-            console.log('---- enrolledStudents:', this.enrolledStudents);
+            this.enrolledStudents = Array.isArray(students) ? [...students] : [];
           });
         this.subAllStudents = this.backendService.getAllStudents()
           .subscribe(
             (students: Student[]) => {
-              this.allStudents = [...(students || [])];
-              console.log('---- allStudents:', this.allStudents);
+              this.allStudents = Array.isArray(students) ? [...students] : [];
               this.autocompleteInit = this.courseId; // ! dont move subAllStudents code before subEnrolledStudentsCourse
             });
       }

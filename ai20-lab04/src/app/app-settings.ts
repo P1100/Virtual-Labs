@@ -20,25 +20,42 @@ export const tabs = [
   {path: 'assignments', label: 'Assignments'}
 ];
 
-export function removeHATEOAS(i: HateoasModel): any {
-  delete i?._links;
-  delete i?.links;
-  let container: any = i?._embedded;
-  if (container?.courseDTOList != null) {
-    container = container.courseDTOList;
+/* HATEOAS API DESIGN DECISION: all http returned objects are converted to array (empty, full, or singleton), to uniform handling */
+export function removeHATEOAS(container: HateoasModel): any[] {
+  delete container?._links;
+  delete container?.links;
+  let innerList: any = container?._embedded;
+  if (innerList?.courseDTOList != null) {
+    innerList = innerList.courseDTOList;
   }
-  if (container?.studentDTOList != null) {
-    container = container.studentDTOList;
+  if (innerList?.studentDTOList != null) {
+    innerList = innerList.studentDTOList;
   }
-  const innerList: any = container?.map((element: any) => {
+  if (innerList?.professorDTOList != null) {
+    innerList = innerList.studentDTOList;
+  }
+  if (innerList?.imageDTOList != null) {
+    innerList = innerList.studentDTOList;
+  }
+  if (innerList?.teamDTOList != null) {
+    innerList = innerList.studentDTOList;
+  }
+  if (innerList?.vmDTOList != null) {
+    innerList = innerList.studentDTOList;
+  }
+  if (innerList?.implementationDTOList != null) {
+    innerList = innerList.studentDTOList;
+  }
+  innerList = innerList?.map((element: any) => {
     delete element?._links;
     delete element?.links;
     return element;
   });
   delete innerList?._links;
   delete innerList?.links; // only '_links' should show up
+
   if (innerList == null) {
-    return i;
+    return Array.isArray(container) ? container : [container];
   }
-  return innerList;
+  return Array.isArray(innerList) ? innerList : [innerList];
 }

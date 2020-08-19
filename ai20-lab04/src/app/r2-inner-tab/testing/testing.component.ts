@@ -32,6 +32,7 @@ export class TestingComponent {
     this.courseService.getEnrolledStudents(s).subscribe();
   }
   getAllStudents() {
+    this.backendService.getAllStudents().subscribe();
   }
 
   enableCourse(c: string) {

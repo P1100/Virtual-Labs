@@ -24,14 +24,16 @@ export class BackendService {
     return this.http.get<HateoasModel>(`${this.baseUrl}/students`, AppSettings.JSON_HTTP_OPTIONS)
       .pipe(
         map(object => removeHATEOAS(object)),
-        retry(AppSettings.RETRIES), catchError(this.formatErrors)
+        retry(AppSettings.RETRIES), catchError(this.formatErrors),
+        tap(res => console.log('--getAllStudents:', res))
       );
   }
   getEnrolledStudents(courseId: string): Observable<Student[]> {
     return this.http.get<HateoasModel>(`${this.baseUrl}/courses/${courseId}/enrolled`, AppSettings.JSON_HTTP_OPTIONS)
       .pipe(
         map(object => removeHATEOAS(object)),
-        retry(AppSettings.RETRIES), catchError(this.formatErrors)
+        retry(AppSettings.RETRIES), catchError(this.formatErrors),
+        tap(res => console.log('--getEnrolledStudents:', res))
       );
   }
   enroll(student: Student, courseId: string) {
