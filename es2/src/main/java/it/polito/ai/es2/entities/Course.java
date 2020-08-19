@@ -26,13 +26,14 @@ import java.util.List;
 @Entity
 public class Course {
   @Id
+  @NotBlank
   private String id; // acronym
   @NotBlank
   private String fullName;
   @PositiveOrZero
-  private int minEnrolled;
+  private int minSizeGroup;
   @Positive
-  private int maxEnrolled;
+  private int maxSizeGroup;
   @NotNull
   private boolean enabled;
   private String vmModelPath;

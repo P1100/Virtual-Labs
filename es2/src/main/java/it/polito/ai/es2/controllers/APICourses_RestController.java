@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.server.ResponseStatusException;
 
+import javax.validation.Valid;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -47,20 +48,20 @@ public class APICourses_RestController {
   }
   
   // TODO: remove GET in production
-  @RequestMapping(value = "/{course}/enable", method = {RequestMethod.GET, RequestMethod.POST, RequestMethod.PUT})
-  public void enableCourse(@PathVariable String course) {
-    teamService.enableCourse(course);
+  @RequestMapping(value = "/{courseId}/enable", method = {RequestMethod.GET, RequestMethod.POST, RequestMethod.PUT})
+  public void enableCourse(@PathVariable String courseId) {
+    teamService.enableCourse(courseId);
   }
   
   // TODO: remove GET in production
-  @RequestMapping(value = "/{course}/disable", method = {RequestMethod.GET, RequestMethod.POST, RequestMethod.PUT})
-  public void disableCourse(@PathVariable String course) {
-    teamService.disableCourse(course);
+  @RequestMapping(value = "/{courseId}/disable", method = {RequestMethod.GET, RequestMethod.POST, RequestMethod.PUT})
+  public void disableCourse(@PathVariable String courseId) {
+    teamService.disableCourse(courseId);
   }
   
   //   {"name":"C33","min":1,"max":100,"enabled":true,"professor":"malnati"} - ContentType: application/json
   @PostMapping()
-  public CourseDTO addCourse(@RequestBody CourseDTO courseDTO) {
+  public CourseDTO addCourse(@Valid @RequestBody CourseDTO courseDTO) {
     if (!teamService.addCourse(courseDTO)) {
       throw new ResponseStatusException(HttpStatus.CONFLICT, "Cannot add course " + courseDTO);
     } else
@@ -68,7 +69,7 @@ public class APICourses_RestController {
   }
   
   @PutMapping()
-  public CourseDTO updateCourse(@RequestBody CourseDTO courseDTO) {
+  public CourseDTO updateCourse(@Valid @RequestBody CourseDTO courseDTO) {
     if (!teamService.updateCourse(courseDTO)) {
       throw new ResponseStatusException(HttpStatus.CONFLICT, "Cannot update course " + courseDTO);
     } else
@@ -76,8 +77,8 @@ public class APICourses_RestController {
   }
   
   @DeleteMapping("/{courseId}")
-  public void deleteCourse(@PathVariable String courseId) {
-    if(!teamService.deleteCourse(courseId))
+  public void deleteCourse(@Valid @PathVariable String courseId) {
+    if (!teamService.deleteCourse(courseId))
       throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
   }
   

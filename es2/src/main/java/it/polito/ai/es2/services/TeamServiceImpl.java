@@ -89,7 +89,7 @@ public class TeamServiceImpl implements TeamService {
     log.info("enableCourse(" + courseId + ")");
     if (courseId == null) throw new CourseNotFoundException("null parameter");
     Optional<Course> optionalCourse = courseRepository.findById(courseId);
-    if (optionalCourse.isEmpty()) throw new CourseNotFoundException("Course not found! " + courseId);
+    if (optionalCourse.isEmpty()) throw new CourseNotFoundException(courseId);
     optionalCourse.get().setEnabled(true);
   }
   
@@ -101,7 +101,7 @@ public class TeamServiceImpl implements TeamService {
     log.info("disableCourse(" + courseId + ")");
     if (courseId == null) throw new CourseNotFoundException("null parameter");
     Optional<Course> optionalCourse = courseRepository.findById(courseId);
-    if (optionalCourse.isEmpty()) throw new CourseNotFoundException("Course not found! " + courseId);
+    if (optionalCourse.isEmpty()) throw new CourseNotFoundException(courseId);
     optionalCourse.get().setEnabled(false);
   }
   
@@ -119,12 +119,16 @@ public class TeamServiceImpl implements TeamService {
     }
     return false;
   }
+  
   @Override
   public boolean updateCourse(CourseDTO courseDTO) {
     log.info("updateCourse(" + courseDTO + ")");
     if (courseDTO == null || courseDTO.getId() == null) return false;
-    Course c = modelMapper.map(courseDTO, Course.class);
-    courseRepository.save(c);
+    if (!courseRepository.existsById(courseDTO.getId()))
+      throw new CourseNotFoundException(courseDTO.getId());
+    if (courseDTO.getMaxSizeGroup() < courseDTO.getMinSizeGroup())
+      throw new CourseCardinalityConstrainsException(courseDTO.getMinSizeGroup() + " < " + courseDTO.getMaxSizeGroup());
+    courseRepository.save(modelMapper.map(courseDTO, Course.class));
     return true;
   }
   
@@ -144,7 +148,7 @@ public class TeamServiceImpl implements TeamService {
     log.info("getEnrolledStudents(" + courseId + ")");
     if (courseId == null) throw new TeamServiceException("null course parameter");
     if (!courseRepository.existsById(courseId))
-      throw new CourseNotFoundException("Course not found! " + courseId);
+      throw new CourseNotFoundException(courseId);
     Course c = courseRepository.getOne(courseId);
     return c.getStudents().stream().map(x -> modelMapper.map(x, StudentDTO.class)).collect(Collectors.toList());
   }
@@ -437,13 +441,13 @@ public class TeamServiceImpl implements TeamService {
                 .anyMatch(student -> listStudentsProposal.stream().anyMatch(student::equals))
     )
       throw new StudentInMultipleTeamsException("proposeTeam() - studenti fanno parte di altri gruppi nell’ambito dello stesso corso");
-    if (listStudentsProposal.size() < course.getMinEnrolled() || listStudentsProposal.size() > course.getMaxEnrolled())
-      throw new CourseCardinalConstrainsException("proposeTeam() - non rispettati i vincoli di cardinalità del corso su dimensioni team");
+    if (listStudentsProposal.size() < course.getMinSizeGroup() || listStudentsProposal.size() > course.getMaxSizeGroup())
+      throw new CourseCardinalityConstrainsException("proposeTeam() - non rispettati i vincoli di cardinalità del corso su dimensioni team");
     if (!listStudentsProposal.stream().allMatch(new HashSet<>()::add))
       throw new StudentDuplicatesInProposalException("proposeTeam() - duplicati nell'elenco dei partecipanti della proposta team");
     if (teamRepository.findFirstByNameAndCourse_id(team_name, courseName) != null)
       throw new TeamAlreayCreatedException("proposeTeam() - team già creato");
-    
+  
     TeamDTO teamDTO = new TeamDTO();
     teamDTO.setName(team_name);
     teamDTO.setStatus(Team.status_inactive());

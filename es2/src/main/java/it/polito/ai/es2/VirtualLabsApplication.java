@@ -42,9 +42,10 @@ public class VirtualLabsApplication {
     return new CommandLineRunner() {
       @Override
       public void run(String... args) {
+/*
         teamService.testing();
 //        ***************** DB INITIALIZATION (check order of fields!) **********************
-  /*      teamService.addCourse(new CourseDTO("c1", "Internet Applications", 1, 500, true, null));
+        teamService.addCourse(new CourseDTO("c1", "Internet Applications", 1, 500, true, null));
         teamService.addCourse(new CourseDTO("c2", "Mobile Development", 1, 500, true, null));
         teamService.addCourse(new CourseDTO("c3", "System and device programming", 1, 500, true, null));
         teamService.addCourse(new CourseDTO("c4", "Software Engineering I", 1, 500, true, null));
@@ -53,16 +54,16 @@ public class VirtualLabsApplication {
         teamService.addCourse(new CourseDTO("c7", "Test: min2 max3", 2, 3, true, null));
 
         teamService.addStudent(new StudentDTO(1L, "Pietro", "Giasone", "p1g@polito.it"));
-        teamService.addStudent(new StudentDTO(2L, "Giuseppe", "Rossi", "@2polito.it"));
-        teamService.addStudent(new StudentDTO(3L, "Antonio", "Bianchi", "@3polito.it"));
-        teamService.addStudent(new StudentDTO(4L, "Angelo", "Verdi", "@4polito.it"));
-        teamService.addStudent(new StudentDTO(5L, "Domenico", "Gialli", "@5polito.it"));
-        teamService.addStudent(new StudentDTO(6L, "Bruno", "Ferri", "@6polito.it"));
-        teamService.addStudent(new StudentDTO(7L, "Paola", "Paleta", "@7polito.it"));
-        teamService.addStudent(new StudentDTO(8L, "Sergio", "Limari", "@8polito.it"));
-        teamService.addStudent(new StudentDTO(9L, "Luciano", "Benterri", "@9polito.it"));
-        teamService.addStudent(new StudentDTO(10L, "Francesco", "Cavinni", "@10polito.it"));
-        teamService.addStudent(new StudentDTO(11L, "Maria", "Pasolani", "@11polito.it"));
+        teamService.addStudent(new StudentDTO(2L, "Giuseppe", "Rossi", "2@polito.it"));
+        teamService.addStudent(new StudentDTO(3L, "Antonio", "Bianchi", "3@polito.it"));
+        teamService.addStudent(new StudentDTO(4L, "Angelo", "Verdi", "4@polito.it"));
+        teamService.addStudent(new StudentDTO(5L, "Domenico", "Gialli", "5@polito.it"));
+        teamService.addStudent(new StudentDTO(6L, "Bruno", "Ferri", "6@polito.it"));
+        teamService.addStudent(new StudentDTO(7L, "Paola", "Paleta", "7@polito.it"));
+        teamService.addStudent(new StudentDTO(8L, "Sergio", "Limari", "8@polito.it"));
+        teamService.addStudent(new StudentDTO(9L, "Luciano", "Benterri", "9@polito.it"));
+        teamService.addStudent(new StudentDTO(10L, "Francesco", "Cavinni", "10@polito.it"));
+        teamService.addStudent(new StudentDTO(11L, "Maria", "Pasolani", "11@polito.it"));
 
         System.out.println(teamService.addAllStudents(
             Arrays.asList(new StudentDTO(12L, "Valentina", "Gennari", "12@polito.it"),

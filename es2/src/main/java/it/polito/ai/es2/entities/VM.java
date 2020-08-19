@@ -3,6 +3,7 @@ package it.polito.ai.es2.entities;
 import lombok.Data;
 
 import javax.persistence.*;
+import javax.validation.constraints.PositiveOrZero;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -10,9 +11,13 @@ import java.util.List;
 @Entity
 public class VM {
   @Id
+  @GeneratedValue
   private Long id;
+  @PositiveOrZero
   private int vcpu;
+  @PositiveOrZero
   private int disk;
+  @PositiveOrZero
   private int ram;
   private boolean active;
 //  private String vmModel; // -> saved in course

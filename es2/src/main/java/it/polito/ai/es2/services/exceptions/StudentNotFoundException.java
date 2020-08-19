@@ -4,7 +4,7 @@ public class StudentNotFoundException extends TeamServiceException {
   public StudentNotFoundException() {
   }
   
-  public StudentNotFoundException(String s) {
-    super(s);
+  public StudentNotFoundException(String studentId) {
+    super("Student not found! (" + studentId + ")");
   }
 }

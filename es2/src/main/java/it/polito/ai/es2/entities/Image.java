@@ -5,6 +5,7 @@ import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import javax.persistence.*;
+import javax.validation.constraints.PositiveOrZero;
 import java.sql.Timestamp;
 
 @Data
@@ -14,6 +15,7 @@ public class Image {
   @GeneratedValue
   private Long id;
   // number of iteration for Implementation
+  @PositiveOrZero
   private int revisionCycle;
   @CreationTimestamp
   @Column(name = "create_date")

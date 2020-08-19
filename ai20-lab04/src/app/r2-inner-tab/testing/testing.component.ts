@@ -22,16 +22,16 @@ export class TestingComponent {
   constructor(private backendService: BackendService, private courseService: CourseService) {
   }
 
-  onGetCoursesSubmit() {
-    this.courseService.getCourses().subscribe(x => console.log('TT', x));
+  getAllCourses() {
+    this.courseService.getCourses().subscribe();
   }
   getCourse(s: string) {
-    this.courseService.getCourse(s).subscribe(x => console.log('TT', s, x));
+    this.courseService.getCourse(s).subscribe();
   }
   getEnrolledStudents(s: string) {
-    this.courseService.getEnrolledStudents(s).subscribe(x => console.log('TT', s, x));
+    this.courseService.getEnrolledStudents(s).subscribe();
   }
-  getAllStudents(s: string) {
+  getAllStudents() {
   }
 
   enableCourse(c: string) {

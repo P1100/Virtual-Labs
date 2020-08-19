@@ -2,9 +2,11 @@ package it.polito.ai.es2.entities;
 
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import org.hibernate.validator.constraints.Range;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.PositiveOrZero;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -28,7 +30,9 @@ public class Team {
   private Long id;
   @NotBlank
   private String name;
+  @Range(min = 0, max = 1)
   private int status = 0; //0 inactive, 1 active
+  @PositiveOrZero
   private int maxVcpu, maxDisk, maxRam, maxRunningVM, maxTotVM; // sum of enabled and disabled
   
   public static int status_inactive() {

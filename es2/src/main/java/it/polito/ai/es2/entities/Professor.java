@@ -1,6 +1,7 @@
 package it.polito.ai.es2.entities;
 
 import lombok.Data;
+import org.hibernate.validator.constraints.UniqueElements;
 
 import javax.persistence.*;
 import javax.validation.constraints.Email;
@@ -34,6 +35,7 @@ public class Professor {
   
   @ManyToMany(cascade = {CascadeType.MERGE, CascadeType.PERSIST})
   @JoinTable
+  @UniqueElements
   private List<Course> courses = new ArrayList<>(); // --> teams, vms
   
   @OneToMany(mappedBy = "creator", cascade = {CascadeType.MERGE, CascadeType.PERSIST})

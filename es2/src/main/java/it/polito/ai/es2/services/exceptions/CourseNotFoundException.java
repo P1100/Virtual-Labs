@@ -4,7 +4,7 @@ public class CourseNotFoundException extends TeamServiceException {
   public CourseNotFoundException() {
   }
   
-  public CourseNotFoundException(String s) {
-    super(s);
+  public CourseNotFoundException(String courseId) {
+    super("Course not found! (" + courseId + ")");
   }
 }

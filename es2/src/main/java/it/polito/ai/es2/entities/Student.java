@@ -1,6 +1,7 @@
 package it.polito.ai.es2.entities;
 
 import lombok.Data;
+import org.hibernate.validator.constraints.UniqueElements;
 
 import javax.persistence.*;
 import javax.validation.constraints.Email;
@@ -35,6 +36,7 @@ public class Student {
   @ManyToMany
   @JoinTable(name = "student_course", joinColumns = @JoinColumn(name = "student_id"),
       inverseJoinColumns = @JoinColumn(name = "course_id"))
+  @UniqueElements
   private List<Course> courses = new ArrayList<>();
   
   /**

@@ -1,8 +1,10 @@
 package it.polito.ai.es2.entities;
 
 import lombok.Data;
+import org.hibernate.validator.constraints.Length;
 
 import javax.persistence.*;
+import javax.validation.constraints.PastOrPresent;
 import java.sql.Timestamp;
 import java.util.List;
 
@@ -12,10 +14,13 @@ public class Implementation {
   public enum Status {NULL, READ, SUBMITTED, REVIEWED, DEFINITIVE}
   
   @Id
+  @GeneratedValue
   private Long id;
   private Status status = Status.NULL; // initial state
   private Boolean permanent = false;
+  @Length(max = 3)
   private String grade;
+  @PastOrPresent
   private Timestamp read_status, definitive_status; // cant use 'read' as column name, mariadb error
   
   @ManyToOne(optional = false, cascade = CascadeType.MERGE)

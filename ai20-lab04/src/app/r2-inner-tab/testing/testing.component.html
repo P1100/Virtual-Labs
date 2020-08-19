@@ -1,10 +1,11 @@
 <div id="testing_container">
-  <form (ngSubmit)="onGetCoursesSubmit()" #heroForm="ngForm">
+  <form (ngSubmit)="getAllCourses()" #heroForm="ngForm">
     <div class="form-group">
-      <button type="submit" class="btn btn-primary btn-sm">getAllCourses</button>
-      <button class="btn btn-primary btn-sm" (click)="getAllStudents(course.value)">getAllStudents</button>
+<!--      <button type="submit" class="btn btn-primary btn-sm">getAllCourses</button>-->
     </div>
   </form>
+  <button type="submit" class="btn btn-primary btn-sm" (click)="getAllCourses()">getAllCourses</button>
+  <button class="btn btn-primary btn-sm" (click)="getAllStudents()">getAllStudents</button>
 
   <form>
     <div class="form-group">
