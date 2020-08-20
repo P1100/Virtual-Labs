@@ -1,12 +1,11 @@
 export class Image {
-  id: number;
-  status: number; // {NULL, READ, SUBMITTED, REVIEWED, DEFINITIVE}
-  permanent: boolean;
-  grade: number;
-  readStatus: Date;
-  definitiveStatus: Date;
-
-  constructor() {
+  constructor(
+    public id: number,
+    public status: number,   // status -->  {NULL, READ, SUBMITTED, REVIEWED, DEFINITIVE}
+    public permanent: boolean,
+    public grade: number,
+    public readStatus: Date,
+    public definitiveStatus: Date) {
   }
 //   toString(): string {
 //   return this. + ' ' +

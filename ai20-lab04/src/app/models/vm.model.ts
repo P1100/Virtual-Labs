@@ -1,10 +1,8 @@
 export class Vm {
-  id: number;
-  vcpu: number;
-  disk: number;
-  ram: number;
-  active: boolean;
-
-  constructor() {
+  constructor(public id: number,
+              public vcpu: number,
+              public disk: number,
+              public ram: number,
+              public active: boolean) {
   }
 }
