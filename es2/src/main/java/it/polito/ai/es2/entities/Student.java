@@ -52,7 +52,7 @@ public class Student {
   private List<VM> vmsOwned; // --> vms group from teams
   
   @OneToMany(mappedBy = "student", cascade = CascadeType.ALL)
-  private List<Implementation> homeworks;
+  private List<Implementation> implementations; // --> assignment
   
   public void addCourse(Course new_course) {
     courses.add(new_course);

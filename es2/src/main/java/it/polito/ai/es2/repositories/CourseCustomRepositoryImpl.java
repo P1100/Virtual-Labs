@@ -7,6 +7,8 @@ import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 import java.math.BigInteger;
+import java.util.HashMap;
+import java.util.Map;
 
 @Repository
 public class CourseCustomRepositoryImpl implements CourseCustomRepository {
@@ -15,10 +17,17 @@ public class CourseCustomRepositoryImpl implements CourseCustomRepository {
   
   @Override
   public Integer countTeamsThatViolateCardinality(String id, int min, int max) {
+    Map<String, Object> parameters = new HashMap<>();
+    parameters.put("id", id);
+    parameters.put("min", min);
+    parameters.put("max", max);
+  
     Query query = entityManager.createNativeQuery(
         "SELECT count(*) FROM (SELECT ts.team_id, count(*) as c FROM virtuallabs.teams_students ts GROUP BY ts.team_id) tc " +
-            "JOIN virtuallabs.team t ON tc.team_id = t.id WHERE t.course_id = '" + id +
-            "' AND (tc.c < " + min + " OR tc.c > " + max + ")");
+            "JOIN virtuallabs.team t ON tc.team_id = t.id WHERE t.course_id = :id " +
+            "AND (tc.c < :min OR tc.c > :max)");
+    parameters.forEach(query::setParameter);
+  
     int querySingleResult = 0;
     try {
       Object singleResult = query.getSingleResult();

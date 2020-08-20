@@ -1,2 +1,33 @@
 DROP SCHEMA virtuallabs;
 CREATE DATABASE virtuallabs;
+
+
+# INSERT INTO virtuallabs.hibernate_sequence (next_val) VALUES (1);INSERT INTO virtuallabs.role (name, description) VALUES ('ROLE_ADMIN', null);
+# INSERT INTO virtuallabs.user (username, account_non_expired, account_non_locked, credentials_non_expired, enabled, password) VALUES ('admin', true, true, true, true, '$2a$10$qF/y9z2HGmrDYY9PRTNXVeCvXGrQ0R6iUg8ufPpSndtNJWGZPg8FC');
+# INSERT INTO virtuallabs.user (username, account_non_expired, account_non_locked, credentials_non_expired, enabled, password) VALUES ('guest', true, true, true, true, '$2a$10$iq7S45rrruqf8riqbit1Y.LHR1vWeEF5O6Ox7J5gtdFgg5iJyAHW2');
+# INSERT INTO virtuallabs.user (username, account_non_expired, account_non_locked, credentials_non_expired, enabled, password) VALUES ('malnati', true, true, true, true, '$2a$10$CHNFhsFq9WeRlCTGHPMY1.X8QgyWNpd7ZdHEaTQ9TiXIC2SQtgTKW');
+# INSERT INTO virtuallabs.user (username, account_non_expired, account_non_locked, credentials_non_expired, enabled, password) VALUES ('professor', true, true, true, true, '$2a$10$sC7Y8BagFXw0tIM54a8YGup0enUpJRe/m1VF/UJRHNUoOZh6d2uB6');
+# INSERT INTO virtuallabs.user (username, account_non_expired, account_non_locked, credentials_non_expired, enabled, password) VALUES ('S1', true, true, true, true, '$2a$10$WAc/q.j3vDfE3RF7NcA7kuAIlo2TLhj4n3O2QQB4ASw84d.s/XnIW');
+# INSERT INTO virtuallabs.user (username, account_non_expired, account_non_locked, credentials_non_expired, enabled, password) VALUES ('s2', true, true, true, true, '$2a$10$jzlie6zD.f98sktzDFpZj.riuR//lfaSmO.yTlDUaLD56sxpoET9.');
+# INSERT INTO virtuallabs.user (username, account_non_expired, account_non_locked, credentials_non_expired, enabled, password) VALUES ('servetti', true, true, true, true, '$2a$10$6Zo76b4UQoq.DLiWKAhN.uftoIri7qeehdkaqUS1uhFRJps/6DnlW');
+# INSERT INTO virtuallabs.user (username, account_non_expired, account_non_locked, credentials_non_expired, enabled, password) VALUES ('student', true, true, true, true, '$2a$10$6hdwxi6iwQ2Wh6tL9Ed38u2C7K6lW.zCUAPibN7gx4H9bMiU8CXcC');
+# INSERT INTO virtuallabs.user (username, account_non_expired, account_non_locked, credentials_non_expired, enabled, password) VALUES ('user', true, true, true, true, '$2a$10$pCfdikug5QZXF8JEHxOrc.fMreQEtILYLOaZM6wNI4VR6jHCK69W2');INSERT INTO virtuallabs.users_roles (username, authority) VALUES ('malnati', 'ROLE_USER');
+# INSERT INTO virtuallabs.role (name, description) VALUES ('ROLE_GUEST', null);
+# INSERT INTO virtuallabs.role (name, description) VALUES ('ROLE_PROFESSOR', null);
+# INSERT INTO virtuallabs.role (name, description) VALUES ('ROLE_STUDENT', null);
+# INSERT INTO virtuallabs.role (name, description) VALUES ('ROLE_USER', null);
+# INSERT INTO virtuallabs.student (id, email, first_name, last_name, profile_photo) VALUES ('1', 'pg@polito.it', 'Pietro', 'Giasone', null);
+# INSERT INTO virtuallabs.users_roles (username, authority) VALUES ('malnati', 'ROLE_PROFESSOR');
+# INSERT INTO virtuallabs.users_roles (username, authority) VALUES ('malnati', 'ROLE_GUEST');
+# INSERT INTO virtuallabs.users_roles (username, authority) VALUES ('malnati', 'ROLE_ADMIN');
+# INSERT INTO virtuallabs.users_roles (username, authority) VALUES ('servetti', 'ROLE_USER');
+# INSERT INTO virtuallabs.users_roles (username, authority) VALUES ('servetti', 'ROLE_PROFESSOR');
+# INSERT INTO virtuallabs.users_roles (username, authority) VALUES ('S1', 'ROLE_USER');
+# INSERT INTO virtuallabs.users_roles (username, authority) VALUES ('S1', 'ROLE_STUDENT');
+# INSERT INTO virtuallabs.users_roles (username, authority) VALUES ('s2', 'ROLE_USER');
+# INSERT INTO virtuallabs.users_roles (username, authority) VALUES ('s2', 'ROLE_STUDENT');
+# INSERT INTO virtuallabs.users_roles (username, authority) VALUES ('admin', 'ROLE_ADMIN');
+# INSERT INTO virtuallabs.users_roles (username, authority) VALUES ('user', 'ROLE_USER');
+# INSERT INTO virtuallabs.users_roles (username, authority) VALUES ('guest', 'ROLE_GUEST');
+# INSERT INTO virtuallabs.users_roles (username, authority) VALUES ('professor', 'ROLE_PROFESSOR');
+# INSERT INTO virtuallabs.users_roles (username, authority) VALUES ('student', 'ROLE_STUDENT');
