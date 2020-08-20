@@ -6,6 +6,7 @@ import org.hibernate.validator.constraints.UniqueElements;
 import javax.persistence.*;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.PositiveOrZero;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -21,6 +22,7 @@ import java.util.List;
 @Entity
 public class Student {
   @Id
+  @PositiveOrZero
   private Long id;  // matricola/serial
   @NotBlank
   private String firstName;
@@ -43,13 +45,13 @@ public class Student {
    * Multiple teams because each student might be enrolled in multiple courses at the same time
    */
   @ManyToMany(mappedBy = "members")
-  List<Team> teams = new ArrayList<>();
+  List<Team> teams = new ArrayList<>(); // --> vms total
   
   @OneToMany(mappedBy = "creator")
   private List<VM> vmsCreated;
   
   @ManyToMany(mappedBy = "sharedOwners")
-  private List<VM> vmsOwned; // --> vms group from teams
+  private List<VM> vmsOwned;
   
   @OneToMany(mappedBy = "student", cascade = CascadeType.ALL)
   private List<Implementation> implementations; // --> assignment

@@ -20,5 +20,5 @@ public class ImplementationDTO extends RepresentationModel<ImplementationDTO> {
   @Length(max = 3)
   private String grade;
   @PastOrPresent
-  private Timestamp read_status, definitive_status;
+  private Timestamp readStatus, definitiveStatus;
 }

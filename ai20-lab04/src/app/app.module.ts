@@ -17,7 +17,6 @@ import {MatCardModule} from '@angular/material/card';
 import {StudentsComponent} from './r2-inner-tab/students/students.component';
 import {MatTabsModule} from '@angular/material/tabs';
 import {PageNotFoundComponent} from './r0-topheader-leftsidebar/page-not-found.component';
-import {GroupsContComponent} from './r2-inner-tab/groups/groups-cont.component';
 import {TabsNavComponent} from './r1-content/tabs-nav.component';
 import {VmsContComponent} from './r2-inner-tab/vms/vms-cont.component';
 import {HTTP_INTERCEPTORS, HttpClientModule} from '@angular/common/http';
@@ -40,6 +39,7 @@ import {MatMenuModule} from '@angular/material/menu';
 import {TestingComponent} from './r2-inner-tab/testing/testing.component';
 import {MatTooltipModule} from '@angular/material/tooltip';
 import {MatSelectModule} from '@angular/material/select';
+import {TeamsComponent} from './r2-inner-tab/teams/teams.component';
 
 @NgModule({
   imports: [
@@ -83,7 +83,7 @@ import {MatSelectModule} from '@angular/material/select';
     StudentsContComponent,
     PageNotFoundComponent,
     VmsContComponent,
-    GroupsContComponent,
+    TeamsComponent,
     AssignmentsContComponent,
     HomeComponent,
     TabsNavComponent,

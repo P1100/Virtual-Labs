@@ -36,8 +36,8 @@ export class BackendService {
         tap(res => console.log('--getEnrolledStudents:', res))
       );
   }
-  enroll(student: Student, courseId: string) {
-    console.log('enroll(student: Student, courseId: number)', courseId, student, JSON.stringify(student));
+  enroll(student: Student, courseId: string): Observable<any> {
+    console.log('-enroll:', courseId, JSON.stringify(student));
     return this.http.put(
       `${this.baseUrl}/courses/${courseId}/enroll`,
       JSON.stringify(student),

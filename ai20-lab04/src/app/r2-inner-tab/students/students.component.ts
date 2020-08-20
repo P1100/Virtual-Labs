@@ -20,7 +20,7 @@ export class StudentsComponent implements OnInit, AfterViewInit, OnDestroy {
   // Superset of filteredOptions, used in autocomplete
   private students: Student[];
   // displayedColumnsTable is based on Student model (manual sync). It controls various formatting elements
-  displayedColumnsTable: string[] = ['select', 'id', 'firstName', 'lastName', 'group']; // email removed
+  displayedColumnsTable: string[] = ['select', 'id', 'firstName', 'lastName', 'team']; // email removed
   // enrolled is saved with a get/set syntax
   get enrolled(): Student[] {
     return this.dataSource.data;
@@ -41,8 +41,8 @@ export class StudentsComponent implements OnInit, AfterViewInit, OnDestroy {
   filteredOptions$: Observable<Student[]> = null;
   // NEEDED logic to ensure student data is loaded at first click on the autocomplete // TODO: review later, there are better ways besides valueChanges
   @Input()
-  set setAutocompleteInit(flag: number) {
-    if (flag > 0) {
+  set setAutocompleteInit(flag: string) {
+    if (flag != null) {
       this.filteredOptions$ = this.autocompleteControl.valueChanges
         .pipe(
           startWith(''),
@@ -122,7 +122,6 @@ export class StudentsComponent implements OnInit, AfterViewInit, OnDestroy {
     this.checked = new Map(this.enrolled.map(x => [x.id, false]));
   }
   sortChange(sort: Sort) {
-    // console.log('selectedStudentToAdd: ' + JSON.stringify(this.selectedStudentToAdd));
     this.sort = sort as MatSort;
     this.sortData();
   }

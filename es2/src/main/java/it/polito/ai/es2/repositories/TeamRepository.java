@@ -12,5 +12,5 @@ public interface TeamRepository extends JpaRepository<Team, Long> {
   
   Team findFirstByNameAndCourse_id(String name, String courseId);
   
-  Team findFirstByNameAndStatusIsAndCourse_id(String name, int status, String courseId);
+  Team findFirstByNameAndActiveIsAndCourse_id(String name, boolean status, String courseId);
 }

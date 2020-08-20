@@ -31,9 +31,9 @@ public class Course {
   @NotBlank
   private String fullName;
   @PositiveOrZero
-  private int minSizeGroup;
+  private int minSizeTeam;
   @Positive
-  private int maxSizeGroup;
+  private int maxSizeTeam;
   @NotNull
   private boolean enabled;
   private String vmModelPath;

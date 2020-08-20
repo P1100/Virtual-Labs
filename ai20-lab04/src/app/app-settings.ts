@@ -16,7 +16,7 @@ export class AppSettings {
 export const tabs = [
   {path: 'students', label: 'Students'},
   {path: 'vms', label: 'VMs'},
-  {path: 'groups', label: 'Groups'},
+  {path: 'teams', label: 'Teams'},
   {path: 'assignments', label: 'Assignments'}
 ];
 

@@ -19,8 +19,8 @@ public class VM {
   private int disk;
   @PositiveOrZero
   private int ram;
-  private boolean active;
-//  private String vmModel; // -> saved in course
+  private boolean active = false;
+// --> vmModel saved in course
   
   @ManyToOne(optional = false, cascade = CascadeType.MERGE)
   @JoinColumn

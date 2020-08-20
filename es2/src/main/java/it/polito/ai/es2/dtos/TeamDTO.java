@@ -3,7 +3,6 @@ package it.polito.ai.es2.dtos;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.hibernate.validator.constraints.Range;
 import org.springframework.hateoas.RepresentationModel;
 
 import javax.validation.constraints.NotBlank;
@@ -16,8 +15,7 @@ public class TeamDTO extends RepresentationModel<TeamDTO> {
   private Long id;
   @NotBlank
   private String name;
-  @Range(min = 0, max = 1)
-  private int status = 0; //0 inactive, 1 active
+  private boolean active = false; // false
   @PositiveOrZero
   private int
       maxVcpu,

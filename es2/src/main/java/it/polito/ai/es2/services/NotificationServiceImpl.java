@@ -75,7 +75,7 @@ public class NotificationServiceImpl implements NotificationService {
     tokenRepository.deleteById(idtoken);
     List<Token> tokenList = tokenRepository.findAllByTeamId(teamId);
     if (tokenList.size() == 0) {
-      teamService.setTeamStatus(teamId, Team.status_active());
+      teamService.setTeamStatus(teamId, true);
       return true;
     }
 //    TODO: (??) commented, review later

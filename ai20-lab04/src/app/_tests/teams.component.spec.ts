@@ -1,20 +1,20 @@
 import {async, ComponentFixture, TestBed} from '@angular/core/testing';
 
-import {GroupsContComponent} from '../r2-inner-tab/groups/groups-cont.component';
+import {TeamsComponent} from '../r2-inner-tab/teams/teams.component';
 
-describe('GroupsContComponent', () => {
-  let component: GroupsContComponent;
-  let fixture: ComponentFixture<GroupsContComponent>;
+describe('TeamsComponent', () => {
+  let component: TeamsComponent;
+  let fixture: ComponentFixture<TeamsComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [GroupsContComponent]
+      declarations: [TeamsComponent]
     })
       .compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(GroupsContComponent);
+    fixture = TestBed.createComponent(TeamsComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

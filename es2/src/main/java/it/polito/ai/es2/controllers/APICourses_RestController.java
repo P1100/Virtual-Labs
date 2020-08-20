@@ -128,10 +128,10 @@ public class APICourses_RestController {
   
   // ContentType:json. Body:{"id":"S33","name":"S33-name","firstName":"S33-FirstName"}
   @RequestMapping(value = "/{courseId}/enroll", method = {RequestMethod.PUT, RequestMethod.POST})
-  public void enrollStudent(@PathVariable String courseId, @RequestBody Map<String, Long> studentMap) {
+  public void enrollStudent(@PathVariable String courseId, @RequestBody Map<String, String> studentMap) {
     Long studentId;
     if (studentMap.containsKey("id"))
-      studentId = studentMap.get("id");
+      studentId = Long.valueOf(studentMap.get("id"));
     else
       throw new ResponseStatusException(HttpStatus.PRECONDITION_FAILED, courseId + " - studentMapReceived:" + studentMap);
     if (!teamService.enrollStudent(studentId, courseId)) {

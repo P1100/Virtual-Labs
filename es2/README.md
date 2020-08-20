@@ -29,8 +29,8 @@ GET http://localhost:8080/users/add/user/pass/
 `CREATE DATABASE teams;`
 --> For mariaDb, use data dump sql script
 ### DB Rebuild
-DROP SCHEMA virtuallbas;
-CREATE DATABASE virtuallbas;
+DROP SCHEMA virtuallabs;
+CREATE DATABASE virtuallabs;
 ### Query (?)
 Select *
 FROM team t JOIN course c on t.course_id = c.name NATURAL JOIN teams_students ts JOIN student st ON ts.student_id = st.id ;

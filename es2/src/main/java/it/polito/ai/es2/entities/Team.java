@@ -2,7 +2,6 @@ package it.polito.ai.es2.entities;
 
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-import org.hibernate.validator.constraints.Range;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
@@ -19,7 +18,7 @@ import java.util.List;
  * spazio disco e ram, numero di istanze attive contemporaneamente e numero massimo di istanze
  * disponibili (cioè somma di quelle attive e spente).
  * <p>
- * Didn"t use group, instead of team, because 'group' is a reserved MySQL word
+ * IMPORTANT! Didn't use group, instead of team, because 'group' is a reserved MySQL word
  */
 @Data
 @EqualsAndHashCode(of = {"course", "id", "name"})
@@ -30,18 +29,9 @@ public class Team {
   private Long id;
   @NotBlank
   private String name;
-  @Range(min = 0, max = 1)
-  private int status = 0; //0 inactive, 1 active
+  private boolean active = false; // status
   @PositiveOrZero
   private int maxVcpu, maxDisk, maxRam, maxRunningVM, maxTotVM; // sum of enabled and disabled
-  
-  public static int status_inactive() {
-    return 0;
-  }
-  
-  public static int status_active() {
-    return 1;
-  }
   
   @ManyToOne(cascade = {CascadeType.MERGE, CascadeType.PERSIST}, optional = false)
   @JoinColumn(name = "course_id")

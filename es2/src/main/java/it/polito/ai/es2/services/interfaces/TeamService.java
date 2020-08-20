@@ -35,7 +35,7 @@ public interface TeamService {
   
   List<TeamDTO> getAllTeams();
   Optional<TeamDTO> getTeam(Long teamId);
-  boolean setTeamStatus(Long teamId, int status);
+  boolean setTeamStatus(Long teamId, boolean status);
   boolean evictTeam(Long teamId);
 
 //  ---------- Added after beginning project-----------------

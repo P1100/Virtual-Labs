@@ -7,12 +7,14 @@ import org.springframework.hateoas.RepresentationModel;
 
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.PositiveOrZero;
 
 @NoArgsConstructor
 @AllArgsConstructor
 @Data
 public class ProfessorDTO extends RepresentationModel<ProfessorDTO> {
-  private String id; // matricola/serial
+  @PositiveOrZero
+  private Long id; // matricola/serial
   @NotBlank
   private String firstName;
   @NotBlank

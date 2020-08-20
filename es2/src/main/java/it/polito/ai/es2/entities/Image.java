@@ -14,14 +14,11 @@ public class Image {
   @Id
   @GeneratedValue
   private Long id;
-  // number of iteration for Implementation
   @PositiveOrZero
-  private int revisionCycle;
+  private int revisionCycle;   // number of iteration for Implementation
   @CreationTimestamp
-  @Column(name = "create_date")
   private Timestamp createDate; // LocalDateTime
   @UpdateTimestamp
-  @Column(name = "modify_date")
   private Timestamp modifyDate;
   @Lob
   @Basic(fetch = FetchType.LAZY)

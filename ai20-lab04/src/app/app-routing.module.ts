@@ -6,9 +6,9 @@ import {StudentsContComponent} from './r2-inner-tab/students/students-cont.compo
 import {PageNotFoundComponent} from './r0-topheader-leftsidebar/page-not-found.component';
 import {AssignmentsContComponent} from './r2-inner-tab/assignments/assignments-cont.component';
 import {TabsNavComponent} from './r1-content/tabs-nav.component';
-import {GroupsContComponent} from './r2-inner-tab/groups/groups-cont.component';
 import {HomeComponent} from './r0-topheader-leftsidebar/home.component';
 import {TestingComponent} from './r2-inner-tab/testing/testing.component';
+import {TeamsComponent} from './r2-inner-tab/teams/teams.component';
 
 const routes: Routes = [
   {
@@ -54,8 +54,8 @@ const routes: Routes = [
                     component: VmsContComponent
                   },
                   {
-                    path: 'groups',
-                    component: GroupsContComponent
+                    path: 'teams',
+                    component: TeamsComponent
                   },
                   {
                     path: 'assignments',

@@ -12,6 +12,7 @@ import javax.validation.constraints.NotBlank;
 @AllArgsConstructor
 @Data
 public class StudentDTO extends RepresentationModel<StudentDTO> {
+  @NotBlank
   private Long id;  // matricola/serial
   @NotBlank
   private String firstName;

@@ -126,8 +126,8 @@ public class TeamServiceImpl implements TeamService {
     if (courseDTO == null || courseDTO.getId() == null) return false;
     if (!courseRepository.existsById(courseDTO.getId()))
       throw new CourseNotFoundException(courseDTO.getId());
-    int min = courseDTO.getMinSizeGroup();
-    int max = courseDTO.getMaxSizeGroup();
+    int min = courseDTO.getMinSizeTeam();
+    int max = courseDTO.getMaxSizeTeam();
     if (max < min)
       throw new CourseCardinalityConstrainsException(min + " < " + max);
     if (courseRepository.countTeamsThatViolateCardinality(courseDTO.getId(), min, max) != 0)
@@ -212,7 +212,7 @@ public class TeamServiceImpl implements TeamService {
    */
   @Override
   public boolean enrollStudent(Long studentId, String courseId) {
-    log.info("disenrollStudent(" + studentId + ", " + courseId + ")");
+    log.info("enrollStudent(" + studentId + ", " + courseId + ")");
     if (studentId == null || courseId == null) throw new TeamServiceException("null student or course parameter");
     if (!studentRepository.existsById(studentId)) throw new StudentNotFoundException("enrollStudent() - student not found:" + studentId);
     Optional<Course> courseOptional = courseRepository.findById(courseId);
@@ -445,7 +445,7 @@ public class TeamServiceImpl implements TeamService {
                 .anyMatch(student -> listStudentsProposal.stream().anyMatch(student::equals))
     )
       throw new StudentInMultipleTeamsException("proposeTeam() - studenti fanno parte di altri gruppi nell’ambito dello stesso corso");
-    if (listStudentsProposal.size() < course.getMinSizeGroup() || listStudentsProposal.size() > course.getMaxSizeGroup())
+    if (listStudentsProposal.size() < course.getMinSizeTeam() || listStudentsProposal.size() > course.getMaxSizeTeam())
       throw new CourseCardinalityConstrainsException("proposeTeam() - non rispettati i vincoli di cardinalità del corso su dimensioni team");
     if (!listStudentsProposal.stream().allMatch(new HashSet<>()::add))
       throw new StudentDuplicatesInProposalException("proposeTeam() - duplicati nell'elenco dei partecipanti della proposta team");
@@ -454,7 +454,7 @@ public class TeamServiceImpl implements TeamService {
   
     TeamDTO teamDTO = new TeamDTO();
     teamDTO.setName(team_name);
-    teamDTO.setStatus(Team.status_inactive());
+    teamDTO.setActive(false);
     Team new_team = modelMapper.map(teamDTO, Team.class);
     // aggiungo nuovo team, a studenti e al corso
     for (Student student : new ArrayList<>(listStudentsProposal)) {
@@ -488,15 +488,15 @@ public class TeamServiceImpl implements TeamService {
   }
   
   /**
-   * @param status - Team.status_active() or Team.status_inactive()
+   * @param status true sets team active, false sets team inactive
    */
   @Override
-  public boolean setTeamStatus(Long teamId, int status) {
+  public boolean setTeamStatus(Long teamId, boolean status) {
     log.info("setTeamStatus(" + teamId + ", " + status + ")");
     Team team = teamRepository.findById(teamId).orElse(null);
-    if (team == null || team.getStatus() == status)
+    if (team == null || team.isActive() == status)
       return false;
-    team.setStatus(status); // no need to save, will be flushed automatically at the end of transaction (since not a new entity)
+    team.setActive(status); // no need to save, will be flushed automatically at the end of transaction (since not a new entity)
     return true;
   }
 }

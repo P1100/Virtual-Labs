@@ -48,9 +48,6 @@
 - ng generate guard -d auth/auth --flat --implements CanActivate
 - ng generate component HomeTab --module=app --inlineTemplate --inlineStyle --minimal
 
-## Comandi browser
-http://localhost:3000/students?_expand=group
-
 ## Custom settings
 * In node_modules/json-server-auth/dist/constants.js, changed from '1h' to 
 `exports.JWT_EXPIRES_IN = '999999h';`

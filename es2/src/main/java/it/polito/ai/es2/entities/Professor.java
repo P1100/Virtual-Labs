@@ -6,6 +6,7 @@ import org.hibernate.validator.constraints.UniqueElements;
 import javax.persistence.*;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.PositiveOrZero;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -21,7 +22,8 @@ import java.util.List;
 @Entity
 public class Professor {
   @Id
-  private String id; // matricola/serial
+  @PositiveOrZero
+  private Long id; // matricola/serial
   @NotBlank
   private String firstName;
   @NotBlank
