@@ -16,11 +16,12 @@ mat-list-item {
   margin-bottom: 5px;
 }
 
-.not-active {
+.title-link-not-active {
   color: inherit; /* blue colors for links too */
   text-decoration: inherit; /* no underline. none */
 }
-.active-link {
+
+.active-link-style {
   font-weight: bold;
 }
 

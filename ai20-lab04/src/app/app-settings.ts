@@ -6,9 +6,9 @@ export class AppSettings {
   public static JSON_HTTP_OPTIONS: object = {
     headers: new HttpHeaders({
       'Content-Type': 'application/json;charset=utf-8',
-      Accept: 'application/json' // , text/plain, */*
+      Accept: 'application/json', // , text/plain, */*
     })
-    // , responseType: 'json'
+    , responseType: 'json'
   };
 }
 
@@ -58,4 +58,9 @@ export function removeHATEOAS(container: HateoasModel): any[] {
     return Array.isArray(container) ? container : [container];
   }
   return Array.isArray(innerList) ? innerList : [innerList];
+}
+
+// Uniform all data received from services, to arrays (from objects)
+export function getSafeDeepCopyArray(ss: any): any[] {
+  return Array.isArray(ss) ? [...ss] : (ss != null ? [ss] : []);
 }

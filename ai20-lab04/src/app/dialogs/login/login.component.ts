@@ -1,4 +1,4 @@
-import {Component, OnDestroy, OnInit} from '@angular/core';
+import {Component, OnDestroy} from '@angular/core';
 import {FormBuilder, FormGroup, ValidationErrors, Validators} from '@angular/forms';
 import {Subscription} from 'rxjs';
 import {MatDialogRef} from '@angular/material/dialog';
@@ -12,7 +12,7 @@ import {filter, map, tap} from 'rxjs/operators';
   styleUrls: []
 })
 
-export class LoginComponent implements OnInit, OnDestroy {
+export class LoginComponent implements OnDestroy {
   public user;
   form: FormGroup;
   subscriptionLogin: Subscription;
@@ -40,10 +40,8 @@ export class LoginComponent implements OnInit, OnDestroy {
       console.log(this.user);
     });
   }
-  ngOnInit(): void {
-  }
   ngOnDestroy(): void {
-    console.log('LoginComponent destroyed!');
+    this.onCancelClick();
   }
   onCancelClick(): void {
     this.subscriptionLogin?.unsubscribe();

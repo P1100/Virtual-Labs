@@ -1,12 +1,11 @@
 <mat-toolbar color="primary">
   <button
-    type="button"
-    aria-label="Toggle sidenav"
+    type="button" aria-label="Toggle sidenav"
     mat-icon-button
     (click)="drawer.toggle()">
     <mat-icon aria-label="Side nav toggle icon">menu</mat-icon>
   </button>
-  <a routerLink="/home" class="not-active">{{title}}</a>
+  <a routerLink="/home" class="title-link-not-active">{{title}}</a>
   <a routerLink="/testing" style="padding-left: 10px; color: chartreuse">Test Page</a>
 
   <!-- This fills the remaining space of the current row -->
@@ -14,13 +13,12 @@
 
   <!--  <button mat-button type="button" *ngIf="loggedUser == ''">Register</button>-->
   <button mat-button type="button" *ngIf="isLogged">{{loggedUser}}</button>
-  <button mat-button type="button" aria-label="login and logout"
-          (click)="openLoginDialogTemplate()">    {{isLogged}}-T
+  <button mat-button type="button"
+          (click)="openLoginDialogTemplate()">    {{isLogged}}-Test
   </button>
 
   <button mat-button
-          type="button"
-          aria-label="login and logout"
+          type="button" aria-label="login and logout"
           (click)="clickLoginLogout()">
     {{isLogged == true ? 'Logout' : 'Login'}}
   </button>
@@ -32,23 +30,21 @@
   <mat-sidenav #drawer mode="side" opened position="start">
     <div>
       <mat-nav-list>
-<!--    TODO: modificare lista corsi, e permessi di edit/delete, in base a login/auth -->
+        <!--    TODO: modificare lista corsi, e permessi di edit/delete, in base a login/auth (professor sees all, student only enrolled ones)-->
         <mat-list-item *ngFor="let course of courses">
           <button
-            type="button"
-            aria-label="Menu course"
+            type="button" aria-label="Menu course"
             mat-icon-button
             (click)="editCourse()">
             <mat-icon>edit</mat-icon>
           </button>
           <a mat-list-item
              routerLink="teacher/course/{{course.id}}"
-             routerLinkActive="active-link">
+             routerLinkActive="active-link-style" [routerLinkActiveOptions]="{exact:true}">
             {{course.fullName}}
           </a>
         </mat-list-item>
       </mat-nav-list>
-
     </div>
   </mat-sidenav>
 
@@ -57,4 +53,3 @@
   </mat-sidenav-content>
 
 </mat-sidenav-container>
-

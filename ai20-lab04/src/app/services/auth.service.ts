@@ -60,7 +60,7 @@ export class AuthService {
     localStorage.removeItem('expires_at');
     console.log('AuthService.logout: accessToken removed');
   }
-  public getSub(): Subject<any> {
+  public getSubscriptionSubject(): Subject<any> {
     return this.isLoggedSubject;
   }
 

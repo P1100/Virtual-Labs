@@ -8,7 +8,7 @@ import {of, Subscription} from 'rxjs';
 import {TestDialogComponent} from '../dialogs/test-dialog/test-dialog.component';
 import {LoginComponent} from '../dialogs/login/login.component';
 import {CourseService} from '../services/course-service';
-import {filter, map, mergeMap, tap} from 'rxjs/operators';
+import {filter, map, mergeMap} from 'rxjs/operators';
 
 // TODO: remove it later, it was test code
 export interface DialogData {
@@ -42,17 +42,21 @@ export class HomeComponent implements OnInit, OnDestroy {
               private route: ActivatedRoute) {
     titleService.setTitle(this.title);
     courseService.getCourses().subscribe(x => this.courses = x);
+
     // At every routing change, update nameActiveCourse (top toolbar)
     this.router.events
       .pipe(
-        // Moving to params child route (StudentsContComponent)
         filter((event) => event instanceof NavigationEnd),
         map(() => this.route),
-        tap(r => console.log(r)),
         map((rout) => {
-          return rout?.firstChild?.firstChild?.firstChild?.firstChild;
+          // Moving to params child route (StudentsContComponent) --> without "paramsInheritanceStrategy: 'always'"
+          // return rout?.firstChild?.firstChild?.firstChild?.firstChild;
+          let lastchild: ActivatedRoute = rout;
+          while (lastchild.firstChild != null) {
+            lastchild = lastchild.firstChild;
+          }
+          return lastchild; // -> last child will have all the params inherited
         }),
-        // tap(r => console.log('Child', r)),
         mergeMap((rout) => (rout != null) ? rout?.paramMap : of(null))
       ).subscribe((paramMap) => {
         if (paramMap == null || this.courses == null) {
@@ -69,7 +73,7 @@ export class HomeComponent implements OnInit, OnDestroy {
       }
     );
 
-    this.subscription = this.auth.getSub().subscribe(x => {
+    this.subscription = this.auth.getSubscriptionSubject().subscribe(x => {
       this.isLogged = x;
       if (x === true) {
         this.loggedUser = localStorage.getItem('user');

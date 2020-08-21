@@ -18,6 +18,7 @@ export class CourseService {
   }
   private formatErrors(error: any) {
     console.error(error);
+    window.alert(JSON.stringify(error));
     return throwError(error.error);
   }
 

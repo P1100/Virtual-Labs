@@ -1,9 +1,10 @@
-import {Component, OnDestroy, OnInit} from '@angular/core';
+import {Component, OnDestroy} from '@angular/core';
 import {ActivatedRoute} from '@angular/router';
 import {concatMap, tap, toArray} from 'rxjs/operators';
 import {BackendService} from '../../services/backend.service';
 import {from, Observable, Subscription} from 'rxjs';
 import {Student} from '../../models/student.model';
+import {getSafeDeepCopyArray} from '../../app-settings';
 
 /* API:
 * - Data taken from backend service: one new request each time active route changes.
@@ -22,12 +23,12 @@ import {Student} from '../../models/student.model';
   `,
   styleUrls: []
 })
-export class StudentsContComponent implements OnInit, OnDestroy {
+export class StudentsContComponent implements OnDestroy {
   // updated after every route change, inside constructor
   allStudents: Student[] = [];
   enrolledStudents: Student[] = [];
   courseId = '0';
-  // constructor subscriptions to Observable<ParamMap> of ActivatedRoute.paramMap()
+  // constructor subscriptions to paramMap
   subAllStudents: Subscription = null;
   subEnrolledStudentsCourse: Subscription = null;
   subRouteParam: Subscription = null;
@@ -51,8 +52,6 @@ export class StudentsContComponent implements OnInit, OnDestroy {
           });
       }
     );
-  }
-  ngOnInit(): void {
   }
   ngOnDestroy(): void {
     this.subRouteParam.unsubscribe();
@@ -96,7 +95,7 @@ export class StudentsContComponent implements OnInit, OnDestroy {
         console.log('onEnroll update date subscribe outer: ', array);
         this.backendService.getEnrolledStudents(this.courseId).subscribe(
           (ss: Student[]) => {
-            this.enrolledStudents = [...(ss || [])];
+            this.enrolledStudents = getSafeDeepCopyArray(ss);
             console.log('onEnroll date subscribe inner: ', ss);
           }
         );
