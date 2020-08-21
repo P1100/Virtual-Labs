@@ -1,4 +1,4 @@
-import {AfterViewInit, Component, EventEmitter, Input, OnDestroy, OnInit, Output, ViewChild} from '@angular/core';
+import {AfterViewInit, Component, EventEmitter, Input, OnDestroy, Output, ViewChild} from '@angular/core';
 import {Student} from '../../models/student.model';
 import {MatTableDataSource} from '@angular/material/table';
 import {MatSort, Sort} from '@angular/material/sort';
@@ -15,7 +15,7 @@ import {ActivatedRoute} from '@angular/router';
   styleUrls: ['./students.component.css']
 })
 /* Data is always obtained from the container component, which calls the service, which calls the back end */
-export class StudentsComponent implements OnInit, AfterViewInit, OnDestroy {
+export class StudentsComponent implements AfterViewInit, OnDestroy {
   @Input()
   // Superset of filteredOptions, used in autocomplete
   private students: Student[];
@@ -30,37 +30,39 @@ export class StudentsComponent implements OnInit, AfterViewInit, OnDestroy {
   set enrolled(array: Student[]) {
     this.dataSource.data = [...array];
     this.sortData();
+    // Update checkbox logic
     this.checked = new Map(array.map(x => [+x.id, false]));
     this.checkboxMasterCompleted = false;
     this.checkboxMasterIndeterminate = false;
     this.showCheckboxDeselectAllToolbar = false;
     this.showCheckboxDeselectAllToolbar = false;
+    // Update autocomplete list
+    delete this.filteredOptions$;
+    this.setAutocompleteInit = 'renew-autocomplete-list';
   }
   autocompleteControl = new FormControl();
   // Used in AutoComplete. It's the list of all students but at times filtered (so cant be merged in only one var)
   filteredOptions$: Observable<Student[]> = null;
-  // NEEDED logic to ensure student data is loaded at first click on the autocomplete // TODO: review later, there are better ways besides valueChanges
   @Input()
   set setAutocompleteInit(flag: string) {
     if (flag != null) {
       this.filteredOptions$ = this.autocompleteControl.valueChanges
         .pipe(
           startWith(''),
-          // // WARNING: When option is selected, value becomes a Student object... not a string. Code below commented (console.logs) was to test that
+          // // WARNING: When option is selected, value becomes a Student object... not a string.
           filter(value => ((typeof value) === 'string')),
-          // tap(() => console.log('filteredOptions$', this.students, this.enrolled)),
-          map((value: string): Student[] => {
-            return this.students.filter(s => {
+          map((input: string): Student[] => {
+            return this.students.filter(student => {
               let notcontains = true;
-              for (const student of this.enrolled) {
+              for (const enrolled of this.enrolled) {
                 // tslint:disable-next-line:triple-equals
-                if (student.id == s.id) {
+                if (enrolled.id == student.id) {
                   notcontains = false;
                 }
               }
               return notcontains;
             })
-              ?.filter(x => (x.firstName + ' ' + x.lastName + ' ' + x.firstName + x.id).toLowerCase().includes(value.trim().toLowerCase()))
+              ?.filter(x => (x.firstName + ' ' + x.lastName + ' ' + x.firstName + x.id).toLowerCase().includes(input.trim().toLowerCase()))
               ?.sort((a, b) => {
                 return sortCompare(a.lastName, b.lastName, true);
               });
@@ -101,8 +103,6 @@ export class StudentsComponent implements OnInit, AfterViewInit, OnDestroy {
       // Needed to reset the input of autocomplete, after a route change
       this.autocompleteControl.reset(null);
     });
-  }
-  ngOnInit() {
   }
   ngAfterViewInit() {
     this.dataSource.paginator = this.paginator;
