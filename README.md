@@ -11,7 +11,7 @@ This is a didactical project, made for the Internet Applications course (2020). 
 - [Docker](https://docs.docker.com/install/)
 
 ## ER Model
-![asdasd](https://i.ibb.co/TvLpY09/Virtual-Labs-ERmodel.jpg)
+![asdasd](https://i.ibb.co/rGK9cL8/Virtual-Labs-ERmodel.jpg)
 
 ## Instructions
 
