@@ -27,7 +27,6 @@ mysql> SET foreign_key_checks = 1;
 GET http://localhost:8080/users/add/user/pass/
 ### DB Creation
 `CREATE DATABASE teams;`
---> For mariaDb, use data dump sql script
 ### DB Rebuild
 DROP SCHEMA virtuallabs;
 CREATE DATABASE virtuallabs;
