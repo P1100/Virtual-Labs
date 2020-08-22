@@ -16,9 +16,8 @@ export class BackendService {
   constructor(private http: HttpClient) {
   }
   private formatErrors(error: any) {
-    console.error(error);
-    window.alert(JSON.stringify(error));
-    return throwError(error.error);
+    console.error(error?.name + ': ' + error?.statusText);
+    return throwError(error);
   }
 
   getAllStudents(): Observable<Student[]> {
