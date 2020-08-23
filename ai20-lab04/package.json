@@ -1,6 +1,6 @@
 {
-  "firstName": "ai20-lab04",
-  "version": "0.0.0",
+  "firstName": "virtuallabs-frontend",
+  "version": "0.9.0",
   "scripts": {
     "start": "npm run serve",
     "startAll-windows": "start npm run jsonserver & start npm run serve",
