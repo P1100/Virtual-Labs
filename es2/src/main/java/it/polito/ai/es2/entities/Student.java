@@ -6,6 +6,7 @@ import org.hibernate.validator.constraints.UniqueElements;
 import javax.persistence.*;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Pattern;
 import javax.validation.constraints.PositiveOrZero;
 import java.util.ArrayList;
 import java.util.List;
@@ -30,6 +31,7 @@ public class Student {
   private String lastName;
   @NotBlank
   @Email
+  @Pattern(regexp = "s[0-9]{1,9}@studenti\\.polito\\.it")
   private String email;
   @OneToOne
   @JoinColumn

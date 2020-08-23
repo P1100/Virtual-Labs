@@ -7,6 +7,7 @@ import org.springframework.hateoas.RepresentationModel;
 
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Pattern;
 import javax.validation.constraints.PositiveOrZero;
 
 @NoArgsConstructor
@@ -21,5 +22,6 @@ public class ProfessorDTO extends RepresentationModel<ProfessorDTO> {
   private String lastName;
   @NotBlank
   @Email
+  @Pattern(regexp = "d[0-9]{1,9}@polito\\.it")
   private String email;
 }
