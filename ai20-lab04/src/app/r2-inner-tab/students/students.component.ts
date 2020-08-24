@@ -1,13 +1,12 @@
-import {AfterViewInit, Component, EventEmitter, Input, OnDestroy, Output, ViewChild} from '@angular/core';
+import {AfterViewInit, Component, EventEmitter, Input, OnChanges, Output, SimpleChanges, ViewChild} from '@angular/core';
 import {Student} from '../../models/student.model';
 import {MatTableDataSource} from '@angular/material/table';
 import {MatSort, Sort} from '@angular/material/sort';
 import {MatPaginator} from '@angular/material/paginator';
 import {MatAutocompleteSelectedEvent} from '@angular/material/autocomplete';
 import {FormControl} from '@angular/forms';
-import {Observable, Subscription} from 'rxjs';
+import {Observable} from 'rxjs';
 import {filter, map, startWith} from 'rxjs/operators';
-import {ActivatedRoute} from '@angular/router';
 
 @Component({
   selector: 'app-students',
@@ -15,37 +14,64 @@ import {ActivatedRoute} from '@angular/router';
   styleUrls: ['./students.component.css']
 })
 /* Data is always obtained from the container component, which calls the service, which calls the back end */
-export class StudentsComponent implements AfterViewInit, OnDestroy {
+export class StudentsComponent implements AfterViewInit, OnChanges {
   @Input()
   // Superset of filteredOptions, used in autocomplete
   private students: Student[];
   // displayedColumnsTable is based on Student model (manual sync). It controls various formatting elements
   displayedColumnsTable: string[] = ['select', 'id', 'firstName', 'lastName', 'team']; // email removed
-  // enrolled is saved with a get/set syntax
-  get enrolled(): Student[] {
-    return this.dataSource.data;
-  }
-  // Update enrolled students data from, when new one is sent by the container comp. Reset all
+  // Table data, connected directly to the data sent from the cont component (see above)
+  dataSource: MatTableDataSource<Student> = new MatTableDataSource<Student>();
   @Input()
   set enrolled(array: Student[]) {
     this.dataSource.data = [...array];
-    this.sortData();
-    // Update checkbox logic
     this.checked = new Map(array.map(x => [+x.id, false]));
-    this.checkboxMasterCompleted = false;
-    this.checkboxMasterIndeterminate = false;
-    this.showCheckboxDeselectAllToolbar = false;
-    this.showCheckboxDeselectAllToolbar = false;
-    // Update autocomplete list
-    delete this.filteredOptions$;
-    this.setAutocompleteInit = 'renew-autocomplete-list';
+  }
+  get enrolled(): Student[] {
+    return this.dataSource.data;
   }
   autocompleteControl = new FormControl();
   // Used in AutoComplete. It's the list of all students but at times filtered (so cant be merged in only one var)
   filteredOptions$: Observable<Student[]> = null;
-  @Input()
-  set setAutocompleteInit(flag: string) {
-    if (flag != null) {
+  @Output()
+  enrolledEvent = new EventEmitter<Student[]>();
+  @Output()
+  disenrolledEvent = new EventEmitter<Student[]>();
+  @ViewChild(MatSort) sort: MatSort;
+  @ViewChild(MatPaginator) paginator: MatPaginator;
+  // MatPaginator Inputs
+  length: number; // The current total number of items being paged. Read only
+  pageSize = 25;
+  pageSizeOptions: number[] = [1, 2, 5, 10, 20];
+  /* Checkbox Logic */
+  checkboxMasterCompleted = false;
+  checkboxMasterIndeterminate = false;
+  showCheckboxSelectAllToolbar = false;
+  showCheckboxDeselectAllToolbar = false;
+  // IMPORTANT: always add the + symbol before any number passed to checked, otherwise it will interpret it like a string, resulting in an error
+  checked: Map<number, boolean> = new Map();   // number = student's id (serial)
+
+  selectedStudentToAdd: Student = null;
+
+  // TODO: temp for images, delete later
+  flag = 'https://upload.wikimedia.org/wikipedia/commons/9/9d/Flag_of_Arkansas.svg';
+
+  ngOnChanges(changes: SimpleChanges): void {
+    for (const index in changes) {
+      console.log(index);
+    }
+    if (changes['enrolled'] != null || changes['students'] != null) {
+      if (changes['enrolled'] != null) {
+        this.sortData();
+        // Update checkbox logic
+        this.checkboxMasterCompleted = false;
+        this.checkboxMasterIndeterminate = false;
+        this.showCheckboxDeselectAllToolbar = false;
+        this.showCheckboxDeselectAllToolbar = false;
+      }
+      // Update autocomplete
+      delete this.filteredOptions$;
+      this.autocompleteControl.reset(null);
       this.filteredOptions$ = this.autocompleteControl.valueChanges
         .pipe(
           startWith(''),
@@ -70,43 +96,10 @@ export class StudentsComponent implements AfterViewInit, OnDestroy {
         );
     }
   }
-  // Table data, connected directly to the data sent from the cont component (see above)
-  dataSource: MatTableDataSource<Student> = new MatTableDataSource<Student>();
-  @Output()
-  enrolledEvent = new EventEmitter<Student[]>();
-  @Output()
-  disenrolledEvent = new EventEmitter<Student[]>();
-  @ViewChild(MatSort) sort: MatSort;
-  @ViewChild(MatPaginator) paginator: MatPaginator;
-  // MatPaginator Inputs
-  length: number; // The current total number of items being paged. Read only
-  pageSize = 25;
-  pageSizeOptions: number[] = [1, 2, 5, 10, 20];
-  /* Checkbox Logic */
-  checkboxMasterCompleted = false;
-  checkboxMasterIndeterminate = false;
-  showCheckboxSelectAllToolbar = false;
-  showCheckboxDeselectAllToolbar = false;
-  // IMPORTANT: always add the + symbol before any number passed to checked, otherwise it will interpret it like a string, resulting in an error
-  checked: Map<number, boolean> = null;   // number = student's id (serial)
-
-  selectedStudentToAdd: Student = null;
-  private urlParamSubscription: Subscription;
-
-  // TODO: temp for images, delete later
-  flag = 'https://upload.wikimedia.org/wikipedia/commons/9/9d/Flag_of_Arkansas.svg';
-
-  constructor(private route: ActivatedRoute) {
-    this.urlParamSubscription = this.route.parent.url.subscribe(() => {
-      // Every time I change the route, I make sure the autocomplete input data is updated.. (setAutocompleteInit)
-      delete this.filteredOptions$;
-      // Needed to reset the input of autocomplete, after a route change
-      this.autocompleteControl.reset(null);
-    });
-  }
   ngAfterViewInit() {
     this.dataSource.paginator = this.paginator;
   }
+
   // Data and sort update done automatically in '@Input() set enrolled'
   studentsAdd() {
     if (this.selectedStudentToAdd && this.students.includes(this.selectedStudentToAdd)
@@ -198,9 +191,6 @@ export class StudentsComponent implements AfterViewInit, OnDestroy {
     this.updateMasterCheckbox();
     this.showCheckboxSelectAllToolbar = false;
     this.showCheckboxDeselectAllToolbar = false;
-  }
-  ngOnDestroy(): void {
-    this.urlParamSubscription.unsubscribe();
   }
 }
 

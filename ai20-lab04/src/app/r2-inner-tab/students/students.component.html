@@ -1,6 +1,5 @@
 <p *ngIf="showCheckboxSelectAllToolbar || showCheckboxDeselectAllToolbar">
-  <mat-toolbar
-    style="font-family: 'Roboto,RobotoDraft,Helvetica,Arial,sans-serif', serif; -webkit-justify-content: center;">
+  <mat-toolbar>
     <div *ngIf="showCheckboxSelectAllToolbar; else elseRemoveAllDialog">
       All {{dataSource.paginator.pageSize}} students on this page are selected.
       <a (click)="checkboxSetAll(true)"

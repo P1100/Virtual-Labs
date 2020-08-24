@@ -1,6 +1,6 @@
 import {Component, OnDestroy} from '@angular/core';
 import {ActivatedRoute} from '@angular/router';
-import {concatMap, tap, toArray} from 'rxjs/operators';
+import {concatMap, toArray} from 'rxjs/operators';
 import {BackendService} from '../../services/backend.service';
 import {from, Observable, Subscription} from 'rxjs';
 import {Student} from '../../models/student.model';
@@ -16,7 +16,6 @@ import {getSafeDeepCopyArray} from '../../app-settings';
   template: `
     <app-students [enrolled]="enrolledStudents"
                   [students]="allStudents"
-                  [setAutocompleteInit]="autocompleteInit"
                   (enrolledEvent)="onStudentsToEnroll($event)"
                   (disenrolledEvent)="onStudentsToDisenroll($event)"
     ></app-students>
@@ -32,10 +31,8 @@ export class StudentsContComponent implements OnDestroy {
   subAllStudents: Subscription = null;
   subEnrolledStudentsCourse: Subscription = null;
   subRouteParam: Subscription = null;
-  // Needed to initialize autocomplete properly
-  autocompleteInit: string = null;
 
-  // update students and enrolled on routing change (e.g. when changing course)
+  // Routing change update (e.g. when changing course)
   constructor(private backendService: BackendService, private activatedRoute: ActivatedRoute) {
     this.subRouteParam = this.activatedRoute.paramMap.subscribe(() => {
         this.courseId = this.activatedRoute.parent.snapshot.paramMap.get('id');
@@ -47,8 +44,6 @@ export class StudentsContComponent implements OnDestroy {
         this.subAllStudents = this.backendService.getAllStudents()
           .subscribe((students: Student[]) => {
             this.allStudents = Array.isArray(students) ? [...students] : [];
-            // TODO: find a better way to drive subscription update on students component
-            this.autocompleteInit = this.allStudents.length > 0 ? this.courseId : null; // ! dont move subAllStudents code before subEnrolledStudentsCourse
           });
       }
     );
@@ -64,10 +59,8 @@ export class StudentsContComponent implements OnDestroy {
       return;
     }
     console.log('onStudentsToEnroll', studentsToEnroll);
-    // this.backendService.enroll(new Student(1123,'','',''), this.courseId).subscribe(() => console.log('SUCCESS'));
     const observable: Observable<Student[]> = from([...studentsToEnroll])
       .pipe(
-        tap(student => console.log('ConcatMap pipe in. Current student:', student)),
         concatMap((student: Student) =>
           this.backendService.enroll(student, this.courseId) as Observable<any>
         ),
@@ -79,8 +72,7 @@ export class StudentsContComponent implements OnDestroy {
     if (studentsToDisenroll === null || studentsToDisenroll.length === 0) {
       return;
     }
-    const observable: Observable<Student[]> = from(studentsToDisenroll).pipe( // Observable<ObservedValueOf<Student[]>>
-      tap(student => console.log('ConcatMap pipe in. Current student:', student)),
+    const observable: Observable<Student[]> = from(studentsToDisenroll).pipe(
       concatMap((student: Student) =>
         this.backendService.disenroll(student, this.courseId) as Observable<any>
       ),
@@ -90,13 +82,10 @@ export class StudentsContComponent implements OnDestroy {
   }
 
   private updateEnrolledStudents(o: Observable<Student[]>) {
-    console.log('updateEnrolledStudents');
     o.subscribe(array => {
-        console.log('onEnroll update date subscribe outer: ', array);
         this.backendService.getEnrolledStudents(this.courseId).subscribe(
           (ss: Student[]) => {
             this.enrolledStudents = getSafeDeepCopyArray(ss);
-            console.log('onEnroll date subscribe inner: ', ss);
           }
         );
       }
