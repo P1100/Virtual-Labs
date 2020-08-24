@@ -1,19 +1,19 @@
 mat-sidenav-container {
+  display: flex;
+  flex: 0 1 auto;
   margin: 2px;
   height: 100%;
 }
 
 mat-sidenav {
-  width: 250px;
   flex: 0 1 auto;
-  /*position: sticky;*/
+  width: 260px;
   top: 0;
   z-index: 1;
 }
 
-mat-list-item {
-  margin-top: 5px;
-  margin-bottom: 5px;
+mat-sidenav-content {
+  flex: 1 1 auto;
 }
 
 .title-link-not-active {
@@ -31,6 +31,20 @@ mat-list-item {
   flex: 1 1 auto;
 }
 
-button {
+#toolbar-button {
   outline: none;
+}
+
+#add-course-button {
+  display: flex;
+  justify-content: center;
+}
+
+#add-course-button mat-icon {
+  color: teal;
+  margin-right: 10px;
+}
+
+#delete-course-icon {
+  color: firebrick;
 }

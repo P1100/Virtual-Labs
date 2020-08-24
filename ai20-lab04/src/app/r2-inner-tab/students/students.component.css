@@ -2,29 +2,21 @@ table {
   width: 100%;
 }
 
-input {
-  outline: none;
-  box-shadow: none;
-  border: transparent;
-}
-
-form {
-  min-width: 150px;
-  max-width: 500px;
-  width: 100%;
-}
-
 mat-form-field {
+  max-width: 450px;
   width: 70%;
 }
 
-img {
+img .avatars {
   vertical-align: middle;
   margin-right: 8px;
   margin-left: 8px;
 }
 
-mat-toolbar {
-  font-family: 'Roboto,RobotoDraft,Helvetica,Arial,sans-serif', serif;
+#gmail-like-toolbar {
   -webkit-justify-content: center;
+}
+
+#person_add_icon {
+  color: navy;
 }

@@ -1,5 +1,5 @@
 <p *ngIf="showCheckboxSelectAllToolbar || showCheckboxDeselectAllToolbar">
-  <mat-toolbar>
+  <mat-toolbar id="gmail-like-toolbar">
     <div *ngIf="showCheckboxSelectAllToolbar; else elseRemoveAllDialog">
       All {{dataSource.paginator.pageSize}} students on this page are selected.
       <a (click)="checkboxSetAll(true)"
@@ -28,13 +28,15 @@
                         (optionSelected)="autocompleteSaveOption($event)"
                         [displayWith]="autocompleteDisplayFunction">
         <mat-option *ngFor="let option of filteredOptions$ | async" [value]="option">
-          <img aria-hidden="true" [src]="flag" height="25" alt="photo">
+          <img class="avatars" aria-hidden="true" [src]="flag" height="25" alt="photo">
           {{option.lastName}} {{option.firstName}} ({{option.id}})
         </mat-option>
       </mat-autocomplete>
     </mat-form-field>
-    <!--    tolto $event da parametro studentsAdd, perché prende il dato da aggiornare da saveOption. Forse-->
-    <button (click)="studentsAdd(); input.value=''" mat-button matSuffix>Add</button>
+    <!--    tolto $event da parametro studentsAdd, perché prende il dato da aggiornare da saveOption. -->
+    <button (click)="studentsAdd(); input.value=''" mat-button matSuffix>
+      <mat-icon id="person_add_icon">person_add</mat-icon>
+    </button>
     <br>
     <button (click)="studentsRemove()" mat-button>Delete selected</button>
   </form>
