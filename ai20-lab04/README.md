@@ -5,6 +5,10 @@
 - Update to angular 10, and last version of Spring Boot
 - Checkbox gmail style
 
+## Dependencies
+- moment js
+- `ng add @ng-bootstrap/ng-bootstrap`
+
 ## Build
 - `npm install` 
 - `ng build –prod`
