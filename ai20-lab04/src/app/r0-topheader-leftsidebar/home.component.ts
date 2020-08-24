@@ -7,7 +7,7 @@ import {ActivatedRoute, NavigationEnd, Router} from '@angular/router';
 import {of, Subscription} from 'rxjs';
 import {TestDialogComponent} from '../dialogs/test-dialog/test-dialog.component';
 import {LoginComponent} from '../dialogs/login/login.component';
-import {CourseService} from '../services/course-service';
+import {CourseService} from '../services/course.service';
 import {filter, map, mergeMap} from 'rxjs/operators';
 
 // TODO: remove it later, it was test code
@@ -33,6 +33,12 @@ export class HomeComponent implements OnInit, OnDestroy {
   animal: string;
   name: string;
   nameActiveCourse: any;
+
+  panelOpenState = [];
+
+  revertExpand(i: number) {
+    this.panelOpenState[i] = !this.panelOpenState[i];
+  }
 
   constructor(private titleService: Title,
               private courseService: CourseService,

@@ -29,39 +29,35 @@
 
 <mat-sidenav-container>
   <mat-sidenav #drawer mode="side" opened position="start">
-    <mat-accordion>
+    <mat-accordion multi="false">
       <mat-nav-list>
         <mat-list-item routerLink="#" id="add-course-button">
           <mat-icon>add_circle</mat-icon>
           Add course
         </mat-list-item>
         <!--    TODO: modificare lista corsi, e permessi di edit/delete, in base a login/auth (professor sees all, student only enrolled ones)-->
-        <mat-nav-list *ngFor="let course of courses">
-          <mat-expansion-panel togglePosition="before" multi="false" [class.mat-elevation-z0]="true" dense>
+        <mat-nav-list *ngFor="let course of courses; index as i">
+          <mat-expansion-panel togglePosition="before" [class.mat-elevation-z0]="true" dense
+                               [(expanded)]="panelOpenState[i]">
             <mat-expansion-panel-header>
               <mat-panel-title>
                 <a mat-list-item
                    routerLink="teacher/course/{{course.id}}"
-                   routerLinkActive="active-link-style" [routerLinkActiveOptions]="{exact:true}">
+                   routerLinkActive="active-link-style" [routerLinkActiveOptions]="{exact:true}"
+                   (click)="revertExpand(i)">
                   {{course.fullName}}
                 </a>
               </mat-panel-title>
             </mat-expansion-panel-header>
             <mat-nav-list dense>
               <a mat-list-item routerLink="#">
-                <mat-icon>edit</mat-icon>
+                <mat-icon (click)="editCourse()">edit</mat-icon>
                 Edit course</a>
               <a mat-list-item routerLink="#">
                 <mat-icon id="delete-course-icon">delete_forever</mat-icon>
                 Delete course</a>
             </mat-nav-list>
           </mat-expansion-panel>
-          <!--          <button-->
-          <!--            type="button" aria-label="Menu course"-->
-          <!--            mat-icon-button-->
-          <!--            (click)="editCourse()">-->
-          <!--            <mat-icon>edit</mat-icon>-->
-          <!--          </button>-->
         </mat-nav-list>
       </mat-nav-list>
     </mat-accordion>
