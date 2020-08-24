@@ -40,6 +40,7 @@ import {TestingComponent} from './r2-inner-tab/testing/testing.component';
 import {MatTooltipModule} from '@angular/material/tooltip';
 import {MatSelectModule} from '@angular/material/select';
 import {TeamsComponent} from './r2-inner-tab/teams/teams.component';
+import {MatExpansionModule} from '@angular/material/expansion';
 
 @NgModule({
   imports: [
@@ -69,6 +70,7 @@ import {TeamsComponent} from './r2-inner-tab/teams/teams.component';
     MatTooltipModule,
     // New / temp / test
     MatSelectModule,
+    MatExpansionModule,
     /* Unused */
     // LayoutModule,
     // DragDropModule,
