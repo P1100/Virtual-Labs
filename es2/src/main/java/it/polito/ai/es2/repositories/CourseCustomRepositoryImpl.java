@@ -16,9 +16,9 @@ public class CourseCustomRepositoryImpl implements CourseCustomRepository {
   private EntityManager entityManager;
   
   @Override
-  public Integer countTeamsThatViolateCardinality(String id, int min, int max) {
+  public Integer countTeamsThatViolateCardinality(String courseId, int min, int max) {
     Map<String, Object> parameters = new HashMap<>();
-    parameters.put("id", id);
+    parameters.put("id", courseId);
     parameters.put("min", min);
     parameters.put("max", max);
   

@@ -19,7 +19,7 @@ public class Notification_Controller {
     if (confirm)
       return "token_confirmed";
     else
-      return "error_template";
+      return "token_error";
   }
   
   @GetMapping("/reject/{token}")
@@ -28,6 +28,6 @@ public class Notification_Controller {
     if (reject)
       return "token_rejcted";
     else
-      return "error_template";
+      return "token_error";
   }
 }

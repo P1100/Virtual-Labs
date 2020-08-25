@@ -5,6 +5,7 @@ import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.PositiveOrZero;
 import java.sql.Timestamp;
 
@@ -14,6 +15,10 @@ public class Image {
   @Id
   @GeneratedValue
   private Long id;
+  @NotBlank
+  private String name;
+  @NotBlank
+  private String type;
   @PositiveOrZero
   private int revisionCycle;   // number of iteration for Implementation
   @CreationTimestamp
@@ -22,13 +27,13 @@ public class Image {
   private Timestamp modifyDate;
   @Lob
   @Basic(fetch = FetchType.LAZY)
-  private byte[] data;
+  private byte[] picByte;
   
   @OneToOne(mappedBy = "profilePhoto")
-  private Student avatarStudent;
+  private Student student;
   
   @OneToOne(mappedBy = "profilePhoto")
-  private Professor avatarProfessor;
+  private Professor professor;
   
   @OneToOne(mappedBy = "content")
   private Assignment assignment;

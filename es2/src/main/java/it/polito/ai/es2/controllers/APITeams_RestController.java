@@ -1,6 +1,7 @@
 package it.polito.ai.es2.controllers;
 
 import it.polito.ai.es2.controllers.hateoas.ModelHelper;
+import it.polito.ai.es2.domains.TeamViewModel;
 import it.polito.ai.es2.dtos.StudentDTO;
 import it.polito.ai.es2.dtos.TeamDTO;
 import it.polito.ai.es2.services.interfaces.TeamService;
@@ -8,9 +9,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.hateoas.CollectionModel;
 import org.springframework.hateoas.Link;
 import org.springframework.http.HttpStatus;
+import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
@@ -22,12 +26,14 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 public class APITeams_RestController {
   @Autowired
   TeamService teamService;
+  @Autowired
+  private ModelHelper modelHelper;
   
   @GetMapping({"", "/"})
   public CollectionModel<TeamDTO> getAllTeams() {
     List<TeamDTO> allTeams = teamService.getAllTeams();
     for (TeamDTO teamDTO : allTeams) {
-      ModelHelper.enrich(teamDTO);
+      modelHelper.enrich(teamDTO);
     }
     Link link = linkTo(methodOn(APITeams_RestController.class)
                            .getAllTeams()).withSelfRel();
@@ -40,14 +46,14 @@ public class APITeams_RestController {
     Optional<TeamDTO> teamDTO = teamService.getTeam(teamId);
     if (!teamDTO.isPresent())
       throw new ResponseStatusException(HttpStatus.CONFLICT, teamId.toString());
-    return ModelHelper.enrich(teamDTO.get());
+    return modelHelper.enrich(teamDTO.get());
   }
   
   @GetMapping("/{teamId}/members")
   public List<StudentDTO> getMembers(@PathVariable Long teamId) {
     List<StudentDTO> members = teamService.getMembers(teamId);
     for (StudentDTO member : members) {
-      ModelHelper.enrich(member);
+      modelHelper.enrich(member);
     }
     return members;
   }
@@ -61,5 +67,22 @@ public class APITeams_RestController {
   @PostMapping("/evict/{teamId}")
   public boolean evictTeam(@PathVariable Long teamId) {
     return teamService.evictTeam(teamId);
+  }
+  
+  @PostMapping("/propose")
+  public String propose_team(@ModelAttribute("command") TeamViewModel teamViewModel,
+                             BindingResult bindingResult, Model model) {
+    TeamDTO created_team;
+    teamViewModel.getMemberIds().removeAll(Arrays.asList("", null));
+    try {
+      created_team = teamService.proposeTeam(teamViewModel.getCourseId(), teamViewModel.getName(), teamViewModel.getMemberIds());
+    } catch (Exception e) {
+      e.printStackTrace();
+      model.addAttribute("error", e.getMessage());
+      return "error_template";
+    }
+    if (created_team == null)
+      return "error_template";
+    return "csv_home";
   }
 }

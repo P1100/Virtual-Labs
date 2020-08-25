@@ -1,24 +1,19 @@
 package it.polito.ai.es2.dtos;
 
-import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.NoArgsConstructor;
 import org.springframework.hateoas.RepresentationModel;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.PositiveOrZero;
 
-@NoArgsConstructor
-@AllArgsConstructor
-@Data // Note that it doesn't work with modelMapper!
+@Data
 public class TeamDTO extends RepresentationModel<TeamDTO> {
   private Long id;
   @NotBlank
   private String name;
-  private boolean active = false; // false
+  private boolean active;
   @PositiveOrZero
-  private int
-      maxVcpu,
+  private int maxVcpu,
       maxDisk,
       maxRam,
       maxRunningVM,

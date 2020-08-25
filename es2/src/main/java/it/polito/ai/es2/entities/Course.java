@@ -5,7 +5,6 @@ import lombok.ToString;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Positive;
 import javax.validation.constraints.PositiveOrZero;
 import java.util.ArrayList;
@@ -34,7 +33,6 @@ public class Course {
   private int minSizeTeam;
   @Positive
   private int maxSizeTeam;
-  @NotNull
   private boolean enabled;
   private String vmModelPath;
   

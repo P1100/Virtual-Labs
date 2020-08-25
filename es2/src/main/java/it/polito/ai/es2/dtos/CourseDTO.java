@@ -6,7 +6,6 @@ import lombok.NoArgsConstructor;
 import org.springframework.hateoas.RepresentationModel;
 
 import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Positive;
 import javax.validation.constraints.PositiveOrZero;
 
@@ -22,7 +21,6 @@ public class CourseDTO extends RepresentationModel<CourseDTO> {
   private int minSizeTeam;
   @Positive
   private int maxSizeTeam;
-  @NotNull
   private boolean enabled;
   private String vmModelPath;
 }
