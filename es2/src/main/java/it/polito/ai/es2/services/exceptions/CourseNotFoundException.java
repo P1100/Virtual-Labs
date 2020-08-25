@@ -1,6 +1,6 @@
 package it.polito.ai.es2.services.exceptions;
 
-public class CourseNotFoundException extends TeamServiceException {
+public class CourseNotFoundException extends NullParameterException {
   public CourseNotFoundException() {
   }
   

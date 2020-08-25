@@ -1,6 +1,6 @@
 package it.polito.ai.es2.services.exceptions;
 
-public class StudentNotFoundException extends TeamServiceException {
+public class StudentNotFoundException extends NullParameterException {
   public StudentNotFoundException() {
   }
   

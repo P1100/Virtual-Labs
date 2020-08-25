@@ -1,8 +1,6 @@
 package it.polito.ai.es2;
 
-import it.polito.ai.es2.services.exceptions.CourseNotFoundException;
-import it.polito.ai.es2.services.exceptions.StudentNotFoundException;
-import it.polito.ai.es2.services.exceptions.TeamServiceException;
+import it.polito.ai.es2.services.exceptions.*;
 import lombok.extern.java.Log;
 import org.springframework.dao.DataAccessException;
 import org.springframework.http.HttpHeaders;
@@ -30,20 +28,17 @@ public class GlobalRuntimeExceptionHandler
       RuntimeException ex, WebRequest request) {
     String bodyOfResponse = "Server Error";
     log.warning(ex.toString() + " \n " + request.toString());
-    return handleExceptionInternal(ex, bodyOfResponse, new HttpHeaders(), HttpStatus.INTERNAL_SERVER_ERROR, request);
+    return handleExceptionInternal(ex, bodyOfResponse, new HttpHeaders(), HttpStatus.INTERNAL_SERVER_ERROR, request); // 500
   }
   
-  @ExceptionHandler(value = {DataAccessException.class,
-      ConstraintViolationException.class, TransactionSystemException.class, RollbackException.class})
+  @ExceptionHandler(value = {DataAccessException.class, ConstraintViolationException.class, TransactionSystemException.class, RollbackException.class})
   protected ResponseEntity<Object> dataError(
       RuntimeException ex, WebRequest request) {
     String bodyOfResponse = "Data Error";
     log.warning(ex.toString() + " \n " + request.toString());
-    return handleExceptionInternal(ex, bodyOfResponse, new HttpHeaders(), HttpStatus.BAD_REQUEST, request);
+    return handleExceptionInternal(ex, bodyOfResponse, new HttpHeaders(), HttpStatus.BAD_REQUEST, request); // 400
   }
   
-  //  @ResponseStatus(HttpStatus.BAD_REQUEST)
-// @ExceptionHandler(MethodArgumentNotValidException.class)
   @Override
   protected ResponseEntity<Object> handleMethodArgumentNotValid(MethodArgumentNotValidException ex,
                                                                 HttpHeaders headers, HttpStatus status, WebRequest request) {
@@ -53,16 +48,16 @@ public class GlobalRuntimeExceptionHandler
       String errorMessage = error.getDefaultMessage();
       errors.put(fieldName, errorMessage);
     });
-    log.warning("Validation error list : " + errors.values());
-    return new ResponseEntity<>(errors, HttpStatus.BAD_REQUEST);
+    log.warning("Validation errors: " + errors.values());
+    return new ResponseEntity<>(errors, HttpStatus.UNPROCESSABLE_ENTITY); // 422
   }
   
-  @ExceptionHandler(value = {TeamServiceException.class})
+  @ExceptionHandler(value = {NullParameterException.class})
   protected ResponseEntity<Object> nullParameters(
       RuntimeException ex, WebRequest request) {
     String bodyOfResponse = ex.getMessage();
     log.warning(ex.toString() + " \n " + request.toString());
-    return handleExceptionInternal(ex, bodyOfResponse, new HttpHeaders(), HttpStatus.BAD_REQUEST, request);
+    return handleExceptionInternal(ex, bodyOfResponse, new HttpHeaders(), HttpStatus.BAD_REQUEST, request); // 400
   }
   
   @ExceptionHandler(value = {CourseNotFoundException.class, StudentNotFoundException.class})
@@ -70,6 +65,30 @@ public class GlobalRuntimeExceptionHandler
       RuntimeException ex, WebRequest request) {
     String bodyOfResponse = ex.getMessage();
     log.warning(ex.toString() + " \n " + request.toString());
-    return handleExceptionInternal(ex, bodyOfResponse, new HttpHeaders(), HttpStatus.NOT_FOUND, request);
+    return handleExceptionInternal(ex, bodyOfResponse, new HttpHeaders(), HttpStatus.NOT_FOUND, request); // 404
+  }
+  
+  @ExceptionHandler(value = {CourseCardinalityConstrainsException.class})
+  protected ResponseEntity<Object> courseTeamsCardinalityViolation(
+      RuntimeException ex, WebRequest request) {
+    String bodyOfResponse = ex.getMessage();
+    log.warning(ex.toString() + " \n " + request.toString());
+    return handleExceptionInternal(ex, bodyOfResponse, new HttpHeaders(), HttpStatus.CONFLICT, request); // 404
+  }
+  
+  @ExceptionHandler(value = {CourseNotEnabledException.class})
+  protected ResponseEntity<Object> CourseNotEnabled(
+      RuntimeException ex, WebRequest request) {
+    String bodyOfResponse = ex.getMessage();
+    log.warning(ex.toString() + " \n " + request.toString());
+    return handleExceptionInternal(ex, bodyOfResponse, new HttpHeaders(), HttpStatus.CONFLICT, request); // 404
+  }
+  
+  @ExceptionHandler(value = {StudentAlreadyEnrolled.class})
+  protected ResponseEntity<Object> StudentAlreadyEnrolled(
+      RuntimeException ex, WebRequest request) {
+    String bodyOfResponse = ex.getMessage();
+    log.warning(ex.toString() + " \n " + request.toString());
+    return handleExceptionInternal(ex, bodyOfResponse, new HttpHeaders(), HttpStatus.CONFLICT, request); // 404
   }
 }

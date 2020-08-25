@@ -1,10 +1,10 @@
 package it.polito.ai.es2.services.exceptions;
 
-public class CourseNotEnabledException extends TeamServiceException {
+public class CourseNotEnabledException extends NullParameterException {
   public CourseNotEnabledException() {
   }
   
   public CourseNotEnabledException(String s) {
-    super(s);
+    super("Course not enabled! (" + s + ")");
   }
 }
