@@ -2,6 +2,9 @@ package it.polito.ai.es2;
 
 import it.polito.ai.es2.dtos.CourseDTO;
 import it.polito.ai.es2.dtos.StudentDTO;
+import it.polito.ai.es2.services.interfaces.CourseService;
+import it.polito.ai.es2.services.interfaces.ProjectVLService;
+import it.polito.ai.es2.services.interfaces.StudentService;
 import it.polito.ai.es2.services.interfaces.TeamService;
 import lombok.extern.java.Log;
 import org.modelmapper.ModelMapper;
@@ -25,67 +28,77 @@ public class VirtualLabsApplication {
     SpringApplication.run(VirtualLabsApplication.class, args);
   }
   
-  @Bean
-  ModelMapper modelMapper() {
-    return new ModelMapper();
-  }
-  
   @Autowired
   Environment environment;
   @Autowired
   private ApplicationContext applicationContext;
   @Autowired
+  private CourseService courseService;
+  @Autowired
+  private StudentService studentService;
+  @Autowired
   private TeamService teamService;
-
-//  @Value("${server.port}")
-//  String port;
-//  @Value("${server.address}")
-//  String address;
+  @Autowired
+  private ProjectVLService projectVLService;
+  
+  @Bean
+  ModelMapper modelMapper() {
+    return new ModelMapper();
+  }
   
   @Bean
   CommandLineRunner runner() {
     return new CommandLineRunner() {
       @Override
       public void run(String... args) {
-//        StudentDTO s1 = new StudentDTO(); s1.setId(1231L); s1.setFirstName("NewStud");s1.setLastName("last");s1.setEmail("s999999@studenti.polito.it");
-//        teamService.addStudent(s1);
-        boolean init = teamService.getAllCourses().stream().count() <= 0;
+        boolean init = false;
+//        init = courseService.getAllCourses().stream().count() <= 0;
         if (init == true) {
-          teamService.testing();
-//        ***************** DB INITIALIZATION (check order of fields!) **********************
-          teamService.addCourse(new CourseDTO("c1", "Internet Applications", 1, 500, true, null));
-          teamService.addCourse(new CourseDTO("c2", "Mobile Development", 1, 500, true, null));
-          teamService.addCourse(new CourseDTO("c3", "System and device programming", 1, 500, true, null));
-          teamService.addCourse(new CourseDTO("c4", "Software Engineering I", 1, 500, true, null));
-          teamService.addCourse(new CourseDTO("c5", "Software Engineering II", 1, 500, true, null));
-          teamService.addCourse(new CourseDTO("c6", "Test: Disabled Course", 1, 500, false, null));
-          teamService.addCourse(new CourseDTO("c7", "Test: min2 max3", 2, 3, true, null));
+          System.out.println("***************** Command Line Runner DB INITIALIZATION (check order of fields!) **********************");
+          projectVLService.testing();
+          courseService.addCourse(new CourseDTO("c1", "Internet Applications", 1, 500, true, null));
+          courseService.addCourse(new CourseDTO("c2", "Mobile Development", 1, 500, true, null));
+          courseService.addCourse(new CourseDTO("c3", "System and device programming", 1, 500, true, null));
+          courseService.addCourse(new CourseDTO("c4", "Software Engineering I", 1, 500, true, null));
+          courseService.addCourse(new CourseDTO("c5", "Software Engineering II", 1, 500, true, null));
+          courseService.addCourse(new CourseDTO("c6", "Test: Disabled Course", 1, 500, false, null));
+          courseService.addCourse(new CourseDTO("c7", "Test: min2 max3", 2, 3, true, null));
+  
+          studentService.addStudent(new StudentDTO(1L, "Pietro", "Giasone", "s1@studenti.polito.it"));
+          studentService.addStudent(new StudentDTO(2L, "Giuseppe", "Rossi", "s2@studenti.polito.it"));
+          studentService.addStudent(new StudentDTO(3L, "Antonio", "Bianchi", "s3@studenti.polito.it"));
+          studentService.addStudent(new StudentDTO(4L, "Angelo", "Verdi", "s4@studenti.polito.it"));
+          studentService.addStudent(new StudentDTO(5L, "Domenico", "Gialli", "s5@studenti.polito.it"));
+          studentService.addStudent(new StudentDTO(6L, "Bruno", "Ferri", "s6@studenti.polito.it"));
+          studentService.addStudent(new StudentDTO(7L, "Paola", "Paleta", "s7@studenti.polito.it"));
+          studentService.addStudent(new StudentDTO(8L, "Sergio", "Limari", "s8@studenti.polito.it"));
+          studentService.addStudent(new StudentDTO(9L, "Luciano", "Benterri", "s9@studenti.polito.it"));
+          studentService.addStudent(new StudentDTO(10L, "Francesco", "Cavinni", "s10@studenti.polito.it"));
+          studentService.addStudent(new StudentDTO(11L, "Maria", "Pasolani", "s11@studenti.polito.it"));
     
-          teamService.addStudent(new StudentDTO(1L, "Pietro", "Giasone", "s1@studenti.polito.it"));
-          teamService.addStudent(new StudentDTO(2L, "Giuseppe", "Rossi", "s2@studenti.polito.it"));
-          teamService.addStudent(new StudentDTO(3L, "Antonio", "Bianchi", "s3@studenti.polito.it"));
-          teamService.addStudent(new StudentDTO(4L, "Angelo", "Verdi", "s4@studenti.polito.it"));
-          teamService.addStudent(new StudentDTO(5L, "Domenico", "Gialli", "s5@studenti.polito.it"));
-          teamService.addStudent(new StudentDTO(6L, "Bruno", "Ferri", "s6@studenti.polito.it"));
-          teamService.addStudent(new StudentDTO(7L, "Paola", "Paleta", "s7@studenti.polito.it"));
-          teamService.addStudent(new StudentDTO(8L, "Sergio", "Limari", "s8@studenti.polito.it"));
-          teamService.addStudent(new StudentDTO(9L, "Luciano", "Benterri", "s9@studenti.polito.it"));
-          teamService.addStudent(new StudentDTO(10L, "Francesco", "Cavinni", "s10@studenti.polito.it"));
-          teamService.addStudent(new StudentDTO(11L, "Maria", "Pasolani", "s11@studenti.polito.it"));
-    
-          System.out.println(teamService.addAllStudents(
+          System.out.println(studentService.addStudents(
               Arrays.asList(new StudentDTO(12L, "Valentina", "Gennari", "s12@studenti.polito.it"),
                   new StudentDTO(13L, "Francesca", "Tulini", "s13@studenti.polito.it"),
                   new StudentDTO(14L, "Elena", "Casellari", "s14@studenti.polito.it"),
                   new StudentDTO(15L, "Anna", "Rodieni", "s15@studenti.polito.it"),
                   new StudentDTO(100L, "Last", "One", "s16@studenti.polito.it")
               )));
-          System.out.println((teamService.enrollStudent(1L, "c1")));
-          System.out.println((teamService.enrollStudent(1L, "c6")));
-          System.out.println((teamService.enrollStudent(1L, "c7")));
-          System.out.println(teamService.enrollStudents(Collections.singletonList(2L), "c5"));
-          System.out.println(teamService.enrollStudents(Arrays.asList(2L, 3L, 4L, 5L, 10L, 11L), "c1"));
-          System.out.println((teamService.proposeTeam("c1", "Team1", Arrays.asList(2L, 3L, 4L))));
+          courseService.enrollStudent(1L, "c1");
+          courseService.enrollStudent(1L, "c6");
+          courseService.enrollStudent(1L, "c7");
+          courseService.enrollStudents(Collections.singletonList(2L), "c5");
+          courseService.enrollStudents(Arrays.asList(1L, 2L, 3L, 4L), "c1");
+          teamService.proposeTeam("c1", "Team1", Arrays.asList(1L, 2L, 3L, 4L));
+          courseService.enrollStudents(Arrays.asList(6L, 9L), "c1");
+          teamService.proposeTeam("c1", "Team2", Arrays.asList(6L, 9L));
+          courseService.enrollStudents(Arrays.asList(7L, 8L), "c1");
+          teamService.proposeTeam("c1", "Team3", Arrays.asList(7L, 8L));
+          courseService.enrollStudents(Arrays.asList(2L, 3L), "c2");
+          teamService.proposeTeam("c2", "Team4", Arrays.asList(2L, 3L));
+          courseService.enrollStudents(Arrays.asList(10L, 3L), "c3");
+          teamService.proposeTeam("c3", "Team5", Arrays.asList(10L, 3L));
+          courseService.enrollStudents(Arrays.asList(2L, 4L), "c5");
+          teamService.proposeTeam("c5", "Team6", Arrays.asList(2L, 4L));
         }
 
 
