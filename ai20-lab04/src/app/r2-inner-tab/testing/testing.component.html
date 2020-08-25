@@ -1,26 +1,141 @@
 <div id="testing_container">
   <form (ngSubmit)="getAllCourses()" #heroForm="ngForm">
     <div class="form-group">
-<!--      <button type="submit" class="btn btn-primary btn-sm">getAllCourses</button>-->
+      <!--      <button type="submit" class="btn btn-primary btn-sm">getAllCourses</button>-->
     </div>
   </form>
   <button type="submit" class="btn btn-primary btn-sm" (click)="getAllCourses()">getAllCourses</button>
   <button class="btn btn-primary btn-sm" (click)="getAllStudents()">getAllStudents</button>
 
-  <form>
-    <div class="form-group">
-      <input type="text" class="form-control" #course placeholder="course id">
-      <button mat-raised-button class="btn btn-light btn-sm" (click)="getCourse(course.value)">getCourse</button>
-      <button mat-raised-button class="btn btn-light btn-sm" (click)="enableCourse(course.value)">enableCourse</button>
-      <button mat-raised-button class="btn btn-light btn-sm" (click)="disableCourse(course.value)">disableCourse
-      </button>
-      <button mat-raised-button class="btn btn-light btn-sm" (click)="getEnrolledStudents(course.value)">
-        getEnrolledStudents
-      </button>
-      <br>
-      <button mat-raised-button class="btn btn-light btn-sm" (click)="addCourse(course.value)">addCourse</button>
-      <button mat-raised-button class="btn btn-light btn-sm" (click)="updateCourse(course.value)">updateCourse</button>
-      <button mat-raised-button class="btn btn-light btn-sm" (click)="deleteCourse(course.value)">deleteCourse</button>
-    </div>
-  </form>
+  <div class="form-group">
+    <input type="text" class="form-control" #course placeholder="course id" value="c5">
+    <button mat-raised-button class="btn btn-light btn-sm" (click)="getCourse(course.value)">getCourse</button>
+    <button mat-raised-button class="btn btn-light btn-sm" (click)="getEnrolledStudents(course.value)">
+      getEnrolledStudents
+    </button>
+    <br>
+    <button mat-raised-button class="btn btn-light btn-sm" (click)="enableCourse(course.value)">enableCourse</button>
+    <button mat-raised-button class="btn btn-light btn-sm" (click)="disableCourse(course.value)">disableCourse</button>
+    <button mat-raised-button class="btn btn-light btn-sm" (click)="addCourse(course.value)">addCourse</button>
+    <button mat-raised-button class="btn btn-light btn-sm" (click)="updateCourse(course.value)">updateCourse</button>
+    <button mat-raised-button class="btn btn-light btn-sm" (click)="deleteCourse(course.value)">deleteCourse</button>
+    <br>
+    <button mat-raised-button class="btn btn-light btn-sm" (click)="getTeamsForCourse(course.value)">getTeamsForCourse
+    </button>
+    <button mat-raised-button class="btn btn-light btn-sm" (click)="getStudentsInTeams(course.value)">
+      getStudentsInTeams
+    </button>
+    <button mat-raised-button class="btn btn-light btn-sm" (click)="getAvailableStudents(course.value)">
+      getAvailableStudents
+    </button>
+  </div>
+  <br>
+  <div class="form-group">
+    <label for="student">Student 1</label>
+    <input type="text" #student id="student" placeholder="student id" value="20">
+    <label for="student">Student 2</label>
+    <input type="text" #stud2 id="stud2" placeholder="student id" value="30"><br>
+    <button mat-raised-button class="btn btn-light btn-sm" (click)="enrollStudent(student.value, course.value)">
+      enrollStudent
+    </button>
+    <button mat-raised-button class="btn btn-light btn-sm"
+            (click)="enrollStudents(student.value, stud2.value, course.value)">enrollStudents
+    </button>
+    <button mat-raised-button class="btn btn-light btn-sm" (click)="disenrollStudent(student.value, course.value)">
+      disenrollStudent
+    </button>
+  </div>
 </div>
+
+<form enctype="multipart/form-data" method="POST">
+  <div class="custom-file">
+    <input type="file" accept=".csv" class="custom-file-input" id="importFile" (change)="onFileChanged($event)">
+    <label class="custom-file-label" for="importFile" #labelFileName>Choose file</label>
+  </div>
+  <br>
+  <div class="input-group-prepend">
+    <button class="btn btn-outline-secondary" type="button" (click)="onCSVUpload(course.value)">Upload CSV</button>
+  </div>
+</form>
+
+<br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>
+<div class="button-request" align="right">
+  <button mat-raised-button color="primary">
+    <mat-icon>playlist_add</mat-icon>
+    Richiesta composizione gruppo
+  </button>
+</div>
+<div class="avatar">
+  <div class="rounded-box">
+    <div class="outer">
+      <div class="inner">
+        <input class="inputfile" type="file" name="pic" accept="image/*">
+        <label>
+          <mat-icon class="camera">camera_alt</mat-icon>
+        </label>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<div class="container row">
+  <div class="col-md-12">
+    <h1>Upload Image</h1>
+  </div>
+</div>
+<div class="container row">
+  <div class="col-md-6">
+    <input type="file" (change)="onFileChanged($event)">
+  </div>
+  <div class="col-md-6">
+    <input type="button" (click)="onImageUpload()" value="upload">
+  </div>
+</div>
+<hr/>
+
+<div class="container row">
+  <div class="col-md-12">
+    <h1>Get Image</h1>
+  </div>
+</div>
+<div class="container row">
+  <div class="col-md-12">
+    <div *ngIf=message>{{message}}</div>
+  </div>
+</div>
+<div class="container row">
+  <div class="col-md-6">
+    <input type="text" class="form-control" id="name" placeholder="image name" [(ngModel)]="imageId"
+           name="name"/>
+  </div>
+  <div class="col-md-6">
+    <input type="button" (click)="getImage()" value="Get Image">
+  </div>
+</div>
+<div class="container row">
+  <div class="col-md-12">
+    <div *ngIf=retrievedImage>
+      <img [src]="retrievedImage">
+    </div>
+  </div>
+</div>
+<br>
+<br>
+<br>
+<br>
+
+<h3>Propose Team</h3>
+<form method="post" action="http://localhost:8080/API/teams/propose">
+  <div class="form-group mt-3">
+    <label>Id</label>
+    <input type="text">
+    <br>
+    <label>Name</label>
+    <input type="text" placeholder="Team_testing_email">
+    <br>
+    <label>CourseId</label>
+    <input type="text" placeholder="Course_testing_email">
+  </div>
+  <input type="submit">
+</form>

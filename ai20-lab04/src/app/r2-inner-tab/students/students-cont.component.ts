@@ -1,7 +1,7 @@
 import {Component, OnDestroy} from '@angular/core';
 import {ActivatedRoute} from '@angular/router';
 import {concatMap, toArray} from 'rxjs/operators';
-import {BackendService} from '../../services/backend.service';
+import {StudentService} from '../../services/student.service';
 import {from, Observable, Subscription} from 'rxjs';
 import {Student} from '../../models/student.model';
 import {getSafeDeepCopyArray} from '../../app-settings';
@@ -33,17 +33,17 @@ export class StudentsContComponent implements OnDestroy {
   subRouteParam: Subscription = null;
 
   // Routing change update (e.g. when changing course)
-  constructor(private backendService: BackendService, private activatedRoute: ActivatedRoute) {
+  constructor(private backendService: StudentService, private activatedRoute: ActivatedRoute) {
     this.subRouteParam = this.activatedRoute.paramMap.subscribe(() => {
-        this.courseId = this.activatedRoute.parent.snapshot.paramMap.get('id');
-        console.log('activeCourse: ' + this.courseId);
-        this.subEnrolledStudentsCourse = this.backendService.getEnrolledStudents(this.courseId)
-          .subscribe((students: Student[]) => {
-            this.enrolledStudents = Array.isArray(students) ? [...students] : [];
-          });
-        this.subAllStudents = this.backendService.getAllStudents()
-          .subscribe((students: Student[]) => {
-            this.allStudents = Array.isArray(students) ? [...students] : [];
+      this.courseId = this.activatedRoute.parent.snapshot.paramMap.get('id');
+      console.log('activeCourse: ' + this.courseId);
+      this.subEnrolledStudentsCourse = this.backendService.getEnrolledStudents(this.courseId)
+        .subscribe((students: Student[]) => {
+          this.enrolledStudents = Array.isArray(students) ? [...students] : [];
+        });
+      this.subAllStudents = this.backendService.getAllStudents()
+        .subscribe((students: Student[]) => {
+          this.allStudents = Array.isArray(students) ? [...students] : [];
           });
       }
     );

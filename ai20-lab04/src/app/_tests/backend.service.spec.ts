@@ -1,18 +1,18 @@
 import {TestBed} from '@angular/core/testing';
 
-import {BackendService} from '../services/backend.service';
+import {StudentService} from '../services/student.service';
 import {HttpClientModule} from '@angular/common/http';
 
 // Needed to add import of HttpClientModule to make it work
-describe('BackendService', () => {
-  let service: BackendService;
+describe('StudentService', () => {
+  let service: StudentService;
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      providers: [BackendService],
+      providers: [StudentService],
       imports: [HttpClientModule]
     });
-    service = TestBed.inject(BackendService);
+    service = TestBed.inject(StudentService);
   });
 
   it('should be created', () => {

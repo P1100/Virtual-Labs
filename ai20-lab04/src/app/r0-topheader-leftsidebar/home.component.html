@@ -32,8 +32,10 @@
     <mat-accordion multi="false">
       <mat-nav-list>
         <mat-list-item routerLink="#" id="add-course-button">
-          <mat-icon>add_circle</mat-icon>
-          Add course
+          <button mat-raised-button>
+            <mat-icon>add_circle</mat-icon>
+            Add course
+          </button>
         </mat-list-item>
         <!--    TODO: modificare lista corsi, e permessi di edit/delete, in base a login/auth (professor sees all, student only enrolled ones)-->
         <mat-nav-list *ngFor="let course of courses; index as i">

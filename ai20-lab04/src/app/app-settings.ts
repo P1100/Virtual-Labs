@@ -1,5 +1,6 @@
 import {HttpHeaders} from '@angular/common/http';
 import {HateoasModel} from './models/hateoas.model';
+import {throwError} from 'rxjs';
 
 export class AppSettings {
   public static RETRIES = 0;
@@ -32,19 +33,19 @@ export function removeHATEOAS(container: HateoasModel): any[] {
     innerList = innerList.studentDTOList;
   }
   if (innerList?.professorDTOList != null) {
-    innerList = innerList.studentDTOList;
+    innerList = innerList.professorDTOList;
   }
   if (innerList?.imageDTOList != null) {
-    innerList = innerList.studentDTOList;
+    innerList = innerList.imageDTOList;
   }
   if (innerList?.teamDTOList != null) {
-    innerList = innerList.studentDTOList;
+    innerList = innerList.teamDTOList;
   }
   if (innerList?.vmDTOList != null) {
-    innerList = innerList.studentDTOList;
+    innerList = innerList.vmDTOList;
   }
   if (innerList?.implementationDTOList != null) {
-    innerList = innerList.studentDTOList;
+    innerList = innerList.implementationDTOList;
   }
   innerList = innerList?.map((element: any) => {
     delete element?._links;
@@ -63,4 +64,11 @@ export function removeHATEOAS(container: HateoasModel): any[] {
 // Uniform all data received from services, to arrays (from objects)
 export function getSafeDeepCopyArray(ss: any): any[] {
   return Array.isArray(ss) ? [...ss] : (ss != null ? [ss] : []);
+}
+
+export function formatErrors(error: any) {
+  const s = error?.name + ': ' + error?.status + ' '
+    + (error?.error?.error == null ? (typeof (error?.error) == 'string' ? error?.error : Object.keys(error?.error)) : error?.error?.error + ' - ' + error?.error?.message);
+  console.error(s.replace(/undefined -/gi, ''));
+  return throwError(error);
 }

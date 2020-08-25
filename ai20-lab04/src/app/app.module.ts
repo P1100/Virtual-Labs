@@ -8,6 +8,8 @@ import {LoginComponent} from './dialogs/login/login.component';
 import {NgModule} from '@angular/core';
 import {MatInputModule} from '@angular/material/input';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
+import {MatExpansionModule} from '@angular/material/expansion';
+import {MatMenuModule} from '@angular/material/menu';
 import {AppRoutingModule} from './app-routing.module';
 import {MatSortModule} from '@angular/material/sort';
 import {MatTableModule} from '@angular/material/table';
@@ -16,10 +18,13 @@ import {MatCheckboxModule} from '@angular/material/checkbox';
 import {MatCardModule} from '@angular/material/card';
 import {StudentsComponent} from './r2-inner-tab/students/students.component';
 import {MatTabsModule} from '@angular/material/tabs';
+import {MatTooltipModule} from '@angular/material/tooltip';
 import {PageNotFoundComponent} from './r0-topheader-leftsidebar/page-not-found.component';
-import {TabsNavComponent} from './r1-content/tabs-nav.component';
+import {MatButtonModule} from '@angular/material/button';
+import {TeamsComponent} from './r2-inner-tab/teams/teams.component';
 import {VmsContComponent} from './r2-inner-tab/vms/vms-cont.component';
 import {HTTP_INTERCEPTORS, HttpClientModule} from '@angular/common/http';
+import {MatSelectModule} from '@angular/material/select';
 import {MatIconModule} from '@angular/material/icon';
 import {TestDialogComponent} from './dialogs/test-dialog/test-dialog.component';
 import {MatListModule} from '@angular/material/list';
@@ -29,18 +34,14 @@ import {AssignmentsContComponent} from './r2-inner-tab/assignments/assignments-c
 import {EditRemoveCourseComponent} from './dialogs/edit-remove-course/edit-remove-course.component';
 import {BrowserModule} from '@angular/platform-browser';
 import {AreYouSureComponent} from './dialogs/are-you-sure/are-you-sure.component';
+import {TestingComponent} from './r2-inner-tab/testing/testing.component';
 import {EmptyComponent} from './r1-content/empty.component';
 import {StudentsContComponent} from './r2-inner-tab/students/students-cont.component';
 import {AppComponent} from './app.component';
 import {MAT_DIALOG_DEFAULT_OPTIONS, MatDialogModule} from '@angular/material/dialog';
 import {RegisterComponent} from './dialogs/register/register.component';
-import {MatButtonModule} from '@angular/material/button';
-import {MatMenuModule} from '@angular/material/menu';
-import {TestingComponent} from './r2-inner-tab/testing/testing.component';
-import {MatTooltipModule} from '@angular/material/tooltip';
-import {MatSelectModule} from '@angular/material/select';
-import {TeamsComponent} from './r2-inner-tab/teams/teams.component';
-import {MatExpansionModule} from '@angular/material/expansion';
+import {TabsNavComponent} from './r1-content/tabs-nav.component';
+import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
 
 @NgModule({
   imports: [
@@ -71,6 +72,7 @@ import {MatExpansionModule} from '@angular/material/expansion';
     // New / temp / test
     MatSelectModule,
     MatExpansionModule,
+    NgbModule,
     /* Unused */
     // LayoutModule,
     // DragDropModule,
