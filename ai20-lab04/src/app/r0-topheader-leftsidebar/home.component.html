@@ -9,14 +9,13 @@
   <!--  TODO: remove on prod-->
   <a routerLink="/testing" style="padding-left: 10px; color: chartreuse">Test Page</a>
 
-  <!-- This fills the remaining space of the current row -->
   <span class="fill-remaining-space-header"></span>
 
   <!--  <button mat-button type="button" *ngIf="loggedUser == ''">Register</button>-->
   <button mat-button type="button" *ngIf="isLogged">{{loggedUser}}</button>
-  <button mat-button type="button"
-          (click)="openLoginDialogTemplate()">    {{isLogged}}-Test
-  </button>
+  <!--  <button mat-button type="button"-->
+  <!--          (click)="openLoginDialogTemplate()">    {{isLogged}}-Test-->
+  <!--  </button>-->
 
   <button mat-button
           type="button" aria-label="login and logout"
@@ -29,7 +28,7 @@
 
 <mat-sidenav-container>
   <mat-sidenav #drawer mode="side" opened position="start">
-    <mat-accordion multi="false">
+    <mat-accordion multi="false" #acc>
       <mat-nav-list>
         <mat-list-item routerLink="#" id="add-course-button">
           <button mat-raised-button>
@@ -40,22 +39,21 @@
         <!--    TODO: modificare lista corsi, e permessi di edit/delete, in base a login/auth (professor sees all, student only enrolled ones)-->
         <mat-nav-list *ngFor="let course of courses; index as i">
           <mat-expansion-panel togglePosition="before" [class.mat-elevation-z0]="true" dense
-                               [(expanded)]="panelOpenState[i]">
+                               [(expanded)]="panelOpenState[i]"
+                               routerLink="teacher/course/{{course.id}}"
+                               routerLinkActive="active-link-style" [routerLinkActiveOptions]="{exact:true}">
             <mat-expansion-panel-header>
               <mat-panel-title>
-                <a mat-list-item
-                   routerLink="teacher/course/{{course.id}}"
-                   routerLinkActive="active-link-style" [routerLinkActiveOptions]="{exact:true}"
-                   (click)="revertExpand(i)">
+                <a mat-list-item (click)="revertExpand(i)">
                   {{course.fullName}}
                 </a>
               </mat-panel-title>
             </mat-expansion-panel-header>
             <mat-nav-list dense>
-              <a mat-list-item routerLink="#">
-                <mat-icon (click)="editCourse()">edit</mat-icon>
+              <a mat-list-item (click)="openEditCourseDialog()">
+                <mat-icon>edit</mat-icon>
                 Edit course</a>
-              <a mat-list-item routerLink="#">
+              <a mat-list-item (click)="openTestDialog()">
                 <mat-icon id="delete-course-icon">delete_forever</mat-icon>
                 Delete course</a>
             </mat-nav-list>

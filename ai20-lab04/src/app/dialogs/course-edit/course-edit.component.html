@@ -1,0 +1,47 @@
+<h1 mat-dialog-title>{{data?.courseName}}</h1>
+<form #cf="ngForm" (ngSubmit)="onSubmit()">
+  <div mat-dialog-content>
+    <mat-form-field>
+      <mat-label>Id</mat-label>
+      <input matInput #id="ngModel" name="id" [(ngModel)]="course.id" required>
+    </mat-form-field>
+    <mat-error *ngIf="id.invalid && !id.pristine">Id is required</mat-error>
+    <br>
+    <mat-form-field>
+      <mat-label>Full name</mat-label>
+      <input matInput #name="ngModel" name="name" [(ngModel)]="course.fullName">
+    </mat-form-field>
+    <br>
+    <mat-form-field>
+      <mat-label>Status</mat-label>
+      <mat-select #status="ngModel" name="status" [(ngModel)]="course.enabled">
+        <mat-option [value]="true">true</mat-option>
+        <mat-option [value]="false">false</mat-option>
+      </mat-select>
+    </mat-form-field>
+    <br>
+    <mat-form-field>
+      <mat-label>Min size teams</mat-label>
+      <input matInput #min="ngModel" name="min" [(ngModel)]="course.minSizeTeam" type="number">
+    </mat-form-field>
+    <br>
+    <mat-form-field>
+      <mat-label>Max size teams</mat-label>
+      <input matInput #max="ngModel" name="max" [(ngModel)]="course.maxSizeTeam">
+    </mat-form-field>
+    <br>
+    <mat-form-field>
+      <mat-label>Vm Model</mat-label>
+      <input matInput #vmp="ngModel" name="vmp" [(ngModel)]="course.vmModelPath">
+    </mat-form-field>
+    <div class="custom-file">
+      <input type="file" class="custom-file-input" id="importFile" (change)="onFileChanged($event)">
+      <label class="custom-file-label" for="importFile">Choose Vm Model file</label>
+    </div>
+  </div>
+  <br>
+  <div mat-dialog-actions>
+    <button mat-raised-button color="primary" mat-button cdkFocusInitial>Save</button>
+    <button type="button" mat-button (click)="onCancelClick()">Cancel</button>
+  </div>
+</form>

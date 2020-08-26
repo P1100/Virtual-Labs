@@ -5,16 +5,11 @@ import {MatDialog} from '@angular/material/dialog';
 import {AuthService} from '../services/auth.service';
 import {ActivatedRoute, NavigationEnd, Router} from '@angular/router';
 import {of, Subscription} from 'rxjs';
-import {TestDialogComponent} from '../dialogs/test-dialog/test-dialog.component';
 import {LoginComponent} from '../dialogs/login/login.component';
 import {CourseService} from '../services/course.service';
 import {filter, map, mergeMap} from 'rxjs/operators';
-
-// TODO: remove it later, it was test code
-export interface DialogData {
-  animal: string;
-  name: string;
-}
+import {CourseEditComponent} from '../dialogs/course-edit/course-edit.component';
+import {DeletetestComponent} from '../dialogs/deletetest/deletetest.component';
 
 @Component({
   selector: 'app-home',
@@ -24,15 +19,13 @@ export interface DialogData {
 export class HomeComponent implements OnInit, OnDestroy {
   title = 'VirtualLabs';
   courses: Course[] = null;
+  nameActiveCourse: string;
+  idActiveCourse: string;
   isLogged = false;
   loggedUser = '';
   subscription: Subscription;
   subscriptionRoute: Subscription;
   dialogRef = undefined;
-
-  animal: string;
-  name: string;
-  nameActiveCourse: any;
 
   panelOpenState = [];
 
@@ -45,7 +38,8 @@ export class HomeComponent implements OnInit, OnDestroy {
               public dialog: MatDialog,
               private auth: AuthService,
               private router: Router,
-              private route: ActivatedRoute) {
+              private route: ActivatedRoute,
+  ) {
     titleService.setTitle(this.title);
     courseService.getCourses().subscribe(x => this.courses = x);
 
@@ -68,11 +62,18 @@ export class HomeComponent implements OnInit, OnDestroy {
         if (paramMap == null || this.courses == null) {
           this.nameActiveCourse = '';
         } else {
-          const idActiveCourse = paramMap.get('id');
+          const oldId = this.idActiveCourse;
+          this.idActiveCourse = paramMap.get('id');
           for (const course of this.courses) {
             // tslint:disable-next-line:triple-equals
-            if (course.id == idActiveCourse) { // dont use === here
+            if (course.id == this.idActiveCourse) { // dont use === here
               this.nameActiveCourse = course.fullName;
+            }
+          }
+          if (oldId != this.idActiveCourse) { // close all panels
+            console.log('inside');
+            for (let i = 0; i < this.panelOpenState.length; i++) {
+              this.panelOpenState[i] = false;
             }
           }
         }
@@ -95,25 +96,31 @@ export class HomeComponent implements OnInit, OnDestroy {
       }
     });
   }
-  openLoginDialogTemplate(): void {
-    const dialogRef = this.dialog.open(TestDialogComponent, {
-      maxWidth: '600px', hasBackdrop: true,
-      data: {name: this.name, animal: this.animal}
+  openEditCourseDialog(): void {
+    console.log('Dialog CourseEdit');
+    const dialogRef = this.dialog.open(CourseEditComponent, {
+      maxWidth: '900px', autoFocus: true, hasBackdrop: false, disableClose: false, closeOnNavigation: true,
+      data: {courseName: this.nameActiveCourse, id: this.idActiveCourse}
     });
-    dialogRef.afterClosed().subscribe(() => {
+    dialogRef.afterClosed().subscribe(result => {
+      console.log('@@@@@@@@@@@@@@', result);
+      this.dialogRef = undefined;
+      if (result === 'refresh') {
+        this.router.navigateByUrl('/'); // refreshing data
+      }
     });
   }
-  ngOnDestroy(): void {
-    this.subscription.unsubscribe();
-    this.subscriptionRoute.unsubscribe();
+  openTestDialog(): void {
+    const dialogRef = this.dialog.open(DeletetestComponent, {
+      maxWidth: '900px', autoFocus: true, hasBackdrop: false, disableClose: false, closeOnNavigation: true
+    });
   }
   openLoginDialogReactive(): void {
     if (this.dialogRef) { // if dialog exists
       return;
     }
     this.dialogRef = this.dialog.open(LoginComponent, {
-      maxWidth: '600px',
-      autoFocus: true,
+      maxWidth: '600px', autoFocus: true,
       disableClose: false, // Esc key will close it
       hasBackdrop: false, // clicking outside wont close it
     });
@@ -136,6 +143,8 @@ export class HomeComponent implements OnInit, OnDestroy {
       this.openLoginDialogReactive();
     }
   }
-  editCourse() {
+  ngOnDestroy(): void {
+    this.subscription.unsubscribe();
+    this.subscriptionRoute.unsubscribe();
   }
 }
