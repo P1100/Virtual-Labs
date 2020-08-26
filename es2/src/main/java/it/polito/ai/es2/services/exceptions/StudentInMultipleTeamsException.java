@@ -2,7 +2,7 @@ package it.polito.ai.es2.services.exceptions;
 
 //@NoArgsConstructor
 //@AllArgsConstructor
-public class StudentInMultipleTeamsException extends NullParameterException {
+public class StudentInMultipleTeamsException extends RuntimeException {
   public StudentInMultipleTeamsException() {
   }
   

@@ -1,6 +1,6 @@
 package it.polito.ai.es2.services.exceptions;
 
-public class StudentDuplicatesInProposalException extends NullParameterException {
+public class StudentDuplicatesInProposalException extends RuntimeException {
   public StudentDuplicatesInProposalException() {
   }
   

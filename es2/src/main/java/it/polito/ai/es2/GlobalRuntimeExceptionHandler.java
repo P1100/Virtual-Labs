@@ -60,6 +60,14 @@ public class GlobalRuntimeExceptionHandler
     return handleExceptionInternal(ex, bodyOfResponse, new HttpHeaders(), HttpStatus.BAD_REQUEST, request); // 400
   }
   
+  @ExceptionHandler(value = {VlException.class})
+  protected ResponseEntity<Object> genericApiError(
+      RuntimeException ex, WebRequest request) {
+    String bodyOfResponse = ex.getMessage();
+    log.warning(ex.toString() + " \n " + request.toString());
+    return handleExceptionInternal(ex, bodyOfResponse, new HttpHeaders(), HttpStatus.BAD_REQUEST, request); // 400
+  }
+  
   @ExceptionHandler(value = {CourseNotFoundException.class, StudentNotFoundException.class})
   protected ResponseEntity<Object> notFound(
       RuntimeException ex, WebRequest request) {

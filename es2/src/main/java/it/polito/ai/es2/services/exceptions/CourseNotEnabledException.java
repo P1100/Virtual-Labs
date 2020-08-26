@@ -1,6 +1,6 @@
 package it.polito.ai.es2.services.exceptions;
 
-public class CourseNotEnabledException extends NullParameterException {
+public class CourseNotEnabledException extends RuntimeException {
   public CourseNotEnabledException() {
   }
   

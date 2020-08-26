@@ -1,6 +1,6 @@
 package it.polito.ai.es2.services.exceptions;
 
-public class StudentNotEnrolledException extends NullParameterException {
+public class StudentNotEnrolledException extends RuntimeException {
   public StudentNotEnrolledException() {
   }
   
