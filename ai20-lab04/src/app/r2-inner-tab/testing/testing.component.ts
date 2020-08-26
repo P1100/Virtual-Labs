@@ -56,6 +56,7 @@ export class TestingComponent {
   public onFileChanged(event) {
     this.selectedFile = event.target.files[0];
     console.log(this.selectedFile);
+    // To update bootstrap input text, missing JQuery
     this.labelFileName.nativeElement.innerText = this.selectedFile.name;
   }
   // Gets called when the user clicks on submit to upload the image

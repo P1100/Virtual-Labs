@@ -28,7 +28,6 @@
                         (optionSelected)="autocompleteSaveOption($event)"
                         [displayWith]="autocompleteDisplayFunction">
         <mat-option *ngFor="let option of filteredOptions$ | async" [value]="option">
-          <img class="avatars" aria-hidden="true" [src]="flag" height="25" alt="photo">
           {{option.lastName}} {{option.firstName}} ({{option.id}})
         </mat-option>
       </mat-autocomplete>

@@ -1,4 +1,4 @@
-<h1 mat-dialog-title>Login {{data.name}}</h1>
+<h1 mat-dialog-title>Login </h1>
 <div mat-dialog-content>
 
   <mat-card>
@@ -34,15 +34,10 @@ form value:  {{ f.value | json }}
 </pre>
   </mat-card>
 
-  <mat-form-field>
-    <mat-label>Favorite Animal</mat-label>
-    <input matInput [(ngModel)]="data.animal">
-  </mat-form-field>
 </div>
 
 <div mat-dialog-actions>
   <button mat-button (click)="onNoClick()">No Thanks</button>
-  <button mat-button [mat-dialog-close]="data.animal" cdkFocusInitial>Ok</button>
 </div>
 
 <!--<button mat-button tabindex="-1">Not Tabbable</button>-->

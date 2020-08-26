@@ -3,7 +3,6 @@ package it.polito.ai.es2;
 import it.polito.ai.es2.dtos.CourseDTO;
 import it.polito.ai.es2.dtos.StudentDTO;
 import it.polito.ai.es2.services.interfaces.CourseService;
-import it.polito.ai.es2.services.interfaces.ProjectVLService;
 import it.polito.ai.es2.services.interfaces.StudentService;
 import it.polito.ai.es2.services.interfaces.TeamService;
 import lombok.extern.java.Log;
@@ -38,8 +37,6 @@ public class VirtualLabsApplication {
   private StudentService studentService;
   @Autowired
   private TeamService teamService;
-  @Autowired
-  private ProjectVLService projectVLService;
   
   @Bean
   ModelMapper modelMapper() {
@@ -55,7 +52,6 @@ public class VirtualLabsApplication {
 //        init = courseService.getAllCourses().stream().count() <= 0;
         if (init == true) {
           System.out.println("***************** Command Line Runner DB INITIALIZATION (check order of fields!) **********************");
-          projectVLService.testing();
           courseService.addCourse(new CourseDTO("c1", "Internet Applications", 1, 500, true, null));
           courseService.addCourse(new CourseDTO("c2", "Mobile Development", 1, 500, true, null));
           courseService.addCourse(new CourseDTO("c3", "System and device programming", 1, 500, true, null));

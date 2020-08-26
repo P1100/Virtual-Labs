@@ -8,6 +8,7 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 
+// TODO: delete later, use DTO
 @Data
 public class StudentViewModel {
   @CsvBindByName

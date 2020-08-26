@@ -65,18 +65,6 @@
     Richiesta composizione gruppo
   </button>
 </div>
-<div class="avatar">
-  <div class="rounded-box">
-    <div class="outer">
-      <div class="inner">
-        <input class="inputfile" type="file" name="pic" accept="image/*">
-        <label>
-          <mat-icon class="camera">camera_alt</mat-icon>
-        </label>
-      </div>
-    </div>
-  </div>
-</div>
 
 
 <div class="container row">
@@ -92,7 +80,6 @@
     <input type="button" (click)="onImageUpload()" value="upload">
   </div>
 </div>
-<hr/>
 
 <div class="container row">
   <div class="col-md-12">
@@ -116,7 +103,7 @@
 <div class="container row">
   <div class="col-md-12">
     <div *ngIf=retrievedImage>
-      <img [src]="retrievedImage">
+      <img [src]="retrievedImage" width="100px" height="80px">
     </div>
   </div>
 </div>
@@ -125,17 +112,40 @@
 <br>
 <br>
 
-<h3>Propose Team</h3>
-<form method="post" action="http://localhost:8080/API/teams/propose">
-  <div class="form-group mt-3">
-    <label>Id</label>
-    <input type="text">
-    <br>
-    <label>Name</label>
-    <input type="text" placeholder="Team_testing_email">
-    <br>
-    <label>CourseId</label>
-    <input type="text" placeholder="Course_testing_email">
+<!--<h3>Propose Team</h3>-->
+<!--<form method="post" action="http://localhost:8080/API/teams/propose">-->
+<!--  <div class="form-group mt-3">-->
+<!--    <label>Id</label>-->
+<!--    <input type="text">-->
+<!--    <br>-->
+<!--    <label>Name</label>-->
+<!--    <input type="text" placeholder="Team_testing_email">-->
+<!--    <br>-->
+<!--    <label>CourseId</label>-->
+<!--    <input type="text" placeholder="Course_testing_email">-->
+<!--  </div>-->
+<!--  <input type="submit">-->
+<!--</form>-->
+
+
+<form #heroForm="ngForm">
+  <div class="form-group">
+    <label for="name">Name</label>
+    <input type="text" class="form-control" id="name22" ngModel
+           required
+           name="name"
+           #name2="ngModel">
+    <div [hidden]="name2.valid || name2.pristine"
+         class="alert alert-danger">
+      Name is required
+    </div>
   </div>
-  <input type="submit">
+
+  <div class="form-group">
+    <label for="alterEgo">Alter Ego</label>
+    <input type="text" class="form-control" id="alterEgo"
+           name="alterEgo">
+  </div>
+
+
 </form>

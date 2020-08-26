@@ -69,6 +69,7 @@ public class APITeams_RestController {
     return teamService.evictTeam(teamId);
   }
   
+  // TODO: fix up this, delete teamviewmodel
   @PostMapping("/propose")
   public String propose_team(@ModelAttribute("command") TeamViewModel teamViewModel,
                              BindingResult bindingResult, Model model) {

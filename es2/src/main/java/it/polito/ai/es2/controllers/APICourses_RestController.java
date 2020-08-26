@@ -80,7 +80,6 @@ public class APICourses_RestController {
   public void disableCourse(@PathVariable String courseId) {
     courseService.disableCourse(courseId);
   }
-
   
   @GetMapping("/{courseId}/enrolled")
   public CollectionModel<StudentDTO> getEnrolledStudents(@PathVariable String courseId) {
@@ -121,18 +120,17 @@ public class APICourses_RestController {
   @RequestMapping(value = "/{courseId}/enroll-csv", method = {RequestMethod.PUT, RequestMethod.POST})
   public List<Boolean> enrollStudentsCSV(@PathVariable String courseId, @RequestParam("file") MultipartFile file) {
     List<Boolean> booleanList = null;
+    if (file == null || file.isEmpty())
+      throw new ResponseStatusException(HttpStatus.CONFLICT, "null or empty file");
     if (!(file.getContentType().equals("text/csv") || file.getContentType().equals("application/vnd.ms-excel")))
       throw new ResponseStatusException(HttpStatus.UNSUPPORTED_MEDIA_TYPE, courseId + " - File Type:" + file.getContentType());
-    if (file.isEmpty()) {
-      throw new ResponseStatusException(HttpStatus.CONFLICT, "Empty file");
-    } else {
-      Reader reader;
-      try {
-        reader = new BufferedReader(new InputStreamReader(file.getInputStream()));
-        booleanList = courseService.enrollStudentsCSV(reader, courseId);
-      } catch (IOException e) {
-        e.printStackTrace();
-      }
+    Reader reader;
+    try {
+      reader = new BufferedReader(new InputStreamReader(file.getInputStream()));
+      booleanList = courseService.enrollStudentsCSV(reader, courseId);
+    } catch (IOException e) {
+      e.printStackTrace();
+      throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "file IOException");
     }
     return booleanList;
   }

@@ -29,9 +29,7 @@ import java.util.UUID;
  * TODO: add formatted email body
  */
 @Service
-//@Transactional
 public class NotificationServiceImpl implements NotificationService {
-  private final boolean forceOutputEmail_testing = true;
   @Autowired
   public JavaMailSender emailSender;
   @Autowired
@@ -46,8 +44,6 @@ public class NotificationServiceImpl implements NotificationService {
   String port;
   @Autowired
   Environment environment;
-//  @Value("mail.dontSendPrintToConsole")
-//  private boolean isForceOutputEmail_testing;
   
   @Override
   public void sendMessage(String emailAddress, String subject, String body) {
@@ -103,6 +99,7 @@ public class NotificationServiceImpl implements NotificationService {
    * Non c'è bisogno di controlli, poichè viene chiamato direttamente da propose team (che fa lui tutti i controlli)
    */
   @Override
+  @Transactional
   public void notifyTeam(TeamDTO teamDTO, List<Long> memberIds) {
     for (Long memberId : memberIds) {
       Token token = new Token();
@@ -123,15 +120,10 @@ public class NotificationServiceImpl implements NotificationService {
       sb.append("\n\nLink to accept token:\n" + url + "/notification/confirm/" + token.getId());
       sb.append("\n\nLink to remove token:\n" + url + "/notification/reject/" + token.getId());
       System.out.println(sb);
+      String mymatricola = environment.getProperty("mymatricola");
       // TODO: uncommentare in fase di prod (attenzione!)
-      if (forceOutputEmail_testing == false) {
-        System.out.println("[regular email] s" + memberId + "@studenti.polito.it - Conferma iscrizione al team " + teamDTO.getId());
-//        sendMessage("s" + memberId + "@studenti.polito.it", "Conferma iscrizione al team " + teamDTO.getId(), sb.toString());
-      } else {
-        String mymatricola = environment.getProperty("mymatricola");
-        System.out.println("[Forced self s" + mymatricola + "@studenti.polito.it] s" + memberId + "@studenti.polito.it - Conferma iscrizione al team " + teamDTO.getId());
-//        sendMessage("s" + mymatricola + "@studenti.polito.it", "[TESTING FORCE SELF EMAIL - Student:" + memberId + "] Conferma iscrizione al team " + teamDTO.getId(), sb.toString());
-      }
+      System.out.println("[Forced self] s" + mymatricola + "@studenti.polito.it] s" + memberId + "@studenti.polito.it - Conferma iscrizione al team " + teamDTO.getId());
+//        sendMessage("s" + mymatricola + "@studenti.polito.it", "[Student:" + memberId + "] Conferma iscrizione al team " + teamDTO.getId(), sb.toString());
     }
   }
   

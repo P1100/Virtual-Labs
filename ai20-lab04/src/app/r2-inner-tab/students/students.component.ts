@@ -57,9 +57,6 @@ export class StudentsComponent implements AfterViewInit, OnChanges {
   flag = 'https://upload.wikimedia.org/wikipedia/commons/9/9d/Flag_of_Arkansas.svg';
 
   ngOnChanges(changes: SimpleChanges): void {
-    for (const index in changes) {
-      console.log(index);
-    }
     if (changes['enrolled'] != null || changes['students'] != null) {
       if (changes['enrolled'] != null) {
         this.sortData();

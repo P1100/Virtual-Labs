@@ -2,7 +2,6 @@ import {MatToolbarModule} from '@angular/material/toolbar';
 import {MatFormFieldModule} from '@angular/material/form-field';
 import {HomeComponent} from './r0-topheader-leftsidebar/home.component';
 import {MatPaginatorModule} from '@angular/material/paginator';
-import {ProfileComponent} from './dialogs/profile/profile.component';
 import {AuthInterceptor} from './auth/auth.interceptor';
 import {LoginComponent} from './dialogs/login/login.component';
 import {NgModule} from '@angular/core';
@@ -11,6 +10,7 @@ import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {MatExpansionModule} from '@angular/material/expansion';
 import {MatMenuModule} from '@angular/material/menu';
 import {AppRoutingModule} from './app-routing.module';
+import {MatGridListModule} from '@angular/material/grid-list';
 import {MatSortModule} from '@angular/material/sort';
 import {MatTableModule} from '@angular/material/table';
 import {MatAutocompleteModule} from '@angular/material/autocomplete';
@@ -22,6 +22,7 @@ import {MatTooltipModule} from '@angular/material/tooltip';
 import {PageNotFoundComponent} from './r0-topheader-leftsidebar/page-not-found.component';
 import {MatButtonModule} from '@angular/material/button';
 import {TeamsComponent} from './r2-inner-tab/teams/teams.component';
+import {LayoutModule} from '@angular/cdk/layout';
 import {VmsContComponent} from './r2-inner-tab/vms/vms-cont.component';
 import {HTTP_INTERCEPTORS, HttpClientModule} from '@angular/common/http';
 import {MatSelectModule} from '@angular/material/select';
@@ -31,17 +32,19 @@ import {MatListModule} from '@angular/material/list';
 import {MatSidenavModule} from '@angular/material/sidenav';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {AssignmentsContComponent} from './r2-inner-tab/assignments/assignments-cont.component';
-import {EditRemoveCourseComponent} from './dialogs/edit-remove-course/edit-remove-course.component';
 import {BrowserModule} from '@angular/platform-browser';
 import {AreYouSureComponent} from './dialogs/are-you-sure/are-you-sure.component';
 import {TestingComponent} from './r2-inner-tab/testing/testing.component';
 import {EmptyComponent} from './r1-content/empty.component';
+import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
 import {StudentsContComponent} from './r2-inner-tab/students/students-cont.component';
 import {AppComponent} from './app.component';
 import {MAT_DIALOG_DEFAULT_OPTIONS, MatDialogModule} from '@angular/material/dialog';
 import {RegisterComponent} from './dialogs/register/register.component';
 import {TabsNavComponent} from './r1-content/tabs-nav.component';
-import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
+import {CourseEditComponent} from './dialogs/course-edit/course-edit.component';
+import {MatRadioModule} from '@angular/material/radio';
+import {DeletetestComponent} from './dialogs/deletetest/deletetest.component';
 
 @NgModule({
   imports: [
@@ -73,13 +76,9 @@ import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
     MatSelectModule,
     MatExpansionModule,
     NgbModule,
-    /* Unused */
-    // LayoutModule,
-    // DragDropModule,
-    // MatGridListModule,
-    /* -- Dont import below, unless for test */
-    // RouterTestingModule,
-    // HttpClientTestingModule
+    MatGridListModule,
+    LayoutModule,
+    MatRadioModule,
   ],
   declarations: [
     AppComponent,
@@ -96,11 +95,11 @@ import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
     EmptyComponent,
     TestDialogComponent,
     LoginComponent,
-    ProfileComponent,
     RegisterComponent,
-    EditRemoveCourseComponent,
     AreYouSureComponent,
-    TestingComponent
+    TestingComponent,
+    CourseEditComponent,
+    DeletetestComponent,
   ],
   entryComponents: [
     HomeComponent, TestDialogComponent, LoginComponent

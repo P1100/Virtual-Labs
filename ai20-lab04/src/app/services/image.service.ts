@@ -16,7 +16,7 @@ export class ImageService {
 
   uploadImage(uploadImageData: FormData): Observable<HttpResponse<any>> {
     // Make a call to the Spring Boot Application to save the image
-    return this.http.post<FormData>(`${this.baseUrlAPI}/upload`, uploadImageData, {observe: 'response'})
+    return this.http.post<FormData>(`${this.baseUrlAPI}/`, uploadImageData, {observe: 'response'})
       .pipe(
         catchError(formatErrors),
         tap(res => console.log('--uploadImage:', res))

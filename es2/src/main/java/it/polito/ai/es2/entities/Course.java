@@ -37,22 +37,22 @@ public class Course {
   private String vmModelPath;
   
   @ManyToMany(mappedBy = "courses", cascade = {CascadeType.MERGE, CascadeType.PERSIST})
-  private List<Professor> professors = new ArrayList<>();
-  
-  @OneToMany(mappedBy = "course", cascade = CascadeType.ALL)
-  private List<Assignment> assignments = new ArrayList<>();
+  private List<Student> students = new ArrayList<>();
   
   @ManyToMany(mappedBy = "courses", cascade = {CascadeType.MERGE, CascadeType.PERSIST})
-  private List<Student> students = new ArrayList<>();
+  private List<Professor> professors = new ArrayList<>();
   
   @OneToMany(mappedBy = "course", cascade = CascadeType.ALL)
   private List<Team> teams = new ArrayList<>(); // -> vms
   
+  @OneToMany(mappedBy = "course", cascade = CascadeType.ALL)
+  private List<Assignment> assignments = new ArrayList<>();
+  
   public void addStudent(Student new_student) {
     students.add(new_student);
     new_student.getCourses().add(this);
+    
   }
-  
   public void removeStudent(Student old_student) {
     students.remove(old_student);
     old_student.getCourses().remove(this);
