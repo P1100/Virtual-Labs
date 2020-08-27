@@ -10,6 +10,7 @@ import {CourseService} from '../services/course.service';
 import {filter, map, mergeMap} from 'rxjs/operators';
 import {CourseEditComponent} from '../dialogs/course-edit/course-edit.component';
 import {DeletetestComponent} from '../dialogs/deletetest/deletetest.component';
+import {Alert, AlertsService} from '../services/alerts.service';
 
 @Component({
   selector: 'app-home',
@@ -19,40 +20,41 @@ import {DeletetestComponent} from '../dialogs/deletetest/deletetest.component';
 export class HomeComponent implements OnInit, OnDestroy {
   title = 'VirtualLabs';
   courses: Course[] = null;
-  nameActiveCourse: string;
-  idActiveCourse: string;
-  isLogged = false;
-  loggedUser = '';
-  subscription: Subscription;
-  subscriptionRoute: Subscription;
+  nameActiveCourse: string; // used for toolbar, dialog
+  idActiveCourse: string; // dialog
   dialogRef = undefined;
-
   panelOpenState = [];
+  authSubscription: Subscription;
+  loggedUser = '';
+  isLogged = false;
+  routeSubscription: Subscription;
+  alertsSubscription: Subscription;
+  alertMessage: Alert; // ngb-alert
 
   dontExpandPanelOnNameClick(i: number) {
     this.panelOpenState[i] = !this.panelOpenState[i];
     this.cdref.detectChanges(); // Needed to avoid ExpressionChangedAfterItHasBeenCheckedError
   }
-
   constructor(private titleService: Title,
               private courseService: CourseService,
               public dialog: MatDialog,
-              private auth: AuthService,
+              private authService: AuthService,
               private router: Router,
               private route: ActivatedRoute,
+              private alertsService: AlertsService,
               private cdref: ChangeDetectorRef
   ) {
     titleService.setTitle(this.title);
     courseService.getCourses().subscribe(x => this.courses = x);
 
-    // At every routing change, update nameActiveCourse (top toolbar)
+    // At every routing change, update nameActiveCourse (top toolbar) and idActiveCourse, plus some resets/refresh/checks
     this.router.events
       .pipe(
         filter((event) => event instanceof NavigationEnd),
         map(() => this.route),
         map((rout) => {
-          // Moving to params child route (StudentsContComponent) --> without "paramsInheritanceStrategy: 'always'"
-          // return rout?.firstChild?.firstChild?.firstChild?.firstChild;
+          // Moving to params child route (StudentsContComponent)
+          // return rout?.firstChild?.firstChild?.firstChild?.firstChild; // --> without "paramsInheritanceStrategy: 'always'"
           let lastchild: ActivatedRoute = rout;
           while (lastchild.firstChild != null) {
             lastchild = lastchild.firstChild;
@@ -64,7 +66,7 @@ export class HomeComponent implements OnInit, OnDestroy {
         if (paramMap == null || this.courses == null) {
           this.nameActiveCourse = '';
         } else {
-          const oldId = this.idActiveCourse;
+          const oldCourseId = this.idActiveCourse;
           this.idActiveCourse = paramMap.get('id');
           for (const course of this.courses) {
             // tslint:disable-next-line:triple-equals
@@ -72,11 +74,13 @@ export class HomeComponent implements OnInit, OnDestroy {
               this.nameActiveCourse = course.fullName;
             }
           }
+          if (oldCourseId != this.idActiveCourse && this.idActiveCourse != null) {
+            this.alertsService.setAlert(null);
+          }
         }
       }
     );
-
-    this.subscription = this.auth.getSubscriptionSubject().subscribe(x => {
+    this.authSubscription = this.authService.getIsLoggedSubject().subscribe(x => {
       this.isLogged = x;
       if (x === true) {
         this.loggedUser = localStorage.getItem('user');
@@ -84,9 +88,10 @@ export class HomeComponent implements OnInit, OnDestroy {
         localStorage.removeItem('user');
       }
     });
+    this.alertsSubscription = this.alertsService.getAlertSubject().subscribe(x => this.alertMessage = x);
   }
   ngOnInit(): void {
-    this.subscriptionRoute = this.route.queryParams.subscribe(params => {
+    this.routeSubscription = this.route.queryParams.subscribe(params => {
       if (params.doLogin === 'true') {
         this.openLoginDialogReactive();
       }
@@ -95,17 +100,20 @@ export class HomeComponent implements OnInit, OnDestroy {
   openEditCourseDialog(): void {
     const dialogRef = this.dialog.open(CourseEditComponent, {
       maxWidth: '900px', autoFocus: true, hasBackdrop: false, disableClose: false, closeOnNavigation: true,
-      data: {courseName: this.nameActiveCourse, id: this.idActiveCourse}
+      data: {courseName: this.nameActiveCourse, courseId: this.idActiveCourse}
     });
-    dialogRef.afterClosed().subscribe(result => {
-      console.log(result);
-      this.dialogRef = null;
-      if (result === 'refresh') {
-        this.router.navigateByUrl('/'); // refreshing data
-      }
-    });
+    dialogRef.afterClosed().subscribe((res: string) => {
+        this.dialogRef = null;
+        if (res == 'success') {
+          this.alertsService.setAlert({type: 'success', message: 'Course update successful!'});
+          this.router.navigateByUrl('/'); // refreshing data
+        } else if (res != undefined) {
+          this.alertsService.setAlert({type: 'danger', message: 'Couldn\'t update course! ' + res});
+        }
+      }, error => this.alertsService.setAlert({type: 'danger', message: 'Dialog Error!'})
+    );
   }
-  // TODO: remove later
+  // TODO: remove later, test temp reference
   openTestDialog(): void {
     const dialogRef = this.dialog.open(DeletetestComponent, {
       maxWidth: '900px', autoFocus: true, hasBackdrop: false, disableClose: false, closeOnNavigation: true
@@ -129,7 +137,7 @@ export class HomeComponent implements OnInit, OnDestroy {
   clickLoginLogout() {
     if (this.isLogged) {
       console.log('logout');
-      this.auth.logout();
+      this.authService.logout();
       this.router.navigateByUrl('/home');
     } else {
       console.log('login');
@@ -139,8 +147,11 @@ export class HomeComponent implements OnInit, OnDestroy {
       this.openLoginDialogReactive();
     }
   }
+  closeAlert() {
+    this.alertMessage = null;
+  }
   ngOnDestroy(): void {
-    this.subscription.unsubscribe();
-    this.subscriptionRoute.unsubscribe();
+    this.authSubscription.unsubscribe();
+    this.routeSubscription.unsubscribe();
   }
 }

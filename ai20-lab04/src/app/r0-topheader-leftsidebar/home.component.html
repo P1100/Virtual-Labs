@@ -25,6 +25,8 @@
 </mat-toolbar>
 
 <mat-toolbar>{{nameActiveCourse}}</mat-toolbar>
+<ngb-alert *ngIf="alertMessage" [type]="alertMessage?.type"
+           (close)="closeAlert()">{{ alertMessage?.message }}</ngb-alert>
 
 <mat-sidenav-container>
   <mat-sidenav #drawer mode="side" opened position="start">

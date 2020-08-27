@@ -5,6 +5,7 @@ import {StudentService} from '../../services/student.service';
 import {from, Observable, Subscription} from 'rxjs';
 import {Student} from '../../models/student.model';
 import {getSafeDeepCopyArray} from '../../app-settings';
+import {AlertsService} from '../../services/alerts.service';
 
 /* API:
 * - Data taken from backend service: one new request each time active route changes.
@@ -33,18 +34,20 @@ export class StudentsContComponent implements OnDestroy {
   subRouteParam: Subscription = null;
 
   // Routing change update (e.g. when changing course)
-  constructor(private backendService: StudentService, private activatedRoute: ActivatedRoute) {
+  constructor(private backendService: StudentService, private activatedRoute: ActivatedRoute, private alertsService: AlertsService) {
     this.subRouteParam = this.activatedRoute.paramMap.subscribe(() => {
-      this.courseId = this.activatedRoute.parent.snapshot.paramMap.get('id');
-      console.log('activeCourse: ' + this.courseId);
-      this.subEnrolledStudentsCourse = this.backendService.getEnrolledStudents(this.courseId)
-        .subscribe((students: Student[]) => {
-          this.enrolledStudents = Array.isArray(students) ? [...students] : [];
-        });
-      this.subAllStudents = this.backendService.getAllStudents()
-        .subscribe((students: Student[]) => {
-          this.allStudents = Array.isArray(students) ? [...students] : [];
-          });
+        this.courseId = this.activatedRoute.parent.snapshot.paramMap.get('id');
+        console.log('activeCourse: ' + this.courseId);
+        this.subEnrolledStudentsCourse = this.backendService.getEnrolledStudents(this.courseId)
+          .subscribe((students: Student[]) => {
+              this.enrolledStudents = Array.isArray(students) ? [...students] : [];
+            }, error => this.alertsService.setAlert({type: 'danger', message: 'Error: couldn\'t get enrolled students!'})
+          );
+        this.subAllStudents = this.backendService.getAllStudents()
+          .subscribe((students: Student[]) => {
+              this.allStudents = Array.isArray(students) ? [...students] : [];
+            }, error => this.alertsService.setAlert({type: 'danger', message: 'Error: couldn\'t get students list!'})
+          );
       }
     );
   }
@@ -86,7 +89,7 @@ export class StudentsContComponent implements OnDestroy {
         this.backendService.getEnrolledStudents(this.courseId).subscribe(
           (ss: Student[]) => {
             this.enrolledStudents = getSafeDeepCopyArray(ss);
-          }
+          }, error => this.alertsService.setAlert({type: 'danger', message: 'Error: couldn\'t change enroll status!'})
         );
       }
     );
