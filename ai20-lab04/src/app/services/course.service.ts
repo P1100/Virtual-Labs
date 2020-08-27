@@ -1,10 +1,9 @@
 import {Injectable} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
-import {environment} from '../../environments/environment';
 import {Observable} from 'rxjs';
 import {Course} from '../models/course.model';
 import {catchError, map, retry, tap} from 'rxjs/operators';
-import {AppSettings, formatErrors, removeHATEOAS} from '../app-settings';
+import {AppSettings, baseUrl, formatErrors, removeHATEOAS} from '../app-settings';
 import {Student} from '../models/student.model';
 import {HateoasModel} from '../models/hateoas.model';
 import {Team} from '../models/team.model';
@@ -13,7 +12,7 @@ import {Team} from '../models/team.model';
   providedIn: 'root'
 })
 export class CourseService {
-  private baseUrlAPI = environment.baseUrl + '/courses';
+  private baseUrlAPI = baseUrl + '/courses';
 
   constructor(private http: HttpClient) {
   }

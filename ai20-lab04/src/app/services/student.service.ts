@@ -3,15 +3,14 @@ import {Student} from '../models/student.model';
 import {Observable} from 'rxjs';
 import {HttpClient} from '@angular/common/http';
 import {catchError, map, retry, tap} from 'rxjs/operators';
-import {environment} from '../../environments/environment';
-import {AppSettings, formatErrors, removeHATEOAS} from '../app-settings';
+import {AppSettings, baseUrl, formatErrors, removeHATEOAS} from '../app-settings';
 import {HateoasModel} from '../models/hateoas.model';
 
 @Injectable({
   providedIn: 'root'
 })
 export class StudentService {
-  private baseUrlAPI = environment.baseUrl;
+  private baseUrlAPI = baseUrl;
 
   constructor(private http: HttpClient) {
   }

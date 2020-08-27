@@ -53,9 +53,6 @@ export class StudentsComponent implements AfterViewInit, OnChanges {
 
   selectedStudentToAdd: Student = null;
 
-  // TODO: temp for images, delete later
-  flag = 'https://upload.wikimedia.org/wikipedia/commons/9/9d/Flag_of_Arkansas.svg';
-
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['enrolled'] != null || changes['students'] != null) {
       if (changes['enrolled'] != null) {

@@ -11,7 +11,7 @@ import {DomSanitizer} from '@angular/platform-browser';
   selector: 'app-testing',
   templateUrl: './testing.component.html',
   styles: ['#testing_container {\n  margin: 30px;\n}', 'input {  margin: 5px;}', 'button {margin: 2px}'],
-  styleUrls: ['./testing.component.css']
+  // styles: ['./testing.component.css']
 })
 export class TestingComponent {
   getCourses: FormGroup;

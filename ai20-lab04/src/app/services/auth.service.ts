@@ -4,7 +4,7 @@ import {HttpClient} from '@angular/common/http';
 import {tap} from 'rxjs/operators';
 import * as moment from 'moment';
 import {User} from '../models/user.model';
-import {BehaviorSubject, Observable, Subject} from 'rxjs';
+import {BehaviorSubject, Observable} from 'rxjs';
 
 export const ANONYMOUS_USER: User = {
   id: undefined, email: undefined, roles: []
@@ -26,6 +26,10 @@ export class AuthService {
       this.isLoggedSubject = new BehaviorSubject(false);
     }
   }
+  public getIsLoggedSubject(): Observable<any> {
+    return this.isLoggedSubject as Observable<any>;
+  }
+  // TODO: static????
   private static setSession(authResult, email) {
     const tkn = JSON.parse(atob(authResult.accessToken.split('.')[1]));
     // const expiresAt = moment().add(authResult.expiresIn, 'second');
@@ -37,10 +41,6 @@ export class AuthService {
     localStorage.setItem('expires_at', tkn.exp);
   }
 
-  /* shareReplay --> needs Subject
-     We are calling shareReplay to prevent the receiver of this Observable
-    from accidentally triggering multiple POST requests due to multiple subscriptions.
-  */
   login(email: string, password: string): Observable<any> {  // returns object with accessToken
     return this.http.post<User>('/api/login', {email, password}).pipe(
       // tap(user => this.isLoggedSubject.next(user)));
@@ -48,7 +48,6 @@ export class AuthService {
       // delay(2000), // testing correctness code
       // tap(res => console.log('AuthService.login() post before delay:')),
       tap(res => AuthService.setSession(res, email)),
-      // shareReplay(),
       tap(() => this.isLoggedSubject.next(true))
     );
   }
@@ -59,9 +58,6 @@ export class AuthService {
     localStorage.removeItem('user');
     localStorage.removeItem('expires_at');
     console.log('AuthService.logout: accessToken removed');
-  }
-  public getSubscriptionSubject(): Subject<any> {
-    return this.isLoggedSubject;
   }
 
   public isLoggedIn(): boolean {

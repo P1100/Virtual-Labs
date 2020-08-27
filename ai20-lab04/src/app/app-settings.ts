@@ -1,7 +1,10 @@
 import {HttpHeaders} from '@angular/common/http';
 import {HateoasModel} from './models/hateoas.model';
 import {throwError} from 'rxjs';
+import {AlertsService} from './services/alerts.service';
+import {environment} from '../environments/environment';
 
+/* Shared settings, constants and functions */
 export class AppSettings {
   public static RETRIES = 0;
   public static JSON_HTTP_OPTIONS: object = {
@@ -13,6 +16,7 @@ export class AppSettings {
   };
 }
 
+export const baseUrl = 'http://localhost:8080/API';
 // Dynamic build of r1 tabs menu
 export const tabs = [
   {path: 'students', label: 'Students'},
@@ -61,15 +65,16 @@ export function removeHATEOAS(container: HateoasModel): any[] {
   return Array.isArray(innerList) ? innerList : [innerList];
 }
 
-// Uniform all data received from services, to arrays (from objects)
+// Uniform all data received from services, converting any (mostly objects) to arrays
 export function getSafeDeepCopyArray(ss: any): any[] {
   return Array.isArray(ss) ? [...ss] : (ss != null ? [ss] : []);
 }
-
+// TODO: test responseErrorString format
 export function formatErrors(error: any) {
-  const s = error?.name + ': ' + error?.status + ' '
-    + (error?.error?.error == null ? (typeof (error?.error) == 'string' ? error?.error : Object.keys(error?.error)) : error?.error?.error + ' - ' + error?.error?.message);
-  console.error(s.replace(/undefined -/gi, ''));
   console.error(error);
-  return throwError(error?.status);
+  let responseErrorString = (`${(error?.error?.error == null ? (typeof (error?.error) == 'string' ? error?.error : Object.keys(error?.error)) : error?.error?.error + ' - ' + error?.error?.message)}`);
+  if (environment.dev == true) {
+    responseErrorString = responseErrorString + ` [${AlertsService.getHttpResponseStatusDescription(error?.status)}]`;
+  }
+  return throwError(responseErrorString.replace(/undefined -/gi, ''));
 }
