@@ -1,5 +1,6 @@
 <h1 mat-dialog-title class="text-center mb-3">{{data?.courseName}}</h1>
-<form #cf="ngForm" (ngSubmit)="onSubmit()" class="text-center border border-light p-3">
+<form #cf="ngForm" (ngSubmit)="onSubmit()" class="text-center border border-light p-3"
+      [noValidate]="noValidateForTesting">
   <div mat-dialog-content>
     <mat-form-field class="form-group">
       <mat-label>Id</mat-label>
@@ -46,7 +47,9 @@
   </div>
   <br>
   <div mat-dialog-actions>
-    <button mat-raised-button color="primary" mat-button [disabled]="!cf.valid || cf.pristine">Save</button>
+    <button mat-raised-button color="primary" mat-button
+            [disabled]="(!cf.valid || cf.pristine) && !noValidateForTesting">Save
+    </button>
     <button type="button" mat-button (click)="onCancelClick()">Cancel</button>
   </div>
 </form>
