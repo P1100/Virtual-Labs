@@ -44,4 +44,9 @@ public class Professor {
   
   @OneToMany(mappedBy = "creator", cascade = {CascadeType.MERGE, CascadeType.PERSIST})
   private List<Assignment> assignments;
+  
+  @Override
+  public String toString() {
+    return "Professor{} " + this.id + this.getLastName();
+  }
 }

@@ -8,6 +8,7 @@ import it.polito.ai.es2.dtos.CourseDTO;
 import it.polito.ai.es2.dtos.StudentDTO;
 import it.polito.ai.es2.dtos.TeamDTO;
 import it.polito.ai.es2.entities.Course;
+import it.polito.ai.es2.entities.Professor;
 import it.polito.ai.es2.entities.Student;
 import it.polito.ai.es2.repositories.CourseRepository;
 import it.polito.ai.es2.repositories.StudentRepository;
@@ -105,10 +106,10 @@ public class CourseServiceImpl implements CourseService {
   @Override
   public boolean addCourse(CourseDTO courseDTO) {
     log.info("addCourse(" + courseDTO + ")");
+//    courseDTO.setId(courseDTO.getId().to);
     if (courseDTO == null || courseDTO.getId() == null) return false;
-    Course c = modelMapper.map(courseDTO, Course.class);
     if (!courseRepository.existsById(courseDTO.getId())) {
-      courseRepository.save(c);
+      courseRepository.save(modelMapper.map(courseDTO, Course.class));
       return true;
     }
     return false;
@@ -140,6 +141,23 @@ public class CourseServiceImpl implements CourseService {
   public boolean deleteCourse(String courseId) {
     log.info("deleteCourse(" + courseId + ")");
     if (courseId == null) return false;
+    Optional<Course> courseOptional = courseRepository.findById(courseId);
+    if (courseOptional.isEmpty()) return false;
+    Course c = courseOptional.get();
+    List<Student> ss = new ArrayList<>();
+    // removing synch course before delete
+    for (Student student : c.getStudents()) {
+      List<Course> courses = student.getCourses();
+      student.getCourses().remove(c);
+      courses = student.getCourses();
+      ss.add(student);
+    }
+    c.setStudents(new ArrayList<Student>());
+    for (Professor professor : c.getProfessors()) {
+      professor.getCourses().remove(c);
+    }
+    c.setProfessors(new ArrayList<Professor>());
+    // ----> Others sync handled by delete cascade!
     courseRepository.deleteById(courseId);
     return true;
   }

@@ -61,9 +61,4 @@ public class Team {
     members.add(new_student);
     new_student.getTeams().add(this);
   }
-  
-  public void removetudent(Student old_student) {
-    old_student.getTeams().remove(this);
-    this.members.remove(old_student);
-  }
 }

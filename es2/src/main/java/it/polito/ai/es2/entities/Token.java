@@ -13,7 +13,7 @@ import java.sql.Timestamp;
 @Entity
 public class Token {
   @Id
-  private String id;
+  private String id; // TODO: lowercase it
   // TODO: no need to link to team table? Review later
   private Long teamId;
   private Timestamp expiryDate;

@@ -91,6 +91,7 @@ public class APICourses_RestController {
         linkTo(methodOn(APICourses_RestController.class).getEnrolledStudents(courseId)).withSelfRel());
   }
   
+  // TODO: remove team if no more students in it?
   @PutMapping("/{courseId}/disenroll/{studentId}")
   public void disenrollStudent(@PathVariable Long studentId, @PathVariable String courseId) {
     courseService.disenrollStudent(studentId, courseId);

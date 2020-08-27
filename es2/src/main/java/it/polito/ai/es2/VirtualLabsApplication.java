@@ -49,7 +49,7 @@ public class VirtualLabsApplication {
       @Override
       public void run(String... args) {
         boolean init = false;
-//        init = courseService.getAllCourses().stream().count() <= 0;
+        init = courseService.getAllCourses().stream().count() <= 0;
         if (init == true) {
           System.out.println("***************** Command Line Runner DB INITIALIZATION (check order of fields!) **********************");
           courseService.addCourse(new CourseDTO("c1", "Internet Applications", 1, 500, true, null));
@@ -80,7 +80,7 @@ public class VirtualLabsApplication {
                   new StudentDTO(100L, "Last", "One", "s16@studenti.polito.it")
               )));
           courseService.enrollStudent(1L, "c1");
-          courseService.enrollStudent(1L, "c6");
+//          courseService.enrollStudent(1L, "c6");
           courseService.enrollStudent(1L, "c7");
           courseService.enrollStudents(Collections.singletonList(2L), "c5");
           courseService.enrollStudents(Arrays.asList(1L, 2L, 3L, 4L), "c1");

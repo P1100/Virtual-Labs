@@ -1,7 +1,7 @@
 package it.polito.ai.es2.entities;
 
-import lombok.Data;
-import lombok.ToString;
+import lombok.Getter;
+import lombok.Setter;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
@@ -9,7 +9,7 @@ import javax.validation.constraints.Positive;
 import javax.validation.constraints.PositiveOrZero;
 import java.util.ArrayList;
 import java.util.List;
-
+import java.util.Objects;
 
 /**
  * Corso
@@ -20,13 +20,13 @@ import java.util.List;
  * <p>
  * Id is the course acronym. If course disabled, you cant use the VM associated
  */
-@Data
-@ToString(exclude = {"teams", "students", "professors"})
+@Getter
+@Setter
 @Entity
 public class Course {
   @Id
   @NotBlank
-  private String id; // acronym
+  private String id; // acronym. Equals and Hashcode on lowercase value
   @NotBlank
   private String fullName;
   @PositiveOrZero
@@ -47,12 +47,12 @@ public class Course {
   
   @OneToMany(mappedBy = "course", cascade = CascadeType.ALL)
   private List<Assignment> assignments = new ArrayList<>();
-  
+
   public void addStudent(Student new_student) {
     students.add(new_student);
     new_student.getCourses().add(this);
-    
   }
+  
   public void removeStudent(Student old_student) {
     students.remove(old_student);
     old_student.getCourses().remove(this);
@@ -62,13 +62,21 @@ public class Course {
     new_team.setCourse(this);
   }
   
-  public void removeTeam(Team old_team) {
-    teams.remove(old_team);
-    old_team.setCourse(null);
+  @Override
+  public String toString() {
+    return "Course{} " + this.id;
   }
-
-//  public void addAssignment(Assignment a) {
-//    assignments.add(a);
-//    a.setCourse(this);
-//  }
+  
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) return true;
+    if (!(o instanceof Course)) return false;
+    Course course = (Course) o;
+    return id.equalsIgnoreCase(course.id);
+  }
+  
+  @Override
+  public int hashCode() {
+    return Objects.hash(id.toLowerCase());
+  }
 }

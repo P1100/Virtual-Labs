@@ -58,11 +58,6 @@ public class Student {
   @OneToMany(mappedBy = "student", cascade = CascadeType.ALL)
   private List<Implementation> implementations; // --> assignment
   
-  public void addCourse(Course new_course) {
-    courses.add(new_course);
-    new_course.getStudents().add(this);
-  }
-  
   public void removeCourse(Course old_course) {
     courses.remove(old_course);
     old_course.getStudents().remove(this);
@@ -73,8 +68,8 @@ public class Student {
     team.getMembers().add(this);
   }
   
-  public void removeTeam(Team team) {
-    team.getMembers().remove(this);
-    teams.remove(team);
+  @Override
+  public String toString() {
+    return "Student{} " + this.id + this.getLastName();
   }
 }

@@ -39,8 +39,8 @@ public class Assignment {
   @OneToMany(mappedBy = "assignment")
   private List<Implementation> implementations;
   
-  // Parameters needed at creation
-  void init(Course c, Professor p, Image i) {
+  // Parameters and initialization needed at entity creation
+  void initNewEntity(Course c, Professor p, Image i) {
     course = c;
     c.getAssignments().add(this);
     creator = p;
