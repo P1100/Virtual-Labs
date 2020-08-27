@@ -1,4 +1,4 @@
-import {Component, OnDestroy, OnInit} from '@angular/core';
+import {ChangeDetectorRef, Component, OnDestroy, OnInit} from '@angular/core';
 import {Course} from '../models/course.model';
 import {Title} from '@angular/platform-browser';
 import {MatDialog} from '@angular/material/dialog';
@@ -29,8 +29,9 @@ export class HomeComponent implements OnInit, OnDestroy {
 
   panelOpenState = [];
 
-  revertExpand(i: number) {
+  dontExpandPanelOnNameClick(i: number) {
     this.panelOpenState[i] = !this.panelOpenState[i];
+    this.cdref.detectChanges(); // Needed to avoid ExpressionChangedAfterItHasBeenCheckedError
   }
 
   constructor(private titleService: Title,
@@ -39,6 +40,7 @@ export class HomeComponent implements OnInit, OnDestroy {
               private auth: AuthService,
               private router: Router,
               private route: ActivatedRoute,
+              private cdref: ChangeDetectorRef
   ) {
     titleService.setTitle(this.title);
     courseService.getCourses().subscribe(x => this.courses = x);
@@ -70,12 +72,6 @@ export class HomeComponent implements OnInit, OnDestroy {
               this.nameActiveCourse = course.fullName;
             }
           }
-          if (oldId != this.idActiveCourse) { // close all panels
-            console.log('inside');
-            for (let i = 0; i < this.panelOpenState.length; i++) {
-              this.panelOpenState[i] = false;
-            }
-          }
         }
       }
     );
@@ -97,19 +93,19 @@ export class HomeComponent implements OnInit, OnDestroy {
     });
   }
   openEditCourseDialog(): void {
-    console.log('Dialog CourseEdit');
     const dialogRef = this.dialog.open(CourseEditComponent, {
       maxWidth: '900px', autoFocus: true, hasBackdrop: false, disableClose: false, closeOnNavigation: true,
       data: {courseName: this.nameActiveCourse, id: this.idActiveCourse}
     });
     dialogRef.afterClosed().subscribe(result => {
-      console.log('@@@@@@@@@@@@@@', result);
-      this.dialogRef = undefined;
+      console.log(result);
+      this.dialogRef = null;
       if (result === 'refresh') {
         this.router.navigateByUrl('/'); // refreshing data
       }
     });
   }
+  // TODO: remove later
   openTestDialog(): void {
     const dialogRef = this.dialog.open(DeletetestComponent, {
       maxWidth: '900px', autoFocus: true, hasBackdrop: false, disableClose: false, closeOnNavigation: true
@@ -126,7 +122,7 @@ export class HomeComponent implements OnInit, OnDestroy {
     });
     // Settings what to do when dialog is closed
     this.dialogRef.afterClosed().subscribe(() => {
-        this.dialogRef = undefined;
+      this.dialogRef = null;
       }
     );
   }

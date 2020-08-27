@@ -40,11 +40,11 @@
         <mat-nav-list *ngFor="let course of courses; index as i">
           <mat-expansion-panel togglePosition="before" [class.mat-elevation-z0]="true" dense
                                [(expanded)]="panelOpenState[i]"
-                               routerLink="teacher/course/{{course.id}}"
-                               routerLinkActive="active-link-style" [routerLinkActiveOptions]="{exact:true}">
+                               routerLink="teacher/course/{{course.id}}">
             <mat-expansion-panel-header>
               <mat-panel-title>
-                <a mat-list-item (click)="revertExpand(i)">
+                <a mat-list-item (click)="dontExpandPanelOnNameClick(i)" routerLinkActive="active-link-style"
+                   [routerLinkActiveOptions]="{exact:true}">
                   {{course.fullName}}
                 </a>
               </mat-panel-title>
