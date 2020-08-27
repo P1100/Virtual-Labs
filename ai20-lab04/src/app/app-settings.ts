@@ -31,6 +31,9 @@ export const tabs = [
 
 /* HATEOAS API DESIGN DECISION: all http returned objects are converted to array (empty, full, or singleton), to uniform handling */
 export function removeHATEOAS(container: HateoasModel): any[] {
+  if (container == null) {
+    return [];
+  }
   delete container?._links;
   delete container?.links;
   let innerList: any = container?._embedded;
@@ -62,11 +65,19 @@ export function removeHATEOAS(container: HateoasModel): any[] {
   });
   delete innerList?._links;
   delete innerList?.links; // only '_links' should show up
-
-  if (innerList == null) {
-    return Array.isArray(container) ? container : [container];
+  const result = innerList != null ? innerList : container;
+  if (Array.isArray(result)) {
+    return result;
+  } else if (typeof result == 'object') {
+    if (Object.keys(result)?.length == 0) {
+      return [];
+    } else {
+      return [result];
+    }
+  } else {
+    console.warn('HTTP HateOASModel: not an object, not an array.');
+    return [];
   }
-  return Array.isArray(innerList) ? innerList : [innerList];
 }
 
 // Uniform all data received from services, converting any (mostly objects) to arrays

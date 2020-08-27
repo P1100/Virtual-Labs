@@ -1,5 +1,5 @@
 # Virtual Labs
-This is a didactical project, made for the Internet Applications course (2020). It is a web app for handling university courses, teams, students and all their assignments/laboratories.
+This is a didactical learning project, made for the Internet Applications course (2020). It is a web app for handling university courses, teams, students and all their assignments/laboratories. Is it kept up to date
 
 ## Technologies
 - [Java SE 11 LTS - JDK](https://docs.oracle.com/en/java/javase/11/index.html)
@@ -7,7 +7,7 @@ This is a didactical project, made for the Internet Applications course (2020). 
   -  [Spring Data JPA](http://projects.spring.io/spring-data-jpa/)
     -    [Hibernate](http://docs.spring.io/spring/docs/current/spring-framework-reference/html/orm.html#orm-hibernate)
   -  [Spring Security](http://projects.spring.io/spring-security/)
-- [Angular: 10.0.11](https://github.com/angular/angular)
+- [Angular: 10.0.14](https://github.com/angular/angular)
 - [MariaDb](https://github.com/MariaDB/server)
 - [Docker](https://docs.docker.com/install/)
 
@@ -19,6 +19,9 @@ This is a didactical project, made for the Internet Applications course (2020). 
 
 ## ER Model
 ![](https://i.ibb.co/rGK9cL8/Virtual-Labs-ERmodel.jpg)
+
+## Questions and Issues
+Feel free to post any.
 
 ## License
 

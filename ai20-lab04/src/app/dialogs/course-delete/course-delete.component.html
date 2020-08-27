@@ -1,0 +1,25 @@
+<mat-card>
+  <h1>Are you absolutely sure?</h1>
+  <mat-card-content class="flash flash-warn flash-full">
+    <p class="Box-body overflow-auto">
+      This action <strong>cannot</strong> be undone. This will permanently delete the
+      <strong>{{courseToDeleteName}}</strong>
+      course, students, teams, assignments, submissions, vm, and remove all collaborator associations.
+    </p>
+    <p>Please type <strong>confirm/delete</strong> to confirm.</p>
+  </mat-card-content>
+  <mat-card-actions>
+    <form #cf="ngForm" (ngSubmit)="onSubmit()">
+      <p>
+        <input type="text" class="form-control input-block" autofocus required
+               pattern="confirm/delete"
+               aria-label="Type in to confirm that you want to delete this course."
+               name="verify" autocomplete="off"
+               name="confirm" [(ngModel)]="confirm">
+      </p>
+      <button class="btn btn-block btn-danger" [disabled]="(!cf.valid || cf.pristine) && !noValidateForTesting">I
+        understand the consequences, delete this course
+      </button>
+    </form>
+  </mat-card-actions>
+</mat-card>

@@ -1,4 +1,4 @@
-import {ChangeDetectorRef, Component, OnDestroy, OnInit} from '@angular/core';
+import {Component, OnDestroy, OnInit} from '@angular/core';
 import {Course} from '../models/course.model';
 import {Title} from '@angular/platform-browser';
 import {MatDialog} from '@angular/material/dialog';
@@ -7,11 +7,11 @@ import {ActivatedRoute, NavigationEnd, Router} from '@angular/router';
 import {of, Subscription} from 'rxjs';
 import {LoginComponent} from '../dialogs/login/login.component';
 import {CourseService} from '../services/course.service';
-import {filter, map, mergeMap} from 'rxjs/operators';
+import {filter, map, mergeMap, tap} from 'rxjs/operators';
 import {CourseEditComponent} from '../dialogs/course-edit/course-edit.component';
-import {DeletetestComponent} from '../dialogs/deletetest/deletetest.component';
 import {Alert, AlertsService} from '../services/alerts.service';
 import {AppSettings} from '../app-settings';
+import {CourseDeleteComponent} from '../dialogs/course-delete/course-delete.component';
 
 @Component({
   selector: 'app-home',
@@ -32,10 +32,10 @@ export class HomeComponent implements OnInit, OnDestroy {
   alertsSubscription: Subscription;
   alertMessage: Alert; // ngb-alert
   testingPageEnabled = AppSettings.devShowTestingComponents;
+  forseCoursesUpdate = false;
 
   dontExpandPanelOnNameClick(i: number) {
     this.panelOpenState[i] = !this.panelOpenState[i];
-    this.cdref.detectChanges(); // Needed to avoid ExpressionChangedAfterItHasBeenCheckedError
   }
   constructor(private titleService: Title,
               private courseService: CourseService,
@@ -43,8 +43,7 @@ export class HomeComponent implements OnInit, OnDestroy {
               private authService: AuthService,
               private router: Router,
               private route: ActivatedRoute,
-              private alertsService: AlertsService,
-              private cdref: ChangeDetectorRef
+              private alertsService: AlertsService
   ) {
     titleService.setTitle(this.title);
     courseService.getCourses().subscribe(x => this.courses = x);
@@ -53,6 +52,7 @@ export class HomeComponent implements OnInit, OnDestroy {
     this.router.events
       .pipe(
         filter((event) => event instanceof NavigationEnd),
+        tap(e => console.log(e)),
         map(() => this.route),
         map((rout) => {
           // Moving to params child route (StudentsContComponent)
@@ -76,8 +76,17 @@ export class HomeComponent implements OnInit, OnDestroy {
               this.nameActiveCourse = course.fullName;
             }
           }
-          if (oldCourseId != this.idActiveCourse && this.idActiveCourse != null) {
+          if (oldCourseId != this.idActiveCourse && this.idActiveCourse != null) { // reset alert on course change
             this.alertsService.setAlert(null);
+          }
+          if (this.forseCoursesUpdate === true) { // called after course delete
+            this.forseCoursesUpdate = false;
+            courseService.getCourses().subscribe(x => this.courses = x);
+          }
+          if (this.idActiveCourse != oldCourseId) { // closing all panels
+            for (let i = 0; i < this.panelOpenState.length; i++) {
+              this.panelOpenState[i] = false;
+            }
           }
         }
       }
@@ -101,7 +110,7 @@ export class HomeComponent implements OnInit, OnDestroy {
   }
   openEditCourseDialog(): void {
     const dialogRef = this.dialog.open(CourseEditComponent, {
-      maxWidth: '900px', autoFocus: true, hasBackdrop: false, disableClose: false, closeOnNavigation: true,
+      maxWidth: '600px', autoFocus: true, hasBackdrop: false, disableClose: false, closeOnNavigation: true,
       data: {courseName: this.nameActiveCourse, courseId: this.idActiveCourse}
     });
     dialogRef.afterClosed().subscribe((res: string) => {
@@ -115,11 +124,22 @@ export class HomeComponent implements OnInit, OnDestroy {
       }, error => this.alertsService.setAlert({type: 'danger', message: 'Dialog Error!'})
     );
   }
-  // TODO: remove later, test temp reference
-  openTestDialog(): void {
-    const dialogRef = this.dialog.open(DeletetestComponent, {
-      maxWidth: '900px', autoFocus: true, hasBackdrop: false, disableClose: false, closeOnNavigation: true
+  openDeleteCourseDialog(): void {
+    const dialogRef = this.dialog.open(CourseDeleteComponent, {
+      maxWidth: '600px', autoFocus: true, hasBackdrop: false, disableClose: false, closeOnNavigation: true,
+      data: {courseName: this.nameActiveCourse, courseId: this.idActiveCourse}
     });
+    dialogRef.afterClosed().subscribe((res: string) => {
+        this.dialogRef = null;
+        if (res == 'success') {
+          this.alertsService.setAlert({type: 'success', message: 'Course delete successful!'});
+          this.forseCoursesUpdate = true;
+          this.router.navigateByUrl('/'); // refreshing data
+        } else if (res != undefined) {
+          this.alertsService.setAlert({type: 'danger', message: 'Couldn\'t delete course! ' + res});
+        }
+      }, error => this.alertsService.setAlert({type: 'danger', message: 'Dialog Error!'})
+    );
   }
   openLoginDialogReactive(): void {
     if (this.dialogRef) { // if dialog exists

@@ -25,9 +25,11 @@
   </mat-toolbar>
 </div>
 
-<mat-toolbar>{{nameActiveCourse}}</mat-toolbar>
-<ngb-alert *ngIf="alertMessage" [type]="alertMessage?.type"
-           (close)="closeAlert()">{{ alertMessage?.message }}</ngb-alert>
+<div id="sub-top-toolbar">
+  <mat-toolbar>{{nameActiveCourse}}</mat-toolbar>
+  <ngb-alert *ngIf="alertMessage" [type]="alertMessage?.type"
+             (close)="closeAlert()">{{ alertMessage?.message }}</ngb-alert>
+</div>
 
 <mat-sidenav-container>
   <mat-sidenav #drawer mode="side" opened position="start">
@@ -56,7 +58,7 @@
               <a mat-list-item (click)="openEditCourseDialog()">
                 <mat-icon>edit</mat-icon>
                 Edit course</a>
-              <a mat-list-item (click)="openTestDialog()">
+              <a mat-list-item (click)="openDeleteCourseDialog()">
                 <mat-icon id="delete-course-icon">delete_forever</mat-icon>
                 Delete course</a>
             </mat-nav-list>

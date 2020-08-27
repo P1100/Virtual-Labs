@@ -19,7 +19,8 @@ export class CourseEditComponent {
   constructor(private courseService: CourseService,
               public dialogRef: MatDialogRef<CourseEditComponent>,
               @Inject(MAT_DIALOG_DATA) public data: any) {
-    const subscription = courseService.getCourse(data?.courseId).subscribe(c => this.course = c[0]);
+    // data: {courseName: this.nameActiveCourse, courseId: this.idActiveCourse}
+    const subscription = courseService.getCourse(data?.courseId).subscribe((c: Course[]) => this.course = c[0]);
   }
 
   onCancelClick(): void {

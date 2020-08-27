@@ -33,7 +33,6 @@ import {MatSidenavModule} from '@angular/material/sidenav';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {AssignmentsContComponent} from './r2-inner-tab/assignments/assignments-cont.component';
 import {BrowserModule} from '@angular/platform-browser';
-import {AreYouSureComponent} from './dialogs/are-you-sure/are-you-sure.component';
 import {TestingComponent} from './r2-inner-tab/testing/testing.component';
 import {EmptyComponent} from './r1-content/empty.component';
 import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
@@ -45,6 +44,7 @@ import {TabsNavComponent} from './r1-content/tabs-nav.component';
 import {CourseEditComponent} from './dialogs/course-edit/course-edit.component';
 import {MatRadioModule} from '@angular/material/radio';
 import {DeletetestComponent} from './dialogs/deletetest/deletetest.component';
+import {CourseDeleteComponent} from './dialogs/course-delete/course-delete.component';
 
 @NgModule({
   imports: [
@@ -96,10 +96,10 @@ import {DeletetestComponent} from './dialogs/deletetest/deletetest.component';
     TestDialogComponent,
     LoginComponent,
     RegisterComponent,
-    AreYouSureComponent,
     TestingComponent,
     CourseEditComponent,
     DeletetestComponent,
+    CourseDeleteComponent,
   ],
   entryComponents: [
     HomeComponent, TestDialogComponent, LoginComponent
