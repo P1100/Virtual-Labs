@@ -71,5 +71,5 @@ export function formatErrors(error: any) {
     + (error?.error?.error == null ? (typeof (error?.error) == 'string' ? error?.error : Object.keys(error?.error)) : error?.error?.error + ' - ' + error?.error?.message);
   console.error(s.replace(/undefined -/gi, ''));
   console.error(error);
-  return throwError(error);
+  return throwError(error?.status);
 }

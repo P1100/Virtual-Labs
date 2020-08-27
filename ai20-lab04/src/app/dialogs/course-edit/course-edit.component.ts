@@ -25,7 +25,7 @@ export class CourseEditComponent {
   onSubmit() {
     this.courseService.updateCourse(this.course).subscribe(
       x => this.dialogRef.close('success'),
-      e => this.dialogRef.close(e?.status)
+      e => this.dialogRef.close(e)
     );
   }
 
