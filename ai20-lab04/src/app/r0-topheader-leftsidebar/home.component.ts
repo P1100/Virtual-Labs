@@ -7,7 +7,7 @@ import {ActivatedRoute, NavigationEnd, Router} from '@angular/router';
 import {of, Subscription} from 'rxjs';
 import {LoginComponent} from '../dialogs/login/login.component';
 import {CourseService} from '../services/course.service';
-import {filter, map, mergeMap, tap} from 'rxjs/operators';
+import {filter, map, mergeMap} from 'rxjs/operators';
 import {CourseEditComponent} from '../dialogs/course-edit/course-edit.component';
 import {Alert, AlertsService} from '../services/alerts.service';
 import {AppSettings} from '../app-settings';
@@ -52,7 +52,6 @@ export class HomeComponent implements OnInit, OnDestroy {
     this.router.events
       .pipe(
         filter((event) => event instanceof NavigationEnd),
-        tap(e => console.log(e)),
         map(() => this.route),
         map((rout) => {
           // Moving to params child route (StudentsContComponent)
