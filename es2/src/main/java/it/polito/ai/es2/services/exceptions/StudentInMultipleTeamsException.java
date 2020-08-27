@@ -4,9 +4,10 @@ package it.polito.ai.es2.services.exceptions;
 //@AllArgsConstructor
 public class StudentInMultipleTeamsException extends RuntimeException {
   public StudentInMultipleTeamsException() {
+    super("Student in multiple teams.");
   }
   
   public StudentInMultipleTeamsException(String s) {
-    super(s);
+    super("Student in multiple teams. (" + s + ")");
   }
 }

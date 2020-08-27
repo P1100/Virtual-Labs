@@ -128,7 +128,7 @@ public class CourseServiceImpl implements CourseService {
     if (max < min)
       throw new CourseCardinalityConstrainsException(min + " < " + max);
     if (courseRepository.countTeamsThatViolateCardinality(courseDTO.getId(), min, max) != 0)
-      throw new CourseCardinalityConstrainsException("New cardinalities incompatible with existing teams");
+      throw new CourseCardinalityConstrainsException("new cardinalities incompatible with existing teams");
     courseRepository.save(modelMapper.map(courseDTO, Course.class));
     return true;
   }
@@ -207,7 +207,7 @@ public class CourseServiceImpl implements CourseService {
     if (!c.isEnabled())
       throw new CourseNotEnabledException(courseId);
     if (c.getStudents().stream().anyMatch(x -> x.getId().equals(studentId)))
-      throw new StudentAlreadyEnrolled(studentId + " - Course: " + courseId);
+      throw new StudentAlreadyEnrolled(studentId + " - course: " + courseId);
     c.addStudent(studentOptional.get());
   }
   

@@ -2,10 +2,10 @@ package it.polito.ai.es2.services.exceptions;
 
 public class VlException extends RuntimeException {
   public VlException() {
-    super();
+    super("Generic Error.");
   }
   
   public VlException(String s) {
-    super(s);
+    super("Generic Error. (" + s + ")");
   }
 }

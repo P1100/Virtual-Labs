@@ -2,10 +2,10 @@ package it.polito.ai.es2.services.exceptions;
 
 public class TeamAlreayCreatedException extends RuntimeException {
   public TeamAlreayCreatedException() {
-    super();
+    super("Team already created.");
   }
   
-  public TeamAlreayCreatedException(String message) {
-    super(message);
+  public TeamAlreayCreatedException(String s) {
+    super("Team already created. (" + s + ")");
   }
 }

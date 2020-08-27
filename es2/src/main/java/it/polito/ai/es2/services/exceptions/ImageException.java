@@ -2,10 +2,10 @@ package it.polito.ai.es2.services.exceptions;
 
 public class ImageException extends RuntimeException {
   public ImageException() {
-    super();
+    super("Image error.");
   }
   
   public ImageException(String s) {
-    super(s);
+    super("Image error. (" + s + ")");
   }
 }

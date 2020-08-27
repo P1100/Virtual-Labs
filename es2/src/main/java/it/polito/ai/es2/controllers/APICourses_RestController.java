@@ -104,7 +104,7 @@ public class APICourses_RestController {
     if (studentMap.containsKey("id"))
       studentId = Long.valueOf(studentMap.get("id"));
     else
-      throw new ResponseStatusException(HttpStatus.PRECONDITION_FAILED, "Missing student id");
+      throw new ResponseStatusException(HttpStatus.PRECONDITION_FAILED, "missing student id");
     courseService.enrollStudent(studentId, courseId);
 //    if (!) {
 //      throw new ResponseStatusException(HttpStatus.CONFLICT, courseId + " - " + studentId);
@@ -123,7 +123,7 @@ public class APICourses_RestController {
     if (file == null || file.isEmpty())
       throw new ResponseStatusException(HttpStatus.CONFLICT, "null or empty file");
     if (!(file.getContentType().equals("text/csv") || file.getContentType().equals("application/vnd.ms-excel")))
-      throw new ResponseStatusException(HttpStatus.UNSUPPORTED_MEDIA_TYPE, courseId + " - File Type:" + file.getContentType());
+      throw new ResponseStatusException(HttpStatus.UNSUPPORTED_MEDIA_TYPE, courseId + " - file Type:" + file.getContentType());
     Reader reader;
     try {
       reader = new BufferedReader(new InputStreamReader(file.getInputStream()));

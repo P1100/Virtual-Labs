@@ -18,27 +18,27 @@ import javax.persistence.RollbackException;
 import javax.validation.ConstraintViolationException;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 @Log
 @ControllerAdvice
 public class GlobalRuntimeExceptionHandler
     extends ResponseEntityExceptionHandler {
   @ExceptionHandler(value = {IllegalArgumentException.class, IllegalStateException.class})
-  protected ResponseEntity<Object> genericError(
-      RuntimeException ex, WebRequest request) {
+  protected ResponseEntity<Object> genericError(RuntimeException ex, WebRequest request) {
     String bodyOfResponse = "Server Error";
     log.warning(ex.toString() + " \n " + request.toString());
     return handleExceptionInternal(ex, bodyOfResponse, new HttpHeaders(), HttpStatus.INTERNAL_SERVER_ERROR, request); // 500
   }
   
   @ExceptionHandler(value = {DataAccessException.class, ConstraintViolationException.class, TransactionSystemException.class, RollbackException.class})
-  protected ResponseEntity<Object> dataError(
-      RuntimeException ex, WebRequest request) {
+  protected ResponseEntity<Object> dataError(RuntimeException ex, WebRequest request) {
     String bodyOfResponse = "Data Error";
     log.warning(ex.toString() + " \n " + request.toString());
     return handleExceptionInternal(ex, bodyOfResponse, new HttpHeaders(), HttpStatus.BAD_REQUEST, request); // 400
   }
   
+  /** DTO Validation errors (override of ResponseEntityExceptionHandler) **/
   @Override
   protected ResponseEntity<Object> handleMethodArgumentNotValid(MethodArgumentNotValidException ex,
                                                                 HttpHeaders headers, HttpStatus status, WebRequest request) {
@@ -48,55 +48,43 @@ public class GlobalRuntimeExceptionHandler
       String errorMessage = error.getDefaultMessage();
       errors.put(fieldName, errorMessage);
     });
-    log.warning("Validation errors: " + errors.values());
-    return new ResponseEntity<>(errors, HttpStatus.UNPROCESSABLE_ENTITY); // 422
+    log.warning("DTO Validation errors: " + errors.values());
+    return new ResponseEntity<>("Validation errors: " + errors.keySet().stream().map(x->x+" ").collect(Collectors.joining()), HttpStatus.UNPROCESSABLE_ENTITY); // 422
   }
   
   @ExceptionHandler(value = {NullParameterException.class})
-  protected ResponseEntity<Object> nullParameters(
-      RuntimeException ex, WebRequest request) {
-    String bodyOfResponse = ex.getMessage();
+  protected ResponseEntity<Object> nullParameters(RuntimeException ex, WebRequest request) {
     log.warning(ex.toString() + " \n " + request.toString());
-    return handleExceptionInternal(ex, bodyOfResponse, new HttpHeaders(), HttpStatus.BAD_REQUEST, request); // 400
+    return handleExceptionInternal(ex, ex.getMessage(), new HttpHeaders(), HttpStatus.BAD_REQUEST, request); // 400
   }
   
   @ExceptionHandler(value = {VlException.class})
-  protected ResponseEntity<Object> genericApiError(
-      RuntimeException ex, WebRequest request) {
-    String bodyOfResponse = ex.getMessage();
+  protected ResponseEntity<Object> genericApiError(RuntimeException ex, WebRequest request) {
     log.warning(ex.toString() + " \n " + request.toString());
-    return handleExceptionInternal(ex, bodyOfResponse, new HttpHeaders(), HttpStatus.BAD_REQUEST, request); // 400
+    return handleExceptionInternal(ex, ex.getMessage(), new HttpHeaders(), HttpStatus.BAD_REQUEST, request); // 400
   }
   
   @ExceptionHandler(value = {CourseNotFoundException.class, StudentNotFoundException.class})
-  protected ResponseEntity<Object> notFound(
-      RuntimeException ex, WebRequest request) {
-    String bodyOfResponse = ex.getMessage();
+  protected ResponseEntity<Object> notFound(RuntimeException ex, WebRequest request) {
     log.warning(ex.toString() + " \n " + request.toString());
-    return handleExceptionInternal(ex, bodyOfResponse, new HttpHeaders(), HttpStatus.NOT_FOUND, request); // 404
+    return handleExceptionInternal(ex, ex.getMessage(), new HttpHeaders(), HttpStatus.NOT_FOUND, request); // 404
   }
   
   @ExceptionHandler(value = {CourseCardinalityConstrainsException.class})
-  protected ResponseEntity<Object> courseTeamsCardinalityViolation(
-      RuntimeException ex, WebRequest request) {
-    String bodyOfResponse = ex.getMessage();
+  protected ResponseEntity<Object> courseTeamsCardinalityViolation(RuntimeException ex, WebRequest request) {
     log.warning(ex.toString() + " \n " + request.toString());
-    return handleExceptionInternal(ex, bodyOfResponse, new HttpHeaders(), HttpStatus.CONFLICT, request); // 404
+    return handleExceptionInternal(ex, ex.getMessage(), new HttpHeaders(), HttpStatus.CONFLICT, request); // 404
   }
   
   @ExceptionHandler(value = {CourseNotEnabledException.class})
-  protected ResponseEntity<Object> CourseNotEnabled(
-      RuntimeException ex, WebRequest request) {
-    String bodyOfResponse = ex.getMessage();
+  protected ResponseEntity<Object> CourseNotEnabled(RuntimeException ex, WebRequest request) {
     log.warning(ex.toString() + " \n " + request.toString());
-    return handleExceptionInternal(ex, bodyOfResponse, new HttpHeaders(), HttpStatus.CONFLICT, request); // 404
+    return handleExceptionInternal(ex, ex.getMessage(), new HttpHeaders(), HttpStatus.CONFLICT, request); // 404
   }
   
   @ExceptionHandler(value = {StudentAlreadyEnrolled.class})
-  protected ResponseEntity<Object> StudentAlreadyEnrolled(
-      RuntimeException ex, WebRequest request) {
-    String bodyOfResponse = ex.getMessage();
+  protected ResponseEntity<Object> StudentAlreadyEnrolled(RuntimeException ex, WebRequest request) {
     log.warning(ex.toString() + " \n " + request.toString());
-    return handleExceptionInternal(ex, bodyOfResponse, new HttpHeaders(), HttpStatus.CONFLICT, request); // 404
+    return handleExceptionInternal(ex, ex.getMessage(), new HttpHeaders(), HttpStatus.CONFLICT, request); // 404
   }
 }

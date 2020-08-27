@@ -2,10 +2,10 @@ package it.polito.ai.es2.services.exceptions;
 
 public class ImageNotFoundException extends RuntimeException {
   public ImageNotFoundException() {
-    super();
+    super("Image not found.");
   }
   
   public ImageNotFoundException(String s) {
-    super(s);
+    super("Image not found. (" + s + ")");
   }
 }
