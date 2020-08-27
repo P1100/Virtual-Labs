@@ -1,5 +1,5 @@
 import {Injectable} from '@angular/core';
-import {BehaviorSubject, Subject} from 'rxjs';
+import {BehaviorSubject, Observable} from 'rxjs';
 
 export interface Alert {
   type: string; // Can be: 'success','info','warning','danger','primary','secondary','light','dark'
@@ -13,8 +13,8 @@ export class AlertsService {
   private alertMessage: Alert = null;  // null, or Alert
   private alertSubject: BehaviorSubject<Alert> = new BehaviorSubject(null);
 
-  public getAlertSubject(): Subject<Alert> {
-    return this.alertSubject;
+  public getAlertSubject(): Observable<Alert> {
+    return this.alertSubject as Observable<Alert>;
   }
   public setAlert(alert: Alert) {
     this.alertMessage = alert;
