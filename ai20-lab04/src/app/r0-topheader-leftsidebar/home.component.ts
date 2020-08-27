@@ -11,6 +11,7 @@ import {filter, map, mergeMap} from 'rxjs/operators';
 import {CourseEditComponent} from '../dialogs/course-edit/course-edit.component';
 import {DeletetestComponent} from '../dialogs/deletetest/deletetest.component';
 import {Alert, AlertsService} from '../services/alerts.service';
+import {AppSettings} from '../app-settings';
 
 @Component({
   selector: 'app-home',
@@ -30,6 +31,7 @@ export class HomeComponent implements OnInit, OnDestroy {
   routeSubscription: Subscription;
   alertsSubscription: Subscription;
   alertMessage: Alert; // ngb-alert
+  testingPageEnabled = AppSettings.devShowTestingComponents;
 
   dontExpandPanelOnNameClick(i: number) {
     this.panelOpenState[i] = !this.panelOpenState[i];

@@ -2,13 +2,13 @@ import {Injectable} from '@angular/core';
 import {HttpClient, HttpResponse} from '@angular/common/http';
 import {Observable} from 'rxjs';
 import {catchError, retry, tap} from 'rxjs/operators';
-import {AppSettings, baseUrl, formatErrors} from '../app-settings';
+import {AppSettings, formatErrors} from '../app-settings';
 
 @Injectable({
   providedIn: 'root'
 })
 export class ImageService {
-  private baseUrlAPI = baseUrl + '/images';
+  private baseUrlAPI = AppSettings.baseUrl + '/images';
 
   constructor(private http: HttpClient) {
   }

@@ -3,7 +3,7 @@ import {HttpClient} from '@angular/common/http';
 import {Observable} from 'rxjs';
 import {Course} from '../models/course.model';
 import {catchError, map, retry, tap} from 'rxjs/operators';
-import {AppSettings, baseUrl, formatErrors, removeHATEOAS} from '../app-settings';
+import {AppSettings, formatErrors, removeHATEOAS} from '../app-settings';
 import {Student} from '../models/student.model';
 import {HateoasModel} from '../models/hateoas.model';
 import {Team} from '../models/team.model';
@@ -12,7 +12,7 @@ import {Team} from '../models/team.model';
   providedIn: 'root'
 })
 export class CourseService {
-  private baseUrlAPI = baseUrl + '/courses';
+  private baseUrlAPI = AppSettings.baseUrl + '/courses';
 
   constructor(private http: HttpClient) {
   }

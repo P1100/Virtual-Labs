@@ -2,6 +2,7 @@ import {Component, Inject} from '@angular/core';
 import {MAT_DIALOG_DATA, MatDialogRef} from '@angular/material/dialog';
 import {Course} from '../../models/course.model';
 import {CourseService} from '../../services/course.service';
+import {AppSettings} from '../../app-settings';
 
 @Component({
   selector: 'app-course-edit',
@@ -9,10 +10,11 @@ import {CourseService} from '../../services/course.service';
   styles: ['mat-form-field {width: 100%}']
 })
 export class CourseEditComponent {
-  readonly noValidateForTesting = false;
   course = new Course('null', '', 0, 0, false, '');
   addressForm: any;
   private selectedFile: File;
+  noValidateForTesting = false;
+  showNoValidateCheckboxForTesting = AppSettings.devShowTestingComponents;
 
   constructor(private courseService: CourseService,
               public dialogRef: MatDialogRef<CourseEditComponent>,

@@ -6,6 +6,11 @@ import {environment} from '../environments/environment';
 
 /* Shared settings, constants and functions */
 export class AppSettings {
+  // Back end URL
+  public static baseUrl = 'http://localhost:8080/API';
+  public static devShowTestingComponents = environment.dev;
+
+  // HTTP Settings (services)
   public static RETRIES = 0;
   public static JSON_HTTP_OPTIONS: object = {
     headers: new HttpHeaders({
@@ -16,7 +21,6 @@ export class AppSettings {
   };
 }
 
-export const baseUrl = 'http://localhost:8080/API';
 // Dynamic build of r1 tabs menu
 export const tabs = [
   {path: 'students', label: 'Students'},
@@ -73,7 +77,7 @@ export function getSafeDeepCopyArray(ss: any): any[] {
 export function formatErrors(error: any) {
   console.error(error);
   let responseErrorString = (`${(error?.error?.error == null ? (typeof (error?.error) == 'string' ? error?.error : Object.keys(error?.error)) : error?.error?.error + ' - ' + error?.error?.message)}`);
-  if (environment.dev == true) {
+  if (AppSettings.devShowTestingComponents) {
     responseErrorString = responseErrorString + ` [${AlertsService.getHttpResponseStatusDescription(error?.status)}]`;
   }
   return throwError(responseErrorString.replace(/undefined -/gi, ''));
