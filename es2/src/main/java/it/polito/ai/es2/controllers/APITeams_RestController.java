@@ -28,7 +28,7 @@ public class APITeams_RestController {
   TeamService teamService;
   @Autowired
   private ModelHelper modelHelper;
-  
+
   @GetMapping({"", "/"})
   public CollectionModel<TeamDTO> getAllTeams() {
     List<TeamDTO> allTeams = teamService.getAllTeams();
@@ -40,7 +40,7 @@ public class APITeams_RestController {
     CollectionModel<TeamDTO> result = CollectionModel.of(allTeams, link);
     return result;
   }
-  
+
   @GetMapping("/{teamId}")
   public TeamDTO getTeam(@PathVariable Long teamId) {
     Optional<TeamDTO> teamDTO = teamService.getTeam(teamId);
@@ -48,7 +48,7 @@ public class APITeams_RestController {
       throw new ResponseStatusException(HttpStatus.CONFLICT, teamId.toString());
     return modelHelper.enrich(teamDTO.get());
   }
-  
+
   @GetMapping("/{teamId}/members")
   public List<StudentDTO> getMembers(@PathVariable Long teamId) {
     List<StudentDTO> members = teamService.getMembers(teamId);
@@ -57,18 +57,18 @@ public class APITeams_RestController {
     }
     return members;
   }
-  
+
   // http://localhost:8080/API/teams/propose/C0/Team0/100,101,S33
   @PostMapping("/propose/{courseName}/{team_name}/{memberIds}")
   public TeamDTO proposeTeam(@PathVariable String courseName, @PathVariable String team_name, @PathVariable List<Long> memberIds) {
     return teamService.proposeTeam(courseName, team_name, memberIds);
   }
-  
+
   @PostMapping("/evict/{teamId}")
   public boolean evictTeam(@PathVariable Long teamId) {
     return teamService.evictTeam(teamId);
   }
-  
+
   // TODO: fix up this, delete teamviewmodel
   @PostMapping("/propose")
   public String propose_team(@ModelAttribute("command") TeamViewModel teamViewModel,

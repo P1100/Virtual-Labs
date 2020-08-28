@@ -4,7 +4,7 @@ public class NullParameterException extends RuntimeException {
   public NullParameterException() {
     super("Null parameters.");
   }
-  
+
   public NullParameterException(String s) {
     super("Null parameters. (" + s + ")");
   }

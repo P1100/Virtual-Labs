@@ -11,7 +11,7 @@ import java.util.Map;
 @Controller
 @RequestMapping("/testing")
 public class Testing_Controller {
-  
+
   @GetMapping("/testmap")
   @ResponseBody
   public Map<String, String> testMapBinding() {
@@ -20,13 +20,13 @@ public class Testing_Controller {
     m.put("key2", "value2");
     return m;
   }
-  
+
   @RequestMapping(value = {"/", "/hello"}, produces = "application/json; charset=UTF-8")
   @ResponseBody
   public String hello() {
     return "{\"nombre\":\"Donell\", \"dni\":\"351351P\"}";
   }
-  
+
   @GetMapping("/hello2")
   @ResponseBody //default: text/plain
   public String hello2() {

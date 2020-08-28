@@ -25,7 +25,7 @@ public class VirtualLabsApplication {
   public static void main(String[] args) {
     SpringApplication.run(VirtualLabsApplication.class, args);
   }
-  
+
   @Autowired
   Environment environment;
   //  @Autowired
@@ -36,12 +36,12 @@ public class VirtualLabsApplication {
   private StudentService studentService;
   @Autowired
   private TeamService teamService;
-  
+
   @Bean
   ModelMapper modelMapper() {
     return new ModelMapper();
   }
-  
+
   @Bean
   CommandLineRunner runner() {
     return new CommandLineRunner() {
@@ -72,12 +72,12 @@ public class VirtualLabsApplication {
           studentService.addStudent(new StudentDTO(11L, "Maria", "Pasolani", "s11@studenti.polito.it"));
 
           System.out.println(studentService.addStudents(
-                  Arrays.asList(new StudentDTO(12L, "Valentina", "Gennari", "s12@studenti.polito.it"),
-                          new StudentDTO(13L, "Francesca", "Tulini", "s13@studenti.polito.it"),
-                          new StudentDTO(14L, "Elena", "Casellari", "s14@studenti.polito.it"),
-                          new StudentDTO(15L, "Anna", "Rodieni", "s15@studenti.polito.it"),
-                          new StudentDTO(100L, "Last", "One", "s16@studenti.polito.it")
-                  )));
+              Arrays.asList(new StudentDTO(12L, "Valentina", "Gennari", "s12@studenti.polito.it"),
+                  new StudentDTO(13L, "Francesca", "Tulini", "s13@studenti.polito.it"),
+                  new StudentDTO(14L, "Elena", "Casellari", "s14@studenti.polito.it"),
+                  new StudentDTO(15L, "Anna", "Rodieni", "s15@studenti.polito.it"),
+                  new StudentDTO(100L, "Last", "One", "s16@studenti.polito.it")
+              )));
           courseService.enrollStudent(1L, "c1");
 //          courseService.enrollStudent(1L, "c6");
           courseService.enrollStudent(1L, "c7");
@@ -381,7 +381,7 @@ public class VirtualLabsApplication {
         StudentDTO s9r = new StudentDTO("S9", "REWRITE", "REWRITE");
         System.out.println(teamService.addStudent(s9r));
 */
-      
+
       }
     };
   }

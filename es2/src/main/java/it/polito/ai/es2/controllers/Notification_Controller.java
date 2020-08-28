@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 public class Notification_Controller {
   @Autowired
   NotificationService notificationService;
-  
+
   @GetMapping("/confirm/{token}")
   public String confirm_token(@PathVariable String token) {
     boolean confirm = notificationService.confirm(token);
@@ -21,7 +21,7 @@ public class Notification_Controller {
     else
       return "token_error";
   }
-  
+
   @GetMapping("/reject/{token}")
   public String reject_token(@PathVariable String token) {
     boolean reject = notificationService.reject(token);

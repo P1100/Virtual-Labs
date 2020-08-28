@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 public class _ControllerHome {
   @Autowired
   ModelHelper urlSettings;
-  
+
   @RequestMapping(value = "/API", produces = "application/json; charset=UTF-8")
   @ResponseBody
   public String getAPI() {

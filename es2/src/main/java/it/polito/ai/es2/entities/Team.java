@@ -32,19 +32,19 @@ public class Team {
   private boolean active = false; // status
   @PositiveOrZero
   private int maxVcpu, maxDisk, maxRam, maxRunningVM, maxTotVM; // sum of enabled and disabled
-  
+
   @ManyToOne(cascade = {CascadeType.MERGE, CascadeType.PERSIST}, optional = false)
   @JoinColumn(name = "course_id")
   Course course; // --> model vm
-  
+
   @ManyToMany(cascade = {CascadeType.MERGE, CascadeType.PERSIST})
   @JoinTable(name = "teams_students", joinColumns = @JoinColumn(name = "team_id"),
       inverseJoinColumns = @JoinColumn(name = "student_id"))
   List<Student> members = new ArrayList<>();
-  
+
   @OneToMany(mappedBy = "team")
   private List<VM> vms = new ArrayList<>();
-  
+
   public void setCourse(Course new_course) {
     if (course != null)
       course.getTeams().remove(this);
@@ -55,7 +55,7 @@ public class Team {
       course = new_course;
     }
   }
-  
+
   public void addStudent(Student new_student) {
     members.add(new_student);
     new_student.getTeams().add(this);

@@ -43,7 +43,7 @@ public class CourseServiceImpl implements CourseService {
   CourseRepository courseRepository;
   @Autowired
   StudentRepository studentRepository;
-  
+
   /**
    * GET {@link APICourses_RestController#getAllCourses()}
    */
@@ -52,7 +52,7 @@ public class CourseServiceImpl implements CourseService {
     log.info("getAllCourses");
     return courseRepository.findAll().stream().map(x -> modelMapper.map(x, CourseDTO.class)).collect(Collectors.toList());
   }
-  
+
   /**
    * GET {@link it.polito.ai.es2.controllers.APICourses_RestController#getCourse(String)}
    */
@@ -62,7 +62,7 @@ public class CourseServiceImpl implements CourseService {
     if (courseId == null) return Optional.empty();
     return courseRepository.findById(courseId).map(x -> modelMapper.map(x, CourseDTO.class));
   }
-  
+
   /**
    * GET {@link it.polito.ai.es2.controllers.APICourses_RestController#getEnrolledStudents(String)}
    */
@@ -75,7 +75,7 @@ public class CourseServiceImpl implements CourseService {
       throw new CourseNotFoundException(courseId);
     return courseOptional.get().getStudents().stream().map(x -> modelMapper.map(x, StudentDTO.class)).collect(Collectors.toList());
   }
-  
+
   /**
    * {@link it.polito.ai.es2.controllers.APICourses_RestController#enableCourse(String)}
    */
@@ -87,7 +87,7 @@ public class CourseServiceImpl implements CourseService {
     if (optionalCourse.isEmpty()) throw new CourseNotFoundException(courseId);
     optionalCourse.get().setEnabled(true);
   }
-  
+
   /**
    * {@link it.polito.ai.es2.controllers.APICourses_RestController#disableCourse(String)}
    */
@@ -99,7 +99,7 @@ public class CourseServiceImpl implements CourseService {
     if (optionalCourse.isEmpty()) throw new CourseNotFoundException(courseId);
     optionalCourse.get().setEnabled(false);
   }
-  
+
   /**
    * POST {@link it.polito.ai.es2.controllers.APICourses_RestController#addCourse(CourseDTO)}
    */
@@ -114,7 +114,7 @@ public class CourseServiceImpl implements CourseService {
     }
     return false;
   }
-  
+
   /**
    * PUT {@link it.polito.ai.es2.controllers.APICourses_RestController#updateCourse(CourseDTO)}
    */
@@ -133,7 +133,7 @@ public class CourseServiceImpl implements CourseService {
     courseRepository.save(modelMapper.map(courseDTO, Course.class));
     return true;
   }
-  
+
   /**
    * DELETE {@link it.polito.ai.es2.controllers.APICourses_RestController#deleteCourse(String)}
    */
@@ -157,7 +157,7 @@ public class CourseServiceImpl implements CourseService {
     courseRepository.deleteById(courseId);
     return true;
   }
-  
+
   /**
    * GET {@link it.polito.ai.es2.controllers.APICourses_RestController#getStudentsInTeams(String)}
    */
@@ -168,7 +168,7 @@ public class CourseServiceImpl implements CourseService {
     if (!courseRepository.existsById(courseId)) throw new CourseNotFoundException(courseId);
     return courseRepository.getStudentsInTeams(courseId).stream().map(x -> modelMapper.map(x, StudentDTO.class)).collect(Collectors.toList());
   }
-  
+
   /**
    * GET {@link it.polito.ai.es2.controllers.APICourses_RestController#getAvailableStudents(String)}
    */
@@ -179,7 +179,7 @@ public class CourseServiceImpl implements CourseService {
     if (!courseRepository.existsById(courseId)) throw new CourseNotFoundException(courseId);
     return courseRepository.getStudentsNotInTeams(courseId).stream().map(x -> modelMapper.map(x, StudentDTO.class)).collect(Collectors.toList());
   }
-  
+
   /**
    * GET {@link it.polito.ai.es2.controllers.APICourses_RestController#getTeamsForCourse(String)}
    */
@@ -191,7 +191,7 @@ public class CourseServiceImpl implements CourseService {
     if (co.isEmpty()) throw new CourseNotFoundException(courseId);
     return co.get().getTeams().stream().map(x -> modelMapper.map(x, TeamDTO.class)).collect(Collectors.toList());
   }
-  
+
   /**
    * {@link it.polito.ai.es2.controllers.APICourses_RestController#disenrollStudent(Long, String)}
    */
@@ -205,7 +205,7 @@ public class CourseServiceImpl implements CourseService {
     if (courseOptional.isEmpty()) throw new CourseNotFoundException(courseId);
     courseOptional.get().removeStudent(studentOptional.get());
   }
-  
+
   /**
    * {@link it.polito.ai.es2.controllers.APICourses_RestController#enrollStudent(String, Map)}
    */
@@ -224,7 +224,7 @@ public class CourseServiceImpl implements CourseService {
       throw new StudentAlreadyEnrolled(studentId + " - course: " + courseId);
     c.addStudent(studentOptional.get());
   }
-  
+
   /**
    * {@link it.polito.ai.es2.controllers.APICourses_RestController#enrollStudents(List, String)}
    */
@@ -235,7 +235,7 @@ public class CourseServiceImpl implements CourseService {
       throw new NullParameterException("null list of students or course parameter");
     if (!courseRepository.existsById(courseId))
       throw new CourseNotFoundException("enrollStudents(List<Long> studentIds, String courseId) - course not found");
-    
+
     Course course = courseRepository.getOne(courseId);
     List<Boolean> lb = new ArrayList<>();
     for (Long id : studentIds) {
@@ -257,7 +257,7 @@ public class CourseServiceImpl implements CourseService {
     log.info("enrollStudents returned List<Boolean>:" + lb);
     return lb;
   }
-  
+
   /**
    * {@link it.polito.ai.es2.controllers.APICourses_RestController#enrollStudentsCSV(String, MultipartFile)}
    */

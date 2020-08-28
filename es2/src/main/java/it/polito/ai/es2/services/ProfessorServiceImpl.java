@@ -13,13 +13,13 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional
 @Log
 public class ProfessorServiceImpl implements ProfessorService {
-    @Autowired
-    ModelMapper modelMapper;
-    @Autowired
-    ProfessorRepository professorRepository;
+  @Autowired
+  ModelMapper modelMapper;
+  @Autowired
+  ProfessorRepository professorRepository;
 
-    @Override
-    public boolean addProfessor(ProfessorDTO professor) {
+  @Override
+  public boolean addProfessor(ProfessorDTO professor) {
 //    log.info("addProfessor(" + professor + ")");
 //    if (professor == null || professor.getId() == null) return false;
 //    Professor p = modelMapper.map(professor, Professor.class);
@@ -36,7 +36,7 @@ public class ProfessorServiceImpl implements ProfessorService {
 //    } catch (Exception e) {
 //      log.warning("###### Other Exception:" + e);
 //      e.printStackTrace();
-        return false;
+    return false;
 //    }
-    }
+  }
 }

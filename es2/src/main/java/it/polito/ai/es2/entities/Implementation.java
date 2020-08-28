@@ -12,7 +12,7 @@ import java.util.List;
 @Entity
 public class Implementation {
   public enum Status {NULL, READ, SUBMITTED, REVIEWED, DEFINITIVE}
-  
+
   @Id
   @GeneratedValue
   private Long id;
@@ -22,15 +22,15 @@ public class Implementation {
   private String grade;
   @PastOrPresent
   private Timestamp readStatus, definitiveStatus; // cant use 'read' as column name, mariadb error
-  
+
   @ManyToOne(optional = false, cascade = CascadeType.MERGE)
   @JoinColumn
   private Student student;
-  
+
   @ManyToOne(optional = false, cascade = CascadeType.MERGE)
   @JoinColumn
   private Assignment assignment; // --> course, professor
-  
+
   @OneToMany(mappedBy = "submission")
   private List<Image> imageSubmissions;
 }

@@ -5,5 +5,6 @@ import org.springframework.web.multipart.MultipartFile;
 
 public interface ImageService {
   void uploadImage(MultipartFile file);
-  ImageDTO getImage(Long imageId);
+
+    ImageDTO getImage(Long imageId);
 }

@@ -14,7 +14,7 @@ import java.util.Map;
 public class CourseCustomRepositoryImpl implements CourseCustomRepository {
   @PersistenceContext
   private EntityManager entityManager;
-  
+
   @Override
   public Integer countTeamsThatViolateCardinality(String courseId, int min, int max) {
     Map<String, Object> parameters = new HashMap<>();

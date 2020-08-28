@@ -20,25 +20,25 @@ public class Assignment {
   private Timestamp releaseDate;
   @FutureOrPresent
   private Timestamp expireDate;
-  
+
   @OneToOne(optional = false)
   @JoinColumn
   @NotNull
   private Image content;
-  
+
   @ManyToOne(cascade = CascadeType.MERGE)
   @JoinColumn
   @NotNull
   private Course course;
-  
+
   @ManyToOne(optional = false, cascade = CascadeType.MERGE)
   @JoinColumn
   @NotNull
   private Professor creator;
-  
+
   @OneToMany(mappedBy = "assignment")
   private List<Implementation> implementations;
-  
+
   // Parameters and initialization needed at entity creation
   void initNewEntity(Course c, Professor p, Image i) {
     course = c;

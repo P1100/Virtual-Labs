@@ -57,7 +57,7 @@ public class TeamServiceImpl implements TeamService {
     log.info("getAllTeams()");
     return teamRepository.findAll().stream().map(x -> modelMapper.map(x, TeamDTO.class)).collect(Collectors.toList());
   }
-  
+
   /**
    * GET {@link it.polito.ai.es2.controllers.APITeams_RestController#getTeam(Long)}
    */
@@ -67,7 +67,7 @@ public class TeamServiceImpl implements TeamService {
     if (teamId == null) throw new NullParameterException("null team parameter");
     return teamRepository.findById(teamId).map(x -> modelMapper.map(x, TeamDTO.class));
   }
-  
+
   /**
    * GET {@link it.polito.ai.es2.controllers.APITeams_RestController#getMembers(Long)}
    */
@@ -81,7 +81,7 @@ public class TeamServiceImpl implements TeamService {
     else
       throw new TeamNotFoundException("getMembers() - team not found");
   }
-  
+
   /**
    * {@link it.polito.ai.es2.controllers.APITeams_RestController#proposeTeam(String, String, List)}
    */
@@ -97,7 +97,7 @@ public class TeamServiceImpl implements TeamService {
     List<Optional<Student>> streamopt_listStudentsProposal = memberIds.stream().map(x -> studentRepository.findById(x)).collect(Collectors.toList());
     if (!streamopt_listStudentsProposal.stream().allMatch(Optional::isPresent))
       throw new StudentNotFoundException("proposeTeam() - student not found");
-    
+
     Course course = oc.get();
     List<Student> listStudentsProposal = streamopt_listStudentsProposal.stream().map(Optional::get).collect(Collectors.toList());
     if (!course.getStudents().containsAll(listStudentsProposal)) // !listStudentsProposal.stream().allMatch(x -> course.getStudents().contains(x))
@@ -132,7 +132,7 @@ public class TeamServiceImpl implements TeamService {
     notificationService.notifyTeam(return_teamDTO, memberIds);
     return return_teamDTO;
   }
-  
+
   /**
    * {@link it.polito.ai.es2.controllers.APITeams_RestController#evictTeam(Long)}
    */
@@ -143,7 +143,7 @@ public class TeamServiceImpl implements TeamService {
     if (optionalTeam.isEmpty())
       return false;
     Team team_to_delete = optionalTeam.get();
-    
+
     for (Student student : team_to_delete.getMembers()) {
       // usare "student.removeTeam()" rimuoverebbe studenti da team, il che creerebbe problemi in quanto modificherebbe il ciclo foreach enhanced in corso (java.util.ConcurrentModificationException)
       student.getTeams().remove(team_to_delete);
@@ -153,7 +153,7 @@ public class TeamServiceImpl implements TeamService {
     teamRepository.delete(team_to_delete);
     return true;
   }
-  
+
   /**
    * @param status true sets team active, false sets team inactive
    */

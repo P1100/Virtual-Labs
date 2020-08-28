@@ -4,7 +4,7 @@ public class ImageNotFoundException extends RuntimeException {
   public ImageNotFoundException() {
     super("Image not found.");
   }
-  
+
   public ImageNotFoundException(String s) {
     super("Image not found. (" + s + ")");
   }

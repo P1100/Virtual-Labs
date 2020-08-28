@@ -42,7 +42,7 @@ public class StudentServiceImpl implements StudentService {
     log.info("getAllStudents()");
     return studentRepository.findAll().stream().map(x -> modelMapper.map(x, StudentDTO.class)).collect(Collectors.toList());
   }
-  
+
   /**
    * GET {@link it.polito.ai.es2.controllers.APIStudents_RestController#getStudent(Long)}
    */
@@ -52,7 +52,7 @@ public class StudentServiceImpl implements StudentService {
     if (studentId == null) throw new NullParameterException("null student parameter");
     return studentRepository.findById(studentId).map(x -> modelMapper.map(x, StudentDTO.class));
   }
-  
+
   /**
    * GET {@link it.polito.ai.es2.controllers.APIStudents_RestController#getCourses(Long)}
    */
@@ -62,7 +62,7 @@ public class StudentServiceImpl implements StudentService {
     if (studentId == null) throw new NullParameterException("null student parameter");
     return studentRepository.getOne(studentId).getCourses().stream().map(x -> modelMapper.map(x, CourseDTO.class)).collect(Collectors.toList());
   }
-  
+
   /**
    * GET {@link it.polito.ai.es2.controllers.APIStudents_RestController#getTeamsForStudent(Long)}
    */
@@ -72,7 +72,7 @@ public class StudentServiceImpl implements StudentService {
     if (studentId == null) throw new NullParameterException("null student parameter");
     return studentRepository.getOne(studentId).getTeams().stream().map(x -> modelMapper.map(x, TeamDTO.class)).collect(Collectors.toList());
   }
-  
+
   /**
    * POST {@link it.polito.ai.es2.controllers.APIStudents_RestController#addStudent(StudentDTO)}
    */
@@ -97,7 +97,7 @@ public class StudentServiceImpl implements StudentService {
       return false;
     }
   }
-  
+
   /**
    * POST {@link it.polito.ai.es2.controllers.APIStudents_RestController#addStudents(List)}
    */

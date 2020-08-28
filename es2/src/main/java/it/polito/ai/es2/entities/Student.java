@@ -36,38 +36,38 @@ public class Student {
   @OneToOne
   @JoinColumn
   private Image profilePhoto;
-  
+
   @ManyToMany
   @JoinTable(name = "student_course", joinColumns = @JoinColumn(name = "student_id"),
       inverseJoinColumns = @JoinColumn(name = "course_id"))
   @UniqueElements
   private List<Course> courses = new ArrayList<>();
-  
+
   /**
    * Multiple teams because each student might be enrolled in multiple courses at the same time
    */
   @ManyToMany(mappedBy = "members")
   List<Team> teams = new ArrayList<>(); // --> vms total
-  
+
   @OneToMany(mappedBy = "creator")
   private List<VM> vmsCreated;
-  
+
   @ManyToMany(mappedBy = "sharedOwners")
   private List<VM> vmsOwned;
-  
+
   @OneToMany(mappedBy = "student", cascade = CascadeType.ALL)
   private List<Implementation> implementations; // --> assignment
-  
+
   public void removeCourse(Course old_course) {
     courses.remove(old_course);
     old_course.getStudents().remove(this);
   }
-  
+
   public void addTeam(Team team) {
     teams.add(team);
     team.getMembers().add(this);
   }
-  
+
   @Override
   public String toString() {
     return "Student{} " + id + getLastName();

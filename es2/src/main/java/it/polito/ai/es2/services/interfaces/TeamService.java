@@ -8,10 +8,14 @@ import java.util.Optional;
 
 public interface TeamService {
   List<TeamDTO> getAllTeams();
+
   Optional<TeamDTO> getTeam(Long teamId);
+
   List<StudentDTO> getMembers(Long TeamId);
+
   TeamDTO proposeTeam(String courseId, String name, List<Long> memberIds);
+
   boolean evictTeam(Long teamId);
-  
+
   boolean setTeamStatus(Long teamId, boolean status);
 }

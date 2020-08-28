@@ -28,16 +28,16 @@ public class ModelHelper {
   @Value("${myprop.prefixurl}")
   private String httpPrefix; // http or https
   public String baseUrl = "";
-  
+
   @PostConstruct
   public void init() {
     baseUrl = httpPrefix + "://" + address + ":" + port;
   }
-  
+
   public String getBaseUrl() {
     return baseUrl;
   }
-  
+
   public CourseDTO enrich(CourseDTO courseDTO) {
     if (courseDTO == null)
       return new CourseDTO();
@@ -45,7 +45,7 @@ public class ModelHelper {
     courseDTO.add(Link.of(baseUrl + "/API/courses/" + courseDTO.getId(), IanaLinkRelations.SELF));
     courseDTO.add(Link.of(baseUrl + "/API/courses/" + courseDTO.getId() + "/enable").withRel("enable (POST)"));
     courseDTO.add(Link.of(baseUrl + "/API/courses/" + courseDTO.getId() + "/disable").withRel("disable (POST)"));
-    
+
     courseDTO.add(linkTo(methodOn(APICourses_RestController.class)
                              .getEnrolledStudents(courseDTO.getId())).withRel("enrolled"));
     courseDTO.add(linkTo(methodOn(APICourses_RestController.class)
@@ -56,7 +56,7 @@ public class ModelHelper {
                              .getTeamsForCourse(courseDTO.getId())).withRel("teams"));
     return courseDTO;
   }
-  
+
   public StudentDTO enrich(StudentDTO studentDTO) {
     if (studentDTO == null)
       return new StudentDTO();
@@ -68,7 +68,7 @@ public class ModelHelper {
                               .getTeamsForStudent(studentDTO.getId())).withRel("teams"));
     return studentDTO;
   }
-  
+
   public TeamDTO enrich(TeamDTO teamDTO) {
     if (teamDTO == null)
       return new TeamDTO();

@@ -16,7 +16,7 @@ import org.springframework.web.server.ResponseStatusException;
 public class APIImages_RestController {
   @Autowired
   ImageService imageService;
-  
+
   @PostMapping(value = "/")
   public ResponseEntity<String> uploadImage(@RequestParam("imageFile") MultipartFile file) {
     if (file == null)
@@ -24,9 +24,10 @@ public class APIImages_RestController {
     imageService.uploadImage(file);
     return ResponseEntity.status(HttpStatus.OK).body("{\"Response\": \"Upload successful!\"}");
   }
-  
+
   @GetMapping(path = {"/{imageId}"})
-  public @ResponseBody ImageDTO getImage(@PathVariable("imageId") Long imageId) {
+  public @ResponseBody
+  ImageDTO getImage(@PathVariable("imageId") Long imageId) {
     return imageService.getImage(imageId);
   }
 }

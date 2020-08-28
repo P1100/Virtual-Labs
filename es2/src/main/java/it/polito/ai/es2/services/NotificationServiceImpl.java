@@ -44,7 +44,7 @@ public class NotificationServiceImpl implements NotificationService {
   String port;
   @Autowired
   Environment environment;
-  
+
   @Override
   public void sendMessage(String emailAddress, String subject, String body) {
     SimpleMailMessage message = new SimpleMailMessage();
@@ -53,7 +53,7 @@ public class NotificationServiceImpl implements NotificationService {
     message.setText(body);
     emailSender.send(message);
   }
-  
+
   /**
    * trovare team, e corso?, e rimuovere token
    * if team_corrente ha ancora tokens, ritorna false
@@ -80,7 +80,7 @@ public class NotificationServiceImpl implements NotificationService {
 //    }
     return false;
   }
-  
+
   /**
    * Trova team, rimuovi tutti i token relativi a team corrente (se ce ne sono) e invoca evict team + return true. Altrimenti false
    */
@@ -94,7 +94,7 @@ public class NotificationServiceImpl implements NotificationService {
     tokenRepository.deleteAll(tokenRepository.findAllByTeamId(teamId));
     return teamService.evictTeam(teamId);
   }
-  
+
   /**
    * Non c'è bisogno di controlli, poichè viene chiamato direttamente da propose team (che fa lui tutti i controlli)
    */
@@ -126,12 +126,12 @@ public class NotificationServiceImpl implements NotificationService {
 //        sendMessage("s" + mymatricola + "@studenti.polito.it", "[Student:" + memberId + "] Conferma iscrizione al team " + teamDTO.getId(), sb.toString());
     }
   }
-  
+
   private Optional<Team> cleanupAndVerifyTokenExists(String idtoken) {
     cleanUpOldTokens();
     return tokenRepository.findById(idtoken).map(Token::getTeamId).map(teamId -> teamRepository.getOne(teamId));
   }
-  
+
   private boolean cleanUpOldTokens() {
     List<Token> tokenExpiredList = tokenRepository.findAllByExpiryDateBeforeOrderByExpiryDate(Timestamp.valueOf(LocalDateTime.now()));
     if (tokenExpiredList.size() > 0) {

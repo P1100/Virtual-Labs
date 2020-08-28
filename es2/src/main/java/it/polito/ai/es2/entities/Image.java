@@ -28,20 +28,20 @@ public class Image {
   @Lob
   @Basic(fetch = FetchType.LAZY)
   private byte[] picByte;
-  
+
   @OneToOne(mappedBy = "profilePhoto")
   private Student student;
-  
+
   @OneToOne(mappedBy = "profilePhoto")
   private Professor professor;
-  
+
   @OneToOne(mappedBy = "content")
   private Assignment assignment;
-  
+
   @ManyToOne(cascade = CascadeType.MERGE)
   @JoinColumn
   private Implementation submission;
-  
+
   @OneToOne(mappedBy = "imageVm")
   private VM vm;
 }

@@ -35,38 +35,38 @@ public class Course {
   private int maxSizeTeam;
   private boolean enabled;
   private String vmModelPath;
-  
+
   @ManyToMany(mappedBy = "courses", cascade = {CascadeType.MERGE, CascadeType.PERSIST})
   private List<Student> students = new ArrayList<>();
-  
+
   @ManyToMany(mappedBy = "courses", cascade = {CascadeType.MERGE, CascadeType.PERSIST})
   private List<Professor> professors = new ArrayList<>();
-  
+
   @OneToMany(mappedBy = "course", cascade = CascadeType.ALL)
   private List<Team> teams = new ArrayList<>(); // -> vms
-  
+
   @OneToMany(mappedBy = "course", cascade = CascadeType.ALL)
   private List<Assignment> assignments = new ArrayList<>();
-  
+
   public void addStudent(Student new_student) {
     students.add(new_student);
     new_student.getCourses().add(this);
   }
-  
+
   public void removeStudent(Student old_student) {
     students.remove(old_student);
     old_student.getCourses().remove(this);
   }
-  
+
   public void addTeam(Team new_team) {
     new_team.setCourse(this);
   }
-  
+
   @Override
   public String toString() {
     return "Course{} " + id;
   }
-  
+
   @Override
   public boolean equals(Object o) {
     if (this == o) return true;
@@ -74,7 +74,7 @@ public class Course {
     Course course = (Course) o;
     return id.equalsIgnoreCase(course.id);
   }
-  
+
   @Override
   public int hashCode() {
     return Objects.hash(id.toLowerCase());

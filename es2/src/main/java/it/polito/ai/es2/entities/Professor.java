@@ -36,15 +36,15 @@ public class Professor {
   @OneToOne
   @JoinColumn
   private Image profilePhoto;
-  
+
   @ManyToMany(cascade = {CascadeType.MERGE, CascadeType.PERSIST})
   @JoinTable
   @UniqueElements
   private List<Course> courses = new ArrayList<>(); // --> teams, vms
-  
+
   @OneToMany(mappedBy = "creator", cascade = {CascadeType.MERGE, CascadeType.PERSIST})
   private List<Assignment> assignments;
-  
+
   @Override
   public String toString() {
     return "Professor{} " + id + getLastName();

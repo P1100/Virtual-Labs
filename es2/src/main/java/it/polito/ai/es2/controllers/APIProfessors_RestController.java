@@ -9,8 +9,8 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/API/students")
 public class APIProfessors_RestController {
-    @Autowired
-    ProfessorService professorService;
-    @Autowired
-    private ModelHelper modelHelper;
+  @Autowired
+  ProfessorService professorService;
+  @Autowired
+  private ModelHelper modelHelper;
 }
