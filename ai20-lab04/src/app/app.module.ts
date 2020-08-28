@@ -27,7 +27,6 @@ import {VmsContComponent} from './r2-inner-tab/vms/vms-cont.component';
 import {HTTP_INTERCEPTORS, HttpClientModule} from '@angular/common/http';
 import {MatSelectModule} from '@angular/material/select';
 import {MatIconModule} from '@angular/material/icon';
-import {TestDialogComponent} from './dialogs/test-dialog/test-dialog.component';
 import {MatListModule} from '@angular/material/list';
 import {MatSidenavModule} from '@angular/material/sidenav';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
@@ -72,10 +71,10 @@ import {CourseDeleteComponent} from './dialogs/course-delete/course-delete.compo
     MatButtonModule,
     MatMenuModule,
     MatTooltipModule,
-    // New / temp / test
+    // New unchecked
     MatSelectModule,
     MatExpansionModule,
-    NgbModule,
+    NgbModule, //ng bootstrap
     MatGridListModule,
     LayoutModule,
     MatRadioModule,
@@ -90,19 +89,14 @@ import {CourseDeleteComponent} from './dialogs/course-delete/course-delete.compo
     AssignmentsContComponent,
     HomeComponent,
     TabsNavComponent,
-    TestDialogComponent,
     LoginComponent,
     EmptyComponent,
-    TestDialogComponent,
     LoginComponent,
     RegisterComponent,
     TestingComponent,
     CourseEditComponent,
     DeletetestComponent,
     CourseDeleteComponent,
-  ],
-  entryComponents: [
-    HomeComponent, TestDialogComponent, LoginComponent
   ],
   providers: [HttpClientModule, {provide: MAT_DIALOG_DEFAULT_OPTIONS, useValue: {hasBackdrop: false}},
     {provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true}],

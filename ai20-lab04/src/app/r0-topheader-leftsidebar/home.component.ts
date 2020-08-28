@@ -13,6 +13,10 @@ import {Alert, AlertsService} from '../services/alerts.service';
 import {AppSettings} from '../app-settings';
 import {CourseDeleteComponent} from '../dialogs/course-delete/course-delete.component';
 
+export interface dialogCourseData {
+  courseId: string,
+  courseName: string,
+}
 @Component({
   selector: 'app-home',
   templateUrl: './home.component.html',

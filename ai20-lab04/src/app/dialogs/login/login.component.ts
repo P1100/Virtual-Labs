@@ -53,12 +53,12 @@ export class LoginComponent implements OnDestroy {
     if (val.email && val.password) {
       this.subscriptionLogin = this.authService.login(val.email, val.password)
         .subscribe((accessToken) => {
-          console.log('User is logged in. Received: ' + JSON.stringify(accessToken), accessToken);
-          console.log('LoginComponent ended login http sub');
-          this.dialogRef.close();
-          console.log('LoginComponent after dialogRef.close()');
-          this.router.navigateByUrl('/');
-          console.log('LoginComponent after navigateByUrl!');
+            console.log('User is logged in. Received: ' + JSON.stringify(accessToken), accessToken);
+            console.log('LoginComponent ended login http sub');
+            this.dialogRef.close();
+            console.log('LoginComponent after dialogRef.close()');
+            this.router.navigateByUrl('/');
+            console.log('LoginComponent after navigateByUrl!');
           }
         );
     }

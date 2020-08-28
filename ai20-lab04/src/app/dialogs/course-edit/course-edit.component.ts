@@ -3,6 +3,7 @@ import {MAT_DIALOG_DATA, MatDialogRef} from '@angular/material/dialog';
 import {Course} from '../../models/course.model';
 import {CourseService} from '../../services/course.service';
 import {AppSettings} from '../../app-settings';
+import {dialogCourseData} from '../../r0-topheader-leftsidebar/home.component';
 
 @Component({
   selector: 'app-course-edit',
@@ -18,8 +19,7 @@ export class CourseEditComponent {
 
   constructor(private courseService: CourseService,
               public dialogRef: MatDialogRef<CourseEditComponent>,
-              @Inject(MAT_DIALOG_DATA) public data: any) {
-    // data: {courseName: this.nameActiveCourse, courseId: this.idActiveCourse}
+              @Inject(MAT_DIALOG_DATA) public data: dialogCourseData) {
     const subscription = courseService.getCourse(data?.courseId).subscribe((c: Course[]) => this.course = c[0]);
   }
 

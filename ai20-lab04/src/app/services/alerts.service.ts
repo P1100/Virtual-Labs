@@ -5,6 +5,7 @@ export interface Alert {
   type: string; // Can be: 'success','info','warning','danger','primary','secondary','light','dark'
   message: string;
 }
+
 const httpCodes = {
   100: '100 Continue',
   101: '101 Switching Protocols',
