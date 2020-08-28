@@ -237,6 +237,8 @@ public class CourseServiceImpl implements CourseService {
       throw new CourseNotFoundException("enrollStudents(List<Long> studentIds, String courseId) - course not found");
 
     Course course = courseRepository.getOne(courseId);
+    if (!course.isEnabled())
+      throw new CourseNotEnabledException(courseId);
     List<Boolean> lb = new ArrayList<>();
     for (Long id : studentIds) {
       if (id == null) { // null was put by AddAndReroll function
@@ -267,6 +269,8 @@ public class CourseServiceImpl implements CourseService {
     if (reader == null || courseId == null) throw new NullParameterException("null reader or course parameter");
     Optional<Course> courseOptional = courseRepository.findById(courseId);
     if (courseOptional.isEmpty()) throw new CourseNotFoundException(courseId);
+    if (!courseOptional.get().isEnabled())
+      throw new CourseNotEnabledException(courseId);
 
     CsvToBean<StudentViewModel> csvToBean = new CsvToBeanBuilder(reader)
                                                 .withType(StudentViewModel.class)

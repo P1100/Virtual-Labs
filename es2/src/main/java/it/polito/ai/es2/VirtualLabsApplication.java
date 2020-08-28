@@ -17,8 +17,11 @@ import org.springframework.core.env.Environment;
 import java.util.Arrays;
 import java.util.Collections;
 
-// TODO: test empty db, empty courses/tables, runtime errors, null values, invalid inputs and constrains, conversion and arithmetic errors, sub methods errors
-// TODO: check somewhere that for each course there is max one team associated
+/**
+ * Invalid Inputs: empty db, empty entities, course enabled, same name team, student not enrolled, 1 team per course x student,
+ * Other errors: runtime errors, null values, conversion and arithmetic errors, sub methods errors,
+ * Multi data input error (and other controller input mismatch)
+ */
 @SpringBootApplication
 @Log
 public class VirtualLabsApplication {

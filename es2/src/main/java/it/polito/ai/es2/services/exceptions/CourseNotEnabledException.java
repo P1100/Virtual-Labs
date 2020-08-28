@@ -6,6 +6,6 @@ public class CourseNotEnabledException extends RuntimeException {
   }
 
   public CourseNotEnabledException(String s) {
-    super("Course not enabled. (" + s + ")");
+    super("Course " + s + " not enabled. ");
   }
 }

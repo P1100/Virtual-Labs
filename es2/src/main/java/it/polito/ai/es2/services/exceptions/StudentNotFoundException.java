@@ -5,7 +5,7 @@ public class StudentNotFoundException extends RuntimeException {
     super("Student not found.");
   }
 
-  public StudentNotFoundException(String studentId) {
-    super("Student not found. (" + studentId + ")");
+  public StudentNotFoundException(String s) {
+    super("Student " + s + " not found. ");
   }
 }

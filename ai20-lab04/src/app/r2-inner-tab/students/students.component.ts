@@ -1,4 +1,4 @@
-import {AfterViewInit, Component, EventEmitter, Input, OnChanges, Output, SimpleChanges, ViewChild} from '@angular/core';
+import {AfterViewInit, Component, ElementRef, EventEmitter, Input, OnChanges, Output, SimpleChanges, ViewChild} from '@angular/core';
 import {Student} from '../../models/student.model';
 import {MatTableDataSource} from '@angular/material/table';
 import {MatSort, Sort} from '@angular/material/sort';
@@ -46,24 +46,31 @@ export class StudentsComponent implements AfterViewInit, OnChanges {
   /* Checkbox Logic */
   checkboxMasterCompleted = false;
   checkboxMasterIndeterminate = false;
-  showCheckboxSelectAllToolbar = false;
-  showCheckboxDeselectAllToolbar = false;
+  showCheckboxSelectAll = false;
+  showCheckboxDeselectAll = false;
   // IMPORTANT: always add the + symbol before any number passed to checked, otherwise it will interpret it like a string, resulting in an error
   checked: Map<number, boolean> = new Map();   // number = student's id (serial)
 
   selectedStudentToAdd: Student = null;
+  selectedCsvFile: File;
+  @ViewChild('labelFileCsv')
+  labelFileCsv: ElementRef;
+  resetInputCsvElement: any;
+  @Output()
+  uploadCsvEvent = new EventEmitter<File>();
+  csvInput: string;
 
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['enrolled'] != null || changes['students'] != null) {
+      // Update table sort, checkbox logic
       if (changes['enrolled'] != null) {
         this.sortData();
-        // Update checkbox logic
         this.checkboxMasterCompleted = false;
         this.checkboxMasterIndeterminate = false;
-        this.showCheckboxDeselectAllToolbar = false;
-        this.showCheckboxDeselectAllToolbar = false;
+        this.showCheckboxDeselectAll = false;
+        this.showCheckboxDeselectAll = false;
       }
-      // Update autocomplete
+      // Update async autocomplete
       delete this.filteredOptions$;
       this.autocompleteControl.reset(null);
       this.filteredOptions$ = this.autocompleteControl.valueChanges
@@ -157,8 +164,8 @@ export class StudentsComponent implements AfterViewInit, OnChanges {
     [...this.checked.entries()].forEach(t => this.checked.set(+t[0], completed));
     this.checkboxMasterCompleted = completed;
     this.checkboxMasterIndeterminate = false;
-    this.showCheckboxDeselectAllToolbar = completed;
-    this.showCheckboxSelectAllToolbar = false;
+    this.showCheckboxDeselectAll = completed;
+    this.showCheckboxSelectAll = false;
   }
   checkboxSetAllPage(completed: boolean) {
     for (const id of this.getStudentsIdCurrentPage()) {
@@ -168,11 +175,11 @@ export class StudentsComponent implements AfterViewInit, OnChanges {
     this.checkboxMasterIndeterminate = false;
 
     if (completed === true && this.dataSource.data.length > [...this.checked.values()].filter(value => value === true).length) {
-      this.showCheckboxSelectAllToolbar = true;
-      this.showCheckboxDeselectAllToolbar = false;
+      this.showCheckboxSelectAll = true;
+      this.showCheckboxDeselectAll = false;
     } else {
-      this.showCheckboxSelectAllToolbar = false;
-      this.showCheckboxDeselectAllToolbar = false;
+      this.showCheckboxSelectAll = false;
+      this.showCheckboxDeselectAll = false;
     }
   }
   autocompleteDisplayFunction(student: Student): string {
@@ -183,8 +190,20 @@ export class StudentsComponent implements AfterViewInit, OnChanges {
   }
   paginatorUpdate() {
     this.updateMasterCheckbox();
-    this.showCheckboxSelectAllToolbar = false;
-    this.showCheckboxDeselectAllToolbar = false;
+    this.showCheckboxSelectAll = false;
+    this.showCheckboxDeselectAll = false;
+  }
+  // Gets called when the user selects an image
+  public onFileCsvChanged(event) {
+    this.selectedCsvFile = event?.target?.files[0];
+    // To update bootstrap input text, since JQuery is missing
+    this.labelFileCsv.nativeElement.innerText = this.selectedCsvFile?.name;
+  }
+  // courseId in students-cont
+  onCSVUpload() {
+    this.uploadCsvEvent.emit(this.selectedCsvFile);
+    this.labelFileCsv.nativeElement.innerText = 'choose CSV file';
+    this.resetInputCsvElement = null;
   }
 }
 

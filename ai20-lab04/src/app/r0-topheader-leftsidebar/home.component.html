@@ -35,7 +35,7 @@
   <mat-sidenav #drawer mode="side" opened position="start">
     <mat-accordion multi="false" #acc>
       <mat-nav-list>
-        <mat-list-item routerLink="#" id="add-course-button">
+        <mat-list-item id="add-course-button" (click)="openAddCourseDialog()">
           <button mat-raised-button>
             <mat-icon>add_circle</mat-icon>
             Add course

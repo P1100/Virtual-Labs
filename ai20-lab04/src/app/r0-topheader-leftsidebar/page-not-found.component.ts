@@ -4,7 +4,7 @@ import {Component} from '@angular/core';
   selector: 'app-page-not-found',
   template: `
     <p>
-      PageNotFoundComponent: page-not-found works!
+      Page Not Found!
     </p>
   `,
   styles: []

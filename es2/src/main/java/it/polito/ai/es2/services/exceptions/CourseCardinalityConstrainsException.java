@@ -6,6 +6,6 @@ public class CourseCardinalityConstrainsException extends RuntimeException {
   }
 
   public CourseCardinalityConstrainsException(String s) {
-    super("Course cardinalities violated. (" + s + ")");
+    super("Course " + s + " cardinalities violated. ");
   }
 }

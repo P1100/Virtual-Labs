@@ -6,6 +6,6 @@ public class StudentDuplicatesInProposalException extends RuntimeException {
   }
 
   public StudentDuplicatesInProposalException(String s) {
-    super("Student duplicates in proposal. (" + s + ")");
+    super("Student " + s + " duplicate in proposal. ");
   }
 }

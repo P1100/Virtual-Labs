@@ -20,6 +20,15 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+/**
+ * Format HTTP response body: 	{
+ * 	    "timestamp": "2018-01-28T19:48:10.471+0000",
+ * 	    "status": 404,
+ * 	    "error": "Not Found",
+ * 	    "message": "Actor Not Found",
+ * 	    "path": "/actor/8"
+ *    }
+ */
 @Log
 @ControllerAdvice
 public class GlobalRuntimeExceptionHandler

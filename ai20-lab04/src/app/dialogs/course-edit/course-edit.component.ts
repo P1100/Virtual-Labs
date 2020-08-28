@@ -12,7 +12,6 @@ import {dialogCourseData} from '../../r0-topheader-leftsidebar/home.component';
 })
 export class CourseEditComponent {
   course = new Course('null', '', 0, 0, false, '');
-  addressForm: any;
   private selectedFile: File;
   noValidateForTesting = false;
   showNoValidateCheckboxForTesting = AppSettings.devShowTestingComponents;

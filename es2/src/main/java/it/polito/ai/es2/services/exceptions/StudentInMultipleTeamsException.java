@@ -8,6 +8,6 @@ public class StudentInMultipleTeamsException extends RuntimeException {
   }
 
   public StudentInMultipleTeamsException(String s) {
-    super("Student in multiple teams. (" + s + ")");
+    super("Student " + s + " in multiple teams. ");
   }
 }

@@ -12,11 +12,13 @@ import {CourseEditComponent} from '../dialogs/course-edit/course-edit.component'
 import {Alert, AlertsService} from '../services/alerts.service';
 import {AppSettings} from '../app-settings';
 import {CourseDeleteComponent} from '../dialogs/course-delete/course-delete.component';
+import {CourseAddComponent} from '../dialogs/course-add/course-add.component';
 
 export interface dialogCourseData {
   courseId: string,
   courseName: string,
 }
+
 @Component({
   selector: 'app-home',
   templateUrl: './home.component.html',
@@ -111,41 +113,69 @@ export class HomeComponent implements OnInit, OnDestroy {
       }
     });
   }
+  openAddCourseDialog(): void {
+    if (this.dialogRef) // if dialog exists
+    {
+      return;
+    }
+    const dialogRef = this.dialog.open(CourseAddComponent, {
+      maxWidth: '600px', autoFocus: true, hasBackdrop: false, disableClose: false, closeOnNavigation: true
+    });
+    dialogRef.afterClosed().subscribe((res: string) => {
+        this.dialogRef = null;
+        if (res == 'success') {
+          this.alertsService.setAlert({type: 'success', message: 'Course added!'});
+          this.router.navigateByUrl('/'); // refreshing data
+        } else if (res != undefined) {
+          this.alertsService.setAlert({type: 'danger', message: 'Couldn\'t add course! ' + res});
+        }
+      }, error => this.alertsService.setAlert({type: 'danger', message: 'Dialog Error!'})
+    );
+  }
   openEditCourseDialog(): void {
+    if (this.dialogRef) // if dialog exists
+    {
+      return;
+    }
     const dialogRef = this.dialog.open(CourseEditComponent, {
       maxWidth: '600px', autoFocus: true, hasBackdrop: false, disableClose: false, closeOnNavigation: true,
       data: {courseName: this.nameActiveCourse, courseId: this.idActiveCourse}
     });
     dialogRef.afterClosed().subscribe((res: string) => {
-        this.dialogRef = null;
-        if (res == 'success') {
-          this.alertsService.setAlert({type: 'success', message: 'Course update successful!'});
-          this.router.navigateByUrl('/'); // refreshing data
-        } else if (res != undefined) {
-          this.alertsService.setAlert({type: 'danger', message: 'Couldn\'t update course! ' + res});
+      this.dialogRef = null;
+      if (res == 'success') {
+        this.alertsService.setAlert({type: 'success', message: 'Course updated!'});
+        this.router.navigateByUrl('/'); // refreshing data
+      } else if (res != undefined) {
+        this.alertsService.setAlert({type: 'danger', message: 'Couldn\'t update course! ' + res});
         }
       }, error => this.alertsService.setAlert({type: 'danger', message: 'Dialog Error!'})
     );
   }
   openDeleteCourseDialog(): void {
+    if (this.dialogRef) // if dialog exists
+    {
+      return;
+    }
     const dialogRef = this.dialog.open(CourseDeleteComponent, {
       maxWidth: '600px', autoFocus: true, hasBackdrop: false, disableClose: false, closeOnNavigation: true,
       data: {courseName: this.nameActiveCourse, courseId: this.idActiveCourse}
     });
     dialogRef.afterClosed().subscribe((res: string) => {
-        this.dialogRef = null;
-        if (res == 'success') {
-          this.alertsService.setAlert({type: 'success', message: 'Course delete successful!'});
-          this.forseCoursesUpdate = true;
-          this.router.navigateByUrl('/'); // refreshing data
-        } else if (res != undefined) {
+      this.dialogRef = null;
+      if (res == 'success') {
+        this.alertsService.setAlert({type: 'success', message: 'Course deleted!'});
+        this.forseCoursesUpdate = true;
+        this.router.navigateByUrl('/'); // refreshing data
+      } else if (res != undefined) {
           this.alertsService.setAlert({type: 'danger', message: 'Couldn\'t delete course! ' + res});
         }
       }, error => this.alertsService.setAlert({type: 'danger', message: 'Dialog Error!'})
     );
   }
   openLoginDialogReactive(): void {
-    if (this.dialogRef) { // if dialog exists
+    if (this.dialogRef) // if dialog exists
+    {
       return;
     }
     this.dialogRef = this.dialog.open(LoginComponent, {

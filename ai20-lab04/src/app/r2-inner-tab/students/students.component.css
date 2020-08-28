@@ -20,3 +20,7 @@ img .avatars {
 #person_add_icon {
   color: navy;
 }
+
+select, input, button {
+  border-width: 0px;
+}

@@ -6,6 +6,6 @@ public class StudentAlreadyEnrolled extends RuntimeException {
   }
 
   public StudentAlreadyEnrolled(String s) {
-    super("Student already enrolled. (" + s + ")");
+    super("Student " + s + " already enrolled. ");
   }
 }

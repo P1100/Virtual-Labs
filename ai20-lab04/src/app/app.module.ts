@@ -43,6 +43,7 @@ import {TabsNavComponent} from './r1-content-tabs/tabs-nav.component';
 import {CourseEditComponent} from './dialogs/course-edit/course-edit.component';
 import {MatRadioModule} from '@angular/material/radio';
 import {CourseDeleteComponent} from './dialogs/course-delete/course-delete.component';
+import {CourseAddComponent} from './dialogs/course-add/course-add.component';
 
 @NgModule({
   imports: [
@@ -95,6 +96,7 @@ import {CourseDeleteComponent} from './dialogs/course-delete/course-delete.compo
     TestingComponent,
     CourseEditComponent,
     CourseDeleteComponent,
+    CourseAddComponent,
   ],
   providers: [HttpClientModule, {provide: MAT_DIALOG_DEFAULT_OPTIONS, useValue: {hasBackdrop: false}},
     {provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true}],
