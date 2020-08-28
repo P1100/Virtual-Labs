@@ -1,4 +1,4 @@
-import {Component, OnDestroy, OnInit} from '@angular/core';
+import {ChangeDetectorRef, Component, OnDestroy, OnInit} from '@angular/core';
 import {Course} from '../models/course.model';
 import {Title} from '@angular/platform-browser';
 import {MatDialog} from '@angular/material/dialog';
@@ -42,6 +42,7 @@ export class HomeComponent implements OnInit, OnDestroy {
 
   dontExpandPanelOnNameClick(i: number) {
     this.panelOpenState[i] = !this.panelOpenState[i];
+    this.changeDetectorRef.detectChanges();
   }
   constructor(private titleService: Title,
               private courseService: CourseService,
@@ -49,7 +50,8 @@ export class HomeComponent implements OnInit, OnDestroy {
               private authService: AuthService,
               private router: Router,
               private route: ActivatedRoute,
-              private alertsService: AlertsService
+              private alertsService: AlertsService,
+              private changeDetectorRef: ChangeDetectorRef
   ) {
     titleService.setTitle(this.title);
     courseService.getCourses().subscribe(x => this.courses = x);
@@ -119,12 +121,13 @@ export class HomeComponent implements OnInit, OnDestroy {
       return;
     }
     const dialogRef = this.dialog.open(CourseAddComponent, {
-      maxWidth: '600px', autoFocus: true, hasBackdrop: false, disableClose: false, closeOnNavigation: true
+      maxWidth: '600px', autoFocus: true, hasBackdrop: true, disableClose: true, closeOnNavigation: true
     });
     dialogRef.afterClosed().subscribe((res: string) => {
         this.dialogRef = null;
         if (res != undefined) {
           this.courseService.getCourses().subscribe(x => this.courses = x);
+          this.alertsService.setAlert({type: 'success', message: 'Course created'});
         }
       }, () => this.alertsService.setAlert({type: 'danger', message: 'Dialog Error'})
     );
@@ -135,16 +138,13 @@ export class HomeComponent implements OnInit, OnDestroy {
       return;
     }
     const dialogRef = this.dialog.open(CourseEditComponent, {
-      maxWidth: '600px', autoFocus: true, hasBackdrop: false, disableClose: false, closeOnNavigation: true,
+      maxWidth: '600px', autoFocus: true, hasBackdrop: true, disableClose: true, closeOnNavigation: true,
       data: {courseName: this.nameActiveCourse, courseId: this.idActiveCourse}
     });
     dialogRef.afterClosed().subscribe((res: string) => {
-      this.dialogRef = null;
-      if (res == 'success') {
-        this.alertsService.setAlert({type: 'success', message: 'Course updated!'});
-        this.router.navigateByUrl('/'); // refreshing data
-      } else if (res != undefined) {
-        this.alertsService.setAlert({type: 'danger', message: 'Couldn\'t update course! ' + res});
+        this.dialogRef = null;
+        if (res != undefined) {
+          this.alertsService.setAlert({type: 'success', message: 'Course updated'});
         }
       }, error => this.alertsService.setAlert({type: 'danger', message: 'Dialog Error!'})
     );
@@ -155,17 +155,15 @@ export class HomeComponent implements OnInit, OnDestroy {
       return;
     }
     const dialogRef = this.dialog.open(CourseDeleteComponent, {
-      maxWidth: '600px', autoFocus: true, hasBackdrop: false, disableClose: false, closeOnNavigation: true,
+      maxWidth: '600px', autoFocus: false, hasBackdrop: true, disableClose: false, closeOnNavigation: true,
       data: {courseName: this.nameActiveCourse, courseId: this.idActiveCourse}
     });
     dialogRef.afterClosed().subscribe((res: string) => {
-      this.dialogRef = null;
-      if (res == 'success') {
-        this.alertsService.setAlert({type: 'success', message: 'Course deleted!'});
-        this.forseCoursesUpdate = true;
-        this.router.navigateByUrl('/'); // refreshing data
-      } else if (res != undefined) {
-          this.alertsService.setAlert({type: 'danger', message: 'Couldn\'t delete course! ' + res});
+        this.dialogRef = null;
+        console.log(res);
+        if (res != undefined) {
+          this.courseService.getCourses().subscribe(x => this.courses = x);
+          this.alertsService.setAlert({type: 'success', message: 'Course deleted!'});
         }
       }, error => this.alertsService.setAlert({type: 'danger', message: 'Dialog Error!'})
     );
@@ -176,9 +174,7 @@ export class HomeComponent implements OnInit, OnDestroy {
       return;
     }
     this.dialogRef = this.dialog.open(LoginComponent, {
-      maxWidth: '600px', autoFocus: true,
-      disableClose: false, // Esc key will close it
-      hasBackdrop: false, // clicking outside wont close it
+      maxWidth: '600px', autoFocus: true, hasBackdrop: true, disableClose: true, closeOnNavigation: false
     });
     // Settings what to do when dialog is closed
     this.dialogRef.afterClosed().subscribe(() => {

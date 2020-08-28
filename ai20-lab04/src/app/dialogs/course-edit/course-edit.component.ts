@@ -4,6 +4,8 @@ import {Course} from '../../models/course.model';
 import {CourseService} from '../../services/course.service';
 import {AppSettings} from '../../app-settings';
 import {dialogCourseData} from '../../r0-topheader-leftsidebar/home.component';
+import {Router} from '@angular/router';
+import {AlertsService} from '../../services/alerts.service';
 
 @Component({
   selector: 'app-course-edit',
@@ -18,7 +20,7 @@ export class CourseEditComponent {
 
   constructor(private courseService: CourseService,
               public dialogRef: MatDialogRef<CourseEditComponent>,
-              @Inject(MAT_DIALOG_DATA) public data: dialogCourseData) {
+              @Inject(MAT_DIALOG_DATA) public data: dialogCourseData, private router: Router, private alertsService: AlertsService) {
     const subscription = courseService.getCourse(data?.courseId).subscribe((c: Course[]) => this.course = c[0]);
   }
 
@@ -27,8 +29,15 @@ export class CourseEditComponent {
   }
   onSubmit() {
     this.courseService.updateCourse(this.course).subscribe(
-      x => this.dialogRef.close('success'),
-      e => this.dialogRef.close(e)
+      x => {
+        this.dialogRef.close('success');
+        this.router.navigateByUrl('/');
+        this.alertsService.setAlert({type: 'success', message: 'Course updated!'});
+      },
+      e => {
+        this.alertsService.setAlert({type: 'danger', message: 'Couldn\'t update course! ' + e});
+        this.dialogRef.close();
+      }
     );
   }
 

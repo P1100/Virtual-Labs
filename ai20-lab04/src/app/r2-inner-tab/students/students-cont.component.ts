@@ -64,9 +64,8 @@ export class StudentsContComponent implements OnDestroy {
   }
 
   onStudentsToEnroll(studentsToEnroll: Student[]) {
-    console.log('enroll', studentsToEnroll);
     if (studentsToEnroll === null || studentsToEnroll.length === 0) {
-      this.alertsService.setAlert({type: 'danger', message: 'Couldn\'t enroll! Null parameters'});
+      this.alertsService.setAlert({type: 'danger', message: 'Couldn\'t enroll!'});
       return;
     }
     const observable: Observable<Student[]> = from([...studentsToEnroll])
@@ -80,7 +79,7 @@ export class StudentsContComponent implements OnDestroy {
   }
   onStudentsToDisenroll(studentsToDisenroll: Student[]) {
     if (studentsToDisenroll === null || studentsToDisenroll.length === 0) {
-      this.alertsService.setAlert({type: 'danger', message: 'Couldn\'t disenroll! Null parameters'});
+      this.alertsService.setAlert({type: 'danger', message: 'Couldn\'t disenroll!'});
       return;
     }
     const observable: Observable<Student[]> = from(studentsToDisenroll).pipe(

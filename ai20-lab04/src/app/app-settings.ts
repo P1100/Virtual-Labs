@@ -1,7 +1,6 @@
 import {HttpHeaders} from '@angular/common/http';
 import {HateoasModel} from './models/hateoas.model';
 import {throwError} from 'rxjs';
-import {AlertsService} from './services/alerts.service';
 import {environment} from '../environments/environment';
 
 /* Shared settings, constants and functions */
@@ -86,10 +85,10 @@ export function getSafeDeepCopyToArray(ss: any): any[] {
 }
 // TODO: test responseErrorString format
 export function formatErrors(error: any) {
-  let responseErrorString = ''; // (`${(error?.error?.error == null ? (typeof (error?.error) == 'string' ? error?.error : Object.keys(error?.error)) : error?.error?.error + ' - ' + error?.error?.message)}`);
+  let responseErrorString = error?.error?.message; // (`${(error?.error?.error == null ? (typeof (error?.error) == 'string' ? error?.error : Object.keys(error?.error)) : error?.error?.error + ' - ' + error?.error?.message)}`);
   if (AppSettings.devModeShowAll) {
-    console.error('1-', error, error?.error, error?.error?.error);
-    // responseErrorString = (responseErrorString + ` [${AlertsService.getHttpResponseStatusDescription(error?.status)}]`)responseErrorString.replace(/undefined -/gi, '');
+    console.error('1-', error, '-----', error?.error, '-----', error?.error?.error, '-----', responseErrorString);
+    responseErrorString = responseErrorString + ` [${error?.error?.status} ${error?.error?.error}]`;
   }
-  return throwError(error?.error);
+  return throwError(responseErrorString);
 }

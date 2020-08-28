@@ -63,7 +63,6 @@ export class CourseService {
       .pipe(catchError(formatErrors));
   }
   enrollStudentsCSV(courseId: string, uploadCSVData: FormData): Observable<any> {
-    console.log('--enrollStudentsCSV:', courseId, uploadCSVData);
     return this.http.post(`${this.baseUrlAPI}/${courseId}/enroll-csv`, uploadCSVData).pipe(catchError(formatErrors));
   }
   getTeamsForCourse(courseId: string): Observable<Team[]> {
