@@ -24,7 +24,8 @@ public class APIImages_RestController {
     imageService.uploadImage(file);
     return ResponseEntity.status(HttpStatus.OK).body("{\"Response\": \"Upload successful!\"}");
   }
-  @GetMapping(path = { "/{imageId}" })
+  
+  @GetMapping(path = {"/{imageId}"})
   public @ResponseBody ImageDTO getImage(@PathVariable("imageId") Long imageId) {
     return imageService.getImage(imageId);
   }

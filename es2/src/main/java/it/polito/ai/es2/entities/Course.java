@@ -47,7 +47,7 @@ public class Course {
   
   @OneToMany(mappedBy = "course", cascade = CascadeType.ALL)
   private List<Assignment> assignments = new ArrayList<>();
-
+  
   public void addStudent(Student new_student) {
     students.add(new_student);
     new_student.getCourses().add(this);

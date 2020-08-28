@@ -38,7 +38,9 @@ public class GlobalRuntimeExceptionHandler
     return handleExceptionInternal(ex, bodyOfResponse, new HttpHeaders(), HttpStatus.BAD_REQUEST, request); // 400
   }
   
-  /** DTO Validation errors (override of ResponseEntityExceptionHandler) **/
+  /**
+   * DTO Validation errors (override of ResponseEntityExceptionHandler)
+   **/
   @Override
   protected ResponseEntity<Object> handleMethodArgumentNotValid(MethodArgumentNotValidException ex,
                                                                 HttpHeaders headers, HttpStatus status, WebRequest request) {
@@ -49,7 +51,7 @@ public class GlobalRuntimeExceptionHandler
       errors.put(fieldName, errorMessage);
     });
     log.warning("DTO Validation errors: " + errors.values());
-    return new ResponseEntity<>("Validation errors: " + errors.keySet().stream().map(x->x+" ").collect(Collectors.joining()), HttpStatus.UNPROCESSABLE_ENTITY); // 422
+    return new ResponseEntity<>("Validation errors: " + errors.keySet().stream().map(x -> x + " ").collect(Collectors.joining()), HttpStatus.UNPROCESSABLE_ENTITY); // 422
   }
   
   @ExceptionHandler(value = {NullParameterException.class})

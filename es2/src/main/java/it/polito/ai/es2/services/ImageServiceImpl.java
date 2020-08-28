@@ -69,6 +69,7 @@ public class ImageServiceImpl implements ImageService {
     }
     imageRepository.save(img);
   }
+  
   /**
    * GET {@link it.polito.ai.es2.controllers.APIImages_RestController#getImage(Long)}
    */
@@ -106,8 +107,9 @@ public class ImageServiceImpl implements ImageService {
     System.out.println("Compressed Image Byte Size - " + outputStream.toByteArray().length);
     return outputStream.toByteArray();
   }
+  
   // Uncompress the image bytes before returning it to the angular application
-  private byte[] decompressBytes(byte[] data)  {
+  private byte[] decompressBytes(byte[] data) {
     Inflater inflater = new Inflater();
     inflater.setInput(data);
     ByteArrayOutputStream outputStream = new ByteArrayOutputStream(data.length);
