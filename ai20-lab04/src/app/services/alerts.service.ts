@@ -54,7 +54,6 @@ const httpCodes = {
   providedIn: 'root'
 })
 export class AlertsService {
-  private alertMessage: Alert = null;  // null, or Alert
   private alertSubject: BehaviorSubject<Alert> = new BehaviorSubject(null);
   public static getHttpResponseStatusDescription(code: number): string {
     return httpCodes[code];
@@ -63,12 +62,12 @@ export class AlertsService {
   public getAlertSubject(): Observable<Alert> {
     return this.alertSubject as Observable<Alert>;
   }
-  public setAlert(alert: Alert) {
-    this.alertMessage = alert;
+  // {type: 'success', message: 'Course added!'}
+  public setAlert(atype: string, amessage: string) {
+    const alert: Alert = {type: atype, message: `${amessage}`};
     this.alertSubject.next(alert);
   }
   public closeAlert() {
-    this.alertMessage = null;
     this.alertSubject.next(null);
   }
 

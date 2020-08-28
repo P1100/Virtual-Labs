@@ -35,6 +35,7 @@ const routes: Routes = [
 // TODO: reactivate Auth logic later (look es5 commit to be sure, not everything is to uncomment...)
             // canActivate: [AuthGuard],
             // canActivateChild: [AuthGuard],
+            // canLoad: []
             children: [
               {
                 path: ':id',
@@ -73,7 +74,7 @@ const routes: Routes = [
 ];
 
 @NgModule({
-  imports: [RouterModule.forRoot(routes, {enableTracing: false, onSameUrlNavigation: 'reload', paramsInheritanceStrategy: 'always'})],
+  imports: [RouterModule.forRoot(routes, {enableTracing: false, onSameUrlNavigation: 'ignore', paramsInheritanceStrategy: 'always'})],
   exports: [RouterModule]
 })
 export class AppRoutingModule {

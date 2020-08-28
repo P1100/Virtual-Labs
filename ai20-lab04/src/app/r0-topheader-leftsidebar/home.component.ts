@@ -7,7 +7,7 @@ import {ActivatedRoute, NavigationEnd, Router} from '@angular/router';
 import {of, Subscription} from 'rxjs';
 import {LoginComponent} from '../dialogs/login/login.component';
 import {CourseService} from '../services/course.service';
-import {filter, map, mergeMap} from 'rxjs/operators';
+import {filter, map, switchMap} from 'rxjs/operators';
 import {CourseEditComponent} from '../dialogs/course-edit/course-edit.component';
 import {Alert, AlertsService} from '../services/alerts.service';
 import {AppSettings} from '../app-settings';
@@ -36,7 +36,7 @@ export class HomeComponent implements OnInit, OnDestroy {
   isLogged = false;
   routeSubscription: Subscription;
   alertsSubscription: Subscription;
-  alertMessage: Alert; // ngb-alert
+  alertNgb: Alert; // ngb-alert
   testingPageEnabled = AppSettings.devModeShowAll;
   forseCoursesUpdate = false;
 
@@ -70,7 +70,7 @@ export class HomeComponent implements OnInit, OnDestroy {
           }
           return lastchild; // -> last child will have all the params inherited
         }),
-        mergeMap((rout) => (rout != null) ? rout?.paramMap : of(null))
+        switchMap((rout) => (rout != null) ? rout?.paramMap : of(null)) // debug_note: it was mergeMap
       ).subscribe((paramMap) => {
         if (paramMap == null || this.courses == null) {
           this.nameActiveCourse = '';
@@ -83,14 +83,14 @@ export class HomeComponent implements OnInit, OnDestroy {
               this.nameActiveCourse = course.fullName;
             }
           }
-          if (oldCourseId != this.idActiveCourse && this.idActiveCourse != null) { // reset alert on course change
-            this.alertsService.setAlert(null);
-          }
           if (this.forseCoursesUpdate === true) { // called after course delete
             this.forseCoursesUpdate = false;
             courseService.getCourses().subscribe(x => this.courses = x);
           }
-          if (this.idActiveCourse != oldCourseId) { // closing all panels
+          if (this.idActiveCourse != oldCourseId && this.idActiveCourse != null) { // reset alerts
+            this.alertsService.closeAlert();
+          }
+          if (this.idActiveCourse != oldCourseId) { // closing all panels,
             for (let i = 0; i < this.panelOpenState.length; i++) {
               this.panelOpenState[i] = false;
             }
@@ -106,7 +106,7 @@ export class HomeComponent implements OnInit, OnDestroy {
         localStorage.removeItem('user');
       }
     });
-    this.alertsSubscription = this.alertsService.getAlertSubject().subscribe(x => this.alertMessage = x);
+    this.alertsSubscription = this.alertsService.getAlertSubject().subscribe(x => this.alertNgb = x);
   }
   ngOnInit(): void {
     this.routeSubscription = this.route.queryParams.subscribe(params => {
@@ -127,14 +127,12 @@ export class HomeComponent implements OnInit, OnDestroy {
         this.dialogRef = null;
         if (res != undefined) {
           this.courseService.getCourses().subscribe(x => this.courses = x);
-          this.alertsService.setAlert({type: 'success', message: 'Course created'});
         }
-      }, () => this.alertsService.setAlert({type: 'danger', message: 'Dialog Error'})
+      }, () => this.alertsService.setAlert('danger', 'Dialog Error')
     );
   }
   openEditCourseDialog(): void {
-    if (this.dialogRef) // if dialog exists
-    {
+    if (this.dialogRef) {
       return;
     }
     const dialogRef = this.dialog.open(CourseEditComponent, {
@@ -143,15 +141,11 @@ export class HomeComponent implements OnInit, OnDestroy {
     });
     dialogRef.afterClosed().subscribe((res: string) => {
         this.dialogRef = null;
-        if (res != undefined) {
-          this.alertsService.setAlert({type: 'success', message: 'Course updated'});
-        }
-      }, error => this.alertsService.setAlert({type: 'danger', message: 'Dialog Error!'})
+      }, error => this.alertsService.setAlert('danger', 'Dialog Error!')
     );
   }
   openDeleteCourseDialog(): void {
-    if (this.dialogRef) // if dialog exists
-    {
+    if (this.dialogRef) {
       return;
     }
     const dialogRef = this.dialog.open(CourseDeleteComponent, {
@@ -160,27 +154,21 @@ export class HomeComponent implements OnInit, OnDestroy {
     });
     dialogRef.afterClosed().subscribe((res: string) => {
         this.dialogRef = null;
-        console.log(res);
         if (res != undefined) {
           this.courseService.getCourses().subscribe(x => this.courses = x);
-          this.alertsService.setAlert({type: 'success', message: 'Course deleted!'});
         }
-      }, error => this.alertsService.setAlert({type: 'danger', message: 'Dialog Error!'})
+      }, error => this.alertsService.setAlert('danger', 'Dialog Error!')
     );
   }
   openLoginDialogReactive(): void {
-    if (this.dialogRef) // if dialog exists
-    {
+    if (this.dialogRef) {
       return;
     }
     this.dialogRef = this.dialog.open(LoginComponent, {
       maxWidth: '600px', autoFocus: true, hasBackdrop: true, disableClose: true, closeOnNavigation: false
     });
     // Settings what to do when dialog is closed
-    this.dialogRef.afterClosed().subscribe(() => {
-      this.dialogRef = null;
-      }
-    );
+    this.dialogRef.afterClosed().subscribe(() => this.dialogRef = null);
   }
   clickLoginLogout() {
     if (this.isLogged) {
@@ -196,10 +184,11 @@ export class HomeComponent implements OnInit, OnDestroy {
     }
   }
   closeAlert() {
-    this.alertMessage = null;
+    this.alertNgb = null;
   }
   ngOnDestroy(): void {
     this.authSubscription.unsubscribe();
     this.routeSubscription.unsubscribe();
+    this.alertsSubscription.unsubscribe();
   }
 }

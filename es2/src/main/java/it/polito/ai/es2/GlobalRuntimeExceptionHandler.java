@@ -33,14 +33,14 @@ public class GlobalRuntimeExceptionHandler
     extends ResponseEntityExceptionHandler {
   @ExceptionHandler(value = {IllegalArgumentException.class, IllegalStateException.class})
   protected ResponseEntity<Object> genericJavaError(RuntimeException ex, WebRequest request) {
-    String bodyOfResponse = "Server Error";
+    String bodyOfResponse = "{`\"message\":\"Server Error\", \"status\":\"500\", \"error\":\"INTERNAL SERVER ERROR\"}";
     log.severe(ex + " \n " + request);
     return handleExceptionInternal(ex, bodyOfResponse, new HttpHeaders(), HttpStatus.INTERNAL_SERVER_ERROR, request); // 500
   }
 
   @ExceptionHandler(value = {DataAccessException.class, ConstraintViolationException.class, TransactionSystemException.class, RollbackException.class})
   protected ResponseEntity<Object> dataError(RuntimeException ex, WebRequest request) {
-    String bodyOfResponse = "{`\"message\":\"Data Error\"}";
+    String bodyOfResponse = "{`\"message\":\"Data Error\", \"status\":\"400\", \"error\":\"BAD REQUEST\"}";
     log.warning(ex + " \n " + request);
     return handleExceptionInternal(ex, bodyOfResponse, new HttpHeaders(), HttpStatus.BAD_REQUEST, request); // 400
   }

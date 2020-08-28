@@ -29,7 +29,7 @@ export class CourseService {
   }
   updateCourse(course: Course): Observable<any> {
     return this.http.put(`${this.baseUrlAPI}`, JSON.stringify(course), AppSettings.JSON_HTTP_OPTIONS)
-      .pipe(retry(AppSettings.RETRIES), catchError(formatErrors));
+      .pipe(catchError(formatErrors));
   }
 
   getCourse(courseId: string): Observable<Course[]> {
@@ -39,7 +39,7 @@ export class CourseService {
   }
   deleteCourse(courseId: string): Observable<any> {
     return this.http.delete(`${this.baseUrlAPI}/${courseId}`, AppSettings.JSON_HTTP_OPTIONS)
-      .pipe(retry(AppSettings.RETRIES), catchError(formatErrors));
+      .pipe(catchError(formatErrors));
   }
 
   enableCourse(courseId: string): Observable<any> {

@@ -23,8 +23,8 @@ export class AppSettings {
 // Dynamic build of r1 tabs menu
 export const tabs = [
   {path: 'students', label: 'Students'},
-  {path: 'vms', label: 'VMs'},
   {path: 'teams', label: 'Teams'},
+  {path: 'vms', label: 'VMs'},
   {path: 'assignments', label: 'Assignments'}
 ];
 
@@ -87,7 +87,7 @@ export function getSafeDeepCopyToArray(ss: any): any[] {
 export function formatErrors(error: any) {
   let responseErrorString = error?.error?.message; // (`${(error?.error?.error == null ? (typeof (error?.error) == 'string' ? error?.error : Object.keys(error?.error)) : error?.error?.error + ' - ' + error?.error?.message)}`);
   if (AppSettings.devModeShowAll) {
-    console.error('1-', error, '-----', error?.error, '-----', error?.error?.error, '-----', responseErrorString);
+    console.error(error, '-----', error?.error, '-----', error?.error?.error, '-----', responseErrorString);
     responseErrorString = responseErrorString + ` [${error?.error?.status} ${error?.error?.error}]`;
   }
   return throwError(responseErrorString);

@@ -47,13 +47,13 @@ export class StudentsContComponent implements OnDestroy {
       this.subEnrolledStudentsCourse = this.backendService.getEnrolledStudents(this.courseId)
         .subscribe((students: Student[]) => {
             this.enrolledStudents = Array.isArray(students) ? [...students] : [];
-          }, error => this.alertsService.setAlert({type: 'danger', message: 'Error: couldn\'t get enrolled students!'})
+          }, error => this.alertsService.setAlert('danger', 'Couldn\t get enrolled students! ' + error)
         );
       this.subAllStudents = this.backendService.getAllStudents()
         .subscribe((students: Student[]) => {
-              this.allStudents = Array.isArray(students) ? [...students] : [];
-            }, error => this.alertsService.setAlert({type: 'danger', message: 'Error: couldn\'t get students list!'})
-          );
+            this.allStudents = Array.isArray(students) ? [...students] : [];
+          }, error => this.alertsService.setAlert('danger', 'Couldn\'t get students list! ' + error)
+        );
       }
     );
   }
@@ -65,7 +65,7 @@ export class StudentsContComponent implements OnDestroy {
 
   onStudentsToEnroll(studentsToEnroll: Student[]) {
     if (studentsToEnroll === null || studentsToEnroll.length === 0) {
-      this.alertsService.setAlert({type: 'danger', message: 'Couldn\'t enroll!'});
+      this.alertsService.setAlert('danger', 'Couldn\'t enroll!');
       return;
     }
     const observable: Observable<Student[]> = from([...studentsToEnroll])
@@ -73,13 +73,13 @@ export class StudentsContComponent implements OnDestroy {
         concatMap((student: Student) =>
           this.backendService.enroll(student, this.courseId) as Observable<any>
         ),
-        toArray()  // so it waits for all inner observables to collect
+        toArray()  // so it waits for all inner observables to collect, after source complete
       ) as Observable<any>;
     this.updateEnrolledStudents(observable, 'enroll');
   }
   onStudentsToDisenroll(studentsToDisenroll: Student[]) {
     if (studentsToDisenroll === null || studentsToDisenroll.length === 0) {
-      this.alertsService.setAlert({type: 'danger', message: 'Couldn\'t disenroll!'});
+      this.alertsService.setAlert('danger', 'Couldn\'t disenroll!');
       return;
     }
     const observable: Observable<Student[]> = from(studentsToDisenroll).pipe(
@@ -96,9 +96,9 @@ export class StudentsContComponent implements OnDestroy {
       this.backendService.getEnrolledStudents(this.courseId).subscribe(
         (ss: Student[]) => {
           this.enrolledStudents = getSafeDeepCopyToArray(ss);
-          this.alertsService.setAlert({type: 'success', message: `Student ${message}ed!`});
-        }, error => this.alertsService.setAlert({type: 'danger', message: `Couldn\'t update enrolled students! ${error}`}));
-    }, error => this.alertsService.setAlert({type: 'danger', message: `Couldn\'t ${message}! ${error}`}));
+          this.alertsService.setAlert('success', `Student ${message}ed!`);
+        }, error => this.alertsService.setAlert('danger', `Couldn\'t update enrolled students! ${error}`));
+    }, error => this.alertsService.setAlert('danger', `Couldn\'t ${message}! ${error}`));
   }
   onCsvUpload(selectedFile: File) {
     const uploadCSVData = new FormData();
@@ -108,10 +108,10 @@ export class StudentsContComponent implements OnDestroy {
           this.backendService.getEnrolledStudents(this.courseId).subscribe(
             (ss: Student[]) => {
               this.enrolledStudents = getSafeDeepCopyToArray(ss);
-              this.alertsService.setAlert({type: 'success', message: `CSV students enrolled!`});
-            }, error => this.alertsService.setAlert({type: 'danger', message: `Couldn\'t update enrolled students! ${error}`}));
+              this.alertsService.setAlert('success', `CSV students enrolled!`);
+            }, error => this.alertsService.setAlert('danger', `Couldn\'t update enrolled students! ${error}`));
         },
-        error => this.alertsService.setAlert({type: 'danger', message: `Couldn\'t upload CSV! ${error}`})
+        error => this.alertsService.setAlert('danger', `Couldn\'t upload CSV! ${error}`)
       );
   }
 }

@@ -28,10 +28,10 @@ export class CourseAddComponent {
       x => {
         this.dialogRef.close('success');
         this.router.navigateByUrl('/');
-        this.alertsService.setAlert({type: 'success', message: 'Course added!'});
+        this.alertsService.setAlert('success', 'Course added!');
       },
       e => {
-        this.alertsService.setAlert({type: 'danger', message: 'Couldn\'t add course! ' + e});
+        this.alertsService.setAlert('danger', 'Couldn\'t add course! ' + e);
         this.dialogRef.close();
       }
     );

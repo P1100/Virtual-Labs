@@ -27,8 +27,9 @@
 
 <div id="sub-top-toolbar">
   <mat-toolbar>{{nameActiveCourse}}</mat-toolbar>
-  <ngb-alert *ngIf="alertMessage" [type]="alertMessage?.type"
-             (close)="closeAlert()">{{ alertMessage?.message }}</ngb-alert>
+  <ngb-alert *ngIf="alertNgb" [type]="alertNgb?.type"
+             (close)="closeAlert()">{{alertNgb?.message}}</ngb-alert>
+  <!--  [innerHTML]="alertNgb?.message"-->
 </div>
 
 <mat-sidenav-container>

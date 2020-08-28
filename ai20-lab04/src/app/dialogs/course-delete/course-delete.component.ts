@@ -28,10 +28,10 @@ export class CourseDeleteComponent {
       x => {
         this.dialogRef.close('success');
         this.router.navigateByUrl('/');
-        this.alertsService.setAlert({type: 'success', message: 'Course deleted!'});
+        this.alertsService.setAlert('success', 'Course deleted!');
       },
       e => {
-        this.alertsService.setAlert({type: 'danger', message: 'Couldn\'t delete course! ' + e});
+        this.alertsService.setAlert('danger', 'Couldn\'t delete course! ' + e);
         this.dialogRef.close();
       }
     );

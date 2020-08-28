@@ -21,7 +21,12 @@ export class CourseEditComponent {
   constructor(private courseService: CourseService,
               public dialogRef: MatDialogRef<CourseEditComponent>,
               @Inject(MAT_DIALOG_DATA) public data: dialogCourseData, private router: Router, private alertsService: AlertsService) {
-    const subscription = courseService.getCourse(data?.courseId).subscribe((c: Course[]) => this.course = c[0]);
+    const subscription = courseService.getCourse(data?.courseId).subscribe(
+      (c: Course[]) => this.course = c[0],
+      error => {
+        this.dialogRef.close();
+        this.alertsService.setAlert('danger', 'Failed to get course. ' + error);
+      });
   }
 
   onCancelClick(): void {
@@ -32,10 +37,10 @@ export class CourseEditComponent {
       x => {
         this.dialogRef.close('success');
         this.router.navigateByUrl('/');
-        this.alertsService.setAlert({type: 'success', message: 'Course updated!'});
+        this.alertsService.setAlert('success', 'Course updated!');
       },
       e => {
-        this.alertsService.setAlert({type: 'danger', message: 'Couldn\'t update course! ' + e});
+        this.alertsService.setAlert('danger', 'Couldn\'t update course! ' + e);
         this.dialogRef.close();
       }
     );

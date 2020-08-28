@@ -31,10 +31,10 @@ export class StudentService {
   }
   enroll(student: Student, courseId: string): Observable<any> {
     return this.http.put(`${this.baseUrlAPI}/courses/${courseId}/enroll`, JSON.stringify(student), AppSettings.JSON_HTTP_OPTIONS
-    ).pipe(retry(AppSettings.RETRIES), catchError(formatErrors));
+    ).pipe(catchError(formatErrors));
   }
   disenroll(student: Student, courseId: string): Observable<any> {
     return this.http.put(`${this.baseUrlAPI}/courses/${courseId}/disenroll/${student.id}`, null
-    ).pipe(retry(AppSettings.RETRIES), catchError(formatErrors));
+    ).pipe(catchError(formatErrors));
   }
 }
