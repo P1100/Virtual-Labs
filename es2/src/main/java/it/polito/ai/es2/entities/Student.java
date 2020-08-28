@@ -70,6 +70,6 @@ public class Student {
   
   @Override
   public String toString() {
-    return "Student{} " + this.id + this.getLastName();
+    return "Student{} " + id + getLastName();
   }
 }

@@ -63,7 +63,7 @@ public class NotificationServiceImpl implements NotificationService {
   @Transactional
   public boolean confirm(String idtoken) {
     Optional<Team> optionalTeam = cleanupAndVerifyTokenExists(idtoken);
-    if (!optionalTeam.isPresent())
+    if (optionalTeam.isEmpty())
       return false;
     Team team = optionalTeam.get();
     Long teamId = team.getId();
@@ -88,7 +88,7 @@ public class NotificationServiceImpl implements NotificationService {
   @Transactional
   public boolean reject(String idtoken) {
     Optional<Team> optionalTeam = cleanupAndVerifyTokenExists(idtoken);
-    if (!optionalTeam.isPresent())
+    if (optionalTeam.isEmpty())
       return false;
     Long teamId = optionalTeam.get().getId();
     tokenRepository.deleteAll(tokenRepository.findAllByTeamId(teamId));
@@ -105,9 +105,9 @@ public class NotificationServiceImpl implements NotificationService {
       Token token = new Token();
       token.setId((UUID.randomUUID().toString()));
       token.setTeamId(teamDTO.getId());
-      token.setStudent(studentRepository.findById(memberId).orElseGet(() -> null));
+      token.setStudent(studentRepository.findById(memberId).orElse(null));
       token.setExpiryDate(Timestamp.valueOf(LocalDateTime.now().plusHours(1)));
-      String url = null;
+      String url;
       try {
         url = "http://" + InetAddress.getLocalHost().getHostAddress() + ":" + port;
         tokenRepository.save(token);
@@ -116,7 +116,7 @@ public class NotificationServiceImpl implements NotificationService {
         return;
       }
       StringBuffer sb = new StringBuffer();
-      sb.append("Hello " + memberId);
+      sb.append("Hello ").append(memberId);
       sb.append("\n\nLink to accept token:\n" + url + "/notification/confirm/" + token.getId());
       sb.append("\n\nLink to remove token:\n" + url + "/notification/reject/" + token.getId());
       System.out.println(sb);
@@ -129,7 +129,7 @@ public class NotificationServiceImpl implements NotificationService {
   
   private Optional<Team> cleanupAndVerifyTokenExists(String idtoken) {
     cleanUpOldTokens();
-    return tokenRepository.findById(idtoken).map(token -> token.getTeamId()).map(teamId -> teamRepository.getOne(teamId));
+    return tokenRepository.findById(idtoken).map(Token::getTeamId).map(teamId -> teamRepository.getOne(teamId));
   }
   
   private boolean cleanUpOldTokens() {

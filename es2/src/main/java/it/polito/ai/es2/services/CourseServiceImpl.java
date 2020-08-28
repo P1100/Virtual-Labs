@@ -144,19 +144,15 @@ public class CourseServiceImpl implements CourseService {
     Optional<Course> courseOptional = courseRepository.findById(courseId);
     if (courseOptional.isEmpty()) return false;
     Course c = courseOptional.get();
-    List<Student> ss = new ArrayList<>();
-    // removing synch course before delete
+    // removing course from synced entities before delete
     for (Student student : c.getStudents()) {
-      List<Course> courses = student.getCourses();
       student.getCourses().remove(c);
-      courses = student.getCourses();
-      ss.add(student);
     }
-    c.setStudents(new ArrayList<Student>());
+    c.setStudents(new ArrayList<>());
     for (Professor professor : c.getProfessors()) {
       professor.getCourses().remove(c);
     }
-    c.setProfessors(new ArrayList<Professor>());
+    c.setProfessors(new ArrayList<>());
     // ----> Others sync handled by delete cascade!
     courseRepository.deleteById(courseId);
     return true;
@@ -271,8 +267,8 @@ public class CourseServiceImpl implements CourseService {
     if (reader == null || courseId == null) throw new NullParameterException("null reader or course parameter");
     Optional<Course> courseOptional = courseRepository.findById(courseId);
     if (courseOptional.isEmpty()) throw new CourseNotFoundException(courseId);
-    
-    CsvToBean<StudentViewModel> csvToBean = new CsvToBeanBuilder(reader)
+  
+    CsvToBean<StudentViewModel> csvToBean = new CsvToBeanBuilder<StudentViewModel>(reader)
                                                 .withType(StudentViewModel.class)
                                                 .withIgnoreLeadingWhiteSpace(true)
                                                 .build();

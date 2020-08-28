@@ -37,14 +37,14 @@ public class APITeams_RestController {
     }
     Link link = linkTo(methodOn(APITeams_RestController.class)
                            .getAllTeams()).withSelfRel();
-    CollectionModel<TeamDTO> result = new CollectionModel<>(allTeams, link);
+    CollectionModel<TeamDTO> result = CollectionModel.of(allTeams, link);
     return result;
   }
   
   @GetMapping("/{teamId}")
   public TeamDTO getTeam(@PathVariable Long teamId) {
     Optional<TeamDTO> teamDTO = teamService.getTeam(teamId);
-    if (!teamDTO.isPresent())
+    if (teamDTO.isEmpty())
       throw new ResponseStatusException(HttpStatus.CONFLICT, teamId.toString());
     return modelHelper.enrich(teamDTO.get());
   }
@@ -74,7 +74,7 @@ public class APITeams_RestController {
   public String propose_team(@ModelAttribute("command") TeamViewModel teamViewModel,
                              BindingResult bindingResult, Model model) {
     TeamDTO created_team;
-    teamViewModel.getMemberIds().removeAll(Arrays.asList("", null));
+    teamViewModel.getMemberIds().removeAll(Arrays.asList(0L, null));
     try {
       created_team = teamService.proposeTeam(teamViewModel.getCourseId(), teamViewModel.getName(), teamViewModel.getMemberIds());
     } catch (Exception e) {

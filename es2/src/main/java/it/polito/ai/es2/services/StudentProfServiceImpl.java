@@ -7,7 +7,7 @@ import it.polito.ai.es2.entities.Student;
 import it.polito.ai.es2.repositories.CourseRepository;
 import it.polito.ai.es2.repositories.StudentRepository;
 import it.polito.ai.es2.services.exceptions.NullParameterException;
-import it.polito.ai.es2.services.interfaces.StudentService;
+import it.polito.ai.es2.services.interfaces.StudentProfService;
 import lombok.extern.java.Log;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,7 +26,7 @@ import java.util.stream.Collectors;
 @Service
 @Transactional
 @Log
-public class StudentServiceImpl implements StudentService {
+public class StudentProfServiceImpl implements StudentProfService {
   @Autowired
   ModelMapper modelMapper;
   @Autowired
@@ -57,7 +57,7 @@ public class StudentServiceImpl implements StudentService {
    * GET {@link it.polito.ai.es2.controllers.APIStudents_RestController#getCourses(Long)}
    */
   @Override
-  public List<CourseDTO> getCourses(Long studentId) {
+  public List<CourseDTO> getEnrolledCourses(Long studentId) {
     log.info("getCourses(" + studentId + ")");
     if (studentId == null) throw new NullParameterException("null student parameter");
     return studentRepository.getOne(studentId).getCourses().stream().map(x -> modelMapper.map(x, CourseDTO.class)).collect(Collectors.toList());
@@ -88,11 +88,11 @@ public class StudentServiceImpl implements StudentService {
       }
       return false;
     } catch (IllegalArgumentException e) {
-      log.warning("###### IllegalArgumentException:" + e.toString());
+      log.warning("###### IllegalArgumentException:" + e);
       e.printStackTrace();
       return false;
     } catch (Exception e) {
-      log.warning("###### Other Exception:" + e.toString());
+      log.warning("###### Other Exception:" + e);
       e.printStackTrace();
       return false;
     }

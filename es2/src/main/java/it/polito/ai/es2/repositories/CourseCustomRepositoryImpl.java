@@ -28,7 +28,7 @@ public class CourseCustomRepositoryImpl implements CourseCustomRepository {
             "AND (tc.c < :min OR tc.c > :max)");
     parameters.forEach(query::setParameter);
   
-    int querySingleResult = 0;
+    int querySingleResult;
     try {
       Object singleResult = query.getSingleResult();
       querySingleResult = ((BigInteger) singleResult).intValue();

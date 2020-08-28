@@ -15,7 +15,7 @@ public class Testing_Controller {
   @GetMapping("/testmap")
   @ResponseBody
   public Map<String, String> testMapBinding() {
-    Map<String, String> m = new HashMap<String, String>(); //Map.of
+    Map<String, String> m = new HashMap<>(); //Map.of
     m.put("key1", "value1");
     m.put("key2", "value2");
     return m;

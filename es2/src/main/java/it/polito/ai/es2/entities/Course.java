@@ -64,7 +64,7 @@ public class Course {
   
   @Override
   public String toString() {
-    return "Course{} " + this.id;
+    return "Course{} " + id;
   }
   
   @Override

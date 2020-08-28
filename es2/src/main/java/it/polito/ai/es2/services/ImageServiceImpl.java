@@ -74,7 +74,7 @@ public class ImageServiceImpl implements ImageService {
    */
   @Override
   public ImageDTO getImage(Long imageId) {
-    final Optional<Image> retrievedImage = imageRepository.findById(imageId);
+    Optional<Image> retrievedImage = imageRepository.findById(imageId);
     if (retrievedImage.isEmpty())
       throw new ImageNotFoundException(imageId.toString());
     ImageDTO img = new ImageDTO();
@@ -85,7 +85,7 @@ public class ImageServiceImpl implements ImageService {
     return img;
   }
   
-  // compress the image bytes before storing it in the database
+  // Compress the image bytes before storing it in the database
   private byte[] compressBytes(byte[] data) {
     System.out.println("Original Image Byte Size - " + data.length);
     Deflater deflater = new Deflater();
@@ -100,11 +100,13 @@ public class ImageServiceImpl implements ImageService {
     try {
       outputStream.close();
     } catch (IOException e) {
+      e.printStackTrace();
+      throw new ImageException("IOException");
     }
     System.out.println("Compressed Image Byte Size - " + outputStream.toByteArray().length);
     return outputStream.toByteArray();
   }
-  // uncompress the image bytes before returning it to the angular application
+  // Uncompress the image bytes before returning it to the angular application
   private byte[] decompressBytes(byte[] data)  {
     Inflater inflater = new Inflater();
     inflater.setInput(data);
@@ -116,10 +118,9 @@ public class ImageServiceImpl implements ImageService {
         outputStream.write(buffer, 0, count);
       }
       outputStream.close();
-    } catch (IOException ioe) {
-      System.out.println(ioe);
-    } catch (DataFormatException e) {
-      System.out.println(e);
+    } catch (IOException | DataFormatException e) {
+      e.printStackTrace();
+      throw new ImageException("IOException | DataFormatException");
     }
     byte[] decompressed = outputStream.toByteArray();
     log.info("Original: " + data.length + " bytes. " + "Decompressed: " + decompressed.length + " bytes.");

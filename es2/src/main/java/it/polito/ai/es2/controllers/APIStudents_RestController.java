@@ -4,7 +4,7 @@ import it.polito.ai.es2.controllers.hateoas.ModelHelper;
 import it.polito.ai.es2.dtos.CourseDTO;
 import it.polito.ai.es2.dtos.StudentDTO;
 import it.polito.ai.es2.dtos.TeamDTO;
-import it.polito.ai.es2.services.interfaces.StudentService;
+import it.polito.ai.es2.services.interfaces.StudentProfService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.hateoas.CollectionModel;
 import org.springframework.hateoas.Link;
@@ -23,33 +23,33 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 @RequestMapping("/API/students")
 public class APIStudents_RestController {
   @Autowired
-  StudentService studentService;
+  StudentProfService studentProfService;
   @Autowired
   private ModelHelper modelHelper;
   
   @GetMapping({"", "/"})
   public CollectionModel<StudentDTO> getAllStudents() {
-    List<StudentDTO> allStudents = studentService.getAllStudents();
+    List<StudentDTO> allStudents = studentProfService.getAllStudents();
     for (StudentDTO studentDTO : allStudents) {
       modelHelper.enrich(studentDTO);
     }
     Link link = linkTo(methodOn(APIStudents_RestController.class)
                            .getAllStudents()).withSelfRel();
-    CollectionModel<StudentDTO> result = new CollectionModel<>(allStudents, link);
+    CollectionModel<StudentDTO> result = CollectionModel.of(allStudents, link);
     return result;
   }
   
   @GetMapping("/{student_id}")
   public StudentDTO getStudent(@PathVariable Long student_id) {
-    Optional<StudentDTO> studentDTO = studentService.getStudent(student_id);
-    if (!studentDTO.isPresent())
+    Optional<StudentDTO> studentDTO = studentProfService.getStudent(student_id);
+    if (studentDTO.isEmpty())
       throw new ResponseStatusException(HttpStatus.CONFLICT, student_id.toString());
     return modelHelper.enrich(studentDTO.get());
   }
   
   @GetMapping("/{student_id}/courses")
   public CollectionModel<CourseDTO> getCourses(@PathVariable Long student_id) {
-    List<CourseDTO> courses = studentService.getCourses(student_id);
+    List<CourseDTO> courses = studentProfService.getEnrolledCourses(student_id);
     for (CourseDTO courseDTO : courses) {
       modelHelper.enrich(courseDTO);
     }
@@ -60,7 +60,7 @@ public class APIStudents_RestController {
   
   @GetMapping("/{student_id}/teams")
   public CollectionModel<TeamDTO> getTeamsForStudent(@PathVariable Long student_id) {
-    List<TeamDTO> teams = studentService.getTeamsForStudent(student_id);
+    List<TeamDTO> teams = studentProfService.getTeamsForStudent(student_id);
     for (TeamDTO team : teams) {
       modelHelper.enrich(team);
     }
@@ -73,15 +73,16 @@ public class APIStudents_RestController {
   // ---> Nella POST settare ContentType: application/json
   @PostMapping({"", "/"})
   public StudentDTO addStudent(@Valid @RequestBody StudentDTO studentDTO) {
-    if (!studentService.addStudent(studentDTO)) {
-      throw new ResponseStatusException(HttpStatus.CONFLICT, studentDTO.getLastName());
-    } else
+    if (studentProfService.addStudent(studentDTO)) {
       return modelHelper.enrich(studentDTO);
+    } else {
+      throw new ResponseStatusException(HttpStatus.CONFLICT, studentDTO.getLastName());
+    }
   }
   
   //  [{"id":"S44","name":"S33-name","firstName":"S33-FirstName"},{"id":"S55","name":"S33-name","firstName":"S33-FirstName"}]
   @PostMapping("/addall")
   public List<Boolean> addStudents(@Valid @RequestBody List<StudentDTO> students) {
-    return studentService.addStudents(students);
+    return studentProfService.addStudents(students);
   }
 }

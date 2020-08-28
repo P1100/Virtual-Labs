@@ -47,6 +47,6 @@ public class Professor {
   
   @Override
   public String toString() {
-    return "Professor{} " + this.id + this.getLastName();
+    return "Professor{} " + id + getLastName();
   }
 }

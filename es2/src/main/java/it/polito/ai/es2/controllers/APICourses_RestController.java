@@ -120,8 +120,8 @@ public class APICourses_RestController {
   
   @RequestMapping(value = "/{courseId}/enroll-csv", method = {RequestMethod.PUT, RequestMethod.POST})
   public List<Boolean> enrollStudentsCSV(@PathVariable String courseId, @RequestParam("file") MultipartFile file) {
-    List<Boolean> booleanList = null;
-    if (file == null || file.isEmpty())
+    List<Boolean> booleanList;
+    if (file == null || file.isEmpty() || file.getContentType() == null)
       throw new ResponseStatusException(HttpStatus.CONFLICT, "null or empty file");
     if (!(file.getContentType().equals("text/csv") || file.getContentType().equals("application/vnd.ms-excel")))
       throw new ResponseStatusException(HttpStatus.UNSUPPORTED_MEDIA_TYPE, courseId + " - file Type:" + file.getContentType());

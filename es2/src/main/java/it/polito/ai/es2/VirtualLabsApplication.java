@@ -3,7 +3,7 @@ package it.polito.ai.es2;
 import it.polito.ai.es2.dtos.CourseDTO;
 import it.polito.ai.es2.dtos.StudentDTO;
 import it.polito.ai.es2.services.interfaces.CourseService;
-import it.polito.ai.es2.services.interfaces.StudentService;
+import it.polito.ai.es2.services.interfaces.StudentProfService;
 import it.polito.ai.es2.services.interfaces.TeamService;
 import lombok.extern.java.Log;
 import org.modelmapper.ModelMapper;
@@ -11,7 +11,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.core.env.Environment;
 
@@ -29,12 +28,12 @@ public class VirtualLabsApplication {
   
   @Autowired
   Environment environment;
-  @Autowired
-  private ApplicationContext applicationContext;
+  //  @Autowired
+//  private ApplicationContext applicationContext;
   @Autowired
   private CourseService courseService;
   @Autowired
-  private StudentService studentService;
+  private StudentProfService studentProfService;
   @Autowired
   private TeamService teamService;
   
@@ -49,7 +48,7 @@ public class VirtualLabsApplication {
       @Override
       public void run(String... args) {
         boolean init = false;
-        init = courseService.getAllCourses().stream().count() <= 0;
+        init = (long) courseService.getAllCourses().size() <= 0;
         if (init == true) {
           System.out.println("***************** Command Line Runner DB INITIALIZATION (check order of fields!) **********************");
           courseService.addCourse(new CourseDTO("c1", "Internet Applications", 1, 500, true, null));
@@ -60,19 +59,19 @@ public class VirtualLabsApplication {
           courseService.addCourse(new CourseDTO("c6", "Test: Disabled Course", 1, 500, false, null));
           courseService.addCourse(new CourseDTO("c7", "Test: min2 max3", 2, 3, true, null));
   
-          studentService.addStudent(new StudentDTO(1L, "Pietro", "Giasone", "s1@studenti.polito.it"));
-          studentService.addStudent(new StudentDTO(2L, "Giuseppe", "Rossi", "s2@studenti.polito.it"));
-          studentService.addStudent(new StudentDTO(3L, "Antonio", "Bianchi", "s3@studenti.polito.it"));
-          studentService.addStudent(new StudentDTO(4L, "Angelo", "Verdi", "s4@studenti.polito.it"));
-          studentService.addStudent(new StudentDTO(5L, "Domenico", "Gialli", "s5@studenti.polito.it"));
-          studentService.addStudent(new StudentDTO(6L, "Bruno", "Ferri", "s6@studenti.polito.it"));
-          studentService.addStudent(new StudentDTO(7L, "Paola", "Paleta", "s7@studenti.polito.it"));
-          studentService.addStudent(new StudentDTO(8L, "Sergio", "Limari", "s8@studenti.polito.it"));
-          studentService.addStudent(new StudentDTO(9L, "Luciano", "Benterri", "s9@studenti.polito.it"));
-          studentService.addStudent(new StudentDTO(10L, "Francesco", "Cavinni", "s10@studenti.polito.it"));
-          studentService.addStudent(new StudentDTO(11L, "Maria", "Pasolani", "s11@studenti.polito.it"));
-    
-          System.out.println(studentService.addStudents(
+          studentProfService.addStudent(new StudentDTO(1L, "Pietro", "Giasone", "s1@studenti.polito.it"));
+          studentProfService.addStudent(new StudentDTO(2L, "Giuseppe", "Rossi", "s2@studenti.polito.it"));
+          studentProfService.addStudent(new StudentDTO(3L, "Antonio", "Bianchi", "s3@studenti.polito.it"));
+          studentProfService.addStudent(new StudentDTO(4L, "Angelo", "Verdi", "s4@studenti.polito.it"));
+          studentProfService.addStudent(new StudentDTO(5L, "Domenico", "Gialli", "s5@studenti.polito.it"));
+          studentProfService.addStudent(new StudentDTO(6L, "Bruno", "Ferri", "s6@studenti.polito.it"));
+          studentProfService.addStudent(new StudentDTO(7L, "Paola", "Paleta", "s7@studenti.polito.it"));
+          studentProfService.addStudent(new StudentDTO(8L, "Sergio", "Limari", "s8@studenti.polito.it"));
+          studentProfService.addStudent(new StudentDTO(9L, "Luciano", "Benterri", "s9@studenti.polito.it"));
+          studentProfService.addStudent(new StudentDTO(10L, "Francesco", "Cavinni", "s10@studenti.polito.it"));
+          studentProfService.addStudent(new StudentDTO(11L, "Maria", "Pasolani", "s11@studenti.polito.it"));
+  
+          System.out.println(studentProfService.addStudents(
               Arrays.asList(new StudentDTO(12L, "Valentina", "Gennari", "s12@studenti.polito.it"),
                   new StudentDTO(13L, "Francesca", "Tulini", "s13@studenti.polito.it"),
                   new StudentDTO(14L, "Elena", "Casellari", "s14@studenti.polito.it"),

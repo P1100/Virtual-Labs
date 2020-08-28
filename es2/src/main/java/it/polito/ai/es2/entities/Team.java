@@ -47,13 +47,13 @@ public class Team {
   
   
   public void setCourse(Course new_course) {
-    if (this.course != null)
-      this.course.getTeams().remove(this);
+    if (course != null)
+      course.getTeams().remove(this);
     if (new_course == null) {
-      this.course = null;
+      course = null;
     } else {
       new_course.getTeams().add(this);
-      this.course = new_course;
+      course = new_course;
     }
   }
   
