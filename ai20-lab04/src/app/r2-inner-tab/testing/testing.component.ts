@@ -21,12 +21,10 @@ export class TestingComponent {
   arrc: Course[];
   @ViewChild('heroForm')
   heroForm: NgForm; // ElementRef;
-  panelOpenState = false;
 
   constructor(private studentService: StudentService, private courseService: CourseService, private imageService: ImageService,
               private sanitizer: DomSanitizer) {
   }
-
   selectedFile: File;
   retrievedImage: any;
   base64Data: any;
@@ -38,20 +36,6 @@ export class TestingComponent {
   @ViewChild('labelFileName')
   labelFileName: ElementRef;
 
-  uploadCSVData: FormData;
-
-  // Gets called when the user clicks on submit to upload the image
-  onCSVUpload(c: string) {
-    console.log(this.selectedFile);
-    this.uploadCSVData = new FormData();
-    this.uploadCSVData.append('file', this.selectedFile);
-    console.log(this.uploadCSVData, this.uploadCSVData.get('file'));
-    this.courseService.enrollStudentsCSV(c, this.uploadCSVData).subscribe(
-      ((response) => {
-          console.log(response);
-        }
-      ));
-  }
   // Gets called when the user selects an image
   public onFileChanged(event) {
     this.selectedFile = event.target.files[0];
@@ -61,7 +45,7 @@ export class TestingComponent {
   }
   // Gets called when the user clicks on submit to upload the image
   onImageUpload() {
-    // console.log(this.selectedFile);
+    // console.log(this.selectedCsvFile);
     // FormData API provides methods and properties to allow us easily prepare form data to be sent with POST HTTP requests.
     this.uploadImageData = new FormData();
     this.uploadImageData.append('imageFile', this.selectedFile, this.selectedFile.name);
@@ -98,7 +82,7 @@ export class TestingComponent {
     this.courseService.getCourse(s).subscribe();
   }
   getEnrolledStudents(s: string) {
-    this.courseService.getEnrolledStudents(s).subscribe();
+    this.studentService.getEnrolledStudents(s).subscribe();
   }
   getAllStudents() {
     this.studentService.getAllStudents().subscribe();
@@ -138,5 +122,8 @@ export class TestingComponent {
   }
   getAvailableStudents(c: string) {
     this.courseService.getAvailableStudents(c).subscribe();
+  }
+  addStudent(value: string) {
+
   }
 }

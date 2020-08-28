@@ -8,15 +8,13 @@ import java.util.List;
 import java.util.Optional;
 
 public interface StudentService {
+  List<StudentDTO> getAllStudents();
+
   Optional<StudentDTO> getStudent(Long studentId);
 
-  List<StudentDTO> getAllStudents();
+  boolean addStudent(StudentDTO student);
 
   List<CourseDTO> getEnrolledCourses(Long studentId);
 
   List<TeamDTO> getTeamsForStudent(Long studentId);
-
-  boolean addStudent(StudentDTO student);
-
-  List<Boolean> addStudents(List<StudentDTO> students);
 }

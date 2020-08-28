@@ -34,29 +34,17 @@
     <label for="student">Student 1</label>
     <input type="text" #student id="student" placeholder="student id" value="20">
     <label for="student">Student 2</label>
-    <input type="text" #stud2 id="stud2" placeholder="student id" value="30"><br>
-    <button mat-raised-button class="btn btn-light btn-sm" (click)="enrollStudent(student.value, course.value)">
-      enrollStudent
-    </button>
-    <button mat-raised-button class="btn btn-light btn-sm"
-            (click)="enrollStudents(student.value, stud2.value, course.value)">enrollStudents
-    </button>
-    <button mat-raised-button class="btn btn-light btn-sm" (click)="disenrollStudent(student.value, course.value)">
-      disenrollStudent
-    </button>
+    <input type="text" #stud2 id="stud2" placeholder="student id" value="30">
+    <br>
+    <button mat-raised-button class="btn btn-light btn-sm" (click)="addStudent(student.value)">addStudent</button>
+    <button mat-raised-button class="btn btn-light btn-sm" (click)="updateCourse(course.value)">updateCourse</button>
+    <button mat-raised-button class="btn btn-light btn-sm" (click)="deleteCourse(course.value)">deleteCourse</button>
+    <br>
+    <button mat-raised-button class="btn btn-light btn-sm" (click)="enrollStudent(student.value, course.value)"> enrollStudent</button>
+    <button mat-raised-button class="btn btn-light btn-sm" (click)="enrollStudents(student.value, stud2.value, course.value)">enrollStudents</button>
+    <button mat-raised-button class="btn btn-light btn-sm" (click)="disenrollStudent(student.value, course.value)"> disenrollStudent</button>
   </div>
 </div>
-
-<form enctype="multipart/form-data" method="POST">
-  <div class="custom-file">
-    <input type="file" accept=".csv" class="custom-file-input" id="importFile" (change)="onFileChanged($event)">
-    <label class="custom-file-label" for="importFile" #labelFileName>Choose file</label>
-  </div>
-  <br>
-  <div class="input-group-prepend">
-    <button class="btn btn-outline-secondary" type="button" (click)="onCSVUpload(course.value)">Upload CSV</button>
-  </div>
-</form>
 
 <br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>
 <div class="button-request" align="right">
@@ -146,49 +134,4 @@
     <input type="text" class="form-control" id="alterEgo"
            name="alterEgo">
   </div>
-
-
 </form>
-
-
-<!-- Default form register -->
-<form class="text-center border border-light p-5">
-
-  <p class="h4 mb-4">Sign up</p>
-
-  <div class="form-row mb-4">
-    <div class="col">
-      <!-- First name -->
-      <input type="text" id="defaultRegisterFormFirstName" class="form-control" placeholder="First name">
-    </div>
-    <div class="col">
-      <!-- Last name -->
-      <input type="text" id="defaultRegisterFormLastName" class="form-control" placeholder="Last name">
-    </div>
-  </div>
-
-  <!-- E-mail -->
-  <input type="email" id="defaultRegisterFormEmail" class="form-control mb-4" placeholder="E-mail">
-
-  <!-- Password -->
-  <input type="password" id="defaultRegisterFormPassword" class="form-control" placeholder="Password"
-         aria-describedby="defaultRegisterFormPasswordHelpBlock">
-  <small id="defaultRegisterFormPasswordHelpBlock" class="form-text text-muted mb-4">
-    At least 8 characters and 1 digit
-  </small>
-
-  <!-- Phone number -->
-  <input type="text" id="defaultRegisterPhonePassword" class="form-control" placeholder="Phone number"
-         aria-describedby="defaultRegisterFormPhoneHelpBlock">
-  <small id="defaultRegisterFormPhoneHelpBlock" class="form-text text-muted mb-4">
-    Optional - for two-step authentication
-  </small>
-
-
-  <!-- Terms of service -->
-  <p>By clicking
-    <em>Sign up</em> you agree to our
-    <a href="" target="_blank">terms of service</a></p>
-
-</form>
-<!-- Default form register -->

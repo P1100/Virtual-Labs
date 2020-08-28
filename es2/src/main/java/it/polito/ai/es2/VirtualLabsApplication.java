@@ -71,13 +71,12 @@ public class VirtualLabsApplication {
           studentService.addStudent(new StudentDTO(10L, "Francesco", "Cavinni", "s10@studenti.polito.it"));
           studentService.addStudent(new StudentDTO(11L, "Maria", "Pasolani", "s11@studenti.polito.it"));
 
-          System.out.println(studentService.addStudents(
-              Arrays.asList(new StudentDTO(12L, "Valentina", "Gennari", "s12@studenti.polito.it"),
-                  new StudentDTO(13L, "Francesca", "Tulini", "s13@studenti.polito.it"),
-                  new StudentDTO(14L, "Elena", "Casellari", "s14@studenti.polito.it"),
-                  new StudentDTO(15L, "Anna", "Rodieni", "s15@studenti.polito.it"),
-                  new StudentDTO(100L, "Last", "One", "s16@studenti.polito.it")
-              )));
+          studentService.addStudent(new StudentDTO(12L, "Valentina", "Gennari", "s12@studenti.polito.it"));
+          studentService.addStudent(new StudentDTO(13L, "Francesca", "Tulini", "s13@studenti.polito.it"));
+          studentService.addStudent(new StudentDTO(14L, "Elena", "Casellari", "s14@studenti.polito.it"));
+          studentService.addStudent(new StudentDTO(15L, "Anna", "Rodieni", "s15@studenti.polito.it"));
+          studentService.addStudent(new StudentDTO(100L, "Last", "One", "s16@studenti.polito.it"));
+
           courseService.enrollStudent(1L, "c1");
 //          courseService.enrollStudent(1L, "c6");
           courseService.enrollStudent(1L, "c7");

@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 import javax.validation.constraints.NotBlank;
 import java.util.List;
 
+// TODO: delete later, use DTO
 @Data
 @NoArgsConstructor
 @AllArgsConstructor

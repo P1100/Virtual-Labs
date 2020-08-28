@@ -54,6 +54,21 @@ public class StudentServiceImpl implements StudentService {
   }
 
   /**
+   * POST {@link it.polito.ai.es2.controllers.APIStudents_RestController#addStudent(StudentDTO)}
+   */
+  @Override
+  public boolean addStudent(StudentDTO student) {
+    log.info("addStudent(" + student + ")");
+    if (student == null || student.getId() == null) return false;
+    Student s = modelMapper.map(student, Student.class);
+    if (!studentRepository.existsById(student.getId())) {
+      studentRepository.save(s);
+      return true;
+    }
+    return false;
+  }
+
+  /**
    * GET {@link it.polito.ai.es2.controllers.APIStudents_RestController#getCourses(Long)}
    */
   @Override
@@ -71,52 +86,5 @@ public class StudentServiceImpl implements StudentService {
     log.info("getTeamsForStudent(" + studentId + ")");
     if (studentId == null) throw new NullParameterException("null student parameter");
     return studentRepository.getOne(studentId).getTeams().stream().map(x -> modelMapper.map(x, TeamDTO.class)).collect(Collectors.toList());
-  }
-
-  /**
-   * POST {@link it.polito.ai.es2.controllers.APIStudents_RestController#addStudent(StudentDTO)}
-   */
-  @Override
-  public boolean addStudent(StudentDTO student) {
-    log.info("addStudent(" + student + ")");
-    if (student == null || student.getId() == null) return false;
-    Student s = modelMapper.map(student, Student.class);
-    try {
-      if (!studentRepository.existsById(student.getId())) {
-        studentRepository.save(s);
-        return true;
-      }
-      return false;
-    } catch (IllegalArgumentException e) {
-      log.warning("###### IllegalArgumentException:" + e);
-      e.printStackTrace();
-      return false;
-    } catch (Exception e) {
-      log.warning("###### Other Exception:" + e);
-      e.printStackTrace();
-      return false;
-    }
-  }
-
-  /**
-   * POST {@link it.polito.ai.es2.controllers.APIStudents_RestController#addStudents(List)}
-   */
-  @Override
-  public List<Boolean> addStudents(List<StudentDTO> students) {
-    log.info("addAll(" + students + ")");
-    if (students == null) throw new NullParameterException("null list of students parameter");
-    return students.stream()
-               .map(x -> modelMapper.map(x, Student.class))
-               .peek(e -> log.info("addAll(List<StudentDTO> - size:" + students.size() + " - Entità corrente:" + e))
-               .map(
-                   e -> {
-                     boolean b = studentRepository.existsById(e.getId());
-                     // Se studente esisteva già...
-                     if (b)
-                       return Boolean.FALSE;
-                     // Se invece non esisteva...
-                     studentRepository.save(e);
-                     return Boolean.TRUE;
-                   }).collect(Collectors.toList());
   }
 }

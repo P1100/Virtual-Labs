@@ -51,7 +51,7 @@ public class ImageServiceImpl implements ImageService {
   @Autowired
   VMRepository vmRepository;
 
-    /**
+  /**
    * POST {@link it.polito.ai.es2.controllers.APIImages_RestController#uploadImage(MultipartFile)}
    */
   @Override
@@ -70,7 +70,7 @@ public class ImageServiceImpl implements ImageService {
     imageRepository.save(img);
   }
 
-    /**
+  /**
    * GET {@link it.polito.ai.es2.controllers.APIImages_RestController#getImage(Long)}
    */
   @Override
@@ -86,7 +86,7 @@ public class ImageServiceImpl implements ImageService {
     return img;
   }
 
-    // Compress the image bytes before storing it in the database
+  // Compress the image bytes before storing it in the database
   private byte[] compressBytes(byte[] data) {
     System.out.println("Original Image Byte Size - " + data.length);
     Deflater deflater = new Deflater();
@@ -108,7 +108,7 @@ public class ImageServiceImpl implements ImageService {
     return outputStream.toByteArray();
   }
 
-    // Uncompress the image bytes before returning it to the angular application
+  // Uncompress the image bytes before returning it to the angular application
   private byte[] decompressBytes(byte[] data) {
     Inflater inflater = new Inflater();
     inflater.setInput(data);

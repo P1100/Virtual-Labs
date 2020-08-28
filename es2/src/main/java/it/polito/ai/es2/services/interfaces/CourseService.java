@@ -11,31 +11,31 @@ import java.util.Optional;
 public interface CourseService {
   List<CourseDTO> getAllCourses();
 
-    boolean addCourse(CourseDTO course);
+  boolean addCourse(CourseDTO course);
 
-    boolean updateCourse(CourseDTO courseDTO);
+  boolean updateCourse(CourseDTO courseDTO);
 
-    Optional<CourseDTO> getCourse(String name);
+  Optional<CourseDTO> getCourse(String name);
 
-    boolean deleteCourse(String courseId);
+  boolean deleteCourse(String courseId);
 
-    void enableCourse(String courseName);
+  void enableCourse(String courseName);
 
-    void disableCourse(String courseName);
+  void disableCourse(String courseName);
 
-    List<StudentDTO> getEnrolledStudents(String courseName);
+  List<StudentDTO> getEnrolledStudents(String courseName);
 
-    void disenrollStudent(Long studentId, String courseId);
+  void disenrollStudent(Long studentId, String courseId);
 
-    void enrollStudent(Long studentId, String courseName);
+  void enrollStudent(Long studentId, String courseName);
 
-    List<Boolean> enrollStudents(List<Long> studentIds, String courseName);
+  List<Boolean> enrollStudents(List<Long> studentIds, String courseName);
 
-    List<Boolean> enrollStudentsCSV(Reader r, String courseName);
+  List<Boolean> enrollStudentsCSV(Reader r, String courseName);
 
-    List<TeamDTO> getTeamsForCourse(String courseName);
+  List<TeamDTO> getTeamsForCourse(String courseName);
 
-    List<StudentDTO> getStudentsInTeams(String courseName);
+  List<StudentDTO> getStudentsInTeams(String courseName);
 
-    List<StudentDTO> getAvailableStudents(String courseName);
+  List<StudentDTO> getAvailableStudents(String courseName);
 }

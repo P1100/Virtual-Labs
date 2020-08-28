@@ -268,7 +268,7 @@ public class CourseServiceImpl implements CourseService {
     Optional<Course> courseOptional = courseRepository.findById(courseId);
     if (courseOptional.isEmpty()) throw new CourseNotFoundException(courseId);
 
-    CsvToBean<StudentViewModel> csvToBean = new CsvToBeanBuilder<StudentViewModel>(reader)
+    CsvToBean<StudentViewModel> csvToBean = new CsvToBeanBuilder(reader)
                                                 .withType(StudentViewModel.class)
                                                 .withIgnoreLeadingWhiteSpace(true)
                                                 .build();
@@ -279,13 +279,12 @@ public class CourseServiceImpl implements CourseService {
                               .map(new_studentDTO ->
                               {
                                 Optional<Student> optionalStudent_fromDb = studentRepository.findById(new_studentDTO.getId());
-                                if (optionalStudent_fromDb.isPresent())
-                                  return null;
+//                                if (optionalStudent_fromDb.isPresent()) return null; // if students must also be new
                                 Student newStudent = modelMapper.map(new_studentDTO, Student.class);
                                 return studentRepository.save(newStudent);
                               })
                               .map(y -> y != null ? y.getId() : null).collect(Collectors.toList());
-    log.info(courseId + " - enrollStudentsCSV returned Valid_Students: " + list_ids);
+    log.info(courseId + " - enrollStudentsCSV returned Valid Students: " + list_ids);
     return enrollStudents(list_ids, courseId);
   }
 }

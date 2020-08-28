@@ -27,14 +27,13 @@ public class APIStudents_RestController {
   @Autowired
   private ModelHelper modelHelper;
 
-  @GetMapping({"", "/"})
+  @GetMapping()
   public CollectionModel<StudentDTO> getAllStudents() {
     List<StudentDTO> allStudents = studentService.getAllStudents();
     for (StudentDTO studentDTO : allStudents) {
       modelHelper.enrich(studentDTO);
     }
-    Link link = linkTo(methodOn(APIStudents_RestController.class)
-                           .getAllStudents()).withSelfRel();
+    Link link = linkTo(methodOn(APIStudents_RestController.class).getAllStudents()).withSelfRel();
     CollectionModel<StudentDTO> result = CollectionModel.of(allStudents, link);
     return result;
   }
@@ -71,18 +70,12 @@ public class APIStudents_RestController {
 
   //  {"id":"S33","name":"S33-name","firstName":"S33-FirstName"}
   // ---> Nella POST settare ContentType: application/json
-  @PostMapping({"", "/"})
+  @PostMapping()
   public StudentDTO addStudent(@Valid @RequestBody StudentDTO studentDTO) {
     if (studentService.addStudent(studentDTO)) {
       return modelHelper.enrich(studentDTO);
     } else {
       throw new ResponseStatusException(HttpStatus.CONFLICT, studentDTO.getLastName());
     }
-  }
-
-  //  [{"id":"S44","name":"S33-name","firstName":"S33-FirstName"},{"id":"S55","name":"S33-name","firstName":"S33-FirstName"}]
-  @PostMapping("/addall")
-  public List<Boolean> addStudents(@Valid @RequestBody List<StudentDTO> students) {
-    return studentService.addStudents(students);
   }
 }

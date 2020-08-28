@@ -1,6 +1,6 @@
-<p *ngIf="showCheckboxSelectAllToolbar || showCheckboxDeselectAllToolbar">
+<p *ngIf="showCheckboxSelectAll || showCheckboxDeselectAll">
   <mat-toolbar id="gmail-like-toolbar">
-    <div *ngIf="showCheckboxSelectAllToolbar; else elseRemoveAllDialog">
+    <div *ngIf="showCheckboxSelectAll; else elseRemoveAllDialog">
       All {{dataSource.paginator.pageSize}} students on this page are selected.
       <a (click)="checkboxSetAll(true)"
          [routerLink]=""
@@ -10,14 +10,25 @@
     <ng-template #elseRemoveAllDialog>All {{dataSource.data.length}} enrolled students are selected.
       <a (click)="checkboxSetAll(false)"
          [routerLink]=""
-         queryParamsHandling="preserve">Clear selection
-      </a>
+         queryParamsHandling="preserve">Clear selection</a>
     </ng-template>
   </mat-toolbar>
 </p>
 
+<form enctype="multipart/form-data" method="POST">
+  <div class="input-group mb-3">
+    <div class="input-group-prepend">
+      <button class="btn btn-outline-secondary" type="button" (click)="onCSVUpload()" [disabled]="ucsv.invalid || ucsv.pristine">Upload</button>
+    </div>
+    <div class="custom-file">
+      <input type="file" accept=".csv" class="custom-file-input" id="importFile" #ucsv="ngModel" [(ngModel)]="resetInputCsvElement" name="csv" (change)="onFileCsvChanged($event)" required>
+      <label class="custom-file-label" for="importFile" #labelFileCsv>Choose CSV file</label>
+    </div>
+  </div>
+</form>
+
 <div>
-  <form>
+  <form name="header-table">
     <mat-form-field>
       <mat-label>Add student</mat-label>
       <input #input [formControl]="autocompleteControl" [matAutocomplete]="auto"
@@ -36,7 +47,6 @@
     <button (click)="studentsAdd(); input.value=''" mat-button matSuffix matTooltip="Add selected student">
       <mat-icon id="person_add_icon">person_add</mat-icon>
     </button>
-    <br>
     <button (click)="studentsRemove()" mat-button>Delete selected</button>
   </form>
 
