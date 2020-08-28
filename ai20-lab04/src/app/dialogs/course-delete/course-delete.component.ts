@@ -13,7 +13,7 @@ export class CourseDeleteComponent {
   courseToDeleteId: string;
   courseToDeleteName: string;
   confirm: string;
-  noValidateForTesting = AppSettings.devShowTestingComponents;
+  noValidateForTesting = AppSettings.devModeShowAll;
 
   constructor(private courseService: CourseService,
               public dialogRef: MatDialogRef<CourseDeleteComponent>,

@@ -3,6 +3,8 @@ import {Course} from '../../models/course.model';
 import {AppSettings} from '../../app-settings';
 import {CourseService} from '../../services/course.service';
 import {MatDialogRef} from '@angular/material/dialog';
+import {Router} from '@angular/router';
+import {AlertsService} from '../../services/alerts.service';
 
 @Component({
   selector: 'app-course-add',
@@ -13,9 +15,9 @@ export class CourseAddComponent {
   course = new Course('', '', 1, 10, false, '');
   private selectedFile: File;
   noValidateForTesting = false;
-  showNoValidateCheckboxForTesting = AppSettings.devShowTestingComponents;
+  showNoValidateCheckboxForTesting = AppSettings.devModeShowAll;
 
-  constructor(private courseService: CourseService, public dialogRef: MatDialogRef<CourseAddComponent>) {
+  constructor(private courseService: CourseService, public dialogRef: MatDialogRef<CourseAddComponent>, private router: Router, private alertsService: AlertsService) {
   }
 
   onCancelClick(): void {
@@ -23,8 +25,15 @@ export class CourseAddComponent {
   }
   onSubmit() {
     this.courseService.addCourse(this.course).subscribe(
-      x => this.dialogRef.close('success'),
-      e => this.dialogRef.close(e)
+      x => {
+        this.dialogRef.close('success');
+        this.router.navigateByUrl('/');
+        this.alertsService.setAlert({type: 'success', message: 'Course added!'});
+      },
+      e => {
+        this.alertsService.setAlert({type: 'danger', message: 'Couldn\'t add course! ' + e});
+        this.dialogRef.close();
+      }
     );
   }
 

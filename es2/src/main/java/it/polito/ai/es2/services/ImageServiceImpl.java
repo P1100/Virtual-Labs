@@ -5,7 +5,6 @@ import it.polito.ai.es2.entities.Image;
 import it.polito.ai.es2.repositories.*;
 import it.polito.ai.es2.services.exceptions.ImageException;
 import it.polito.ai.es2.services.exceptions.ImageNotFoundException;
-import it.polito.ai.es2.services.exceptions.VlException;
 import it.polito.ai.es2.services.interfaces.ImageService;
 import it.polito.ai.es2.services.interfaces.NotificationService;
 import lombok.extern.java.Log;
@@ -65,7 +64,7 @@ public class ImageServiceImpl implements ImageService {
       img.setPicByte(compressBytes(file.getBytes()));
     } catch (IOException e) {
       e.printStackTrace();
-      throw new VlException("IOException image file");
+      throw new ImageException("IOException file");
     }
     imageRepository.save(img);
   }

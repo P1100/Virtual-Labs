@@ -82,7 +82,7 @@ public class CourseServiceImpl implements CourseService {
   @Override
   public void enableCourse(String courseId) {
     log.info("enableCourse(" + courseId + ")");
-    if (courseId == null) throw new CourseNotFoundException("null parameter");
+    if (courseId == null) throw new CourseNotFoundException();
     Optional<Course> optionalCourse = courseRepository.findById(courseId);
     if (optionalCourse.isEmpty()) throw new CourseNotFoundException(courseId);
     optionalCourse.get().setEnabled(true);
@@ -94,7 +94,7 @@ public class CourseServiceImpl implements CourseService {
   @Override
   public void disableCourse(String courseId) {
     log.info("disableCourse(" + courseId + ")");
-    if (courseId == null) throw new CourseNotFoundException("null parameter");
+    if (courseId == null) throw new CourseNotFoundException();
     Optional<Course> optionalCourse = courseRepository.findById(courseId);
     if (optionalCourse.isEmpty()) throw new CourseNotFoundException(courseId);
     optionalCourse.get().setEnabled(false);
@@ -104,45 +104,45 @@ public class CourseServiceImpl implements CourseService {
    * POST {@link it.polito.ai.es2.controllers.APICourses_RestController#addCourse(CourseDTO)}
    */
   @Override
-  public boolean addCourse(CourseDTO courseDTO) {
+  public void addCourse(CourseDTO courseDTO) {
     log.info("addCourse(" + courseDTO + ")");
-//    courseDTO.setId(courseDTO.getId().to);
-    if (courseDTO == null || courseDTO.getId() == null) return false;
-    if (!courseRepository.existsById(courseDTO.getId())) {
-      courseRepository.save(modelMapper.map(courseDTO, Course.class));
-      return true;
-    }
-    return false;
+    if (courseDTO == null || courseDTO.getId() == null)
+      throw new FailedAddException("null parameters");
+    if (courseRepository.existsById(courseDTO.getId()))
+      throw new FailedAddException("duplicate");
+    courseRepository.save(modelMapper.map(courseDTO, Course.class));
   }
 
   /**
    * PUT {@link it.polito.ai.es2.controllers.APICourses_RestController#updateCourse(CourseDTO)}
    */
   @Override
-  public boolean updateCourse(CourseDTO courseDTO) {
+  public void updateCourse(CourseDTO courseDTO) {
     log.info("updateCourse(" + courseDTO + ")");
-    if (courseDTO == null || courseDTO.getId() == null) return false;
+    if (courseDTO == null || courseDTO.getId() == null)
+      throw new FailedUpdateException("null parameters");
     if (!courseRepository.existsById(courseDTO.getId()))
-      throw new CourseNotFoundException(courseDTO.getId());
+      throw new FailedUpdateException("not found");
     int min = courseDTO.getMinSizeTeam();
     int max = courseDTO.getMaxSizeTeam();
     if (max < min)
-      throw new CourseCardinalityConstrainsException(min + " < " + max);
+      throw new CourseCardinalityConstrainsException(courseDTO.getId(), min + " < " + max);
     if (courseRepository.countTeamsThatViolateCardinality(courseDTO.getId(), min, max) != 0)
-      throw new CourseCardinalityConstrainsException("new cardinalities incompatible with existing teams");
+      throw new CourseCardinalityConstrainsException(courseDTO.getId(), "new cardinalities incompatible with existing teams");
     courseRepository.save(modelMapper.map(courseDTO, Course.class));
-    return true;
   }
 
   /**
    * DELETE {@link it.polito.ai.es2.controllers.APICourses_RestController#deleteCourse(String)}
    */
   @Override
-  public boolean deleteCourse(String courseId) {
+  public void deleteCourse(String courseId) {
     log.info("deleteCourse(" + courseId + ")");
-    if (courseId == null) return false;
+    if (courseId == null)
+      throw new CourseNotFoundException();
     Optional<Course> courseOptional = courseRepository.findById(courseId);
-    if (courseOptional.isEmpty()) return false;
+    if (courseOptional.isEmpty())
+      throw new CourseNotFoundException(courseId);
     Course c = courseOptional.get();
     // removing course from synced entities before delete
     for (Student student : c.getStudents()) {
@@ -155,41 +155,6 @@ public class CourseServiceImpl implements CourseService {
     c.setProfessors(new ArrayList<>());
     // ----> Others sync handled by delete cascade!
     courseRepository.deleteById(courseId);
-    return true;
-  }
-
-  /**
-   * GET {@link it.polito.ai.es2.controllers.APICourses_RestController#getStudentsInTeams(String)}
-   */
-  @Override
-  public List<StudentDTO> getStudentsInTeams(String courseId) {
-    log.info("getStudentsInTeams(" + courseId + ")");
-    if (courseId == null) throw new CourseNotFoundException("null parameter");
-    if (!courseRepository.existsById(courseId)) throw new CourseNotFoundException(courseId);
-    return courseRepository.getStudentsInTeams(courseId).stream().map(x -> modelMapper.map(x, StudentDTO.class)).collect(Collectors.toList());
-  }
-
-  /**
-   * GET {@link it.polito.ai.es2.controllers.APICourses_RestController#getAvailableStudents(String)}
-   */
-  @Override
-  public List<StudentDTO> getAvailableStudents(String courseId) {
-    log.info("getAvailableStudents(" + courseId + ")");
-    if (courseId == null) throw new CourseNotFoundException("null parameter");
-    if (!courseRepository.existsById(courseId)) throw new CourseNotFoundException(courseId);
-    return courseRepository.getStudentsNotInTeams(courseId).stream().map(x -> modelMapper.map(x, StudentDTO.class)).collect(Collectors.toList());
-  }
-
-  /**
-   * GET {@link it.polito.ai.es2.controllers.APICourses_RestController#getTeamsForCourse(String)}
-   */
-  @Override
-  public List<TeamDTO> getTeamsForCourse(String courseId) {
-    log.info("getTeamsForCourse(" + courseId + ")");
-    if (courseId == null) throw new CourseNotFoundException("null parameter");
-    Optional<Course> co = courseRepository.findById(courseId);
-    if (co.isEmpty()) throw new CourseNotFoundException(courseId);
-    return co.get().getTeams().stream().map(x -> modelMapper.map(x, TeamDTO.class)).collect(Collectors.toList());
   }
 
   /**
@@ -198,7 +163,7 @@ public class CourseServiceImpl implements CourseService {
   @Override
   public void disenrollStudent(Long studentId, String courseId) {
     log.info("disenrollStudent(" + studentId + ", " + courseId + ")");
-    if (studentId == null || courseId == null) throw new NullParameterException("null id of student or course");
+    if (studentId == null || courseId == null) throw new NullParameterException("student id, course id");
     Optional<Student> studentOptional = studentRepository.findById(studentId);
     if (studentOptional.isEmpty()) throw new StudentNotFoundException(studentId.toString());
     Optional<Course> courseOptional = courseRepository.findById(courseId);
@@ -212,7 +177,7 @@ public class CourseServiceImpl implements CourseService {
   @Override
   public void enrollStudent(Long studentId, String courseId) {
     log.info("enrollStudent(" + studentId + ", " + courseId + ")");
-    if (studentId == null || courseId == null) throw new NullParameterException("null student or course parameter");
+    if (studentId == null || courseId == null) throw new NullParameterException("student id, course id");
     Optional<Student> studentOptional = studentRepository.findById(studentId);
     if (studentOptional.isEmpty()) throw new StudentNotFoundException(studentId.toString());
     Optional<Course> courseOptional = courseRepository.findById(courseId);
@@ -221,7 +186,7 @@ public class CourseServiceImpl implements CourseService {
     if (!c.isEnabled())
       throw new CourseNotEnabledException(courseId);
     if (c.getStudents().stream().anyMatch(x -> x.getId().equals(studentId)))
-      throw new StudentAlreadyEnrolled(studentId + " - course: " + courseId);
+      throw new StudentAlreadyEnrolled(studentId.toString(), courseId);
     c.addStudent(studentOptional.get());
   }
 
@@ -232,9 +197,9 @@ public class CourseServiceImpl implements CourseService {
   public List<Boolean> enrollStudents(List<Long> studentIds, String courseId) {
     log.info("enrollStudents(" + studentIds + ", " + courseId + ")");
     if (studentIds == null || courseId == null)
-      throw new NullParameterException("null list of students or course parameter");
+      throw new NullParameterException("students id list, course id");
     if (!courseRepository.existsById(courseId))
-      throw new CourseNotFoundException("enrollStudents(List<Long> studentIds, String courseId) - course not found");
+      throw new CourseNotFoundException(courseId);
 
     Course course = courseRepository.getOne(courseId);
     if (!course.isEnabled())
@@ -246,7 +211,7 @@ public class CourseServiceImpl implements CourseService {
         continue;
       }
       if (!studentRepository.existsById(id))
-        throw new StudentNotFoundException("enrollStudents(List<Long> studentIds, String courseId) - student in list not found");
+        throw new StudentNotFoundException(id.toString());
       Student student = studentRepository.getOne(id);
       // Controllo che lo studente corrente (id) non sià già presente nella lista degli studenti iscritti al corso
       if (course.getStudents().stream().anyMatch(x -> x.getId().equals(id))) {
@@ -266,13 +231,13 @@ public class CourseServiceImpl implements CourseService {
   @Override
   public List<Boolean> enrollStudentsCSV(Reader reader, String courseId) {
     log.info("enrollStudentsCSV(" + reader + ", " + courseId + ")");
-    if (reader == null || courseId == null) throw new NullParameterException("null reader or course parameter");
+    if (reader == null || courseId == null) throw new NullParameterException("reader, course id");
     Optional<Course> courseOptional = courseRepository.findById(courseId);
     if (courseOptional.isEmpty()) throw new CourseNotFoundException(courseId);
     if (!courseOptional.get().isEnabled())
       throw new CourseNotEnabledException(courseId);
 
-    CsvToBean<StudentViewModel> csvToBean = new CsvToBeanBuilder(reader)
+    CsvToBean<StudentViewModel> csvToBean = new CsvToBeanBuilder<StudentViewModel>(reader)
                                                 .withType(StudentViewModel.class)
                                                 .withIgnoreLeadingWhiteSpace(true)
                                                 .build();
@@ -290,5 +255,39 @@ public class CourseServiceImpl implements CourseService {
                               .map(y -> y != null ? y.getId() : null).collect(Collectors.toList());
     log.info(courseId + " - enrollStudentsCSV returned Valid Students: " + list_ids);
     return enrollStudents(list_ids, courseId);
+  }
+
+  /**
+   * GET {@link it.polito.ai.es2.controllers.APICourses_RestController#getTeamsForCourse(String)}
+   */
+  @Override
+  public List<TeamDTO> getTeamsForCourse(String courseId) {
+    log.info("getTeamsForCourse(" + courseId + ")");
+    if (courseId == null) throw new CourseNotFoundException("[null]");
+    Optional<Course> co = courseRepository.findById(courseId);
+    if (co.isEmpty()) throw new CourseNotFoundException(courseId);
+    return co.get().getTeams().stream().map(x -> modelMapper.map(x, TeamDTO.class)).collect(Collectors.toList());
+  }
+
+  /**
+   * GET {@link it.polito.ai.es2.controllers.APICourses_RestController#getStudentsInTeams(String)}
+   */
+  @Override
+  public List<StudentDTO> getStudentsInTeams(String courseId) {
+    log.info("getStudentsInTeams(" + courseId + ")");
+    if (courseId == null) throw new CourseNotFoundException("[null]");
+    if (!courseRepository.existsById(courseId)) throw new CourseNotFoundException(courseId);
+    return courseRepository.getStudentsInTeams(courseId).stream().map(x -> modelMapper.map(x, StudentDTO.class)).collect(Collectors.toList());
+  }
+
+  /**
+   * GET {@link it.polito.ai.es2.controllers.APICourses_RestController#getAvailableStudents(String)}
+   */
+  @Override
+  public List<StudentDTO> getAvailableStudents(String courseId) {
+    log.info("getAvailableStudents(" + courseId + ")");
+    if (courseId == null) throw new CourseNotFoundException("[null]");
+    if (!courseRepository.existsById(courseId)) throw new CourseNotFoundException(courseId);
+    return courseRepository.getStudentsNotInTeams(courseId).stream().map(x -> modelMapper.map(x, StudentDTO.class)).collect(Collectors.toList());
   }
 }

@@ -11,15 +11,15 @@ import java.util.Optional;
 public interface CourseService {
   List<CourseDTO> getAllCourses();
 
-  boolean addCourse(CourseDTO course);
-
-  boolean updateCourse(CourseDTO courseDTO);
-
   Optional<CourseDTO> getCourse(String name);
 
-  boolean deleteCourse(String courseId);
+  void addCourse(CourseDTO course);
+
+  void updateCourse(CourseDTO courseDTO);
 
   void enableCourse(String courseName);
+
+  void deleteCourse(String courseId);
 
   void disableCourse(String courseName);
 

@@ -14,7 +14,7 @@ export class CourseEditComponent {
   course = new Course('null', '', 0, 0, false, '');
   private selectedFile: File;
   noValidateForTesting = false;
-  showNoValidateCheckboxForTesting = AppSettings.devShowTestingComponents;
+  showNoValidateCheckboxForTesting = AppSettings.devModeShowAll;
 
   constructor(private courseService: CourseService,
               public dialogRef: MatDialogRef<CourseEditComponent>,

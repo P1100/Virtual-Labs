@@ -4,7 +4,7 @@ import {concatMap, toArray} from 'rxjs/operators';
 import {StudentService} from '../../services/student.service';
 import {from, Observable, Subscription} from 'rxjs';
 import {Student} from '../../models/student.model';
-import {getSafeDeepCopyArray} from '../../app-settings';
+import {getSafeDeepCopyToArray} from '../../app-settings';
 import {AlertsService} from '../../services/alerts.service';
 import {CourseService} from '../../services/course.service';
 
@@ -96,7 +96,7 @@ export class StudentsContComponent implements OnDestroy {
     o.subscribe(() => {
       this.backendService.getEnrolledStudents(this.courseId).subscribe(
         (ss: Student[]) => {
-          this.enrolledStudents = getSafeDeepCopyArray(ss);
+          this.enrolledStudents = getSafeDeepCopyToArray(ss);
           this.alertsService.setAlert({type: 'success', message: `Student ${message}ed!`});
         }, error => this.alertsService.setAlert({type: 'danger', message: `Couldn\'t update enrolled students! ${error}`}));
     }, error => this.alertsService.setAlert({type: 'danger', message: `Couldn\'t ${message}! ${error}`}));
@@ -108,7 +108,7 @@ export class StudentsContComponent implements OnDestroy {
       .subscribe(() => {
           this.backendService.getEnrolledStudents(this.courseId).subscribe(
             (ss: Student[]) => {
-              this.enrolledStudents = getSafeDeepCopyArray(ss);
+              this.enrolledStudents = getSafeDeepCopyToArray(ss);
               this.alertsService.setAlert({type: 'success', message: `CSV students enrolled!`});
             }, error => this.alertsService.setAlert({type: 'danger', message: `Couldn\'t update enrolled students! ${error}`}));
         },

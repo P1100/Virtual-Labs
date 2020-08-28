@@ -37,7 +37,7 @@ export class HomeComponent implements OnInit, OnDestroy {
   routeSubscription: Subscription;
   alertsSubscription: Subscription;
   alertMessage: Alert; // ngb-alert
-  testingPageEnabled = AppSettings.devShowTestingComponents;
+  testingPageEnabled = AppSettings.devModeShowAll;
   forseCoursesUpdate = false;
 
   dontExpandPanelOnNameClick(i: number) {
@@ -123,13 +123,10 @@ export class HomeComponent implements OnInit, OnDestroy {
     });
     dialogRef.afterClosed().subscribe((res: string) => {
         this.dialogRef = null;
-        if (res == 'success') {
-          this.alertsService.setAlert({type: 'success', message: 'Course added!'});
-          this.router.navigateByUrl('/'); // refreshing data
-        } else if (res != undefined) {
-          this.alertsService.setAlert({type: 'danger', message: 'Couldn\'t add course! ' + res});
+        if (res != undefined) {
+          this.courseService.getCourses().subscribe(x => this.courses = x);
         }
-      }, error => this.alertsService.setAlert({type: 'danger', message: 'Dialog Error!'})
+      }, () => this.alertsService.setAlert({type: 'danger', message: 'Dialog Error'})
     );
   }
   openEditCourseDialog(): void {

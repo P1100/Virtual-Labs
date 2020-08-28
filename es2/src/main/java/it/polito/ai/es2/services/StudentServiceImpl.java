@@ -6,6 +6,7 @@ import it.polito.ai.es2.dtos.TeamDTO;
 import it.polito.ai.es2.entities.Student;
 import it.polito.ai.es2.repositories.CourseRepository;
 import it.polito.ai.es2.repositories.StudentRepository;
+import it.polito.ai.es2.services.exceptions.FailedAddException;
 import it.polito.ai.es2.services.exceptions.NullParameterException;
 import it.polito.ai.es2.services.interfaces.StudentService;
 import lombok.extern.java.Log;
@@ -49,7 +50,6 @@ public class StudentServiceImpl implements StudentService {
   @Override
   public Optional<StudentDTO> getStudent(Long studentId) {
     log.info("getStudent(" + studentId + ")");
-    if (studentId == null) throw new NullParameterException("null student parameter");
     return studentRepository.findById(studentId).map(x -> modelMapper.map(x, StudentDTO.class));
   }
 
@@ -57,15 +57,15 @@ public class StudentServiceImpl implements StudentService {
    * POST {@link it.polito.ai.es2.controllers.APIStudents_RestController#addStudent(StudentDTO)}
    */
   @Override
-  public boolean addStudent(StudentDTO student) {
+  public void addStudent(StudentDTO student) {
     log.info("addStudent(" + student + ")");
-    if (student == null || student.getId() == null) return false;
+    if (student == null || student.getId() == null)
+      throw new FailedAddException("null parameters");
     Student s = modelMapper.map(student, Student.class);
-    if (!studentRepository.existsById(student.getId())) {
-      studentRepository.save(s);
-      return true;
+    if (studentRepository.existsById(student.getId())) {
+      throw new FailedAddException("duplicate");
     }
-    return false;
+    studentRepository.save(s);
   }
 
   /**
@@ -74,7 +74,7 @@ public class StudentServiceImpl implements StudentService {
   @Override
   public List<CourseDTO> getEnrolledCourses(Long studentId) {
     log.info("getCourses(" + studentId + ")");
-    if (studentId == null) throw new NullParameterException("null student parameter");
+    if (studentId == null) throw new NullParameterException("student id");
     return studentRepository.getOne(studentId).getCourses().stream().map(x -> modelMapper.map(x, CourseDTO.class)).collect(Collectors.toList());
   }
 
@@ -84,7 +84,7 @@ public class StudentServiceImpl implements StudentService {
   @Override
   public List<TeamDTO> getTeamsForStudent(Long studentId) {
     log.info("getTeamsForStudent(" + studentId + ")");
-    if (studentId == null) throw new NullParameterException("null student parameter");
+    if (studentId == null) throw new NullParameterException("student id");
     return studentRepository.getOne(studentId).getTeams().stream().map(x -> modelMapper.map(x, TeamDTO.class)).collect(Collectors.toList());
   }
 }

@@ -8,7 +8,7 @@ import {environment} from '../environments/environment';
 export class AppSettings {
   // Back end URL
   public static baseUrl = 'http://localhost:8080/API';
-  public static devShowTestingComponents = environment.dev;
+  public static devModeShowAll = environment.dev; // to show logs, tests, and other components
 
   // HTTP Settings (services)
   public static RETRIES = 0;
@@ -29,7 +29,7 @@ export const tabs = [
   {path: 'assignments', label: 'Assignments'}
 ];
 
-/* HATEOAS API DESIGN DECISION: all http returned objects are converted to array (empty, full, or singleton), to uniform handling */
+/* HATEOAS API DESIGN: all http returned objects are converted to array (empty, full, or singleton), to uniform handling. TODO: look for alternatives, like @Projection */
 export function removeHATEOAS(container: HateoasModel): any[] {
   if (container == null) {
     return [];
@@ -81,15 +81,15 @@ export function removeHATEOAS(container: HateoasModel): any[] {
 }
 
 // Uniform all data received from services, converting any (mostly objects) to arrays
-export function getSafeDeepCopyArray(ss: any): any[] {
-  return Array.isArray(ss) ? [...ss] : (ss != null ? [ss] : []);
+export function getSafeDeepCopyToArray(ss: any): any[] {
+  return Array.isArray(ss) ? [...ss] : (ss != null ? [{...ss}] : []);
 }
 // TODO: test responseErrorString format
 export function formatErrors(error: any) {
-  console.error(error);
-  let responseErrorString = (`${(error?.error?.error == null ? (typeof (error?.error) == 'string' ? error?.error : Object.keys(error?.error)) : error?.error?.error + ' - ' + error?.error?.message)}`);
-  if (AppSettings.devShowTestingComponents) {
-    responseErrorString = responseErrorString + ` [${AlertsService.getHttpResponseStatusDescription(error?.status)}]`;
+  let responseErrorString = ''; // (`${(error?.error?.error == null ? (typeof (error?.error) == 'string' ? error?.error : Object.keys(error?.error)) : error?.error?.error + ' - ' + error?.error?.message)}`);
+  if (AppSettings.devModeShowAll) {
+    console.error('1-', error, error?.error, error?.error?.error);
+    // responseErrorString = (responseErrorString + ` [${AlertsService.getHttpResponseStatusDescription(error?.status)}]`)responseErrorString.replace(/undefined -/gi, '');
   }
-  return throwError(responseErrorString.replace(/undefined -/gi, ''));
+  return throwError(error?.error);
 }

@@ -12,7 +12,7 @@ public interface StudentService {
 
   Optional<StudentDTO> getStudent(Long studentId);
 
-  boolean addStudent(StudentDTO student);
+  void addStudent(StudentDTO student);
 
   List<CourseDTO> getEnrolledCourses(Long studentId);
 

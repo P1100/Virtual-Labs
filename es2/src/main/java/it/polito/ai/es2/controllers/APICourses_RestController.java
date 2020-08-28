@@ -41,20 +41,6 @@ public class APICourses_RestController {
   }
 
   //   {"name":"C33","min":1,"max":100,"enabled":true,"professor":"malnati"} - ContentType: application/json
-  @PostMapping()
-  public void addCourse(@Valid @RequestBody CourseDTO courseDTO) {
-    if (!courseService.addCourse(courseDTO)) {
-      throw new ResponseStatusException(HttpStatus.UNPROCESSABLE_ENTITY, "Cannot add course " + courseDTO);
-    }
-  }
-
-  @PutMapping()
-  public void updateCourse(@Valid @RequestBody CourseDTO courseDTO) {
-    if (!courseService.updateCourse(courseDTO)) {
-      throw new ResponseStatusException(HttpStatus.CONFLICT, "Cannot update course " + courseDTO);
-    }
-  }
-
   @GetMapping("/{courseId}")
   public CourseDTO getCourse(@PathVariable String courseId) {
     Optional<CourseDTO> courseDTO = courseService.getCourse(courseId);
@@ -63,10 +49,19 @@ public class APICourses_RestController {
     return modelHelper.enrich(courseDTO.get());
   }
 
+  @PostMapping()
+  public void addCourse(@Valid @RequestBody CourseDTO courseDTO) {
+    courseService.addCourse(courseDTO);
+  }
+
+  @PutMapping()
+  public void updateCourse(@Valid @RequestBody CourseDTO courseDTO) {
+    courseService.updateCourse(courseDTO);
+  }
+
   @DeleteMapping("/{courseId}")
   public void deleteCourse(@PathVariable String courseId) {
-    if (!courseService.deleteCourse(courseId))
-      throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
+    courseService.deleteCourse(courseId);
   }
 
   // TODO: remove GET in production
@@ -101,11 +96,11 @@ public class APICourses_RestController {
   @RequestMapping(value = "/{courseId}/enroll", method = {RequestMethod.PUT, RequestMethod.POST})
   public void enrollStudent(@PathVariable String courseId, @RequestBody Map<String, String> studentMap) { // StudentDTO
     Long studentId;
-    if (studentMap == null) throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "null parameter");
+    if (studentMap == null) throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "null student");
     if (studentMap.containsKey("id"))
       studentId = Long.valueOf(studentMap.get("id"));
     else
-      throw new ResponseStatusException(HttpStatus.PRECONDITION_FAILED, "missing student id");
+      throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "missing student id");
     courseService.enrollStudent(studentId, courseId);
   }
 

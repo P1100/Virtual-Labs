@@ -123,7 +123,4 @@ export class TestingComponent {
   getAvailableStudents(c: string) {
     this.courseService.getAvailableStudents(c).subscribe();
   }
-  addStudent(value: string) {
-
-  }
 }

@@ -113,7 +113,7 @@ public class TeamServiceImpl implements TeamService {
     )
       throw new StudentInMultipleTeamsException("proposeTeam() - studenti fanno parte di altri gruppi nell’ambito dello stesso corso");
     if (listStudentsProposal.size() < course.getMinSizeTeam() || listStudentsProposal.size() > course.getMaxSizeTeam())
-      throw new CourseCardinalityConstrainsException("proposeTeam() - non rispettati i vincoli di cardinalità del corso su dimensioni team");
+      throw new CourseCardinalityConstrainsException(course.getId(), "Proposal rejected");
     if (!listStudentsProposal.stream().allMatch(new HashSet<>()::add))
       throw new StudentDuplicatesInProposalException("proposeTeam() - duplicati nell'elenco dei partecipanti della proposta team");
     if (teamRepository.findFirstByNameAndCourse_id(team_name, courseName) != null)

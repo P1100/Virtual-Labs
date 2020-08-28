@@ -42,8 +42,16 @@ public class APIStudents_RestController {
   public StudentDTO getStudent(@PathVariable Long student_id) {
     Optional<StudentDTO> studentDTO = studentService.getStudent(student_id);
     if (studentDTO.isEmpty())
-      throw new ResponseStatusException(HttpStatus.CONFLICT, student_id.toString());
+      throw new ResponseStatusException(HttpStatus.NOT_FOUND, student_id.toString());
     return modelHelper.enrich(studentDTO.get());
+  }
+
+  //  {"id":"S33","name":"S33-name","firstName":"S33-FirstName"}
+  // ---> Nella POST settare ContentType: application/json
+  @PostMapping()
+  public StudentDTO addStudent(@Valid @RequestBody StudentDTO studentDTO) {
+    studentService.addStudent(studentDTO);
+    return modelHelper.enrich(studentDTO);
   }
 
   @GetMapping("/{student_id}/courses")
@@ -66,16 +74,5 @@ public class APIStudents_RestController {
     CollectionModel<TeamDTO> teamsHAL = CollectionModel.of(teams,
         linkTo(methodOn(APIStudents_RestController.class).getTeamsForStudent(student_id)).withSelfRel());
     return teamsHAL;
-  }
-
-  //  {"id":"S33","name":"S33-name","firstName":"S33-FirstName"}
-  // ---> Nella POST settare ContentType: application/json
-  @PostMapping()
-  public StudentDTO addStudent(@Valid @RequestBody StudentDTO studentDTO) {
-    if (studentService.addStudent(studentDTO)) {
-      return modelHelper.enrich(studentDTO);
-    } else {
-      throw new ResponseStatusException(HttpStatus.CONFLICT, studentDTO.getLastName());
-    }
   }
 }
