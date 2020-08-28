@@ -3,7 +3,7 @@ package it.polito.ai.es2;
 import it.polito.ai.es2.dtos.CourseDTO;
 import it.polito.ai.es2.dtos.StudentDTO;
 import it.polito.ai.es2.services.interfaces.CourseService;
-import it.polito.ai.es2.services.interfaces.StudentProfService;
+import it.polito.ai.es2.services.interfaces.StudentService;
 import it.polito.ai.es2.services.interfaces.TeamService;
 import lombok.extern.java.Log;
 import org.modelmapper.ModelMapper;
@@ -33,7 +33,7 @@ public class VirtualLabsApplication {
   @Autowired
   private CourseService courseService;
   @Autowired
-  private StudentProfService studentProfService;
+  private StudentService studentService;
   @Autowired
   private TeamService teamService;
   
@@ -58,26 +58,26 @@ public class VirtualLabsApplication {
           courseService.addCourse(new CourseDTO("c5", "Software Engineering II", 1, 500, true, null));
           courseService.addCourse(new CourseDTO("c6", "Test: Disabled Course", 1, 500, false, null));
           courseService.addCourse(new CourseDTO("c7", "Test: min2 max3", 2, 3, true, null));
-  
-          studentProfService.addStudent(new StudentDTO(1L, "Pietro", "Giasone", "s1@studenti.polito.it"));
-          studentProfService.addStudent(new StudentDTO(2L, "Giuseppe", "Rossi", "s2@studenti.polito.it"));
-          studentProfService.addStudent(new StudentDTO(3L, "Antonio", "Bianchi", "s3@studenti.polito.it"));
-          studentProfService.addStudent(new StudentDTO(4L, "Angelo", "Verdi", "s4@studenti.polito.it"));
-          studentProfService.addStudent(new StudentDTO(5L, "Domenico", "Gialli", "s5@studenti.polito.it"));
-          studentProfService.addStudent(new StudentDTO(6L, "Bruno", "Ferri", "s6@studenti.polito.it"));
-          studentProfService.addStudent(new StudentDTO(7L, "Paola", "Paleta", "s7@studenti.polito.it"));
-          studentProfService.addStudent(new StudentDTO(8L, "Sergio", "Limari", "s8@studenti.polito.it"));
-          studentProfService.addStudent(new StudentDTO(9L, "Luciano", "Benterri", "s9@studenti.polito.it"));
-          studentProfService.addStudent(new StudentDTO(10L, "Francesco", "Cavinni", "s10@studenti.polito.it"));
-          studentProfService.addStudent(new StudentDTO(11L, "Maria", "Pasolani", "s11@studenti.polito.it"));
-  
-          System.out.println(studentProfService.addStudents(
-              Arrays.asList(new StudentDTO(12L, "Valentina", "Gennari", "s12@studenti.polito.it"),
-                  new StudentDTO(13L, "Francesca", "Tulini", "s13@studenti.polito.it"),
-                  new StudentDTO(14L, "Elena", "Casellari", "s14@studenti.polito.it"),
-                  new StudentDTO(15L, "Anna", "Rodieni", "s15@studenti.polito.it"),
-                  new StudentDTO(100L, "Last", "One", "s16@studenti.polito.it")
-              )));
+
+          studentService.addStudent(new StudentDTO(1L, "Pietro", "Giasone", "s1@studenti.polito.it"));
+          studentService.addStudent(new StudentDTO(2L, "Giuseppe", "Rossi", "s2@studenti.polito.it"));
+          studentService.addStudent(new StudentDTO(3L, "Antonio", "Bianchi", "s3@studenti.polito.it"));
+          studentService.addStudent(new StudentDTO(4L, "Angelo", "Verdi", "s4@studenti.polito.it"));
+          studentService.addStudent(new StudentDTO(5L, "Domenico", "Gialli", "s5@studenti.polito.it"));
+          studentService.addStudent(new StudentDTO(6L, "Bruno", "Ferri", "s6@studenti.polito.it"));
+          studentService.addStudent(new StudentDTO(7L, "Paola", "Paleta", "s7@studenti.polito.it"));
+          studentService.addStudent(new StudentDTO(8L, "Sergio", "Limari", "s8@studenti.polito.it"));
+          studentService.addStudent(new StudentDTO(9L, "Luciano", "Benterri", "s9@studenti.polito.it"));
+          studentService.addStudent(new StudentDTO(10L, "Francesco", "Cavinni", "s10@studenti.polito.it"));
+          studentService.addStudent(new StudentDTO(11L, "Maria", "Pasolani", "s11@studenti.polito.it"));
+
+          System.out.println(studentService.addStudents(
+                  Arrays.asList(new StudentDTO(12L, "Valentina", "Gennari", "s12@studenti.polito.it"),
+                          new StudentDTO(13L, "Francesca", "Tulini", "s13@studenti.polito.it"),
+                          new StudentDTO(14L, "Elena", "Casellari", "s14@studenti.polito.it"),
+                          new StudentDTO(15L, "Anna", "Rodieni", "s15@studenti.polito.it"),
+                          new StudentDTO(100L, "Last", "One", "s16@studenti.polito.it")
+                  )));
           courseService.enrollStudent(1L, "c1");
 //          courseService.enrollStudent(1L, "c6");
           courseService.enrollStudent(1L, "c7");
@@ -206,7 +206,7 @@ public class VirtualLabsApplication {
 //         DONT WORK WITH LAZY LOADING
 //                courseRepository.findAll().stream().forEach(i -> System.out.println(i.toString()));
 //                studentRepository.findAll().stream().forEach(i -> System.out.println(i.toString()));
-  
+
         // NOT WORKING --> org.hibernate.LazyInitializationException: failed to lazily initialize a collection of role: it.polito.ai.es2.entities.Course.teams, could not initialize proxy - no Session
 //        testservice.entity_manager_test();
 //        if (true) return;

@@ -107,9 +107,6 @@ public class APICourses_RestController {
     else
       throw new ResponseStatusException(HttpStatus.PRECONDITION_FAILED, "missing student id");
     courseService.enrollStudent(studentId, courseId);
-//    if (!) {
-//      throw new ResponseStatusException(HttpStatus.CONFLICT, courseId + " - " + studentId);
-//    }
   }
   
   //["S33","S44"]

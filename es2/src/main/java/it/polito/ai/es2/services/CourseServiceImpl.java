@@ -267,7 +267,7 @@ public class CourseServiceImpl implements CourseService {
     if (reader == null || courseId == null) throw new NullParameterException("null reader or course parameter");
     Optional<Course> courseOptional = courseRepository.findById(courseId);
     if (courseOptional.isEmpty()) throw new CourseNotFoundException(courseId);
-  
+
     CsvToBean<StudentViewModel> csvToBean = new CsvToBeanBuilder<StudentViewModel>(reader)
                                                 .withType(StudentViewModel.class)
                                                 .withIgnoreLeadingWhiteSpace(true)

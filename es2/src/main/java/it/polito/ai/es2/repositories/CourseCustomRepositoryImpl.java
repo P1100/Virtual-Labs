@@ -21,13 +21,13 @@ public class CourseCustomRepositoryImpl implements CourseCustomRepository {
     parameters.put("id", courseId);
     parameters.put("min", min);
     parameters.put("max", max);
-  
+
     Query query = entityManager.createNativeQuery(
         "SELECT count(*) FROM (SELECT ts.team_id, count(*) as c FROM virtuallabs.teams_students ts GROUP BY ts.team_id) tc " +
             "JOIN virtuallabs.team t ON tc.team_id = t.id WHERE t.course_id = :id " +
             "AND (tc.c < :min OR tc.c > :max)");
     parameters.forEach(query::setParameter);
-  
+
     int querySingleResult;
     try {
       Object singleResult = query.getSingleResult();

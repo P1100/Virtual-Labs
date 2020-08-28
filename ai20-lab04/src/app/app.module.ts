@@ -42,7 +42,6 @@ import {RegisterComponent} from './dialogs/register/register.component';
 import {TabsNavComponent} from './r1-content/tabs-nav.component';
 import {CourseEditComponent} from './dialogs/course-edit/course-edit.component';
 import {MatRadioModule} from '@angular/material/radio';
-import {DeletetestComponent} from './dialogs/deletetest/deletetest.component';
 import {CourseDeleteComponent} from './dialogs/course-delete/course-delete.component';
 
 @NgModule({
@@ -95,7 +94,6 @@ import {CourseDeleteComponent} from './dialogs/course-delete/course-delete.compo
     RegisterComponent,
     TestingComponent,
     CourseEditComponent,
-    DeletetestComponent,
     CourseDeleteComponent,
   ],
   providers: [HttpClientModule, {provide: MAT_DIALOG_DEFAULT_OPTIONS, useValue: {hasBackdrop: false}},

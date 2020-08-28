@@ -6,7 +6,9 @@ import it.polito.ai.es2.dtos.TeamDTO;
 import it.polito.ai.es2.entities.Course;
 import it.polito.ai.es2.entities.Student;
 import it.polito.ai.es2.entities.Team;
-import it.polito.ai.es2.repositories.*;
+import it.polito.ai.es2.repositories.CourseRepository;
+import it.polito.ai.es2.repositories.StudentRepository;
+import it.polito.ai.es2.repositories.TeamRepository;
 import it.polito.ai.es2.services.exceptions.*;
 import it.polito.ai.es2.services.interfaces.NotificationService;
 import it.polito.ai.es2.services.interfaces.TeamService;
@@ -38,15 +40,15 @@ public class TeamServiceImpl implements TeamService {
   TeamRepository teamRepository;
   @Autowired
   NotificationService notificationService;
-  @Autowired
-  AssignmentRepository assignmentRepository;
-  @Autowired
-  ImageRepository imageRepository;
-  @Autowired
-  ImplementationRepository implementationRepository;
-  @Autowired
-  VMRepository vmRepository;
-  
+//  @Autowired
+//  AssignmentRepository assignmentRepository;
+//  @Autowired
+//  ImageRepository imageRepository;
+//  @Autowired
+//  ImplementationRepository implementationRepository;
+//  @Autowired
+//  VMRepository vmRepository;
+
   /**
    * GET {@link APITeams_RestController#getAllTeams()}
    */
@@ -116,7 +118,7 @@ public class TeamServiceImpl implements TeamService {
       throw new StudentDuplicatesInProposalException("proposeTeam() - duplicati nell'elenco dei partecipanti della proposta team");
     if (teamRepository.findFirstByNameAndCourse_id(team_name, courseName) != null)
       throw new TeamAlreayCreatedException("proposeTeam() - team già creato");
-  
+
     TeamDTO teamDTO = new TeamDTO();
     teamDTO.setName(team_name);
     teamDTO.setActive(false);

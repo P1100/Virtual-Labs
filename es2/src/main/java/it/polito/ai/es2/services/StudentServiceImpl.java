@@ -7,7 +7,7 @@ import it.polito.ai.es2.entities.Student;
 import it.polito.ai.es2.repositories.CourseRepository;
 import it.polito.ai.es2.repositories.StudentRepository;
 import it.polito.ai.es2.services.exceptions.NullParameterException;
-import it.polito.ai.es2.services.interfaces.StudentProfService;
+import it.polito.ai.es2.services.interfaces.StudentService;
 import lombok.extern.java.Log;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,14 +26,14 @@ import java.util.stream.Collectors;
 @Service
 @Transactional
 @Log
-public class StudentProfServiceImpl implements StudentProfService {
+public class StudentServiceImpl implements StudentService {
   @Autowired
   ModelMapper modelMapper;
   @Autowired
   CourseRepository courseRepository;
   @Autowired
   StudentRepository studentRepository;
-  
+
   /**
    * GET {@link it.polito.ai.es2.controllers.APIStudents_RestController#getAllStudents()}
    */
