@@ -1,15 +1,26 @@
 import {Component} from '@angular/core';
+import {Router} from '@angular/router';
 
 @Component({
   selector: 'app-page-not-found',
   template: `
-    <p>
-      Page Not Found!
-    </p>
+    <div style="background-image: url('../../assets/VirtualLabs.jpg');
+    margin: 0;
+    padding: 20px;
+    background-size: cover;
+    height: 100%;
+    /*text-indent: -9999px;*/
+    z-index:-1;">
+      <button mat-flat-button color="primary" (click)="goHome()" class="alert-primary">HOME</button>
+      <p style="text-align: center; color: midnightblue; font-weight: bold; font-size: xx-large">Not Found</p>
+    </div>
   `,
   styles: []
 })
 export class PageNotFoundComponent {
-  constructor() {
+  constructor(private router: Router) {
+  }
+  goHome() {
+    this.router.navigateByUrl('/home');
   }
 }
