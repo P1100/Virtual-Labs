@@ -33,7 +33,7 @@
             <artifactId>lombok</artifactId>
             <optional>true</optional>
         </dependency>
-        <!--    //Non uso driver generico MySql, anche se funzionerebbe allo stesso modo
+        <!--    // Not using MySql driver, for MariaDb, even though it would work
                 <dependency>
                     <groupId>mysql</groupId>
                     <artifactId>mysql-connector-java</artifactId>

@@ -37,6 +37,7 @@ import java.util.stream.Collectors;
 @Transactional
 @Log
 public class CourseServiceImpl implements CourseService {
+  private final static boolean addStudentIfNotFoundBeforeCSVEnrolling = true;
   @Autowired
   ModelMapper modelMapper;
   @Autowired
@@ -248,7 +249,8 @@ public class CourseServiceImpl implements CourseService {
                               .map(new_studentDTO ->
                               {
                                 Optional<Student> optionalStudent_fromDb = studentRepository.findById(new_studentDTO.getId());
-//                                if (optionalStudent_fromDb.isPresent()) return null; // if students must also be new
+                                if (addStudentIfNotFoundBeforeCSVEnrolling && optionalStudent_fromDb.isPresent())
+                                  return null;
                                 Student newStudent = modelMapper.map(new_studentDTO, Student.class);
                                 return studentRepository.save(newStudent);
                               })
