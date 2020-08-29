@@ -1,19 +1,18 @@
 import {Injectable} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
 
-import {tap} from 'rxjs/operators';
+import {catchError, tap} from 'rxjs/operators';
 import * as moment from 'moment';
 import {User} from '../models/user.model';
 import {BehaviorSubject, Observable} from 'rxjs';
-
-export const ANONYMOUS_USER: User = {
-  id: undefined, email: undefined, roles: []
-};
+import {AppSettings, formatErrors} from '../app-settings';
+import {Student} from '../models/student.model';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthService {
+  private baseUrlAPI = AppSettings.baseUrl;
   user: User;
   isLoggedSubject: BehaviorSubject<boolean>;
 
@@ -66,5 +65,11 @@ export class AuthService {
   }
   public isLoggedOut() {
     return !this.isLoggedIn();
+  }
+  public registerStudent(user: Student): Observable<any> {
+    return this.http.post(`${this.baseUrlAPI}/users/student`, JSON.stringify(user), AppSettings.JSON_HTTP_OPTIONS).pipe(catchError(formatErrors));
+  }
+  public registerProfessor(user: Student): Observable<any> {
+    return this.http.post(`${this.baseUrlAPI}/users/professor`, JSON.stringify(user), AppSettings.JSON_HTTP_OPTIONS).pipe(catchError(formatErrors));
   }
 }

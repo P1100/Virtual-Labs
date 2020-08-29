@@ -2,7 +2,7 @@ import {MatToolbarModule} from '@angular/material/toolbar';
 import {MatFormFieldModule} from '@angular/material/form-field';
 import {HomeComponent} from './r0-topheader-leftsidebar/home.component';
 import {MatPaginatorModule} from '@angular/material/paginator';
-import {AuthInterceptor} from './auth/auth.interceptor';
+import {AuthInterceptor} from './services/auth.interceptor';
 import {LoginComponent} from './dialogs/login/login.component';
 import {NgModule} from '@angular/core';
 import {MatInputModule} from '@angular/material/input';

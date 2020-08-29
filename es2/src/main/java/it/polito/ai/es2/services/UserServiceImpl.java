@@ -1,14 +1,16 @@
 package it.polito.ai.es2.services;
 
 import it.polito.ai.es2.dtos.CourseDTO;
+import it.polito.ai.es2.dtos.ProfessorDTO;
 import it.polito.ai.es2.dtos.StudentDTO;
 import it.polito.ai.es2.dtos.TeamDTO;
 import it.polito.ai.es2.entities.Student;
 import it.polito.ai.es2.repositories.CourseRepository;
+import it.polito.ai.es2.repositories.ProfessorRepository;
 import it.polito.ai.es2.repositories.StudentRepository;
 import it.polito.ai.es2.services.exceptions.FailedAddException;
 import it.polito.ai.es2.services.exceptions.NullParameterException;
-import it.polito.ai.es2.services.interfaces.StudentService;
+import it.polito.ai.es2.services.interfaces.UserService;
 import lombok.extern.java.Log;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,13 +29,37 @@ import java.util.stream.Collectors;
 @Service
 @Transactional
 @Log
-public class StudentServiceImpl implements StudentService {
+public class UserServiceImpl implements UserService {
   @Autowired
   ModelMapper modelMapper;
   @Autowired
   CourseRepository courseRepository;
   @Autowired
   StudentRepository studentRepository;
+  @Autowired
+  ProfessorRepository professorRepository;
+
+  @Override
+  public boolean addProfessor(ProfessorDTO professor) {
+//    log.info("addProfessor(" + professor + ")");
+//    if (professor == null || professor.getId() == null) return false;
+//    Professor p = modelMapper.map(professor, Professor.class);
+//    try {
+//      if (!professorRepository.existsById(professor.getId())) {
+//        professorRepository.save(p);
+//        return true;
+//      }
+//      return false;
+//    } catch (IllegalArgumentException e) {
+//      log.warning("###### IllegalArgumentException:" + e);
+//      e.printStackTrace();
+//      return false;
+//    } catch (Exception e) {
+//      log.warning("###### Other Exception:" + e);
+//      e.printStackTrace();
+    return false;
+//    }
+  }
 
   /**
    * GET {@link it.polito.ai.es2.controllers.APIStudents_RestController#getAllStudents()}

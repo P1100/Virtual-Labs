@@ -1,9 +1,9 @@
 <h1 mat-dialog-title class="text-center mb-3">New Course</h1>
-<form #cf="ngForm" (ngSubmit)="onSubmit()" class="text-center border border-light p-3" [noValidate]="noValidateForTesting">
-  <div mat-dialog-content>
+<form #cf="ngForm" (ngSubmit)="onSubmit()" class="text-center border border-light p-3" [noValidate]="checkboxNoValidate">
+  <div>
     <mat-form-field class="form-group">
       <mat-label>Id</mat-label>
-      <input matInput #id="ngModel" name="id" [(ngModel)]="course.id" required>
+      <input matInput #id="ngModel" name="id" [(ngModel)]="course.id" required pattern="^(?!\s*$).+">>
       <mat-hint>must be unique</mat-hint>
     </mat-form-field>
     <br>
@@ -30,8 +30,7 @@
     <br>
     <mat-form-field class="form-group">
       <mat-label>Max size teams</mat-label>
-      <input matInput #max="ngModel" name="max" [(ngModel)]="course.maxSizeTeam" type="number" required
-             pattern="[1-9]\d*">
+      <input matInput #max="ngModel" name="max" [(ngModel)]="course.maxSizeTeam" type="number" required pattern="[1-9]\d*">
       <mat-error *ngIf="max.invalid && !max.pristine">Must be positive (not zero)</mat-error>
     </mat-form-field>
     <br>
@@ -47,11 +46,11 @@
   <br>
   <div mat-dialog-actions>
     <button mat-raised-button color="primary" mat-button
-            [disabled]="(!cf.valid || cf.pristine) && !noValidateForTesting">Add
+            [disabled]="(!cf.valid || cf.pristine) && !checkboxNoValidate">Add
     </button>
     <button type="button" mat-button (click)="onCancelClick()">Cancel</button>
-    <mat-checkbox style="margin: 2px" name="noval" [(ngModel)]="noValidateForTesting"
-                  *ngIf="showNoValidateCheckboxForTesting">Form No Validate
+    <mat-checkbox style="margin: 2px" name="noval" [(ngModel)]="checkboxNoValidate"
+                  *ngIf="showCheckboxNoValidateForTesting">Form No Validate
     </mat-checkbox>
   </div>
 </form>

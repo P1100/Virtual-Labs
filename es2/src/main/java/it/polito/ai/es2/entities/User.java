@@ -1,6 +1,7 @@
 package it.polito.ai.es2.entities;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
@@ -13,6 +14,7 @@ import java.util.List;
 
 @Data
 @NoArgsConstructor
+@AllArgsConstructor
 @Entity
 // [ SQL quoted identifiers] "User" is a reserved word in some SQL implementations, so we escape the table name
 @Table(name = "\"user\"")
@@ -31,7 +33,7 @@ public class User {
   private List<Role> roles = new ArrayList<>();
   @Transient
   private String token;
-  
+
   public Collection<? extends GrantedAuthority> getAuthorities() {
     List<GrantedAuthority> authorities = new ArrayList<GrantedAuthority>();
     for (Role role : roles) {
@@ -39,7 +41,7 @@ public class User {
     }
     return authorities;
   }
-  
+
   public List<String> getRolesStringsList() {
     List<String> stringRoles = new ArrayList<>();
     for (Role role : roles) {

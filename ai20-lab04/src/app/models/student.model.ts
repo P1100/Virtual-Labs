@@ -1,12 +1,14 @@
+/* Also used for professor */
 export class Student {
   id: number;
   firstName: string;
   lastName: string;
   email: string;
+  roles?: string[];
 
   constructor(id: number, firstName: string, lastName: string, email: string) {
     this.id = id;
-    this.firstName = name;
+    this.firstName = firstName;
     this.lastName = lastName;
     this.email = email;
   }

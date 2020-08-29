@@ -2,24 +2,24 @@ package it.polito.ai.es2.services;
 
 import it.polito.ai.es2.controllers.APITeams_RestController;
 import it.polito.ai.es2.dtos.StudentDTO;
-import it.polito.ai.es2.dtos.TeamDTO;
-import it.polito.ai.es2.entities.Course;
-import it.polito.ai.es2.entities.Student;
 import it.polito.ai.es2.entities.Team;
 import it.polito.ai.es2.repositories.CourseRepository;
 import it.polito.ai.es2.repositories.StudentRepository;
 import it.polito.ai.es2.repositories.TeamRepository;
-import it.polito.ai.es2.services.exceptions.*;
+import it.polito.ai.es2.services.exceptions.NullParameterException;
+import it.polito.ai.es2.services.exceptions.TeamNotFoundException;
 import it.polito.ai.es2.services.interfaces.NotificationService;
 import it.polito.ai.es2.services.interfaces.TeamService;
 import lombok.extern.java.Log;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.*;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 /**
@@ -30,7 +30,6 @@ import java.util.stream.Collectors;
 @Service
 @Transactional
 @Log
-@PreAuthorize("permitAll()") // doesnt override httpsecurity settings!
 public class TeamServiceImpl implements TeamService {
   @Autowired
   ModelMapper modelMapper;
@@ -52,49 +51,45 @@ public class TeamServiceImpl implements TeamService {
 //  VMRepository vmRepository;
 
   /**
-   * GET {@link APITeams_RestController#getAllTeams()}
+   * GET {@link it.polito.ai.es2.controllers.APITeams_RestController#getMembers(Long)}
    */
   @Override
-  @PreAuthorize("hasRole('ADMIN')")
+  public List<StudentDTO> getMembers(Long teamId) {
+    log.info("getMembers(" + teamId + ")");
+    if (teamId == null) throw new NullParameterException("teamId");
+    Optional<Team> team = teamRepository.findById(teamId);
+    if (team.isEmpty())
+      throw new TeamNotFoundException(teamId);
+    return team.get().getMembers().stream().filter(Objects::nonNull).map(y -> modelMapper.map(y, StudentDTO.class)).collect(Collectors.toList());
+  }
+
+
+
+  /*
+   *//**
+   * GET {@link APITeams_RestController#getAllTeams()}
+   *//*
+  @Override
   public List<TeamDTO> getAllTeams() {
     log.info("getAllTeams()");
     return teamRepository.findAll().stream().map(x -> modelMapper.map(x, TeamDTO.class)).collect(Collectors.toList());
   }
 
-  /**
+  *//**
    * GET {@link it.polito.ai.es2.controllers.APITeams_RestController#getTeam(Long)}
-   */
+   *//*
   @Override
-  @PreAuthorize("hasRole('ADMIN') or hasRole('PROFESSOR') or @mySecurityChecker.isTeamOwner(#teamId,authentication.principal.username)")
   public Optional<TeamDTO> getTeam(Long teamId) {
     log.info("getTeam(" + teamId + ")");
     if (teamId == null) throw new NullParameterException("null team parameter");
     return teamRepository.findById(teamId).map(x -> modelMapper.map(x, TeamDTO.class));
   }
 
-  /**
-   * GET {@link it.polito.ai.es2.controllers.APITeams_RestController#getMembers(Long)}
-   */
-  @Override
-  @PreAuthorize("hasRole('ADMIN') or hasRole('PROFESSOR') or @mySecurityChecker.isTeamOwner(#teamId,authentication.principal.username)")
-  public List<StudentDTO> getMembers(Long teamId) {
-    log.info("getMembers(" + teamId + ")");
-    if (teamId == null) throw new NullParameterException("null team parameter");
-    Optional<Team> team = teamRepository.findById(teamId);
-    if (team.isPresent())
-      return team.get().getMembers().stream().filter(Objects::nonNull).map(y -> modelMapper.map(y, StudentDTO.class)).collect(Collectors.toList());
-    else
-      throw new TeamNotFoundException("getMembers() - team not found");
-  }
 
-  /**
+  *//**
    * {@link it.polito.ai.es2.controllers.APITeams_RestController#proposeTeam(String, String, List)}
-   */
-  // TODO: credo di aver fatto in modo che non ci possono essere piú gruppi con lo stesso nome per lo stesso corso, check in fase di creazione
+   *//*
   @Override
-  @PreAuthorize("hasRole('ADMIN') or hasRole('STUDENT')")
-  public TeamDTO proposeTeam(String courseName, String team_name, List<String> memberIds) throws TeamServiceException {
-    if (courseName == null || team_name == null || memberIds == null) throw new TeamServiceException("null parameter");
   public TeamDTO proposeTeam(String courseName, String team_name, List<Long> memberIds) {
     log.info("proposeTeam(" + courseName + ", " + team_name + ", " + memberIds + ")");
     if (courseName == null || team_name == null || memberIds == null)
@@ -141,11 +136,10 @@ public class TeamServiceImpl implements TeamService {
     return return_teamDTO;
   }
 
-  /**
+  *//**
    * {@link it.polito.ai.es2.controllers.APITeams_RestController#evictTeam(Long)}
-   */
+   *//*
   @Override
-  @PreAuthorize("hasRole('ADMIN') or (hasRole('PROFESSOR') and @mySecurityChecker.isTeamOwner(#teamId,authentication.principal.username))")
   public boolean evictTeam(Long teamId) {
     log.info("evictTeam(" + teamId + ")");
     Optional<Team> optionalTeam = teamRepository.findById(teamId);
@@ -163,9 +157,9 @@ public class TeamServiceImpl implements TeamService {
     return true;
   }
 
-  /**
+  *//**
    * @param status true sets team active, false sets team inactive
-   */
+   *//*
   @Override
   public boolean setTeamStatus(Long teamId, boolean status) {
     log.info("setTeamStatus(" + teamId + ", " + status + ")");
@@ -175,9 +169,11 @@ public class TeamServiceImpl implements TeamService {
     team.setActive(status); // no need to save, will be flushed automatically at the end of transaction (since not a new entity)
     return true;
   }
+  */
 }
 
 
+/*
 
 
 
@@ -194,17 +190,123 @@ public class TeamServiceImpl implements TeamService {
 
 
 
-  /**
-   * GET {@link APICourses_RestController#getAllCourses()}
-   */
+ */
+/**
+ * GET {@link APICourses_RestController#getAllCourses()}
+ * <p>
+ * GET {@link it.polito.ai.es2.controllers.APICourses_RestController#getCourse(String)}
+ * <p>
+ * GET {@link it.polito.ai.es2.controllers.APICourses_RestController#getEnrolledStudents(String)}
+ * <p>
+ * GET {@link it.polito.ai.es2.controllers.APICourses_RestController#getStudentsInTeams(String)}
+ * <p>
+ * GET {@link it.polito.ai.es2.controllers.APICourses_RestController#getAvailableStudents(String)}
+ * <p>
+ * GET {@link it.polito.ai.es2.controllers.APICourses_RestController#getTeamsForCourse(String)}
+ * <p>
+ * GET {@link it.polito.ai.es2.controllers.APIStudent_RestController#getAllStudents()}
+ * <p>
+ * GET {@link it.polito.ai.es2.controllers.APIStudent_RestController#getStudent(String)}
+ * <p>
+ * GET {@link it.polito.ai.es2.controllers.APIStudent_RestController#getCourses(String)}
+ * <p>
+ * GET {@link it.polito.ai.es2.controllers.APIStudent_RestController#getTeamsForStudent(String)}
+ * <p>
+ * POST {@link it.polito.ai.es2.controllers.APICourses_RestController#addCourse(CourseDTO)}
+ * <p>
+ * POST {@link it.polito.ai.es2.controllers.APIStudent_RestController#addStudent(StudentDTO)}
+ * <p>
+ * POST {@link it.polito.ai.es2.controllers.APIStudent_RestController#addAll(List<StudentDTO>)}
+ * <p>
+ * {@link it.polito.ai.es2.controllers.APICourses_RestController#enableCourse(String)}
+ * <p>
+ * {@link it.polito.ai.es2.controllers.APICourses_RestController#disableCourse(String)}
+ * <p>
+ * {@link it.polito.ai.es2.controllers.APICourses_RestController#enrollStudent(String, Map)}
+ * <p>
+ * {@link it.polito.ai.es2.controllers.APICourses_RestController#enrollStudents(List, String)}
+ * <p>
+ * {@link it.polito.ai.es2.controllers.APICourses_RestController#enrollStudentsCSV(String, MultipartFile)}
+ * <p>
+ * GET {@link it.polito.ai.es2.controllers.APICourses_RestController#getCourse(String)}
+ * <p>
+ * GET {@link it.polito.ai.es2.controllers.APICourses_RestController#getEnrolledStudents(String)}
+ * <p>
+ * GET {@link it.polito.ai.es2.controllers.APICourses_RestController#getStudentsInTeams(String)}
+ * <p>
+ * GET {@link it.polito.ai.es2.controllers.APICourses_RestController#getAvailableStudents(String)}
+ * <p>
+ * GET {@link it.polito.ai.es2.controllers.APICourses_RestController#getTeamsForCourse(String)}
+ * <p>
+ * GET {@link it.polito.ai.es2.controllers.APIStudent_RestController#getAllStudents()}
+ * <p>
+ * GET {@link it.polito.ai.es2.controllers.APIStudent_RestController#getStudent(String)}
+ * <p>
+ * GET {@link it.polito.ai.es2.controllers.APIStudent_RestController#getCourses(String)}
+ * <p>
+ * GET {@link it.polito.ai.es2.controllers.APIStudent_RestController#getTeamsForStudent(String)}
+ * <p>
+ * POST {@link it.polito.ai.es2.controllers.APICourses_RestController#addCourse(CourseDTO)}
+ * <p>
+ * POST {@link it.polito.ai.es2.controllers.APIStudent_RestController#addStudent(StudentDTO)}
+ * <p>
+ * POST {@link it.polito.ai.es2.controllers.APIStudent_RestController#addAll(List<StudentDTO>)}
+ * <p>
+ * {@link it.polito.ai.es2.controllers.APICourses_RestController#enableCourse(String)}
+ * <p>
+ * {@link it.polito.ai.es2.controllers.APICourses_RestController#disableCourse(String)}
+ * <p>
+ * {@link it.polito.ai.es2.controllers.APICourses_RestController#enrollStudent(String, Map)}
+ * <p>
+ * {@link it.polito.ai.es2.controllers.APICourses_RestController#enrollStudents(List, String)}
+ * <p>
+ * {@link it.polito.ai.es2.controllers.APICourses_RestController#enrollStudentsCSV(String, MultipartFile)}
+ * <p>
+ * GET {@link it.polito.ai.es2.controllers.APICourses_RestController#getCourse(String)}
+ * <p>
+ * GET {@link it.polito.ai.es2.controllers.APICourses_RestController#getEnrolledStudents(String)}
+ * <p>
+ * GET {@link it.polito.ai.es2.controllers.APICourses_RestController#getStudentsInTeams(String)}
+ * <p>
+ * GET {@link it.polito.ai.es2.controllers.APICourses_RestController#getAvailableStudents(String)}
+ * <p>
+ * GET {@link it.polito.ai.es2.controllers.APICourses_RestController#getTeamsForCourse(String)}
+ * <p>
+ * GET {@link it.polito.ai.es2.controllers.APIStudent_RestController#getAllStudents()}
+ * <p>
+ * GET {@link it.polito.ai.es2.controllers.APIStudent_RestController#getStudent(String)}
+ * <p>
+ * GET {@link it.polito.ai.es2.controllers.APIStudent_RestController#getCourses(String)}
+ * <p>
+ * GET {@link it.polito.ai.es2.controllers.APIStudent_RestController#getTeamsForStudent(String)}
+ * <p>
+ * POST {@link it.polito.ai.es2.controllers.APICourses_RestController#addCourse(CourseDTO)}
+ * <p>
+ * POST {@link it.polito.ai.es2.controllers.APIStudent_RestController#addStudent(StudentDTO)}
+ * <p>
+ * POST {@link it.polito.ai.es2.controllers.APIStudent_RestController#addAll(List<StudentDTO>)}
+ * <p>
+ * {@link it.polito.ai.es2.controllers.APICourses_RestController#enableCourse(String)}
+ * <p>
+ * {@link it.polito.ai.es2.controllers.APICourses_RestController#disableCourse(String)}
+ * <p>
+ * {@link it.polito.ai.es2.controllers.APICourses_RestController#enrollStudent(String, Map)}
+ * <p>
+ * {@link it.polito.ai.es2.controllers.APICourses_RestController#enrollStudents(List, String)}
+ * <p>
+ * {@link it.polito.ai.es2.controllers.APICourses_RestController#enrollStudentsCSV(String, MultipartFile)}
+ *//*
+
   @Override
   public List<CourseDTO> getAllCourses() {
     return courseRepository.findAll().stream().map(x -> modelMapper.map(x, CourseDTO.class)).collect(Collectors.toList());
   }
 
-  /**
-   * GET {@link it.polito.ai.es2.controllers.APICourses_RestController#getCourse(String)}
-   */
+  */
+/**
+ * GET {@link it.polito.ai.es2.controllers.APICourses_RestController#getCourse(String)}
+ *//*
+
   @Override
   @PreAuthorize("authenticated") // overrides class roles
   public Optional<CourseDTO> getCourse(String courseName) {
@@ -212,9 +314,11 @@ public class TeamServiceImpl implements TeamService {
     return courseRepository.findById(courseName).map(x -> modelMapper.map(x, CourseDTO.class));
   }
 
-  /**
-   * GET {@link it.polito.ai.es2.controllers.APICourses_RestController#getEnrolledStudents(String)}
-   */
+  */
+/**
+ * GET {@link it.polito.ai.es2.controllers.APICourses_RestController#getEnrolledStudents(String)}
+ *//*
+
   @Override
   @PreAuthorize("hasRole('ADMIN') or hasRole('STUDENT') or hasRole('PROFESSOR')")
   public List<StudentDTO> getEnrolledStudents(String courseName) throws CourseNotFoundException {
@@ -225,9 +329,11 @@ public class TeamServiceImpl implements TeamService {
     return c.getStudents().stream().map(x -> modelMapper.map(x, StudentDTO.class)).collect(Collectors.toList());
   }
 
-  /**
-   * GET {@link it.polito.ai.es2.controllers.APICourses_RestController#getStudentsInTeams(String)}
-   */
+  */
+/**
+ * GET {@link it.polito.ai.es2.controllers.APICourses_RestController#getStudentsInTeams(String)}
+ *//*
+
   @Override
   @PreAuthorize("hasRole('ADMIN') or hasRole('STUDENT') or hasRole('PROFESSOR')")
   public List<StudentDTO> getStudentsInTeams(String courseName) {
@@ -236,9 +342,11 @@ public class TeamServiceImpl implements TeamService {
     return courseRepository.getStudentsInTeams(courseName).stream().map(x -> modelMapper.map(x, StudentDTO.class)).collect(Collectors.toList());
   }
 
-  /**
-   * GET {@link it.polito.ai.es2.controllers.APICourses_RestController#getAvailableStudents(String)}
-   */
+  */
+/**
+ * GET {@link it.polito.ai.es2.controllers.APICourses_RestController#getAvailableStudents(String)}
+ *//*
+
   @Override
   @PreAuthorize("hasRole('ADMIN') or hasRole('STUDENT') or hasRole('PROFESSOR')")
   public List<StudentDTO> getAvailableStudents(String courseName) {
@@ -247,9 +355,11 @@ public class TeamServiceImpl implements TeamService {
     return courseRepository.getStudentsNotInTeams(courseName).stream().map(x -> modelMapper.map(x, StudentDTO.class)).collect(Collectors.toList());
   }
 
-  /**
-   * GET {@link it.polito.ai.es2.controllers.APICourses_RestController#getTeamsForCourse(String)}
-   */
+  */
+/**
+ * GET {@link it.polito.ai.es2.controllers.APICourses_RestController#getTeamsForCourse(String)}
+ *//*
+
   @Override
   @PreAuthorize("hasRole('ADMIN') or hasRole('PROFESSOR')")
   public List<TeamDTO> getTeamsForCourse(String courseName) {
@@ -259,18 +369,22 @@ public class TeamServiceImpl implements TeamService {
     return co.get().getTeams().stream().map(x -> modelMapper.map(x, TeamDTO.class)).collect(Collectors.toList());
   }
 
-  /**
-   * GET {@link it.polito.ai.es2.controllers.APIStudent_RestController#getAllStudents()}
-   */
+  */
+/**
+ * GET {@link it.polito.ai.es2.controllers.APIStudent_RestController#getAllStudents()}
+ *//*
+
   @Override
   @PreAuthorize("hasRole('ADMIN') or hasRole('PROFESSOR')")
   public List<StudentDTO> getAllStudents() {
     return studentRepository.findAll().stream().map(x -> modelMapper.map(x, StudentDTO.class)).collect(Collectors.toList());
   }
 
-  /**
-   * GET {@link it.polito.ai.es2.controllers.APIStudent_RestController#getStudent(String)}
-   */
+  */
+/**
+ * GET {@link it.polito.ai.es2.controllers.APIStudent_RestController#getStudent(String)}
+ *//*
+
   @Override
   @PreAuthorize("hasRole('ADMIN') or hasRole('PROFESSOR') or @mySecurityChecker.isOwner(#studentId,authentication.principal.username)")
   public Optional<StudentDTO> getStudent(String studentId) {
@@ -278,9 +392,11 @@ public class TeamServiceImpl implements TeamService {
     return studentRepository.findById(studentId).map(x -> modelMapper.map(x, StudentDTO.class));
   }
 
-  /**
-   * GET {@link it.polito.ai.es2.controllers.APIStudent_RestController#getCourses(String)}
-   */
+  */
+/**
+ * GET {@link it.polito.ai.es2.controllers.APIStudent_RestController#getCourses(String)}
+ *//*
+
   @Override
   @PreAuthorize("hasRole('ADMIN') or hasRole('PROFESSOR') or @mySecurityChecker.isOwner(#studentId,authentication.principal.username)")
   public List<CourseDTO> getCourses(String studentId) {
@@ -288,9 +404,11 @@ public class TeamServiceImpl implements TeamService {
     return studentRepository.getOne(studentId).getCourses().stream().map(x -> modelMapper.map(x, CourseDTO.class)).collect(Collectors.toList());
   }
 
-  /**
-   * GET {@link it.polito.ai.es2.controllers.APIStudent_RestController#getTeamsForStudent(String)}
-   */
+  */
+/**
+ * GET {@link it.polito.ai.es2.controllers.APIStudent_RestController#getTeamsForStudent(String)}
+ *//*
+
   @Override
   @PreAuthorize("hasRole('ADMIN') or hasRole('PROFESSOR') or @mySecurityChecker.isOwner(#studentId,authentication.principal.username)")
   public List<TeamDTO> getTeamsForStudent(String studentId) {
@@ -315,9 +433,11 @@ public class TeamServiceImpl implements TeamService {
 
 
 
-  /**
-   * POST {@link it.polito.ai.es2.controllers.APICourses_RestController#addCourse(CourseDTO)}
-   */
+  */
+/**
+ * POST {@link it.polito.ai.es2.controllers.APICourses_RestController#addCourse(CourseDTO)}
+ *//*
+
   @Override
   @PreAuthorize("hasRole('ADMIN')")
   public boolean addCourse(CourseDTO course) {
@@ -340,9 +460,11 @@ public class TeamServiceImpl implements TeamService {
     }
   }
 
-  /**
-   * POST {@link it.polito.ai.es2.controllers.APIStudent_RestController#addStudent(StudentDTO)}
-   */
+  */
+/**
+ * POST {@link it.polito.ai.es2.controllers.APIStudent_RestController#addStudent(StudentDTO)}
+ *//*
+
   @Override
   @PreAuthorize("hasRole('ADMIN')")
   public boolean addStudent(StudentDTO student) {
@@ -365,9 +487,11 @@ public class TeamServiceImpl implements TeamService {
     }
   }
 
-  /**
-   * POST {@link it.polito.ai.es2.controllers.APIStudent_RestController#addAll(List<StudentDTO>)}
-   */
+  */
+/**
+ * POST {@link it.polito.ai.es2.controllers.APIStudent_RestController#addAll(List<StudentDTO>)}
+ *//*
+
   @Override
   @PreAuthorize("hasRole('ADMIN')")
   public List<Boolean> addAll(List<StudentDTO> students) {
@@ -387,9 +511,11 @@ public class TeamServiceImpl implements TeamService {
                    }).collect(Collectors.toList());
   }
 
-  /**
-   * {@link it.polito.ai.es2.controllers.APICourses_RestController#enableCourse(String)}
-   */
+  */
+/**
+ * {@link it.polito.ai.es2.controllers.APICourses_RestController#enableCourse(String)}
+ *//*
+
   @Override
   @PreAuthorize("hasRole('ADMIN') or (hasRole('PROFESSOR') and @mySecurityChecker.isCourseOwner(#courseName,authentication.principal.username))")
   public void enableCourse(String courseName) throws CourseNotFoundException {
@@ -399,9 +525,11 @@ public class TeamServiceImpl implements TeamService {
     courseRepository.getOne(courseName).setEnabled(true);
   }
 
-  /**
-   * {@link it.polito.ai.es2.controllers.APICourses_RestController#disableCourse(String)}
-   */
+  */
+/**
+ * {@link it.polito.ai.es2.controllers.APICourses_RestController#disableCourse(String)}
+ *//*
+
   @Override
   @PreAuthorize("hasRole('ADMIN') or (hasRole('PROFESSOR') and @mySecurityChecker.isCourseOwner(#courseName,authentication.principal.username))")
   public void disableCourse(String courseName) throws CourseNotFoundException {
@@ -411,9 +539,11 @@ public class TeamServiceImpl implements TeamService {
     courseRepository.getOne(courseName).setEnabled(false);
   }
 
-  /**
-   * {@link it.polito.ai.es2.controllers.APICourses_RestController#enrollStudent(String, Map)}
-   */
+  */
+/**
+ * {@link it.polito.ai.es2.controllers.APICourses_RestController#enrollStudent(String, Map)}
+ *//*
+
   @Override
   @PreAuthorize("hasRole('ADMIN') or (hasRole('PROFESSOR') and @mySecurityChecker.isCourseOwner(#courseName,authentication.principal.username))")
   public boolean enrollStudent(String studentId, String courseName) throws StudentNotFoundException, CourseNotFoundException {
@@ -437,9 +567,11 @@ public class TeamServiceImpl implements TeamService {
     return true;
   }
 
-  /**
-   * {@link it.polito.ai.es2.controllers.APICourses_RestController#enrollStudents(List, String)}
-   */
+  */
+/**
+ * {@link it.polito.ai.es2.controllers.APICourses_RestController#enrollStudents(List, String)}
+ *//*
+
   @Override
   @PreAuthorize("hasRole('ADMIN') or (hasRole('PROFESSOR') and @mySecurityChecker.isCourseOwner(#courseName,authentication.principal.username))")
   public List<Boolean> enrollStudents(List<String> studentIds, String courseName) {
@@ -471,9 +603,11 @@ public class TeamServiceImpl implements TeamService {
     return lb;
   }
 
-  /**
-   * {@link it.polito.ai.es2.controllers.APICourses_RestController#enrollStudentsCSV(String, MultipartFile)}
-   */
+  */
+/**
+ * {@link it.polito.ai.es2.controllers.APICourses_RestController#enrollStudentsCSV(String, MultipartFile)}
+ *//*
+
   @Override
   @PreAuthorize("hasRole('ADMIN') or (hasRole('PROFESSOR') and @mySecurityChecker.isCourseOwner(#courseName,authentication.principal.username))")
   public List<Boolean> addAndEroll(Reader reader, String courseName) {
@@ -501,3 +635,4 @@ public class TeamServiceImpl implements TeamService {
     log.info(courseName + " - CSV_Valid_Students: " + list_ids);
     return enrollStudents(list_ids, courseName);
   }
+*/

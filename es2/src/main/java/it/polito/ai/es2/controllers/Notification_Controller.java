@@ -3,8 +3,6 @@ package it.polito.ai.es2.controllers;
 import it.polito.ai.es2.services.interfaces.NotificationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 @Controller
@@ -12,7 +10,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 public class Notification_Controller {
   @Autowired
   NotificationService notificationService;
-
+/*
   @GetMapping("/confirm/{token}")
   public String confirm_token(@PathVariable String token) {
     boolean confirm = notificationService.confirm(token);
@@ -30,4 +28,5 @@ public class Notification_Controller {
     else
       return "token_error";
   }
+  */
 }

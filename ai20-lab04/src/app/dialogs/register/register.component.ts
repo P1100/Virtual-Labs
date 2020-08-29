@@ -1,46 +1,49 @@
 import {Component} from '@angular/core';
-import {Course} from '../../models/course.model';
 import {AppSettings} from '../../app-settings';
 import {CourseService} from '../../services/course.service';
 import {MatDialogRef} from '@angular/material/dialog';
 import {Router} from '@angular/router';
 import {AlertsService} from '../../services/alerts.service';
+import {User} from '../../models/user.model';
+import {AuthService} from '../../services/auth.service';
+import {Observable} from 'rxjs';
 
 @Component({
   selector: 'app-register',
   templateUrl: './register.component.html',
-  styles: ['mat-form-field {width: 100%}']
+  styles: ['mat-form-field {width: 100%} mat-radio-button {margin-right: 12px}']
 })
 export class RegisterComponent {
-  course = new Course('', '', 1, 10, false, '');
-  private selectedFile: File;
-  noValidateForTesting = false;
-  showNoValidateCheckboxForTesting = AppSettings.devModeShowAll;
+  user = new User(null, null, null, null, []);
+  checkboxNoValidate = false;
+  showCheckboxNoValidateForTesting = AppSettings.devModeShowAll;
+  isStudentRadio = false;
 
-  constructor(private courseService: CourseService, public dialogRef: MatDialogRef<RegisterComponent>, private router: Router, private alertsService: AlertsService) {
+  constructor(private courseService: CourseService, public dialogRef: MatDialogRef<RegisterComponent>, private router: Router,
+              private alertsService: AlertsService, private authService: AuthService) {
   }
 
   onCancelClick(): void {
     this.dialogRef.close(); // same value as when you press ESC (undefined)
   }
   onSubmit() {
-    this.courseService.addCourse(this.course).subscribe(
+    let obs: Observable<any>;
+    console.log(this.isStudentRadio, this.isStudentRadio);
+    if (this.isStudentRadio) {
+      obs = this.authService.registerStudent(this.user);
+    } else {
+      obs = this.authService.registerProfessor(this.user);
+    }
+    obs.subscribe(
       x => {
         this.dialogRef.close('success');
         this.router.navigateByUrl('/');
-        this.alertsService.setAlert('success', 'Course added!');
+        this.alertsService.setAlert('success', 'User registered. Check email for confirmation');
       },
       e => {
-        this.alertsService.setAlert('danger', 'Couldn\'t add course! ' + e);
         this.dialogRef.close();
+        this.alertsService.setAlert('danger', 'Couldn\'t register user! ' + e);
       }
     );
-  }
-
-  public onFileChanged(event) {
-    this.course.enabled = !this.course.enabled;
-    this.selectedFile = event.target.files[0];
-    // To update bootstrap input text, missing JQuery
-    this.course.vmModelPath = this.selectedFile.name;
   }
 }

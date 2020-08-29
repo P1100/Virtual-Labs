@@ -25,10 +25,10 @@ public class Role {
   @ManyToMany(mappedBy = "roles")
   @ToString.Exclude
   private List<User> users = new ArrayList<>();
-  
+
   public Role(String role) {
-    this.name = role;
-    this.description = "";
+    name = role;
+    description = "";
   }
 }
 

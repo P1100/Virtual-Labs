@@ -4,7 +4,7 @@ import it.polito.ai.es2.controllers.hateoas.ModelHelper;
 import it.polito.ai.es2.dtos.CourseDTO;
 import it.polito.ai.es2.dtos.StudentDTO;
 import it.polito.ai.es2.dtos.TeamDTO;
-import it.polito.ai.es2.services.interfaces.StudentService;
+import it.polito.ai.es2.services.interfaces.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.hateoas.CollectionModel;
 import org.springframework.hateoas.Link;
@@ -23,13 +23,13 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 @RequestMapping("/API/students")
 public class APIStudents_RestController {
   @Autowired
-  StudentService studentService;
+  UserService userService;
   @Autowired
   private ModelHelper modelHelper;
 
   @GetMapping()
   public CollectionModel<StudentDTO> getAllStudents() {
-    List<StudentDTO> allStudents = studentService.getAllStudents();
+    List<StudentDTO> allStudents = userService.getAllStudents();
     for (StudentDTO studentDTO : allStudents) {
       modelHelper.enrich(studentDTO);
     }
@@ -40,7 +40,7 @@ public class APIStudents_RestController {
 
   @GetMapping("/{student_id}")
   public StudentDTO getStudent(@PathVariable Long student_id) {
-    Optional<StudentDTO> studentDTO = studentService.getStudent(student_id);
+    Optional<StudentDTO> studentDTO = userService.getStudent(student_id);
     if (studentDTO.isEmpty())
       throw new ResponseStatusException(HttpStatus.NOT_FOUND, student_id.toString());
     return modelHelper.enrich(studentDTO.get());
@@ -50,13 +50,13 @@ public class APIStudents_RestController {
   // ---> Nella POST settare ContentType: application/json
   @PostMapping()
   public StudentDTO addStudent(@Valid @RequestBody StudentDTO studentDTO) {
-    studentService.addStudent(studentDTO);
+    userService.addStudent(studentDTO);
     return modelHelper.enrich(studentDTO);
   }
 
   @GetMapping("/{student_id}/courses")
   public CollectionModel<CourseDTO> getCourses(@PathVariable Long student_id) {
-    List<CourseDTO> courses = studentService.getEnrolledCourses(student_id);
+    List<CourseDTO> courses = userService.getEnrolledCourses(student_id);
     for (CourseDTO courseDTO : courses) {
       modelHelper.enrich(courseDTO);
     }
@@ -67,7 +67,7 @@ public class APIStudents_RestController {
 
   @GetMapping("/{student_id}/teams")
   public CollectionModel<TeamDTO> getTeamsForStudent(@PathVariable Long student_id) {
-    List<TeamDTO> teams = studentService.getTeamsForStudent(student_id);
+    List<TeamDTO> teams = userService.getTeamsForStudent(student_id);
     for (TeamDTO team : teams) {
       modelHelper.enrich(team);
     }
@@ -75,4 +75,5 @@ public class APIStudents_RestController {
         linkTo(methodOn(APIStudents_RestController.class).getTeamsForStudent(student_id)).withSelfRel());
     return teamsHAL;
   }
+
 }

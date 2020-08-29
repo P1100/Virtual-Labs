@@ -29,7 +29,7 @@ export class CourseService {
   }
   updateCourse(course: Course): Observable<any> {
     return this.http.put(`${this.baseUrlAPI}`, JSON.stringify(course), AppSettings.JSON_HTTP_OPTIONS)
-      .pipe(catchError(formatErrors));
+      .pipe(retry(AppSettings.RETRIES), catchError(formatErrors));
   }
 
   getCourse(courseId: string): Observable<Course[]> {
@@ -52,15 +52,15 @@ export class CourseService {
   }
   disenrollStudent(studentId: number, courseId: string): Observable<any> {
     return this.http.put(`${this.baseUrlAPI}/${courseId}/disenroll/${studentId}`, null, AppSettings.JSON_HTTP_OPTIONS)
-      .pipe(catchError(formatErrors));
+      .pipe(retry(AppSettings.RETRIES), catchError(formatErrors));
   }
   enrollStudent(student: Student, courseId: string): Observable<any> {
-    return this.http.post(`${this.baseUrlAPI}/${courseId}/enroll`, JSON.stringify(student), AppSettings.JSON_HTTP_OPTIONS)
-      .pipe(catchError(formatErrors));
+    return this.http.put(`${this.baseUrlAPI}/${courseId}/enroll`, JSON.stringify(student), AppSettings.JSON_HTTP_OPTIONS)
+      .pipe(retry(AppSettings.RETRIES), catchError(formatErrors));
   }
   enrollStudents(studentsId: number[], courseId: string): Observable<any> {
-    return this.http.post(`${this.baseUrlAPI}/${courseId}/enroll-all`, JSON.stringify(studentsId), AppSettings.JSON_HTTP_OPTIONS)
-      .pipe(catchError(formatErrors));
+    return this.http.put(`${this.baseUrlAPI}/${courseId}/enroll-all`, JSON.stringify(studentsId), AppSettings.JSON_HTTP_OPTIONS)
+      .pipe(retry(AppSettings.RETRIES), catchError(formatErrors));
   }
   enrollStudentsCSV(courseId: string, uploadCSVData: FormData): Observable<any> {
     return this.http.post(`${this.baseUrlAPI}/${courseId}/enroll-csv`, uploadCSVData).pipe(catchError(formatErrors));

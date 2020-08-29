@@ -22,7 +22,7 @@ public class JwtRequestFilter extends OncePerRequestFilter {
   private UserDetailsServiceImpl userDetailsServiceImpl;
   @Autowired
   private JwtTokenUtil jwtTokenUtil;
-  
+
   @Override
   protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain chain)
       throws ServletException, IOException {
@@ -32,8 +32,8 @@ public class JwtRequestFilter extends OncePerRequestFilter {
       chain.doFilter(request, response);
       return;
     }
-  
-    final String requestTokenHeader = request.getHeader("Authorization");
+
+    String requestTokenHeader = request.getHeader("Authorization");
     String username = null;
     String jwtToken = null;
     // JWT Token is in the form "Bearer token". Remove Bearer word and get
@@ -50,15 +50,15 @@ public class JwtRequestFilter extends OncePerRequestFilter {
     } else {
       logger.warn("JWT Token does not begin with Bearer String");
     }
-    
+
     // Once we get the token validate it.
     if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
-      UserDetails userDetails = this.userDetailsServiceImpl.loadUserByUsername(username);
-      
+      UserDetails userDetails = userDetailsServiceImpl.loadUserByUsername(username);
+
       // if token is valid configure Spring Security to manually set
       // authentication
       if (jwtTokenUtil.validateToken(jwtToken, userDetails)) {
-        
+
         UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken = new UsernamePasswordAuthenticationToken(
             userDetails, null, userDetails.getAuthorities());
         usernamePasswordAuthenticationToken

@@ -10,6 +10,8 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.server.ResponseStatusException;
 
+import javax.validation.constraints.NotNull;
+
 @RestController
 @RequestMapping(path = "API/images")
 @Log
@@ -18,7 +20,7 @@ public class APIImages_RestController {
   ImageService imageService;
 
   @PostMapping(value = "/")
-  public ResponseEntity<String> uploadImage(@RequestParam("imageFile") MultipartFile file) {
+  public ResponseEntity<String> uploadImage(@RequestParam("imageFile") @NotNull MultipartFile file) {
     if (file == null)
       throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "null file");
     imageService.uploadImage(file);

@@ -1,57 +1,44 @@
-<h1 mat-dialog-title class="text-center mb-3">New Course</h1>
-<form #cf="ngForm" (ngSubmit)="onSubmit()" class="text-center border border-light p-3" [noValidate]="noValidateForTesting">
-  <div mat-dialog-content>
+<h1 mat-dialog-title class="text-center mb-3">Create Virtual Labs Account</h1>
+<form #cf="ngForm" (ngSubmit)="onSubmit()" class="text-center border border-light p-3" [noValidate]="checkboxNoValidate">
+  <div>
     <mat-form-field class="form-group">
       <mat-label>Id</mat-label>
-      <input matInput #id="ngModel" name="id" [(ngModel)]="course.id" required>
+      <input matInput #id="ngModel" name="id" [(ngModel)]="user.id" required pattern="^(?!\s*$).+">
       <mat-hint>must be unique</mat-hint>
     </mat-form-field>
     <br>
     <mat-form-field class="form-group">
-      <mat-label>Full name</mat-label>
-      <input matInput #name="ngModel" name="name" [(ngModel)]="course.firstName" required pattern="^(?!\s*$).+">
+      <mat-label>First name</mat-label>
+      <input matInput #first="ngModel" name="first" [(ngModel)]="user.firstName" required pattern="^(?!\s*$).+">
       <!--class="form-control"-->
-      <mat-error *ngIf="name.invalid && !name.pristine">Name is required, can't be blank</mat-error>
+      <mat-error *ngIf="first.invalid && !first.pristine">First Name is required, can't be blank</mat-error>
     </mat-form-field>
     <br>
     <mat-form-field class="form-group">
-      <mat-label>Status</mat-label>
-      <mat-select #status="ngModel" name="status" [(ngModel)]="course.enabled" required>
-        <mat-option [value]="true">true</mat-option>
-        <mat-option [value]="false">false</mat-option>
-      </mat-select>
+      <mat-label>Last name</mat-label>
+      <input matInput #last="ngModel" name="last" [(ngModel)]="user.lastName" required pattern="^(?!\s*$).+">
+      <mat-error *ngIf="last.invalid && !last.pristine">Last Name is required, can't be blank</mat-error>
     </mat-form-field>
     <br>
     <mat-form-field class="form-group">
-      <mat-label>Min size teams</mat-label>
-      <input matInput #min="ngModel" name="min" [(ngModel)]="course.minSizeTeam" type="number" required pattern="\d+">
-      <mat-error *ngIf="min.invalid && !min.pristine">Must be positive or zero</mat-error>
+      <mat-label>Email</mat-label>
+      <input matInput #email="ngModel" name="email" [(ngModel)]="user.email" type="email" required
+             [pattern]="isStudentRadio==true ? 's[0-9]{1,9}@studenti\.polito\.it' : 's[0-9]{1,9}@polito\.it'">
+      <mat-error *ngIf="email.invalid && !email.pristine">Email is required. Must be s000000@polito.it or s000000@studenti.polito.it</mat-error>
     </mat-form-field>
+    <!--    [formControl]="isStudentRadio" -->
+    <mat-radio-group #isstudent="ngModel" name="isstudent" [(ngModel)]="isStudentRadio" required>
+      <mat-radio-button value="1">Student</mat-radio-button>
+      <mat-radio-button value="0">Professor</mat-radio-button>
+    </mat-radio-group>
     <br>
-    <mat-form-field class="form-group">
-      <mat-label>Max size teams</mat-label>
-      <input matInput #max="ngModel" name="max" [(ngModel)]="course.maxSizeTeam" type="number" required
-             pattern="[1-9]\d*">
-      <mat-error *ngIf="max.invalid && !max.pristine">Must be positive (not zero)</mat-error>
-    </mat-form-field>
-    <br>
-    <mat-form-field class="form-group">
-      <mat-label>Vm Model</mat-label>
-      <input matInput #vmp="ngModel" name="vmp" [(ngModel)]="course.vmModelPath">
-    </mat-form-field>
-    <div class="custom-file form-group">
-      <input type="file" class="custom-file-input" id="importFile" (change)="onFileChanged($event)">
-      <label class="custom-file-label" for="importFile">Choose Vm Model file</label>
-    </div>
   </div>
   <br>
   <div mat-dialog-actions>
     <button mat-raised-button color="primary" mat-button
-            [disabled]="(!cf.valid || cf.pristine) && !noValidateForTesting">Add
+            [disabled]="(!cf.valid || cf.pristine) && !checkboxNoValidate">Sign up
     </button>
     <button type="button" mat-button (click)="onCancelClick()">Cancel</button>
-    <mat-checkbox style="margin: 2px" name="noval" [(ngModel)]="noValidateForTesting"
-                  *ngIf="showNoValidateCheckboxForTesting">Form No Validate
-    </mat-checkbox>
+    <mat-checkbox style="margin: 2px" name="noval" [(ngModel)]="checkboxNoValidate" *ngIf="showCheckboxNoValidateForTesting">Form No Validate</mat-checkbox>
   </div>
 </form>

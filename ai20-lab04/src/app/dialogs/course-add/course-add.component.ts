@@ -14,8 +14,8 @@ import {AlertsService} from '../../services/alerts.service';
 export class CourseAddComponent {
   course = new Course('', '', 1, 10, false, '');
   private selectedFile: File;
-  noValidateForTesting = false;
-  showNoValidateCheckboxForTesting = AppSettings.devModeShowAll;
+  checkboxNoValidate = false;
+  showCheckboxNoValidateForTesting = AppSettings.devModeShowAll;
 
   constructor(private courseService: CourseService, public dialogRef: MatDialogRef<CourseAddComponent>, private router: Router, private alertsService: AlertsService) {
   }

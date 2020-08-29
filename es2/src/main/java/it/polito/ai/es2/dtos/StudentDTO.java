@@ -19,7 +19,6 @@ public class StudentDTO extends RepresentationModel<StudentDTO> {
   private String firstName;
   @NotBlank
   private String lastName;
-  @NotBlank
   @Email
   @Pattern(regexp = "s[0-9]{1,9}@studenti\\.polito\\.it")
   private String email;

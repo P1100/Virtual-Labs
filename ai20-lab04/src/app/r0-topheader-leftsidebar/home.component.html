@@ -12,7 +12,9 @@
 
     <span class="fill-remaining-space-header"></span>
 
-    <!--  <button mat-button type="button" *ngIf="loggedUser == ''">Register</button>-->
+    <button mat-button type="button" style="color: chartreuse">Test</button>
+    <button mat-button type="button" (click)="openRegisterDialog()">Register</button>
+    <!--    <button mat-button type="button" *ngIf="loggedUser == ''">Register</button>-->
     <button mat-button type="button" *ngIf="isLogged">{{loggedUser}}</button>
     <!--  <button mat-button type="button"-->
     <!--          (click)="openLoginDialogTemplate()">    {{isLogged}}-Test-->

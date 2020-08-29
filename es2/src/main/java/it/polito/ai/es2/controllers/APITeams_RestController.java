@@ -1,25 +1,15 @@
 package it.polito.ai.es2.controllers;
 
 import it.polito.ai.es2.controllers.hateoas.ModelHelper;
-import it.polito.ai.es2.domains.TeamViewModel;
 import it.polito.ai.es2.dtos.StudentDTO;
-import it.polito.ai.es2.dtos.TeamDTO;
 import it.polito.ai.es2.services.interfaces.TeamService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.hateoas.CollectionModel;
-import org.springframework.hateoas.Link;
-import org.springframework.http.HttpStatus;
-import org.springframework.ui.Model;
-import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.*;
-import org.springframework.web.server.ResponseStatusException;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
-import java.util.Arrays;
 import java.util.List;
-import java.util.Optional;
-
-import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
-import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
 @RestController
 @RequestMapping("/API/teams")
@@ -29,6 +19,16 @@ public class APITeams_RestController {
   @Autowired
   private ModelHelper modelHelper;
 
+  @GetMapping("/{teamId}/members")
+  public List<StudentDTO> getMembers(@PathVariable Long teamId) {
+    List<StudentDTO> members = teamService.getMembers(teamId);
+    for (StudentDTO member : members) {
+      modelHelper.enrich(member);
+    }
+    return members;
+  }
+
+/*
   @GetMapping({"", "/"})
   public CollectionModel<TeamDTO> getAllTeams() {
     List<TeamDTO> allTeams = teamService.getAllTeams();
@@ -49,14 +49,7 @@ public class APITeams_RestController {
     return modelHelper.enrich(teamDTO.get());
   }
 
-  @GetMapping("/{teamId}/members")
-  public List<StudentDTO> getMembers(@PathVariable Long teamId) {
-    List<StudentDTO> members = teamService.getMembers(teamId);
-    for (StudentDTO member : members) {
-      modelHelper.enrich(member);
-    }
-    return members;
-  }
+
 
   // http://localhost:8080/API/teams/propose/C0/Team0/100,101,S33
   @PostMapping("/propose/{courseName}/{team_name}/{memberIds}")
@@ -86,4 +79,5 @@ public class APITeams_RestController {
       return "error_template";
     return "csv_home";
   }
+  */
 }

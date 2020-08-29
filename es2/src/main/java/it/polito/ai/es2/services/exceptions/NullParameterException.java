@@ -9,7 +9,7 @@ public class NullParameterException extends RuntimeException {
     super("Null parameters.");
   }
 
-  public NullParameterException(String s) {
-    super("Null parameters. (" + s + ")");
+  public NullParameterException(String commaSeparatedNullParametersName) {
+    super("Null parameters. (" + commaSeparatedNullParametersName + ")");
   }
 }

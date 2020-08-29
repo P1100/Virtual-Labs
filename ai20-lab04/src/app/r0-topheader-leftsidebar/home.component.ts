@@ -13,6 +13,7 @@ import {Alert, AlertsService} from '../services/alerts.service';
 import {AppSettings} from '../app-settings';
 import {CourseDeleteComponent} from '../dialogs/course-delete/course-delete.component';
 import {CourseAddComponent} from '../dialogs/course-add/course-add.component';
+import {RegisterComponent} from '../dialogs/register/register.component';
 
 export interface dialogCourseData {
   courseId: string,
@@ -115,17 +116,28 @@ export class HomeComponent implements OnInit, OnDestroy {
       }
     });
   }
-  openAddCourseDialog(): void {
-    if (this.dialogRef) // if dialog exists
-    {
+  openRegisterDialog() {
+    if (this.dialogRef) {
       return;
     }
-    const dialogRef = this.dialog.open(CourseAddComponent, {
-      maxWidth: '600px', autoFocus: true, hasBackdrop: true, disableClose: true, closeOnNavigation: true
+    const dialogRef = this.dialog.open(RegisterComponent, {
+      maxWidth: '800px', autoFocus: true, hasBackdrop: true, disableClose: true, closeOnNavigation: true
     });
     dialogRef.afterClosed().subscribe((res: string) => {
         this.dialogRef = null;
-        if (res != undefined) {
+      }, () => this.alertsService.setAlert('danger', 'Dialog Error')
+    );
+  }
+  openAddCourseDialog(): void {
+    if (this.dialogRef) {
+      return;
+    }
+    const dialogRef = this.dialog.open(CourseAddComponent, {
+      maxWidth: '800px', autoFocus: true, hasBackdrop: true, disableClose: true, closeOnNavigation: true
+    });
+    dialogRef.afterClosed().subscribe((res: string) => {
+      this.dialogRef = null;
+      if (res != undefined) {
           this.courseService.getCourses().subscribe(x => this.courses = x);
         }
       }, () => this.alertsService.setAlert('danger', 'Dialog Error')
@@ -136,7 +148,7 @@ export class HomeComponent implements OnInit, OnDestroy {
       return;
     }
     const dialogRef = this.dialog.open(CourseEditComponent, {
-      maxWidth: '600px', autoFocus: true, hasBackdrop: true, disableClose: true, closeOnNavigation: true,
+      maxWidth: '800px', autoFocus: true, hasBackdrop: true, disableClose: true, closeOnNavigation: true,
       data: {courseName: this.nameActiveCourse, courseId: this.idActiveCourse}
     });
     dialogRef.afterClosed().subscribe((res: string) => {
@@ -149,7 +161,7 @@ export class HomeComponent implements OnInit, OnDestroy {
       return;
     }
     const dialogRef = this.dialog.open(CourseDeleteComponent, {
-      maxWidth: '600px', autoFocus: false, hasBackdrop: true, disableClose: false, closeOnNavigation: true,
+      maxWidth: '800px', autoFocus: false, hasBackdrop: true, disableClose: false, closeOnNavigation: true,
       data: {courseName: this.nameActiveCourse, courseId: this.idActiveCourse}
     });
     dialogRef.afterClosed().subscribe((res: string) => {
@@ -165,7 +177,7 @@ export class HomeComponent implements OnInit, OnDestroy {
       return;
     }
     this.dialogRef = this.dialog.open(LoginComponent, {
-      maxWidth: '600px', autoFocus: true, hasBackdrop: true, disableClose: true, closeOnNavigation: false
+      maxWidth: '800px', autoFocus: true, hasBackdrop: true, disableClose: true, closeOnNavigation: false
     });
     // Settings what to do when dialog is closed
     this.dialogRef.afterClosed().subscribe(() => this.dialogRef = null);

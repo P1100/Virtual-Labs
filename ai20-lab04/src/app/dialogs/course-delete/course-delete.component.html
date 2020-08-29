@@ -11,10 +11,8 @@
   <mat-card-actions>
     <form #cf="ngForm" (ngSubmit)="onSubmit()">
       <p>
-        <input type="text" class="form-control input-block" autofocus required
-               pattern="confirm/delete"
-               aria-label="Type in to confirm that you want to delete this course."
-               autocomplete="off"
+        <input type="text" class="form-control input-block" autofocus required pattern="confirm/delete"
+               aria-label="Type in to confirm that you want to delete this course." autocomplete="off"
                name="confirm" [(ngModel)]="confirm">
       </p>
       <button class="btn btn-block btn-danger" [disabled]="(!cf.valid || cf.pristine) && !noValidateForTesting">I

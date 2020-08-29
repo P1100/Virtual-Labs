@@ -13,6 +13,7 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.server.ResponseStatusException;
 
 import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -111,7 +112,7 @@ public class APICourses_RestController {
   }
 
   @RequestMapping(value = "/{courseId}/enroll-csv", method = {RequestMethod.PUT, RequestMethod.POST})
-  public List<Boolean> enrollStudentsCSV(@PathVariable String courseId, @RequestParam("file") MultipartFile file) {
+  public List<Boolean> enrollStudentsCSV(@PathVariable String courseId, @RequestParam("file") @NotNull MultipartFile file) {
     List<Boolean> booleanList;
     if (file == null || file.isEmpty() || file.getContentType() == null)
       throw new ResponseStatusException(HttpStatus.CONFLICT, "null or empty file");

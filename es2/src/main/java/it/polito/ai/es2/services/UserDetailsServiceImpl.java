@@ -20,7 +20,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
   private UserRepository userRepository;
   @Autowired
   private PasswordEncoder passwordEncoder;
-  
+
   @Override
   public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
     User user = userRepository.findTopByUsername(username);
@@ -34,15 +34,15 @@ public class UserDetailsServiceImpl implements UserDetailsService {
                 user.getAuthorities());
     return UserDetailsImpl;
   }
-  
+
   public User save(UserDTO userDTO) {
     return saveUser(userDTO);
   }
-  
+
   private User saveUser(UserDTO userDTO) {
     return saveUser(userDTO.getUsername(), userDTO.getPassword(), userDTO.getRoles());
   }
-  
+
   /**
    * Main entrypoint for saving a User to the db
    */
@@ -57,7 +57,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
     newUser.setCredentialsNonExpired(true);
     return userRepository.save(newUser);
   }
-  
+
   /**
    * Used by UserController, main entrypoint for saving a User from REST API
    */
@@ -68,7 +68,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
     }
     return false;
   }
-  
+
   /**
    * Used by UserController
    */
