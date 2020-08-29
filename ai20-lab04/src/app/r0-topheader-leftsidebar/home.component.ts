@@ -4,7 +4,7 @@ import {Title} from '@angular/platform-browser';
 import {MatDialog} from '@angular/material/dialog';
 import {AuthService} from '../services/auth.service';
 import {ActivatedRoute, NavigationEnd, Router} from '@angular/router';
-import {of, Subscription} from 'rxjs';
+import {Observable, of, Subscription} from 'rxjs';
 import {LoginComponent} from '../dialogs/login/login.component';
 import {CourseService} from '../services/course.service';
 import {filter, map, switchMap} from 'rxjs/operators';
@@ -39,6 +39,7 @@ export class HomeComponent implements OnInit, OnDestroy {
   alertNgb: Alert; // ngb-alert
   testingPageEnabled = AppSettings.devModeShowAll;
   forseCoursesUpdate = false;
+  coursesObservable: Observable<Course[]>;
 
   dontExpandPanelOnNameClick(i: number) {
     this.panelOpenState[i] = !this.panelOpenState[i];
@@ -54,8 +55,8 @@ export class HomeComponent implements OnInit, OnDestroy {
               private changeDetectorRef: ChangeDetectorRef
   ) {
     titleService.setTitle(this.title);
-    courseService.getCourses().subscribe(x => this.courses = x);
-
+    const coursesObservable = courseService.getCourses();
+    coursesObservable.subscribe(x => this.courses = x); // for toPromise
     // At every routing change, update nameActiveCourse (top toolbar) and idActiveCourse, plus some resets/refresh/checks
     this.router.events
       .pipe(
@@ -72,10 +73,13 @@ export class HomeComponent implements OnInit, OnDestroy {
         }),
         switchMap((rout) => (rout != null) ? rout?.paramMap : of(null)) // debug_note: it was mergeMap
       ).subscribe((paramMap) => {
-        if (paramMap == null || this.courses == null) {
-          this.nameActiveCourse = '';
+      // Wait for courses to be updated
+      coursesObservable.toPromise().then(() => {
+        const oldCourseId = this.idActiveCourse;
+        if (this.courses == null || paramMap?.get('id') == null) {
+          this.nameActiveCourse = null;
+          this.idActiveCourse = null;
         } else {
-          const oldCourseId = this.idActiveCourse;
           this.idActiveCourse = paramMap.get('id');
           for (const course of this.courses) {
             // tslint:disable-next-line:triple-equals
@@ -83,21 +87,17 @@ export class HomeComponent implements OnInit, OnDestroy {
               this.nameActiveCourse = course.fullName;
             }
           }
-          if (this.forseCoursesUpdate === true) { // called after course delete
-            this.forseCoursesUpdate = false;
-            courseService.getCourses().subscribe(x => this.courses = x);
-          }
-          if (this.idActiveCourse != oldCourseId && this.idActiveCourse != null) { // reset alerts
-            this.alertsService.closeAlert();
-          }
-          if (this.idActiveCourse != oldCourseId) { // closing all panels,
-            for (let i = 0; i < this.panelOpenState.length; i++) {
-              this.panelOpenState[i] = false;
-            }
+        }
+        if (this.idActiveCourse != oldCourseId && this.idActiveCourse != null) { // reset alerts
+          this.alertsService.closeAlert();
+        }
+        if (this.idActiveCourse != oldCourseId) { // closing all panels,
+          for (let i = 0; i < this.panelOpenState.length; i++) {
+            this.panelOpenState[i] = false;
           }
         }
-      }
-    );
+      });
+    });
     this.authSubscription = this.authService.getIsLoggedSubject().subscribe(x => {
       this.isLogged = x;
       if (x === true) {
