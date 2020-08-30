@@ -14,6 +14,7 @@ import {AppSettings} from '../app-settings';
 import {CourseDeleteComponent} from '../dialogs/course-delete/course-delete.component';
 import {CourseAddComponent} from '../dialogs/course-add/course-add.component';
 import {RegisterComponent} from '../dialogs/register/register.component';
+import {ImageService} from '../services/image.service';
 
 export interface dialogCourseData {
   courseId: string,
@@ -41,7 +42,7 @@ export class HomeComponent implements OnInit, OnDestroy {
   devShowTestingComponents = AppSettings.devShowTestingComponents;
   forseCoursesUpdate = false;
   coursesObservable: Observable<Course[]>;
-  retrievedImage;
+  retrievedImage: string;
 
   dontExpandPanelOnNameClick(i: number) {
     this.panelOpenState[i] = !this.panelOpenState[i];
@@ -54,6 +55,7 @@ export class HomeComponent implements OnInit, OnDestroy {
               private router: Router,
               private route: ActivatedRoute,
               private alertsService: AlertsService,
+              private imageService: ImageService,
               private changeDetectorRef: ChangeDetectorRef
   ) {
     titleService.setTitle(this.title);
@@ -124,8 +126,9 @@ export class HomeComponent implements OnInit, OnDestroy {
     const dialogRef = this.dialog.open(RegisterComponent, {
       maxWidth: '800px', autoFocus: true, hasBackdrop: true, disableClose: true, closeOnNavigation: true
     });
-    dialogRef.afterClosed().subscribe((res: string) => {
+    dialogRef.afterClosed().subscribe((idImage: string) => {
         this.dialogRef = null;
+        this.imageService.getImage(idImage).subscribe(imageDto => this.retrievedImage = imageDto.imageStringBase64);
       }, () => this.alertsService.setAlert('danger', 'Dialog Error')
     );
   }

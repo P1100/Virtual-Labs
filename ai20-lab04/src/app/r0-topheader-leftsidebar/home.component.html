@@ -8,8 +8,9 @@
     </button>
     <a routerLink="/home" class="title-link-not-active">{{title}}</a>
     <a id="TestingPageLink-devOnly" routerLink="/testing" style="padding-left: 10px; color: chartreuse" *ngIf="devShowTestingComponents">Test Page</a>
-    <a irouterLink="/testing" style="padding-left: 10px; color: chartreuse" >Test Page</a>
-      <img d="showProfilePhoto-devOnly" *ngIf="devShowTestingComponents && retrievedImage" [src]="retrievedImage" width="100px" height="80px">
+    <div *ngIf="devShowTestingComponents && retrievedImage?.length>100">
+      <img d="showProfilePhoto-devOnly" src="{{'data:image/jpg;base64,' + retrievedImage}}" width="40px" height="40px" style="margin: 5px">
+    </div>
 
     <span class="fill-remaining-space-header"></span>
 

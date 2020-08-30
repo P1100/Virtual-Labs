@@ -8,7 +8,7 @@ import {getSafeDeepCopyToArray} from '../../../app-settings';
 import {AlertsService} from '../../../services/alerts.service';
 import {CourseService} from '../../../services/course.service';
 
-/* API:
+/* api:
 * - Data taken from backend service: one new request each time active route changes.
 * --- Then passed to student component by html-template property binding
 * - Angular events are used to receive commands from the child student component

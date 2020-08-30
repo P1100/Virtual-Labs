@@ -1,24 +1,6 @@
 export class Image {
-  id: number;
-  revisionCycle: number;
-  createDate: Date;
-  modifyDate: Date;
-
-  constructor(id: number, revisionCycle: number, createDate: Date, modifyDate: Date) {
-    this.id = id;
-    this.revisionCycle = revisionCycle;
-    this.createDate = createDate;
-    this.revisionCycle = revisionCycle;
+  constructor(public id: number, public name: string, public type: string, public revisionCycle: number, public createDate: Date,
+              public modifyDate: Date, public imageStringBase64: string) {
   }
-//   toString(): string {
-//   return this. + ' ' +
-//     this. + ' ' +
-//     this. + ' ' +
-//     this. + ' ' +
-//     this. + ' ' +
-//     this. + ' ' +
-//     this. + ' ' +
-//     this. + ' ' +;
-// }
 
 }

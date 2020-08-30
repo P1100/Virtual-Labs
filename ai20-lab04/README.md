@@ -44,7 +44,7 @@ To update npm on windows, install newer nodejs.
        `"angularCompilerOptions": {
             "enableIvy": false,  `
 * In environment.ts and environment.prod.ts (in assets)  
-  `baseUrl: 'http://localhost:8080/API'`
+  `baseUrl: 'http://localhost:8080/api'`
 * In karma.conf.js  (default)
 `logLevel: config.LOG_INFO,`  
 `reporters: ['progress', 'kjhtml'],`

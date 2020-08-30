@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 @RestController
-@RequestMapping("/API/teams")
+@RequestMapping("/api/teams")
 public class APITeams_RestController {
   @Autowired
   TeamService teamService;
@@ -51,7 +51,7 @@ public class APITeams_RestController {
 
 
 
-  // http://localhost:8080/API/teams/propose/C0/Team0/100,101,S33
+  // http://localhost:8080/api/teams/propose/C0/Team0/100,101,S33
   @PostMapping("/propose/{courseName}/{team_name}/{memberIds}")
   public TeamDTO proposeTeam(@PathVariable String courseName, @PathVariable String team_name, @PathVariable List<Long> memberIds) {
     return teamService.proposeTeam(courseName, team_name, memberIds);

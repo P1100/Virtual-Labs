@@ -1,7 +1,7 @@
 import {Injectable} from '@angular/core';
-import {HttpClient, HttpResponse} from '@angular/common/http';
+import {HttpClient} from '@angular/common/http';
 import {Observable} from 'rxjs';
-import {catchError, retry, tap} from 'rxjs/operators';
+import {catchError, map, retry, tap} from 'rxjs/operators';
 import {AppSettings, formatErrors} from '../app-settings';
 import {Image} from '../models/image.model';
 
@@ -9,21 +9,22 @@ import {Image} from '../models/image.model';
   providedIn: 'root'
 })
 export class ImageService {
-  private baseUrlAPI = AppSettings.baseUrl + '/images';
+  private baseUrlApi = AppSettings.baseUrl + '/images';
 
   constructor(private http: HttpClient) {
   }
 
-  uploadImage(uploadImageData: FormData): Observable<HttpResponse<any>> {
-    return this.http.post<FormData>(`${this.baseUrlAPI}/API/images`, uploadImageData, {observe: 'response'})
+  uploadImage(uploadImageData: FormData): Observable<Image> {
+    return this.http.post<Image>(`${this.baseUrlApi}`, uploadImageData, {observe: 'response'})
       .pipe(
+        map(httpResponse => httpResponse.body),
         catchError(formatErrors),
         tap(res => console.log('--uploadImage:', res))
       );
   }
   getImage(idImage: string): Observable<Image> {
     // Make a call to Sprinf Boot to get the Image Bytes.
-    return this.http.get<Image>(`${this.baseUrlAPI}/get/${idImage}`)
+    return this.http.get<Image>(`${this.baseUrlApi}/${idImage}`)
       .pipe(
         retry(AppSettings.RETRIES), catchError(formatErrors),
         tap(res => console.log('--getImage:', res))

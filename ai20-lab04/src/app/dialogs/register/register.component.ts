@@ -16,7 +16,7 @@ import {ImageService} from '../../services/image.service';
 })
 export class RegisterComponent {
   user = new User(null, null, null, null, []);
-  checkboxNoValidate = false;
+  checkboxNoValidate = true;
   showCheckboxNoValidateForTesting = AppSettings.devShowTestingComponents;
   isStudentRadio = 'student';
   selectedImageFile: File;
@@ -33,16 +33,17 @@ export class RegisterComponent {
   }
   onSubmit() {
     this.uploadImageData = new FormData();
-    // 'imageFile' is the param value used by the Spring API!!
+    // 'imageFile' is the param value used by the Spring api!!
     this.uploadImageData.append('imageFile', this.selectedImageFile, this.selectedImageFile.name);
     console.log(this.uploadImageData, this.uploadImageData.get('imageFile'));
     this.imageService.uploadImage(this.uploadImageData)
-      .subscribe(() => {},error => {
-        this.dialogRef.close();
-        this.alertsService.setAlert('danger', 'Image upload failed: ' + error);
+      .subscribe(body => {
+          this.dialogRef.close(body.id);
+        }, error => {
+          this.dialogRef.close();
+          this.alertsService.setAlert('danger', 'Image upload failed: ' + error);
         }
       );
-    return; // TODO: temp, remove later
     let obs: Observable<any>;
     console.log(this.isStudentRadio, this.isStudentRadio);
     if (this.isStudentRadio) {

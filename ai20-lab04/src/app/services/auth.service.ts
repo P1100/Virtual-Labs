@@ -12,7 +12,7 @@ import {Student} from '../models/student.model';
   providedIn: 'root'
 })
 export class AuthService {
-  private baseUrlAPI = AppSettings.baseUrl;
+  private baseUrlApi = AppSettings.baseUrl;
   user: User;
   isLoggedSubject: BehaviorSubject<boolean>;
 
@@ -67,9 +67,9 @@ export class AuthService {
     return !this.isLoggedIn();
   }
   public registerStudent(user: Student): Observable<any> {
-    return this.http.post(`${this.baseUrlAPI}/users/student`, JSON.stringify(user), AppSettings.JSON_HTTP_OPTIONS).pipe(catchError(formatErrors));
+    return this.http.post(`${this.baseUrlApi}/users/student`, JSON.stringify(user), AppSettings.JSON_HTTP_OPTIONS).pipe(catchError(formatErrors));
   }
   public registerProfessor(user: Student): Observable<any> {
-    return this.http.post(`${this.baseUrlAPI}/users/professor`, JSON.stringify(user), AppSettings.JSON_HTTP_OPTIONS).pipe(catchError(formatErrors));
+    return this.http.post(`${this.baseUrlApi}/users/professor`, JSON.stringify(user), AppSettings.JSON_HTTP_OPTIONS).pipe(catchError(formatErrors));
   }
 }

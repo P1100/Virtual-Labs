@@ -23,7 +23,7 @@ import java.util.Map;
  * Format HTTP response body (error: {):
  * error: "Conflict"
  * message: "Course c1 cardinalities violated. New cardinalities incompatible with existing teams"
- * path: "/API/courses"
+ * path: "/api/courses"
  * status: 409
  * timestamp: 1598655328395
  * }

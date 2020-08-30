@@ -20,7 +20,7 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
 @RestController
-@RequestMapping("/API/students")
+@RequestMapping("/api/students")
 public class APIStudents_RestController {
   @Autowired
   UserService userService;

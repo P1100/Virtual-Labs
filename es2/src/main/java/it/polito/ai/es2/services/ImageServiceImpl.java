@@ -52,9 +52,10 @@ public class ImageServiceImpl implements ImageService {
 
   /**
    * POST {@link it.polito.ai.es2.controllers.APIImages_RestController#uploadImage(MultipartFile)}
+   * @return
    */
   @Override
-  public void uploadImage(MultipartFile file) {
+  public ImageDTO uploadImage(MultipartFile file) {
     if (file == null)
       throw new ImageException("null parameter");
     if (file.isEmpty())
@@ -68,7 +69,10 @@ public class ImageServiceImpl implements ImageService {
       e.printStackTrace();
       throw new ImageException("IOException file");
     }
-    imageRepository.save(img);
+    Image savedImage = imageRepository.save(img);
+    imageRepository.flush(); // NECESSARY! Otherwise auto generated fields will remain null
+    ImageDTO map = modelMapper.map(savedImage, ImageDTO.class);
+    return map;
   }
 
   /**
@@ -78,15 +82,14 @@ public class ImageServiceImpl implements ImageService {
   public ImageDTO getImage(Long imageId) {
     if (imageId == null)
       throw new ImageException("null id");
-    Optional<Image> retrievedImage = imageRepository.findById(imageId);
-    if (retrievedImage.isEmpty())
+    Optional<Image> imageOptional = imageRepository.findById(imageId);
+    if (imageOptional.isEmpty())
       throw new ImageNotFoundException(imageId.toString());
-    ImageDTO img = new ImageDTO();
-    img.setName(retrievedImage.get().getName());
-    img.setType(retrievedImage.get().getType());
-    byte[] bytes = decompressBytes(retrievedImage.get().getPicByte());
-    img.setImageStringBase64(Base64.getEncoder().encodeToString(bytes));
-    return img;
+    Image retrievedImage = imageOptional.get();
+    ImageDTO imageDTO = modelMapper.map(retrievedImage, ImageDTO.class);
+    byte[] bytes = decompressBytes(retrievedImage.getPicByte());
+    imageDTO.setImageStringBase64(Base64.getEncoder().encodeToString(bytes));
+    return imageDTO;
   }
 
   // Compress the image bytes before storing it in the database

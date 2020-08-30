@@ -41,10 +41,10 @@ public class ModelHelper {
   public CourseDTO enrich(CourseDTO courseDTO) {
     if (courseDTO == null)
       return new CourseDTO();
-    courseDTO.add(Link.of(baseUrl + "/API/courses", "courses"));
-    courseDTO.add(Link.of(baseUrl + "/API/courses/" + courseDTO.getId(), IanaLinkRelations.SELF));
-    courseDTO.add(Link.of(baseUrl + "/API/courses/" + courseDTO.getId() + "/enable").withRel("enable (POST)"));
-    courseDTO.add(Link.of(baseUrl + "/API/courses/" + courseDTO.getId() + "/disable").withRel("disable (POST)"));
+    courseDTO.add(Link.of(baseUrl + "/api/courses", "courses"));
+    courseDTO.add(Link.of(baseUrl + "/api/courses/" + courseDTO.getId(), IanaLinkRelations.SELF));
+    courseDTO.add(Link.of(baseUrl + "/api/courses/" + courseDTO.getId() + "/enable").withRel("enable (POST)"));
+    courseDTO.add(Link.of(baseUrl + "/api/courses/" + courseDTO.getId() + "/disable").withRel("disable (POST)"));
 
     courseDTO.add(linkTo(methodOn(APICourses_RestController.class)
                              .getEnrolledStudents(courseDTO.getId())).withRel("enrolled"));
@@ -60,8 +60,8 @@ public class ModelHelper {
   public StudentDTO enrich(StudentDTO studentDTO) {
     if (studentDTO == null)
       return new StudentDTO();
-    studentDTO.add(Link.of(baseUrl + "/API/students").withRel("students"));
-    studentDTO.add(Link.of(baseUrl + "/API/students/" + studentDTO.getId()).withSelfRel());
+    studentDTO.add(Link.of(baseUrl + "/api/students").withRel("students"));
+    studentDTO.add(Link.of(baseUrl + "/api/students/" + studentDTO.getId()).withSelfRel());
     studentDTO.add(linkTo(methodOn(APIStudents_RestController.class)
                               .getCourses(studentDTO.getId())).withRel("courses"));
     studentDTO.add(linkTo(methodOn(APIStudents_RestController.class)
@@ -71,8 +71,8 @@ public class ModelHelper {
   public TeamDTO enrich(TeamDTO teamDTO) {
     if (teamDTO == null)
       return new TeamDTO();
-    teamDTO.add(Link.of(baseUrl + "/API/teams").withRel("teams"));
-    teamDTO.add(Link.of(baseUrl + "/API/teams/" + teamDTO.getId()).withSelfRel());
+    teamDTO.add(Link.of(baseUrl + "/api/teams").withRel("teams"));
+    teamDTO.add(Link.of(baseUrl + "/api/teams/" + teamDTO.getId()).withSelfRel());
     teamDTO.add(linkTo(methodOn(APITeams_RestController.class)
                            .getMembers(teamDTO.getId())).withRel("members"));
     return teamDTO;

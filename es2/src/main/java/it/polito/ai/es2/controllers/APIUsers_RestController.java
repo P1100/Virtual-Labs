@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/API/users")
+@RequestMapping("/api/users")
 public class APIUsers_RestController {
   @Autowired
   private ModelHelper modelHelper;

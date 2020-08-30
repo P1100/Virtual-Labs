@@ -22,15 +22,15 @@ public class _ControllerHome {
   @Autowired
   UserRepository userRepository;
 
-  @RequestMapping(value = "/API", produces = "application/json; charset=UTF-8")
+  @RequestMapping(value = "/api", produces = "application/json; charset=UTF-8")
   @ResponseBody
   public String getAPI() {
     String baseUrl = urlSettings.getBaseUrl();
     String json = "{" +
-                      "\"Courses\":\"" + baseUrl + "/API/courses\","
-                      + "\"Students\":\"" + baseUrl + "/API/students\","
-                      + "\"Teams\":\"" + baseUrl + "/API/teams\","
-                      + "\"Images\":\"" + baseUrl + "/API/images\""
+                      "\"Courses\":\"" + baseUrl + "/api/courses\","
+                      + "\"Students\":\"" + baseUrl + "/api/students\","
+                      + "\"Teams\":\"" + baseUrl + "/api/teams\","
+                      + "\"Images\":\"" + baseUrl + "/api/images\""
                       + "}";
     return json;
   }

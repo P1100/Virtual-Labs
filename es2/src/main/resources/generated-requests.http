@@ -1,5 +1,5 @@
 ###
-POST http://localhost:8080/API/users/professors
+POST http://localhost:8080/api/users/professors
 Content-Type: application/json
 
 {
@@ -7,13 +7,13 @@ Content-Type: application/json
 }
 
 ###
-POST http://localhost:8080/API/images
+POST http://localhost:8080/api/images
 Content-Type: multipart/form-data
 
 {}
 
 ###
-POST http://localhost:8080/API/images/test?test=email@a
+POST http://localhost:8080/api/images/test?test=email@a
 Content-Type: text/plain
 
 test
@@ -28,6 +28,6 @@ test
 
 
 ###
-GET http://localhost:8080/API/images/test/hal
+GET http://localhost:8080/api/images/test/hal
 
 <> 2020-08-30T121500.400.json

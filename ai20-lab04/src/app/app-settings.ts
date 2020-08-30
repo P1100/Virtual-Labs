@@ -6,7 +6,7 @@ import {environment} from '../environments/environment';
 /* Shared settings, constants and functions */
 export class AppSettings {
   // Back end URL
-  public static baseUrl = 'http://localhost:8080/API';
+  public static baseUrl = 'http://localhost:8080/api';
   public static devShowTestingComponents = environment.dev; // to show logs, tests, and other components
 
   // HTTP Settings (services)
@@ -28,7 +28,7 @@ export const tabs = [
   {path: 'assignments', label: 'Assignments'}
 ];
 
-/* HATEOAS API DESIGN: all http returned objects are converted to array (empty, full, or singleton), to uniform handling. TODO: look for alternatives, like @Projection */
+/* HATEOAS api DESIGN: all http returned objects are converted to array (empty, full, or singleton), to uniform handling. TODO: look for alternatives, like @Projection */
 export function removeHATEOAS(container: HateoasModel): any[] {
   if (container == null) {
     return [];

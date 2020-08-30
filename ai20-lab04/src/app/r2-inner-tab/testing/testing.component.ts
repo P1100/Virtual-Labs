@@ -1,4 +1,4 @@
-import {Component, ElementRef, ViewChild} from '@angular/core';
+import {Component, ViewChild} from '@angular/core';
 import {StudentService} from '../../services/student.service';
 import {CourseService} from '../../services/course.service';
 import {FormGroup, NgForm} from '@angular/forms';
@@ -25,55 +25,6 @@ export class TestingComponent {
   constructor(private studentService: StudentService, private courseService: CourseService, private imageService: ImageService,
               private sanitizer: DomSanitizer) {
   }
-  selectedFile: File;
-  retrievedImage: any;
-  base64Data: any;
-  retrieveResonse: any;
-  message: string;
-  imageId: any;
-  uploadImageData: FormData;
-
-  @ViewChild('labelFileName')
-  labelFileName: ElementRef;
-
-  // Gets called when the user selects an image
-  public onFileChanged(event) {
-    this.selectedFile = event.target.files[0];
-    console.log(this.selectedFile);
-    // To update bootstrap input text, missing JQuery
-    this.labelFileName.nativeElement.innerText = this.selectedFile.name;
-  }
-  // Gets called when the user clicks on submit to upload the image
-  onImageUpload() {
-    // FormData API provides methods and properties to allow us easily prepare form data to be sent with POST HTTP requests.
-    this.uploadImageData = new FormData();
-    this.uploadImageData.append('imageFile', this.selectedFile, this.selectedFile.name);
-    console.log(this.uploadImageData, this.uploadImageData.get('imageFile'));
-    this.imageService.uploadImage(this.uploadImageData)
-      .subscribe((response) => {
-          // console.log(response);
-          if (response.status === 200) {
-            this.message = 'Image uploaded successfully';
-          } else {
-            this.message = 'Image not uploaded successfully';
-          }
-        }
-      );
-  }
-  // Gets called when the user clicks on retieve image button to get the image from back end
-  getImage() {
-    console.log('getImage', this.imageId);
-    this.imageService.getImage(this.imageId)
-      .subscribe(
-        res => {
-          this.retrieveResonse = res;
-          this.base64Data = this.retrieveResonse.imageStringBase64;
-          console.log(this.base64Data);
-          this.retrievedImage = this.sanitizer.bypassSecurityTrustResourceUrl('data:image/jpeg;base64,' + this.base64Data);
-        }
-      );
-  }
-
   getAllCourses() {
     this.courseService.getCourses().subscribe();
   }
