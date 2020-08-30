@@ -55,8 +55,10 @@ public class ImageServiceImpl implements ImageService {
    */
   @Override
   public void uploadImage(MultipartFile file) {
-    if (file == null || file.isEmpty())
-      throw new ImageException("null file, or empty");
+    if (file == null)
+      throw new ImageException("null parameter");
+    if (file.isEmpty())
+      throw new ImageException("empty file");
     Image img = new Image();
     img.setName(file.getOriginalFilename());
     img.setType(file.getContentType());
@@ -74,6 +76,8 @@ public class ImageServiceImpl implements ImageService {
    */
   @Override
   public ImageDTO getImage(Long imageId) {
+    if (imageId == null)
+      throw new ImageException("null id");
     Optional<Image> retrievedImage = imageRepository.findById(imageId);
     if (retrievedImage.isEmpty())
       throw new ImageNotFoundException(imageId.toString());
@@ -87,7 +91,7 @@ public class ImageServiceImpl implements ImageService {
 
   // Compress the image bytes before storing it in the database
   private byte[] compressBytes(byte[] data) {
-    System.out.println("Original Image Byte Size - " + data.length);
+    log.info("Original Image Byte Size - " + data.length);
     Deflater deflater = new Deflater();
     deflater.setInput(data);
     deflater.finish();
@@ -103,7 +107,7 @@ public class ImageServiceImpl implements ImageService {
       e.printStackTrace();
       throw new ImageException("IOException");
     }
-    System.out.println("Compressed Image Byte Size - " + outputStream.toByteArray().length);
+    log.info("Compressed Image Byte Size - " + outputStream.toByteArray().length);
     return outputStream.toByteArray();
   }
 

@@ -45,7 +45,6 @@ export class TestingComponent {
   }
   // Gets called when the user clicks on submit to upload the image
   onImageUpload() {
-    // console.log(this.selectedCsvFile);
     // FormData API provides methods and properties to allow us easily prepare form data to be sent with POST HTTP requests.
     this.uploadImageData = new FormData();
     this.uploadImageData.append('imageFile', this.selectedFile, this.selectedFile.name);

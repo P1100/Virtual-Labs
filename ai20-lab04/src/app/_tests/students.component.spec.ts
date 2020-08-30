@@ -1,6 +1,6 @@
 import {async, ComponentFixture, TestBed} from '@angular/core/testing';
 
-import {StudentsComponent} from '../r2-inner-tab/students/students.component';
+import {StudentsComponent} from '../r2-inner-tab/teacher/students/students.component';
 
 // x prefix is to disable test
 xdescribe('StudentsComponent', () => {

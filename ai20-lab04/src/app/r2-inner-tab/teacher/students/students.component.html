@@ -15,17 +15,19 @@
   </mat-toolbar>
 </p>
 
-<form enctype="multipart/form-data" method="POST">
-  <div class="input-group mb-3">
-    <div class="input-group-prepend">
-      <button class="btn btn-outline-secondary" type="button" (click)="onCSVUpload()" [disabled]="ucsv.invalid || ucsv.pristine">Upload</button>
+<div name="CSV input">
+  <form enctype="multipart/form-data" method="POST">
+    <div class="input-group mb-3">
+      <div class="input-group-prepend">
+        <button class="btn btn-outline-secondary" type="button" (click)="onCSVUpload()" [disabled]="ucsv.invalid || ucsv.pristine">Upload</button>
+      </div>
+      <div class="custom-file">
+        <input type="file" accept=".csv" class="custom-file-input" id="importFile" #ucsv="ngModel" [(ngModel)]="resetInputCsvElement" name="csv" (change)="onFileCsvChanged($event)" required>
+        <label class="custom-file-label" for="importFile" #labelFileCsv>choose CSV file</label>
+      </div>
     </div>
-    <div class="custom-file">
-      <input type="file" accept=".csv" class="custom-file-input" id="importFile" #ucsv="ngModel" [(ngModel)]="resetInputCsvElement" name="csv" (change)="onFileCsvChanged($event)" required>
-      <label class="custom-file-label" for="importFile" #labelFileCsv>choose CSV file</label>
-    </div>
-  </div>
-</form>
+  </form>
+</div>
 
 <div>
   <form name="header-table">

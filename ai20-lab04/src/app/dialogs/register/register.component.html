@@ -23,15 +23,21 @@
     <mat-form-field class="form-group">
       <mat-label>Email</mat-label>
       <input matInput #email="ngModel" name="email" [(ngModel)]="user.email" type="email" required
-             [pattern]="isStudentRadio==true ? 's[0-9]{1,9}@studenti\.polito\.it' : 's[0-9]{1,9}@polito\.it'">
-      <mat-error *ngIf="email.invalid && !email.pristine">Email is required. Must be s000000@polito.it or s000000@studenti.polito.it</mat-error>
+             [pattern]="isStudentRadio=='student' ? 's[0-9]{1,9}@studenti\.polito\.it' : 'd[0-9]{1,9}@polito\.it'">
+      <mat-error *ngIf="email.invalid && !email.pristine">
+        {{isStudentRadio == 'student' ? 'Email is required. Must be like s000000@studenti.polito.it' : 'Email is required. Must be like d000000@polito.it'}}</mat-error>
     </mat-form-field>
-    <!--    [formControl]="isStudentRadio" -->
-    <mat-radio-group #isstudent="ngModel" name="isstudent" [(ngModel)]="isStudentRadio" required>
-      <mat-radio-button value="1">Student</mat-radio-button>
-      <mat-radio-button value="0">Professor</mat-radio-button>
-    </mat-radio-group>
     <br>
+    <div class="custom-file form-group">
+      <input type="file" class="custom-file-input" id="importFile" (change)="onFileChanged($event)">
+      <label class="custom-file-label" for="importFile" #labelImageFile style="text-align: left">Choose profile photo</label>
+    </div>
+    <br> <br><br>
+    <!--    [formControl]="isStudentRadio"  [attr.checked]="0" -->
+    <mat-radio-group #isstudent="ngModel" name="isstudent" [(ngModel)]="isStudentRadio" required>
+      <mat-radio-button value="student">Student</mat-radio-button>
+      <mat-radio-button value="professor">Professor</mat-radio-button>
+    </mat-radio-group>
   </div>
   <br>
   <div mat-dialog-actions>

@@ -16,7 +16,7 @@ export class CourseEditComponent {
   course = new Course('null', '', 0, 0, false, '');
   private selectedFile: File;
   checkboxNoValidate = false;
-  showCheckboxNoValidateForTesting = AppSettings.devModeShowAll;
+  showCheckboxNoValidateForTesting = AppSettings.devShowTestingComponents;
 
   constructor(private courseService: CourseService,
               public dialogRef: MatDialogRef<CourseEditComponent>,
@@ -49,7 +49,6 @@ export class CourseEditComponent {
   public onFileChanged(event) {
     this.course.enabled = !this.course.enabled;
     this.selectedFile = event.target.files[0];
-    // To update bootstrap input text, missing JQuery
     this.course.vmModelPath = this.selectedFile.name;
   }
 }

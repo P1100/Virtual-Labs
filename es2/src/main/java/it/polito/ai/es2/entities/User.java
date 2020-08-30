@@ -49,4 +49,37 @@ public class User {
     }
     return stringRoles;
   }
+  /*
+  *
+    @Size(min = 2, max = 10)
+    @Column(name = "lang_key", length = 10)
+    private String langKey;
+
+    @Size(max = 256)
+    @Column(name = "image_url", length = 256)
+    private String imageUrl;
+
+    @Size(max = 20)
+    @Column(name = "activation_key", length = 20)
+    @JsonIgnore
+    private String activationKey;
+
+    @Size(max = 20)
+    @Column(name = "reset_key", length = 20)
+    @JsonIgnore
+    private String resetKey;
+
+    @Column(name = "reset_date")
+    private Instant resetDate = null;
+
+    @JsonIgnore
+    @ManyToMany
+    @JoinTable(
+        name = "jhi_user_authority",
+        joinColumns = {@JoinColumn(name = "user_id", referencedColumnName = "id")},
+        inverseJoinColumns = {@JoinColumn(name = "authority_name", referencedColumnName = "name")})
+    @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
+    @BatchSize(size = 20)
+    private Set<Authority> authorities = new HashSet<>();
+  * */
 }

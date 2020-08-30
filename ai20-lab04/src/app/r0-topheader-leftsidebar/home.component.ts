@@ -38,9 +38,10 @@ export class HomeComponent implements OnInit, OnDestroy {
   routeSubscription: Subscription;
   alertsSubscription: Subscription;
   alertNgb: Alert; // ngb-alert
-  testingPageEnabled = AppSettings.devModeShowAll;
+  devShowTestingComponents = AppSettings.devShowTestingComponents;
   forseCoursesUpdate = false;
   coursesObservable: Observable<Course[]>;
+  retrievedImage;
 
   dontExpandPanelOnNameClick(i: number) {
     this.panelOpenState[i] = !this.panelOpenState[i];

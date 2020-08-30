@@ -7,8 +7,9 @@
       <mat-icon aria-label="Side nav toggle icon">menu</mat-icon>
     </button>
     <a routerLink="/home" class="title-link-not-active">{{title}}</a>
-    <a id="TestingPageLink-devOnly" routerLink="/testing" style="padding-left: 10px; color: chartreuse"
-       *ngIf="testingPageEnabled">Test Page</a>
+    <a id="TestingPageLink-devOnly" routerLink="/testing" style="padding-left: 10px; color: chartreuse" *ngIf="devShowTestingComponents">Test Page</a>
+    <a irouterLink="/testing" style="padding-left: 10px; color: chartreuse" >Test Page</a>
+      <img d="showProfilePhoto-devOnly" *ngIf="devShowTestingComponents && retrievedImage" [src]="retrievedImage" width="100px" height="80px">
 
     <span class="fill-remaining-space-header"></span>
 

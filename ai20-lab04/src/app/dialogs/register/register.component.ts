@@ -1,4 +1,4 @@
-import {Component} from '@angular/core';
+import {Component, ElementRef, ViewChild} from '@angular/core';
 import {AppSettings} from '../../app-settings';
 import {CourseService} from '../../services/course.service';
 import {MatDialogRef} from '@angular/material/dialog';
@@ -7,6 +7,7 @@ import {AlertsService} from '../../services/alerts.service';
 import {User} from '../../models/user.model';
 import {AuthService} from '../../services/auth.service';
 import {Observable} from 'rxjs';
+import {ImageService} from '../../services/image.service';
 
 @Component({
   selector: 'app-register',
@@ -16,17 +17,32 @@ import {Observable} from 'rxjs';
 export class RegisterComponent {
   user = new User(null, null, null, null, []);
   checkboxNoValidate = false;
-  showCheckboxNoValidateForTesting = AppSettings.devModeShowAll;
-  isStudentRadio = false;
+  showCheckboxNoValidateForTesting = AppSettings.devShowTestingComponents;
+  isStudentRadio = 'student';
+  selectedImageFile: File;
+  uploadImageData: FormData;
+  @ViewChild('labelImageFile')
+  label: ElementRef;
 
   constructor(private courseService: CourseService, public dialogRef: MatDialogRef<RegisterComponent>, private router: Router,
-              private alertsService: AlertsService, private authService: AuthService) {
+              private alertsService: AlertsService, private authService: AuthService, public imageService: ImageService) {
   }
 
   onCancelClick(): void {
     this.dialogRef.close(); // same value as when you press ESC (undefined)
   }
   onSubmit() {
+    this.uploadImageData = new FormData();
+    // 'imageFile' is the param value used by the Spring API!!
+    this.uploadImageData.append('imageFile', this.selectedImageFile, this.selectedImageFile.name);
+    console.log(this.uploadImageData, this.uploadImageData.get('imageFile'));
+    this.imageService.uploadImage(this.uploadImageData)
+      .subscribe(() => {},error => {
+        this.dialogRef.close();
+        this.alertsService.setAlert('danger', 'Image upload failed: ' + error);
+        }
+      );
+    return; // TODO: temp, remove later
     let obs: Observable<any>;
     console.log(this.isStudentRadio, this.isStudentRadio);
     if (this.isStudentRadio) {
@@ -45,5 +61,11 @@ export class RegisterComponent {
         this.alertsService.setAlert('danger', 'Couldn\'t register user! ' + e);
       }
     );
+  }
+  public onFileChanged(event) {
+    this.selectedImageFile = event.target.files[0];
+    // To update bootstrap input text, without JQuery
+    this.label.nativeElement.innerText = this.selectedImageFile?.name;
+
   }
 }

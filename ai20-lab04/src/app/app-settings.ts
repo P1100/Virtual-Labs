@@ -7,7 +7,7 @@ import {environment} from '../environments/environment';
 export class AppSettings {
   // Back end URL
   public static baseUrl = 'http://localhost:8080/API';
-  public static devModeShowAll = environment.dev; // to show logs, tests, and other components
+  public static devShowTestingComponents = environment.dev; // to show logs, tests, and other components
 
   // HTTP Settings (services)
   public static RETRIES = 0;
@@ -86,7 +86,7 @@ export function getSafeDeepCopyToArray(ss: any): any[] {
 // TODO: test responseErrorString format
 export function formatErrors(error: any) {
   let responseErrorString = error?.error?.message; // (`${(error?.error?.error == null ? (typeof (error?.error) == 'string' ? error?.error : Object.keys(error?.error)) : error?.error?.error + ' - ' + error?.error?.message)}`);
-  if (AppSettings.devModeShowAll) {
+  if (AppSettings.devShowTestingComponents) {
     console.error(error, '-----', error?.error, '-----', error?.error?.error, '-----', responseErrorString);
     responseErrorString = responseErrorString + ` [${error?.error?.status} ${error?.error?.error}]`;
   }

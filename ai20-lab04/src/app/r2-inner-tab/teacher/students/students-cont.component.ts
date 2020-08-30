@@ -1,12 +1,12 @@
 import {Component, ElementRef, OnDestroy, ViewChild} from '@angular/core';
 import {ActivatedRoute} from '@angular/router';
 import {concatMap, toArray} from 'rxjs/operators';
-import {StudentService} from '../../services/student.service';
+import {StudentService} from '../../../services/student.service';
 import {from, Observable, Subscription} from 'rxjs';
-import {Student} from '../../models/student.model';
-import {getSafeDeepCopyToArray} from '../../app-settings';
-import {AlertsService} from '../../services/alerts.service';
-import {CourseService} from '../../services/course.service';
+import {Student} from '../../../models/student.model';
+import {getSafeDeepCopyToArray} from '../../../app-settings';
+import {AlertsService} from '../../../services/alerts.service';
+import {CourseService} from '../../../services/course.service';
 
 /* API:
 * - Data taken from backend service: one new request each time active route changes.

@@ -2,7 +2,7 @@ import {NgModule} from '@angular/core';
 import {RouterModule, Routes} from '@angular/router';
 import {EmptyComponent} from './r1-content-tabs/empty.component';
 import {VmsContComponent} from './r2-inner-tab/vms/vms-cont.component';
-import {StudentsContComponent} from './r2-inner-tab/students/students-cont.component';
+import {StudentsContComponent} from './r2-inner-tab/teacher/students/students-cont.component';
 import {PageNotFoundComponent} from './r0-topheader-leftsidebar/page-not-found.component';
 import {AssignmentsContComponent} from './r2-inner-tab/assignments/assignments-cont.component';
 import {TabsNavComponent} from './r1-content-tabs/tabs-nav.component';

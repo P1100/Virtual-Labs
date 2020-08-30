@@ -15,7 +15,7 @@ export class CourseAddComponent {
   course = new Course('', '', 1, 10, false, '');
   private selectedFile: File;
   checkboxNoValidate = false;
-  showCheckboxNoValidateForTesting = AppSettings.devModeShowAll;
+  showCheckboxNoValidateForTesting = AppSettings.devShowTestingComponents;
 
   constructor(private courseService: CourseService, public dialogRef: MatDialogRef<CourseAddComponent>, private router: Router, private alertsService: AlertsService) {
   }
@@ -40,7 +40,6 @@ export class CourseAddComponent {
   public onFileChanged(event) {
     this.course.enabled = !this.course.enabled;
     this.selectedFile = event.target.files[0];
-    // To update bootstrap input text, missing JQuery
     this.course.vmModelPath = this.selectedFile.name;
   }
 }
