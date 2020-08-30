@@ -11,6 +11,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -28,7 +29,7 @@ public class UserDTO implements UserDetails {
   private String password;
   private List<String> roles;
 
-  @NotBlank
+  @NotNull
   private Long id;  // matricola/serial
   @NotBlank
   private String firstName;

@@ -34,7 +34,6 @@ public class Course {
   @Positive
   private int maxSizeTeam;
   private boolean enabled;
-  @NotBlank
   private String vmModelPath;
 
   @ManyToMany(mappedBy = "courses", cascade = {CascadeType.MERGE, CascadeType.PERSIST})

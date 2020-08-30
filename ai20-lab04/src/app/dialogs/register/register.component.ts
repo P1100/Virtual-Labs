@@ -6,7 +6,7 @@ import {Router} from '@angular/router';
 import {AlertsService} from '../../services/alerts.service';
 import {User} from '../../models/user.model';
 import {AuthService} from '../../services/auth.service';
-import {Observable} from 'rxjs';
+import {forkJoin, Observable} from 'rxjs';
 import {ImageService} from '../../services/image.service';
 
 @Component({
@@ -32,32 +32,33 @@ export class RegisterComponent {
     this.dialogRef.close(); // same value as when you press ESC (undefined)
   }
   onSubmit() {
-    this.uploadImageData = new FormData();
-    // 'imageFile' is the param value used by the Spring api!!
-    this.uploadImageData.append('imageFile', this.selectedImageFile, this.selectedImageFile.name);
-    console.log(this.uploadImageData, this.uploadImageData.get('imageFile'));
-    this.imageService.uploadImage(this.uploadImageData)
-      .subscribe(body => {
-          this.dialogRef.close(body.id);
-        }, error => {
-          this.dialogRef.close();
-          this.alertsService.setAlert('danger', 'Image upload failed: ' + error);
-        }
-      );
     let obs: Observable<any>;
-    console.log(this.isStudentRadio, this.isStudentRadio);
     if (this.isStudentRadio) {
       obs = this.authService.registerStudent(this.user);
     } else {
       obs = this.authService.registerProfessor(this.user);
     }
+    // Profile Image Upload
+    if (this.selectedImageFile != null) {
+      console.log('INSIDE IMAGE METHOD');
+      this.uploadImageData = new FormData();
+      // 'imageFile' is the param value used by the Spring api!!
+      this.uploadImageData.append('imageFile', this.selectedImageFile, this.selectedImageFile.name);
+      obs = forkJoin([obs, this.imageService.uploadImage(this.uploadImageData)]);
+    }
     obs.subscribe(
-      x => {
-        this.dialogRef.close('success');
+      resultArray => {
+        // To show image icon on home (dialog return value != 0)
+        if (resultArray?.length > 0) {
+          this.dialogRef.close(resultArray[1]?.id);
+        } else {
+          this.dialogRef.close(0);
+        }
         this.router.navigateByUrl('/');
         this.alertsService.setAlert('success', 'User registered. Check email for confirmation');
       },
       e => {
+        console.log(e);
         this.dialogRef.close();
         this.alertsService.setAlert('danger', 'Couldn\'t register user! ' + e);
       }

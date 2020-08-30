@@ -42,18 +42,18 @@ export class StudentsContComponent implements OnDestroy {
   constructor(private backendService: StudentService, private activatedRoute: ActivatedRoute, private alertsService: AlertsService
     , private courseService: CourseService) {
     this.subRouteParam = this.activatedRoute.paramMap.subscribe(() => {
-      this.courseId = this.activatedRoute.parent.snapshot.paramMap.get('id');
-      console.log('activeCourse: ' + this.courseId);
-      this.subEnrolledStudentsCourse = this.backendService.getEnrolledStudents(this.courseId)
-        .subscribe((students: Student[]) => {
-            this.enrolledStudents = Array.isArray(students) ? [...students] : [];
-          }, error => this.alertsService.setAlert('danger', 'Couldn\t get enrolled students! ' + error)
-        );
-      this.subAllStudents = this.backendService.getAllStudents()
-        .subscribe((students: Student[]) => {
-            this.allStudents = Array.isArray(students) ? [...students] : [];
-          }, error => this.alertsService.setAlert('danger', 'Couldn\'t get students list! ' + error)
-        );
+        this.courseId = this.activatedRoute.parent.snapshot.paramMap.get('id');
+        console.log('activeCourse: ' + this.courseId);
+        this.subEnrolledStudentsCourse = this.backendService.getEnrolledStudents(this.courseId)
+          .subscribe((students: Student[]) => {
+              this.enrolledStudents = Array.isArray(students) ? [...students] : [];
+            }, error => this.alertsService.setAlert('danger', 'Couldn\t get enrolled students! ' + error)
+          );
+        this.subAllStudents = this.backendService.getAllStudents()
+          .subscribe((students: Student[]) => {
+              this.allStudents = Array.isArray(students) ? [...students] : [];
+            }, error => this.alertsService.setAlert('danger', 'Couldn\'t get students list! ' + error)
+          );
       }
     );
   }

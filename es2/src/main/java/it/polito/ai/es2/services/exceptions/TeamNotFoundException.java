@@ -12,6 +12,7 @@ public class TeamNotFoundException extends RuntimeException {
   public TeamNotFoundException(String team) {
     super("Team " + team + " not found. ");
   }
+
   public TeamNotFoundException(Long team) {
     super("Team " + team + " not found. ");
   }

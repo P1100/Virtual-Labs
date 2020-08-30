@@ -1,26 +1,37 @@
 package it.polito.ai.es2.controllers;
 
-import it.polito.ai.es2.controllers.hateoas.ModelHelper;
 import it.polito.ai.es2.dtos.UserDTO;
+import it.polito.ai.es2.services.interfaces.UserService;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import javax.validation.Valid;
 
 @RestController
 @RequestMapping("/api/users")
 public class APIUsers_RestController {
   @Autowired
-  private ModelHelper modelHelper;
+  private ModelMapper modelMapper;
+  @Autowired
+  private UserService userService;
 
   @PostMapping("/professor")
-  public void registerProfessor(UserDTO userDTO) {
+  public UserDTO registerProfessor(@Valid @RequestBody UserDTO userDTO) {
     System.out.println(userDTO);
+    return userDTO;
   }
 
   @PostMapping("/student")
-  public void registerStudent(UserDTO userDTO) {
+  public UserDTO registerStudent(@Valid @RequestBody UserDTO userDTO) {
     System.out.println(userDTO);
+//    StudentDTO studentDTO = modelMapper.map(userDTO, StudentDTO.class);
+//    System.out.println(sdto);
+//    userService.addStudent(studentDTO);
+    return userDTO;
   }
 }
 /*

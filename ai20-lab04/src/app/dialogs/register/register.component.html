@@ -1,9 +1,10 @@
+<!-- TODO: ADD USERNAME AND PASSWORD -->
 <h1 mat-dialog-title class="text-center mb-3">Create Virtual Labs Account</h1>
 <form #cf="ngForm" (ngSubmit)="onSubmit()" class="text-center border border-light p-3" [noValidate]="checkboxNoValidate">
   <div>
     <mat-form-field class="form-group">
       <mat-label>Id</mat-label>
-      <input matInput #id="ngModel" name="id" [(ngModel)]="user.id" required pattern="^(?!\s*$).+">
+      <input matInput #id="ngModel" name="id" [(ngModel)]="user.id" required type="number" pattern="[0-9]{1,6}">
       <mat-hint>must be unique</mat-hint>
     </mat-form-field>
     <br>

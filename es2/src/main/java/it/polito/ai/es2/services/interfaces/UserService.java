@@ -20,7 +20,7 @@ public interface UserService {
   List<TeamDTO> getTeamsForStudent(Long studentId);
 
   boolean addProfessor(ProfessorDTO student);
-  
+
 //  void createPasswordResetTokenForUser(final UserDAO user, final String token);
 //  String validatePasswordResetToken(String token);
 //  Optional<UserDAO> getUserByPasswordResetToken(final String token);

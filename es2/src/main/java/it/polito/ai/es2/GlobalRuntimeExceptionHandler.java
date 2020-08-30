@@ -1,12 +1,10 @@
 package it.polito.ai.es2;
 
 import lombok.extern.java.Log;
-import org.springframework.dao.DataAccessException;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.transaction.TransactionSystemException;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -14,7 +12,6 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
-import javax.persistence.RollbackException;
 import javax.validation.ConstraintViolationException;
 import java.util.HashMap;
 import java.util.Map;
@@ -47,15 +44,16 @@ public class GlobalRuntimeExceptionHandler
     headers.setContentType(MediaType.APPLICATION_JSON);
     return handleExceptionInternal(ex, bodyOfResponse, headers, HttpStatus.BAD_REQUEST, request); // 400
   }
+// TODO: uncomment before release
 
-  @ExceptionHandler(value = {DataAccessException.class, TransactionSystemException.class, RollbackException.class})
-  protected ResponseEntity<Object> dataError(RuntimeException ex, WebRequest request) {
-    String bodyOfResponse = "{\"message\":\"JPA Data Error\", \"status\":\"500\", \"error\":\"INTERNAL_SERVER_ERROR\"}";
-    log.severe(ex + " \n " + request);
-    HttpHeaders headers = new HttpHeaders();
-    headers.setContentType(MediaType.APPLICATION_JSON);
-    return handleExceptionInternal(ex, bodyOfResponse, headers, HttpStatus.INTERNAL_SERVER_ERROR, request); // 400
-  }
+//  @ExceptionHandler(value = {DataAccessException.class, TransactionSystemException.class, RollbackException.class})
+//  protected ResponseEntity<Object> dataError(RuntimeException ex, WebRequest request) {
+//    String bodyOfResponse = "{\"message\":\"JPA Data Error\", \"status\":\"500\", \"error\":\"INTERNAL_SERVER_ERROR\"}";
+//    log.severe(ex + " \n " + request);
+//    HttpHeaders headers = new HttpHeaders();
+//    headers.setContentType(MediaType.APPLICATION_JSON);
+//    return handleExceptionInternal(ex, bodyOfResponse, headers, HttpStatus.INTERNAL_SERVER_ERROR, request); // 400
+//  }
 
   /**
    * DTO Validation errors (override of ResponseEntityExceptionHandler)

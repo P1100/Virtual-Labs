@@ -87,8 +87,8 @@ export function getSafeDeepCopyToArray(ss: any): any[] {
 export function formatErrors(error: any) {
   let responseErrorString = error?.error?.message; // (`${(error?.error?.error == null ? (typeof (error?.error) == 'string' ? error?.error : Object.keys(error?.error)) : error?.error?.error + ' - ' + error?.error?.message)}`);
   if (AppSettings.devShowTestingComponents) {
-    console.error(error, '-----', error?.error, '-----', error?.error?.error, '-----', responseErrorString);
     responseErrorString = responseErrorString + ` [${error?.error?.status} ${error?.error?.error}]`;
+    console.error('FOMART:', error, '\n-----\n', error?.error, '\n-----\n', error?.error?.error, '\n--RESPONSE:---\n', responseErrorString);
   }
   return throwError(responseErrorString);
 }

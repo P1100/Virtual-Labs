@@ -295,6 +295,74 @@ public class TeamServiceImpl implements TeamService {
  * {@link it.polito.ai.es2.controllers.APICourses_RestController#enrollStudents(List, String)}
  * <p>
  * {@link it.polito.ai.es2.controllers.APICourses_RestController#enrollStudentsCSV(String, MultipartFile)}
+ * <p>
+ * GET {@link it.polito.ai.es2.controllers.APICourses_RestController#getCourse(String)}
+ * <p>
+ * GET {@link it.polito.ai.es2.controllers.APICourses_RestController#getEnrolledStudents(String)}
+ * <p>
+ * GET {@link it.polito.ai.es2.controllers.APICourses_RestController#getStudentsInTeams(String)}
+ * <p>
+ * GET {@link it.polito.ai.es2.controllers.APICourses_RestController#getAvailableStudents(String)}
+ * <p>
+ * GET {@link it.polito.ai.es2.controllers.APICourses_RestController#getTeamsForCourse(String)}
+ * <p>
+ * GET {@link it.polito.ai.es2.controllers.APIStudent_RestController#getAllStudents()}
+ * <p>
+ * GET {@link it.polito.ai.es2.controllers.APIStudent_RestController#getStudent(String)}
+ * <p>
+ * GET {@link it.polito.ai.es2.controllers.APIStudent_RestController#getCourses(String)}
+ * <p>
+ * GET {@link it.polito.ai.es2.controllers.APIStudent_RestController#getTeamsForStudent(String)}
+ * <p>
+ * POST {@link it.polito.ai.es2.controllers.APICourses_RestController#addCourse(CourseDTO)}
+ * <p>
+ * POST {@link it.polito.ai.es2.controllers.APIStudent_RestController#addStudent(StudentDTO)}
+ * <p>
+ * POST {@link it.polito.ai.es2.controllers.APIStudent_RestController#addAll(List<StudentDTO>)}
+ * <p>
+ * {@link it.polito.ai.es2.controllers.APICourses_RestController#enableCourse(String)}
+ * <p>
+ * {@link it.polito.ai.es2.controllers.APICourses_RestController#disableCourse(String)}
+ * <p>
+ * {@link it.polito.ai.es2.controllers.APICourses_RestController#enrollStudent(String, Map)}
+ * <p>
+ * {@link it.polito.ai.es2.controllers.APICourses_RestController#enrollStudents(List, String)}
+ * <p>
+ * {@link it.polito.ai.es2.controllers.APICourses_RestController#enrollStudentsCSV(String, MultipartFile)}
+ * <p>
+ * GET {@link it.polito.ai.es2.controllers.APICourses_RestController#getCourse(String)}
+ * <p>
+ * GET {@link it.polito.ai.es2.controllers.APICourses_RestController#getEnrolledStudents(String)}
+ * <p>
+ * GET {@link it.polito.ai.es2.controllers.APICourses_RestController#getStudentsInTeams(String)}
+ * <p>
+ * GET {@link it.polito.ai.es2.controllers.APICourses_RestController#getAvailableStudents(String)}
+ * <p>
+ * GET {@link it.polito.ai.es2.controllers.APICourses_RestController#getTeamsForCourse(String)}
+ * <p>
+ * GET {@link it.polito.ai.es2.controllers.APIStudent_RestController#getAllStudents()}
+ * <p>
+ * GET {@link it.polito.ai.es2.controllers.APIStudent_RestController#getStudent(String)}
+ * <p>
+ * GET {@link it.polito.ai.es2.controllers.APIStudent_RestController#getCourses(String)}
+ * <p>
+ * GET {@link it.polito.ai.es2.controllers.APIStudent_RestController#getTeamsForStudent(String)}
+ * <p>
+ * POST {@link it.polito.ai.es2.controllers.APICourses_RestController#addCourse(CourseDTO)}
+ * <p>
+ * POST {@link it.polito.ai.es2.controllers.APIStudent_RestController#addStudent(StudentDTO)}
+ * <p>
+ * POST {@link it.polito.ai.es2.controllers.APIStudent_RestController#addAll(List<StudentDTO>)}
+ * <p>
+ * {@link it.polito.ai.es2.controllers.APICourses_RestController#enableCourse(String)}
+ * <p>
+ * {@link it.polito.ai.es2.controllers.APICourses_RestController#disableCourse(String)}
+ * <p>
+ * {@link it.polito.ai.es2.controllers.APICourses_RestController#enrollStudent(String, Map)}
+ * <p>
+ * {@link it.polito.ai.es2.controllers.APICourses_RestController#enrollStudents(List, String)}
+ * <p>
+ * {@link it.polito.ai.es2.controllers.APICourses_RestController#enrollStudentsCSV(String, MultipartFile)}
  *//*
 
   @Override

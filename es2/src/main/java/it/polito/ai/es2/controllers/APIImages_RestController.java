@@ -21,7 +21,6 @@ public class APIImages_RestController {
   @Autowired
   private CourseService courseService;
 
-  //
   @PostMapping()
   public ImageDTO uploadImage(@RequestParam("imageFile") @NotNull MultipartFile file) {
     return imageService.uploadImage(file);

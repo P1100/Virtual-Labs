@@ -126,9 +126,12 @@ export class HomeComponent implements OnInit, OnDestroy {
     const dialogRef = this.dialog.open(RegisterComponent, {
       maxWidth: '800px', autoFocus: true, hasBackdrop: true, disableClose: true, closeOnNavigation: true
     });
-    dialogRef.afterClosed().subscribe((idImage: string) => {
+    dialogRef.afterClosed().subscribe((idImage: number) => {
         this.dialogRef = null;
-        this.imageService.getImage(idImage).subscribe(imageDto => this.retrievedImage = imageDto.imageStringBase64);
+        console.log('Out of dialog', idImage);
+        if (idImage > 0) {
+          this.imageService.getImage(idImage).subscribe(imageDto => this.retrievedImage = imageDto.imageStringBase64);
+        }
       }, () => this.alertsService.setAlert('danger', 'Dialog Error')
     );
   }
@@ -140,8 +143,8 @@ export class HomeComponent implements OnInit, OnDestroy {
       maxWidth: '800px', autoFocus: true, hasBackdrop: true, disableClose: true, closeOnNavigation: true
     });
     dialogRef.afterClosed().subscribe((res: string) => {
-      this.dialogRef = null;
-      if (res != undefined) {
+        this.dialogRef = null;
+        if (res != undefined) {
           this.courseService.getCourses().subscribe(x => this.courses = x);
         }
       }, () => this.alertsService.setAlert('danger', 'Dialog Error')

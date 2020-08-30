@@ -52,6 +52,7 @@ public class ImageServiceImpl implements ImageService {
 
   /**
    * POST {@link it.polito.ai.es2.controllers.APIImages_RestController#uploadImage(MultipartFile)}
+   *
    * @return
    */
   @Override

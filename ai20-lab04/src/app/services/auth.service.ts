@@ -66,10 +66,10 @@ export class AuthService {
   public isLoggedOut() {
     return !this.isLoggedIn();
   }
-  public registerStudent(user: Student): Observable<any> {
-    return this.http.post(`${this.baseUrlApi}/users/student`, JSON.stringify(user), AppSettings.JSON_HTTP_OPTIONS).pipe(catchError(formatErrors));
+  public registerStudent(user: Student): Observable<User> {
+    return this.http.post<User>(`${this.baseUrlApi}/users/student`, JSON.stringify(user), AppSettings.JSON_HTTP_OPTIONS).pipe(catchError(formatErrors));
   }
-  public registerProfessor(user: Student): Observable<any> {
-    return this.http.post(`${this.baseUrlApi}/users/professor`, JSON.stringify(user), AppSettings.JSON_HTTP_OPTIONS).pipe(catchError(formatErrors));
+  public registerProfessor(user: Student): Observable<User> {
+    return this.http.post<User>(`${this.baseUrlApi}/users/professor`, JSON.stringify(user), AppSettings.JSON_HTTP_OPTIONS).pipe(catchError(formatErrors));
   }
 }

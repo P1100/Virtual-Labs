@@ -68,6 +68,7 @@ public class ModelHelper {
                               .getTeamsForStudent(studentDTO.getId())).withRel("teams"));
     return studentDTO;
   }
+
   public TeamDTO enrich(TeamDTO teamDTO) {
     if (teamDTO == null)
       return new TeamDTO();
