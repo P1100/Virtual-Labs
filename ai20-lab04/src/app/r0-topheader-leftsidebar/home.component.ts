@@ -7,7 +7,7 @@ import {ActivatedRoute, NavigationEnd, Router} from '@angular/router';
 import {Observable, Subscription} from 'rxjs';
 import {LoginComponent} from '../dialogs/login/login.component';
 import {CourseService} from '../services/course.service';
-import {filter, map, tap} from 'rxjs/operators';
+import {filter, map} from 'rxjs/operators';
 import {CourseEditComponent} from '../dialogs/course-edit/course-edit.component';
 import {Alert, AlertsService} from '../services/alerts.service';
 import {AppSettings} from '../app-settings';
@@ -40,7 +40,6 @@ export class HomeComponent implements OnInit, OnDestroy {
   alertsSubscription: Subscription;
   alertNgb: Alert; // ngb-alert
   devShowTestingComponents = AppSettings.devtest;
-  forseCoursesUpdate = false;
   coursesObservable: Observable<Course[]>;
   retrievedImage: string;
 
@@ -59,16 +58,13 @@ export class HomeComponent implements OnInit, OnDestroy {
               private changeDetectorRef: ChangeDetectorRef
   ) {
     titleService.setTitle(this.title);
-    // I need to await that courses are actually updated  (toPromise)
-    const coursesObservable = courseService.getCourses().pipe(tap(x => {
-      this.courses = x;
-    }));
-    let subscribe: Subscription;
+    const promise = new Promise((resolve, reject) => {
+      resolve(courseService.getCourses().subscribe(courses => this.courses = courses));
+    });
     // At every routing change, update nameActiveCourse (top toolbar) and idActiveCourse, plus some resets/refresh/checks
     this.router.events
       .pipe(
         filter((event) => event instanceof NavigationEnd),
-        tap(() => subscribe?.unsubscribe()),
         map(() => this.route),
         map((rout) => {
           let lastchild: ActivatedRoute = rout;
@@ -79,8 +75,8 @@ export class HomeComponent implements OnInit, OnDestroy {
         }),
         map(rout => rout.snapshot.paramMap)
       ).subscribe((paramMap) => {
-      // Wait for courses to be updated
-      coursesObservable.toPromise().then(() => {
+      // Wait for courses to be initialized at start
+      promise.then(() => {
         const oldCourseId = this.idActiveCourse;
         if (this.courses == null || paramMap?.get('id') == null) {
           this.nameActiveCourse = null;
