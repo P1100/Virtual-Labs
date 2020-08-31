@@ -63,11 +63,13 @@ export class HomeComponent implements OnInit, OnDestroy {
     const coursesObservable = courseService.getCourses().pipe(tap(x => {
       this.courses = x;
     }));
-    this.route.params.subscribe(x => console.log('PARAM MAP UPDATE', x));
+    let subscribe: Subscription;
     // At every routing change, update nameActiveCourse (top toolbar) and idActiveCourse, plus some resets/refresh/checks
     this.router.events
       .pipe(
         filter((event) => event instanceof NavigationEnd),
+        tap(() => subscribe?.unsubscribe()),
+        tap(x => console.log('NAV END')),
         map(() => this.route),
         map((rout) => {
           // Moving to params child route (StudentsContComponent)
@@ -78,7 +80,10 @@ export class HomeComponent implements OnInit, OnDestroy {
           }
           return lastchild; // -> last child will have all the params inherited
         }),
-        // Observable paramMap can emits multiple values (identical) after navEnd 
+        tap(x => {
+          subscribe = x.params.subscribe(y => console.log(x, 'PRE PARAM MAP UPDATE', y));
+        }),
+        // Observable paramMap can emits multiple values (identical) after navEnd
         exhaustMap((rout) => (rout != null) ? rout?.paramMap : of(null)), distinct()
       ).subscribe((paramMap) => {
       // Wait for courses to be updated

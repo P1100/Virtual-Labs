@@ -74,7 +74,7 @@ const routes: Routes = [
 ];
 
 @NgModule({
-  imports: [RouterModule.forRoot(routes, {enableTracing: false, onSameUrlNavigation: 'ignore', paramsInheritanceStrategy: 'always'})],
+  imports: [RouterModule.forRoot(routes, {enableTracing: true, onSameUrlNavigation: 'ignore', paramsInheritanceStrategy: 'always'})],
   exports: [RouterModule]
 })
 export class AppRoutingModule {
