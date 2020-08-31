@@ -20,7 +20,7 @@ export class CourseService {
   getCourses(): Observable<Course[]> {
     return this.http.get<HateoasModel>(`${this.baseUrlApi}`, AppSettings.JSON_HTTP_OPTIONS)
       .pipe(map(object => removeHATEOAS(object)),
-        retry(AppSettings.RETRIES), catchError(formatErrors),
+        catchError(formatErrors),
         tap(res => console.log('--getCourses:', res)));
   }
   addCourse(course: Course): Observable<any> {

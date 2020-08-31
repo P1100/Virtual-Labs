@@ -15,9 +15,9 @@ import {ImageService} from '../../services/image.service';
   styles: ['mat-form-field {width: 100%} mat-radio-button {margin-right: 12px}']
 })
 export class RegisterComponent {
-  user = new User(null, null, null, null, []);
+  user = new User(null, null, null, null, null, null, []);
   checkboxNoValidate = true;
-  showCheckboxNoValidateForTesting = AppSettings.devShowTestingComponents;
+  showCheckboxNoValidateForTesting = AppSettings.devtest;
   isStudentRadio = 'student';
   selectedImageFile: File;
   uploadImageData: FormData;
@@ -48,7 +48,7 @@ export class RegisterComponent {
     }
     obs.subscribe(
       resultArray => {
-        // To show image icon on home (dialog return value != 0)
+        // Check to show test (dev) image icon on home (dialog return value != 0)
         if (resultArray?.length > 0) {
           this.dialogRef.close(resultArray[1]?.id);
         } else {

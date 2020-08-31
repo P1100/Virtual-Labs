@@ -8,6 +8,7 @@ import {Router} from '@angular/router';
     margin: 0;
     padding: 20px;
     background-size: cover;
+    /*min-height: 500px;*/
     height: 100%;
     /*text-indent: -9999px;*/
     z-index:-1;">

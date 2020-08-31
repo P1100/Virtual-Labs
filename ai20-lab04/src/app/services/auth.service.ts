@@ -63,9 +63,6 @@ export class AuthService {
     const exp = localStorage.getItem('expires_at');
     return exp != null && moment().isBefore(moment.unix(+exp));
   }
-  public isLoggedOut() {
-    return !this.isLoggedIn();
-  }
   public registerStudent(user: Student): Observable<User> {
     return this.http.post<User>(`${this.baseUrlApi}/users/student`, JSON.stringify(user), AppSettings.JSON_HTTP_OPTIONS).pipe(catchError(formatErrors));
   }

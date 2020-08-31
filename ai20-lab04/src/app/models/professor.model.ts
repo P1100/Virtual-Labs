@@ -11,12 +11,4 @@ export class Student {
     this.lastName = lastName;
     this.email = email;
   }
-
-  toString(): string {
-    return this.lastName + ' ' +
-      this.firstName + ' (' +
-      this.id + ')' + ' (' +
-      this.email + ')'
-      ;
-  }
 }

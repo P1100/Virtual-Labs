@@ -1,11 +1,11 @@
 import {NgModule} from '@angular/core';
 import {RouterModule, Routes} from '@angular/router';
-import {EmptyComponent} from './r1-content-tabs/empty.component';
+import {EmptyComponent} from './r1-tabs-menu/empty.component';
 import {VmsContComponent} from './r2-inner-tab/vms/vms-cont.component';
 import {StudentsContComponent} from './r2-inner-tab/teacher/students/students-cont.component';
 import {PageNotFoundComponent} from './r0-topheader-leftsidebar/page-not-found.component';
 import {AssignmentsContComponent} from './r2-inner-tab/assignments/assignments-cont.component';
-import {TabsNavComponent} from './r1-content-tabs/tabs-nav.component';
+import {TabsNavComponent} from './r1-tabs-menu/tabs-nav.component';
 import {HomeComponent} from './r0-topheader-leftsidebar/home.component';
 import {TestingComponent} from './r2-inner-tab/testing/testing.component';
 import {TeamsComponent} from './r2-inner-tab/teams/teams.component';
@@ -43,7 +43,7 @@ const routes: Routes = [
                 children: [
                   {
                     path: '',
-                    component: StudentsContComponent,
+                    component: StudentsContComponent, // Default view for teacher
                     pathMatch: 'full'
                   },
                   {

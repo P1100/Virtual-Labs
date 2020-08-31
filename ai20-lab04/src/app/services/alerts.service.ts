@@ -55,9 +55,6 @@ const httpCodes = {
 })
 export class AlertsService {
   private alertSubject: BehaviorSubject<Alert> = new BehaviorSubject(null);
-  public static getHttpResponseStatusDescription(code: number): string {
-    return httpCodes[code];
-  }
 
   public getAlertSubject(): Observable<Alert> {
     return this.alertSubject as Observable<Alert>;
@@ -71,4 +68,7 @@ export class AlertsService {
     this.alertSubject.next(null);
   }
 
+  public static getHttpResponseStatusDescription(code: number): string {
+    return httpCodes[code];
+  }
 }

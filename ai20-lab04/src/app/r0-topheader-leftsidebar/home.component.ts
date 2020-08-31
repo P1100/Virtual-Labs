@@ -7,7 +7,7 @@ import {ActivatedRoute, NavigationEnd, Router} from '@angular/router';
 import {Observable, of, Subscription} from 'rxjs';
 import {LoginComponent} from '../dialogs/login/login.component';
 import {CourseService} from '../services/course.service';
-import {filter, map, switchMap} from 'rxjs/operators';
+import {distinct, exhaustMap, filter, map, tap} from 'rxjs/operators';
 import {CourseEditComponent} from '../dialogs/course-edit/course-edit.component';
 import {Alert, AlertsService} from '../services/alerts.service';
 import {AppSettings} from '../app-settings';
@@ -39,7 +39,7 @@ export class HomeComponent implements OnInit, OnDestroy {
   routeSubscription: Subscription;
   alertsSubscription: Subscription;
   alertNgb: Alert; // ngb-alert
-  devShowTestingComponents = AppSettings.devShowTestingComponents;
+  devShowTestingComponents = AppSettings.devtest;
   forseCoursesUpdate = false;
   coursesObservable: Observable<Course[]>;
   retrievedImage: string;
@@ -59,8 +59,11 @@ export class HomeComponent implements OnInit, OnDestroy {
               private changeDetectorRef: ChangeDetectorRef
   ) {
     titleService.setTitle(this.title);
-    const coursesObservable = courseService.getCourses();
-    coursesObservable.subscribe(x => this.courses = x); // for toPromise
+    // I need to await that courses are actually updated  (toPromis)
+    const coursesObservable = courseService.getCourses().pipe(tap(x => {
+      this.courses = x;
+    }));
+    this.route.params.subscribe(x => console.log('PARAM MAP UPDATE', x));
     // At every routing change, update nameActiveCourse (top toolbar) and idActiveCourse, plus some resets/refresh/checks
     this.router.events
       .pipe(
@@ -75,7 +78,8 @@ export class HomeComponent implements OnInit, OnDestroy {
           }
           return lastchild; // -> last child will have all the params inherited
         }),
-        switchMap((rout) => (rout != null) ? rout?.paramMap : of(null)) // debug_note: it was mergeMap
+        // Observable paramMap can emits multiple values (identical) after navEnd 
+        exhaustMap((rout) => (rout != null) ? rout?.paramMap : of(null)), distinct()
       ).subscribe((paramMap) => {
       // Wait for courses to be updated
       coursesObservable.toPromise().then(() => {
@@ -124,7 +128,7 @@ export class HomeComponent implements OnInit, OnDestroy {
       return;
     }
     const dialogRef = this.dialog.open(RegisterComponent, {
-      maxWidth: '800px', autoFocus: true, hasBackdrop: true, disableClose: true, closeOnNavigation: true
+      maxWidth: '400px', autoFocus: true, hasBackdrop: true, disableClose: true, closeOnNavigation: true
     });
     dialogRef.afterClosed().subscribe((idImage: number) => {
         this.dialogRef = null;
@@ -140,7 +144,7 @@ export class HomeComponent implements OnInit, OnDestroy {
       return;
     }
     const dialogRef = this.dialog.open(CourseAddComponent, {
-      maxWidth: '800px', autoFocus: true, hasBackdrop: true, disableClose: true, closeOnNavigation: true
+      maxWidth: '400px', autoFocus: true, hasBackdrop: true, disableClose: true, closeOnNavigation: true
     });
     dialogRef.afterClosed().subscribe((res: string) => {
         this.dialogRef = null;
@@ -155,7 +159,7 @@ export class HomeComponent implements OnInit, OnDestroy {
       return;
     }
     const dialogRef = this.dialog.open(CourseEditComponent, {
-      maxWidth: '800px', autoFocus: true, hasBackdrop: true, disableClose: true, closeOnNavigation: true,
+      maxWidth: '400px', autoFocus: true, hasBackdrop: true, disableClose: true, closeOnNavigation: true,
       data: {courseName: this.nameActiveCourse, courseId: this.idActiveCourse}
     });
     dialogRef.afterClosed().subscribe((res: string) => {
@@ -168,7 +172,7 @@ export class HomeComponent implements OnInit, OnDestroy {
       return;
     }
     const dialogRef = this.dialog.open(CourseDeleteComponent, {
-      maxWidth: '800px', autoFocus: false, hasBackdrop: true, disableClose: false, closeOnNavigation: true,
+      maxWidth: '400px', autoFocus: false, hasBackdrop: true, disableClose: false, closeOnNavigation: true,
       data: {courseName: this.nameActiveCourse, courseId: this.idActiveCourse}
     });
     dialogRef.afterClosed().subscribe((res: string) => {
@@ -184,7 +188,7 @@ export class HomeComponent implements OnInit, OnDestroy {
       return;
     }
     this.dialogRef = this.dialog.open(LoginComponent, {
-      maxWidth: '800px', autoFocus: true, hasBackdrop: true, disableClose: true, closeOnNavigation: false
+      maxWidth: '400px', autoFocus: true, hasBackdrop: true, disableClose: true, closeOnNavigation: false
     });
     // Settings what to do when dialog is closed
     this.dialogRef.afterClosed().subscribe(() => this.dialogRef = null);

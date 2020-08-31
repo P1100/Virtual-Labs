@@ -1,6 +1,6 @@
 import {async, ComponentFixture, TestBed} from '@angular/core/testing';
 
-import {TabsNavComponent} from '../r1-content-tabs/tabs-nav.component';
+import {TabsNavComponent} from '../r1-tabs-menu/tabs-nav.component';
 import {RouterTestingModule} from '@angular/router/testing';
 import {HttpClientTestingModule} from '@angular/common/http/testing';
 

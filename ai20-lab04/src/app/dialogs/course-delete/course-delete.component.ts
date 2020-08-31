@@ -15,7 +15,7 @@ export class CourseDeleteComponent {
   courseToDeleteId: string;
   courseToDeleteName: string;
   confirm: string;
-  noValidateForTesting = AppSettings.devShowTestingComponents;
+  noValidateForTesting = AppSettings.devtest;
 
   constructor(private courseService: CourseService,
               public dialogRef: MatDialogRef<CourseDeleteComponent>,

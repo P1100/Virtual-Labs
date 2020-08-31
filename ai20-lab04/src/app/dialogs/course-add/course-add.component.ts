@@ -15,7 +15,7 @@ export class CourseAddComponent {
   course = new Course('', '', 1, 10, false, '');
   private selectedFile: File;
   checkboxNoValidate = false;
-  showCheckboxNoValidateForTesting = AppSettings.devShowTestingComponents;
+  showCheckboxNoValidateForTesting = AppSettings.devtest;
 
   constructor(private courseService: CourseService, public dialogRef: MatDialogRef<CourseAddComponent>, private router: Router, private alertsService: AlertsService) {
   }

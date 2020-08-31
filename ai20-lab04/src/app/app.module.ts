@@ -2,7 +2,6 @@ import {MatToolbarModule} from '@angular/material/toolbar';
 import {MatFormFieldModule} from '@angular/material/form-field';
 import {HomeComponent} from './r0-topheader-leftsidebar/home.component';
 import {MatPaginatorModule} from '@angular/material/paginator';
-import {AuthInterceptor} from './services/auth.interceptor';
 import {LoginComponent} from './dialogs/login/login.component';
 import {NgModule} from '@angular/core';
 import {MatInputModule} from '@angular/material/input';
@@ -33,17 +32,18 @@ import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {AssignmentsContComponent} from './r2-inner-tab/assignments/assignments-cont.component';
 import {BrowserModule} from '@angular/platform-browser';
 import {TestingComponent} from './r2-inner-tab/testing/testing.component';
-import {EmptyComponent} from './r1-content-tabs/empty.component';
+import {EmptyComponent} from './r1-tabs-menu/empty.component';
 import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
 import {StudentsContComponent} from './r2-inner-tab/teacher/students/students-cont.component';
 import {AppComponent} from './app.component';
 import {MAT_DIALOG_DEFAULT_OPTIONS, MatDialogModule} from '@angular/material/dialog';
 import {RegisterComponent} from './dialogs/register/register.component';
-import {TabsNavComponent} from './r1-content-tabs/tabs-nav.component';
+import {TabsNavComponent} from './r1-tabs-menu/tabs-nav.component';
 import {CourseEditComponent} from './dialogs/course-edit/course-edit.component';
 import {MatRadioModule} from '@angular/material/radio';
 import {CourseDeleteComponent} from './dialogs/course-delete/course-delete.component';
 import {CourseAddComponent} from './dialogs/course-add/course-add.component';
+import {AuthInterceptor} from './services/auth.interceptor';
 
 @NgModule({
   imports: [

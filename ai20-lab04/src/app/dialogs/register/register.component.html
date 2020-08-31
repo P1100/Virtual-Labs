@@ -1,26 +1,32 @@
-<!-- TODO: ADD USERNAME AND PASSWORD -->
 <h1 mat-dialog-title class="text-center mb-3">Create Virtual Labs Account</h1>
 <form #cf="ngForm" (ngSubmit)="onSubmit()" class="text-center border border-light p-3" [noValidate]="checkboxNoValidate">
   <div>
     <mat-form-field class="form-group">
       <mat-label>Id</mat-label>
-      <input matInput #id="ngModel" name="id" [(ngModel)]="user.id" required type="number" pattern="[0-9]{1,6}">
-      <mat-hint>must be unique</mat-hint>
+      <input matInput #id name="id" disabled readonly>
     </mat-form-field>
-    <br>
+    <mat-form-field class="form-group">
+      <mat-label>Username</mat-label>
+      <input matInput #username="ngModel" name="username" [(ngModel)]="user.username" required type="string" pattern="[0-9]{1,6}" autocomplete="on" (keyup)="user.id = username.value">
+      <mat-hint>Your university serial number</mat-hint>
+      <mat-error *ngIf="username.invalid && !username.pristine">Must be a 6 digits number</mat-error>
+    </mat-form-field>
+    <mat-form-field class="form-group">
+      <mat-label>Password</mat-label>
+      <input matInput #password="ngModel" name="password" [(ngModel)]="user.password" required type="password" pattern="^(?!\s*$).{4,30}" autocomplete="off">
+      <mat-error *ngIf="password.invalid && !password.pristine">Must be at least 4 digits</mat-error>
+    </mat-form-field>
     <mat-form-field class="form-group">
       <mat-label>First name</mat-label>
       <input matInput #first="ngModel" name="first" [(ngModel)]="user.firstName" required pattern="^(?!\s*$).+">
       <!--class="form-control"-->
-      <mat-error *ngIf="first.invalid && !first.pristine">First Name is required, can't be blank</mat-error>
+      <mat-error *ngIf="first.invalid && !first.pristine">First name is required, can't be blank</mat-error>
     </mat-form-field>
-    <br>
     <mat-form-field class="form-group">
       <mat-label>Last name</mat-label>
       <input matInput #last="ngModel" name="last" [(ngModel)]="user.lastName" required pattern="^(?!\s*$).+">
-      <mat-error *ngIf="last.invalid && !last.pristine">Last Name is required, can't be blank</mat-error>
+      <mat-error *ngIf="last.invalid && !last.pristine">Last name is required, can't be blank</mat-error>
     </mat-form-field>
-    <br>
     <mat-form-field class="form-group">
       <mat-label>Email</mat-label>
       <input matInput #email="ngModel" name="email" [(ngModel)]="user.email" type="email" required
@@ -28,12 +34,11 @@
       <mat-error *ngIf="email.invalid && !email.pristine">
         {{isStudentRadio == 'student' ? 'Email is required. Must be like s000000@studenti.polito.it' : 'Email is required. Must be like d000000@polito.it'}}</mat-error>
     </mat-form-field>
-    <br>
     <div class="custom-file form-group">
       <input type="file" class="custom-file-input" id="importFile" (change)="onFileChanged($event)">
       <label class="custom-file-label" for="importFile" #labelImageFile style="text-align: left">Choose profile photo</label>
     </div>
-    <br> <br><br>
+    <br><br>
     <!--    [formControl]="isStudentRadio"  [attr.checked]="0" -->
     <mat-radio-group #isstudent="ngModel" name="isstudent" [(ngModel)]="isStudentRadio" required>
       <mat-radio-button value="student">Student</mat-radio-button>
