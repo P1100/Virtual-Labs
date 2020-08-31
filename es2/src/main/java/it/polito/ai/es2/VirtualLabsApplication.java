@@ -63,23 +63,23 @@ public class VirtualLabsApplication {
           courseService.addCourse(new CourseDTO("c6", "Test: Disabled Course", 1, 500, false, null));
           courseService.addCourse(new CourseDTO("c7", "Test: min2 max3", 2, 3, true, null));
 
-          userStudProfService.addStudent(new StudentDTO(1L, "Pietro", "Giasone", "s1@studenti.polito.it"));
-          userStudProfService.addStudent(new StudentDTO(2L, "Giuseppe", "Rossi", "s2@studenti.polito.it"));
-          userStudProfService.addStudent(new StudentDTO(3L, "Antonio", "Bianchi", "s3@studenti.polito.it"));
-          userStudProfService.addStudent(new StudentDTO(4L, "Angelo", "Verdi", "s4@studenti.polito.it"));
-          userStudProfService.addStudent(new StudentDTO(5L, "Domenico", "Gialli", "s5@studenti.polito.it"));
-          userStudProfService.addStudent(new StudentDTO(6L, "Bruno", "Ferri", "s6@studenti.polito.it"));
-          userStudProfService.addStudent(new StudentDTO(7L, "Paola", "Paleta", "s7@studenti.polito.it"));
-          userStudProfService.addStudent(new StudentDTO(8L, "Sergio", "Limari", "s8@studenti.polito.it"));
-          userStudProfService.addStudent(new StudentDTO(9L, "Luciano", "Benterri", "s9@studenti.polito.it"));
-          userStudProfService.addStudent(new StudentDTO(10L, "Francesco", "Cavinni", "s10@studenti.polito.it"));
-          userStudProfService.addStudent(new StudentDTO(11L, "Maria", "Pasolani", "s11@studenti.polito.it"));
+          userStudProfService.addStudent(new StudentDTO(1L, "Pietro", "Giasone", "s1@studenti.polito.it", null));
+          userStudProfService.addStudent(new StudentDTO(2L, "Giuseppe", "Rossi", "s2@studenti.polito.it", null));
+          userStudProfService.addStudent(new StudentDTO(3L, "Antonio", "Bianchi", "s3@studenti.polito.it", null));
+          userStudProfService.addStudent(new StudentDTO(4L, "Angelo", "Verdi", "s4@studenti.polito.it", null));
+          userStudProfService.addStudent(new StudentDTO(5L, "Domenico", "Gialli", "s5@studenti.polito.it", null));
+          userStudProfService.addStudent(new StudentDTO(6L, "Bruno", "Ferri", "s6@studenti.polito.it", null));
+          userStudProfService.addStudent(new StudentDTO(7L, "Paola", "Paleta", "s7@studenti.polito.it", null));
+          userStudProfService.addStudent(new StudentDTO(8L, "Sergio", "Limari", "s8@studenti.polito.it", null));
+          userStudProfService.addStudent(new StudentDTO(9L, "Luciano", "Benterri", "s9@studenti.polito.it", null));
+          userStudProfService.addStudent(new StudentDTO(10L, "Francesco", "Cavinni", "s10@studenti.polito.it", null));
+          userStudProfService.addStudent(new StudentDTO(11L, "Maria", "Pasolani", "s11@studenti.polito.it", null));
 
-          userStudProfService.addStudent(new StudentDTO(12L, "Valentina", "Gennari", "s12@studenti.polito.it"));
-          userStudProfService.addStudent(new StudentDTO(13L, "Francesca", "Tulini", "s13@studenti.polito.it"));
-          userStudProfService.addStudent(new StudentDTO(14L, "Elena", "Casellari", "s14@studenti.polito.it"));
-          userStudProfService.addStudent(new StudentDTO(15L, "Anna", "Rodieni", "s15@studenti.polito.it"));
-          userStudProfService.addStudent(new StudentDTO(100L, "Last", "One", "s16@studenti.polito.it"));
+          userStudProfService.addStudent(new StudentDTO(12L, "Valentina", "Gennari", "s12@studenti.polito.it", null));
+          userStudProfService.addStudent(new StudentDTO(13L, "Francesca", "Tulini", "s13@studenti.polito.it", null));
+          userStudProfService.addStudent(new StudentDTO(14L, "Elena", "Casellari", "s14@studenti.polito.it", null));
+          userStudProfService.addStudent(new StudentDTO(15L, "Anna", "Rodieni", "s15@studenti.polito.it", null));
+          userStudProfService.addStudent(new StudentDTO(100L, "Last", "One", "s16@studenti.polito.it", null));
 
           courseService.enrollStudent(1L, "c1");
 //          courseService.enrollStudent(1L, "c6");

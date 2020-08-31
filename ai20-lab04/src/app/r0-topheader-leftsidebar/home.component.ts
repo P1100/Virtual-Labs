@@ -59,7 +59,10 @@ export class HomeComponent implements OnInit, OnDestroy {
   ) {
     titleService.setTitle(this.title);
     const promise = new Promise((resolve, reject) => {
-      resolve(courseService.getCourses().subscribe(courses => this.courses = courses));
+      courseService.getCourses().subscribe(courses => {
+        this.courses = courses;
+        resolve('Courses initialized!');
+      });
     });
     // At every routing change, update nameActiveCourse (top toolbar) and idActiveCourse, plus some resets/refresh/checks
     this.router.events
@@ -126,7 +129,6 @@ export class HomeComponent implements OnInit, OnDestroy {
     });
     dialogRef.afterClosed().subscribe((idImage: number) => {
         this.dialogRef = null;
-        console.log('Out of dialog', idImage);
         if (idImage > 0) {
           this.imageService.getImage(idImage).subscribe(imageDto => this.retrievedImage = imageDto.imageStringBase64);
         }

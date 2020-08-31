@@ -21,6 +21,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.Arrays;
 
 @RestController
 @RequestMapping("/api/users")
@@ -39,29 +40,18 @@ public class APIUsers_RestController {
   @Autowired
   private UserStudProfService userStudProfService;
 
-  @GetMapping("/testjwt")
-  public String test() {
-    return "THIS IS A OK TEST";
-  }
-
-  @PostMapping("/testjwt")
-  public String test2() {
-    return "THIS IS A OK TEST";
-  }
-
   // {"username":"admin","password":"a"}
   @RequestMapping(value = "/authenticate", method = RequestMethod.POST)
   public ResponseEntity<?> createAuthenticationToken(@RequestBody JwtRequest authenticationRequest) throws Exception {
     try {
-      // Using UserDetailsServiceImpl (WebConfig) ??
+      // Using UserDetailsServiceImpl (WebConfig).
       authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(authenticationRequest.getUsername(), authenticationRequest.getPassword()));
     } catch (DisabledException e) {
       throw new Exception("USER_DISABLED", e);
     } catch (BadCredentialsException e) {
       throw new Exception("INVALID_CREDENTIALS", e);
     }
-    UserDetails userDetails = userDetailsService
-                                  .loadUserByUsername(authenticationRequest.getUsername());
+    UserDetails userDetails = userDetailsService.loadUserByUsername(authenticationRequest.getUsername());
     String token = jwtTokenUtil.generateToken(userDetails);
     return ResponseEntity.ok(new JwtResponse(token));
   }
@@ -70,6 +60,7 @@ public class APIUsers_RestController {
   @PostMapping("/student")
   public UserDTO registerStudent(@Valid @RequestBody UserDTO userDTO) {
     System.out.println(userDTO);
+    userDTO.setRoles(Arrays.asList("STUDENT"));
     StudentDTO studentDTO = modelMapper.map(userDTO, StudentDTO.class);
     studentDTO.setId(Long.valueOf(userDTO.getUsername()));
     System.out.println(studentDTO);
@@ -82,6 +73,7 @@ public class APIUsers_RestController {
   @PostMapping("/professor")
   public UserDTO registerProfessor(@Valid @RequestBody UserDTO userDTO) {
     System.out.println(userDTO);
+    userDTO.setRoles(Arrays.asList("PROFESSOR"));
     ProfessorDTO professorDTO = modelMapper.map(userDTO, ProfessorDTO.class);
     professorDTO.setId(Long.valueOf(userDTO.getUsername()));
     System.out.println(professorDTO);
@@ -89,12 +81,4 @@ public class APIUsers_RestController {
     System.out.println(userStudProfService.addProfessor(professorDTO));
     return userDTO;
   }
-
 }
-/*
-  @GetMapping("/check/{user}/{pass}")
-  @ResponseBody
-  public boolean matchpass(@PathVariable String user, @PathVariable String pass) {
-    return userDetailsServiceImpl.checkUser(user, pass);
-  }
-  */

@@ -33,7 +33,7 @@ public class Student {
   @Email
   @Pattern(regexp = "s[0-9]{1,9}@studenti\\.polito\\.it")
   private String email;
-  @OneToOne
+  @OneToOne(cascade = CascadeType.ALL)
   @JoinColumn
   private Image profilePhoto;
 
@@ -66,5 +66,10 @@ public class Student {
   @Override
   public String toString() {
     return "Student{} " + id + getLastName();
+  }
+
+  public void addImage(Image image) {
+    profilePhoto = image;
+    image.setStudent(this);
   }
 }

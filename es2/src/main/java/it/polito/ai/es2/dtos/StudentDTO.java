@@ -22,5 +22,6 @@ public class StudentDTO extends RepresentationModel<StudentDTO> {
   @Email
   @Pattern(regexp = "s[0-9]{1,9}@studenti\\.polito\\.it")
   private String email;
+  private Long imageId;
 }
 

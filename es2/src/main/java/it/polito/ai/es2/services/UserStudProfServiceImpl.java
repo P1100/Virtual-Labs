@@ -1,13 +1,11 @@
 package it.polito.ai.es2.services;
 
 import it.polito.ai.es2.dtos.*;
+import it.polito.ai.es2.entities.Image;
 import it.polito.ai.es2.entities.Professor;
 import it.polito.ai.es2.entities.Student;
 import it.polito.ai.es2.entities.User;
-import it.polito.ai.es2.repositories.CourseRepository;
-import it.polito.ai.es2.repositories.ProfessorRepository;
-import it.polito.ai.es2.repositories.StudentRepository;
-import it.polito.ai.es2.repositories.UserRepository;
+import it.polito.ai.es2.repositories.*;
 import it.polito.ai.es2.services.exceptions.FailedAddException;
 import it.polito.ai.es2.services.exceptions.NullParameterException;
 import it.polito.ai.es2.services.exceptions.UsernameAlreadyUsedException;
@@ -43,6 +41,8 @@ public class UserStudProfServiceImpl implements UserStudProfService {
   ProfessorRepository professorRepository;
   @Autowired
   UserRepository userRepository;
+  @Autowired
+  ImageRepository imageRepository;
   // Bean created in WebConfig
   @Autowired
   private PasswordEncoder passwordEncoder;
@@ -64,14 +64,38 @@ public class UserStudProfServiceImpl implements UserStudProfService {
     return modelMapper.map(userRepository.save(newUser), UserDTO.class);
   }
 
-  /**
-   * Used by UserController
-   */
-  public boolean checkUser(String user, String pass) {
-    if (user == null || pass == null)
-      return false;
-    User u = userRepository.findTopByUsername(user);
-    return u != null && passwordEncoder.matches(pass, u.getPassword());
+  @Override
+  public StudentDTO addStudent(@Valid StudentDTO studentDTO) {
+    log.info("addStudent(" + studentDTO + ")");
+    if (studentDTO == null || studentDTO.getId() == null)
+      throw new FailedAddException("null parameters");
+    Student s = modelMapper.map(studentDTO, Student.class);
+    if (studentRepository.existsById(studentDTO.getId())) {
+      throw new FailedAddException("duplicate");
+    }
+    if (studentDTO.getImageId() != null) {
+      Optional<Image> img = imageRepository.findById(studentDTO.getImageId());
+      if (img.isPresent())
+        s.addImage(img.get());
+    }
+    return modelMapper.map(studentRepository.save(s), StudentDTO.class);
+  }
+
+  @Override
+  public ProfessorDTO addProfessor(@Valid ProfessorDTO professorDTO) {
+    log.info("addProfessor(" + professorDTO + ")");
+    if (professorDTO == null || professorDTO.getId() == null)
+      throw new FailedAddException("null parameters");
+    Professor p = modelMapper.map(professorDTO, Professor.class);
+    if (professorRepository.existsById(professorDTO.getId())) {
+      throw new FailedAddException("duplicate");
+    }
+    if (professorDTO.getImageId() != null) {
+      Optional<Image> img = imageRepository.findById(professorDTO.getImageId());
+      if (img.isPresent())
+        p.addImage(img.get());
+    }
+    return modelMapper.map(professorRepository.save(p), ProfessorDTO.class);
   }
 
   /**
@@ -90,37 +114,6 @@ public class UserStudProfServiceImpl implements UserStudProfService {
   public Optional<StudentDTO> getStudent(Long studentId) {
     log.info("getStudent(" + studentId + ")");
     return studentRepository.findById(studentId).map(x -> modelMapper.map(x, StudentDTO.class));
-  }
-
-  //  //  {"id":"S33","name":"S33-name","firstName":"S33-FirstName"}
-//  // ---> Nella POST settare ContentType: application/json
-//  @PostMapping()
-//  public StudentDTO addStudent(@Valid @RequestBody StudentDTO studentDTO) {
-//    userService.addStudent(studentDTO);
-//    return modelHelper.enrich(studentDTO);
-//  }
-  @Override
-  public StudentDTO addStudent(@Valid StudentDTO student) {
-    log.info("addStudent(" + student + ")");
-    if (student == null || student.getId() == null)
-      throw new FailedAddException("null parameters");
-    Student s = modelMapper.map(student, Student.class);
-    if (studentRepository.existsById(student.getId())) {
-      throw new FailedAddException("duplicate");
-    }
-    return modelMapper.map(studentRepository.save(s), StudentDTO.class);
-  }
-
-  @Override
-  public ProfessorDTO addProfessor(@Valid ProfessorDTO professor) {
-    log.info("addProfessor(" + professor + ")");
-    if (professor == null || professor.getId() == null)
-      throw new FailedAddException("null parameters");
-    Professor s = modelMapper.map(professor, Professor.class);
-    if (professorRepository.existsById(professor.getId())) {
-      throw new FailedAddException("duplicate");
-    }
-    return modelMapper.map(professorRepository.save(s), ProfessorDTO.class);
   }
 
   /**

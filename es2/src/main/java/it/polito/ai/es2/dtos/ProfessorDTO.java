@@ -19,4 +19,5 @@ public class ProfessorDTO extends RepresentationModel<ProfessorDTO> {
   @Email
   @Pattern(regexp = "d[0-9]{1,9}@polito\\.it")
   private String email;
+  private Long imageId;
 }

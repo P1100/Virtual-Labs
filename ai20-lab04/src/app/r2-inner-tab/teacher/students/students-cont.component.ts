@@ -43,7 +43,6 @@ export class StudentsContComponent implements OnDestroy {
     , private courseService: CourseService) {
     this.subRouteParam = this.activatedRoute.paramMap.subscribe(() => {
         this.courseId = this.activatedRoute.parent.snapshot.paramMap.get('id');
-        console.log('activeCourse: ' + this.courseId);
         this.subEnrolledStudentsCourse = this.backendService.getEnrolledStudents(this.courseId)
           .subscribe((students: Student[]) => {
               this.enrolledStudents = Array.isArray(students) ? [...students] : [];

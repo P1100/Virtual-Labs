@@ -40,14 +40,11 @@ from (((`teams`.`team` `t` join `teams`.`course` `c` on (`t`.`course_id` = `c`.`
          join `teams`.`student` `st` on (`ts`.`student_id` = `st`.`id`)) left join token tk on (tk.student_id=st.id AND tk.team_id=t.id)
 order by `c`.`idname`, `t`.`name`, `st`.`id`;
 
+## SQL Scratches
 DROP DATABASE virtuallabs;
 CREATE DATABASE virtuallabs;
-CREATE DATABASE JHipsterMariaDb;
 
-
-INSERT INTO virtuallabs.role (name, description) VALUES ('ROLE_ADMIN', null);
-INSERT INTO virtuallabs.role (name, description) VALUES ('ROLE_GUEST', null);
-INSERT INTO virtuallabs.role (name, description) VALUES ('ROLE_PROFESSOR', null);
-INSERT INTO virtuallabs.role (name, description) VALUES ('ROLE_STUDENT', null);
-INSERT INTO virtuallabs.role (name, description) VALUES ('ROLE_USER', null);
+INSERT INTO virtuallabs.role (name, description) VALUES ('ROLE_ADMIN', 'Administrator');
+INSERT INTO virtuallabs.role (name, description) VALUES ('ROLE_PROFESSOR', 'Course Professor');
+INSERT INTO virtuallabs.role (name, description) VALUES ('ROLE_STUDENT', 'The Student');
 

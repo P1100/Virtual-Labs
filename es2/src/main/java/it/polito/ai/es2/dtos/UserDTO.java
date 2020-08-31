@@ -35,6 +35,8 @@ public class UserDTO {
   @Pattern(regexp = "[sd][0-9]{1,9}@(studenti\\.)?polito\\.it")
   private String email;
 
+  private Long imageId;
+
   /**
    * @param strings eg: {"AdMIN", "UsER"}
    * @return {Role: "AdMIN", "UsER"}
@@ -42,7 +44,7 @@ public class UserDTO {
   public static List<Role> convertStringsToRoles(List<String> strings) {
     List<Role> roles = new ArrayList<>();
     for (String role : strings) {
-      roles.add(new Role(role.toUpperCase()));
+      roles.add(new Role("ROLE_" + role.toUpperCase()));
     }
     return roles;
   }
