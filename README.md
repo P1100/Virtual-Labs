@@ -1,4 +1,4 @@
-<h1 align="center">Virtual Labs
+<h1 align="center">Virtual Labs    <br/>
     <br/>
     <img alt="Virtuallbs" src="https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcRMtrxkSwGoK3DuGR-aXg5dilh_TA1_LCYEpw&usqp=CAU" height="200px" />
 
