@@ -2,7 +2,8 @@
 <div mat-dialog-content>
   <!--TODO: need to add * waiting for server response... * message under login-->
   <form autocomplete="off" novalidate [formGroup]="form">
-    <span *ngIf="form.controls.email.errors?.required"> Name is required. </span>
+    <mat-error *ngIf="form.controls.email.errors?.required"> Missing required fields.</mat-error>
+    <br>
     <mat-form-field>
       <mat-label>Email:</mat-label>
       <input matInput placeholder="email" name="email" formControlName="email">

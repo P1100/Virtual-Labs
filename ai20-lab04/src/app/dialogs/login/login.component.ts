@@ -4,7 +4,8 @@ import {Subscription} from 'rxjs';
 import {MatDialogRef} from '@angular/material/dialog';
 import {AuthService} from '../../services/auth.service';
 import {ActivatedRoute, Router} from '@angular/router';
-import {filter, map, tap} from 'rxjs/operators';
+import {filter} from 'rxjs/operators';
+import {User} from '../../models/user.model';
 
 @Component({
   selector: 'app-login-dialog',
@@ -13,7 +14,7 @@ import {filter, map, tap} from 'rxjs/operators';
 })
 
 export class LoginComponent implements OnDestroy {
-  public user;
+  user = new User(null, null, null, null, null, null, []);
   form: FormGroup;
   subscriptionLogin: Subscription;
 
@@ -21,23 +22,20 @@ export class LoginComponent implements OnDestroy {
               private fb: FormBuilder,
               private authService: AuthService,
               private router: Router,
-              activatedRoute: ActivatedRoute) {
+              private activatedRoute: ActivatedRoute) {
     this.form = this.fb.group(
       {
-        email: ['olivier@mail.com', [forbiddenNameValidator(/bob/i), Validators.required]],
-        password: ['bestPassw0rd', [Validators.required]],
+        email: ['000000', [Validators.required]],
+        password: ['000000', [Validators.required]],
       },
       {
-        validators: fakeNameValidator,
-        // updateOn: 'blur'
+        validators: fakeNameValidator
       }) as FormGroup;
     this.form.valueChanges.pipe(
-      filter(() => this.form.valid),
-      tap(formValue => console.log('Valuechanges: ' + JSON.stringify(formValue))),
-      map(value => this.user = {id: value.email, password: value.password}), // , date: new Date()
-    ).subscribe((user) => {
-      this.user = user;
-      console.log(this.user);
+      filter(() => this.form.valid)
+    ).subscribe(form => {
+      this.user.username = form?.email;
+      this.user.username = form?.password;
     });
   }
   ngOnDestroy(): void {
@@ -50,15 +48,11 @@ export class LoginComponent implements OnDestroy {
   }
   login() {
     const val = this.form.value;
-    if (val.email && val.password) {
+    if (val?.email && val?.password) {
       this.subscriptionLogin = this.authService.login(val.email, val.password)
-        .subscribe((accessToken) => {
-            console.log('User is logged in. Received: ' + JSON.stringify(accessToken), accessToken);
-            console.log('LoginComponent ended login http sub');
+        .subscribe(() => {
             this.dialogRef.close();
-            console.log('LoginComponent after dialogRef.close()');
             this.router.navigateByUrl('/');
-            console.log('LoginComponent after navigateByUrl!');
           }
         );
     }
@@ -68,19 +62,9 @@ export class LoginComponent implements OnDestroy {
   }
 }
 
-function forbiddenNameValidator(nameRe: RegExp) {
-  return (control) => {
-    const forbidden = nameRe.test(control.value);
-    // console.log(`is this name ${control.value} forbidden? ${forbidden}`);
-    return forbidden ? {forbiddenName: {value: control.value}} : null;
-  };
-}
-/** A hero's name can't match the hero's alter ego */
 function fakeNameValidator(control: FormGroup): ValidationErrors | null {
   const email = control.get('password');
   const password = control.get('email');
   const ret = password && email && password.value === email.value ? {fakeName: true} : null;
-  // if (ret) { console.log(`${email.value} === ${password.value}`); }
-  // console.log(`are email and password equal? ${email.value} === ${password.value} ${email.value === password.value}`);
   return ret;
 }

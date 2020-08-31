@@ -34,7 +34,7 @@ export class HomeComponent implements OnInit, OnDestroy {
   dialogRef = undefined;
   panelOpenState = [];
   authSubscription: Subscription;
-  loggedUser = '';
+  loggedUserName = '';
   isLogged = false;
   routeSubscription: Subscription;
   alertsSubscription: Subscription;
@@ -106,9 +106,10 @@ export class HomeComponent implements OnInit, OnDestroy {
     this.authSubscription = this.authService.getIsLoggedSubject().subscribe(x => {
       this.isLogged = x;
       if (x === true) {
-        this.loggedUser = localStorage.getItem('user');
+        this.loggedUserName = localStorage.getItem('username');
       } else {
-        localStorage.removeItem('user');
+        localStorage.removeItem('username');
+        this.loggedUserName = null;
       }
     });
     this.alertsSubscription = this.alertsService.getAlertSubject().subscribe(x => this.alertNgb = x);

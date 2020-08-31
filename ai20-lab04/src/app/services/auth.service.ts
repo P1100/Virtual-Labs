@@ -17,8 +17,6 @@ export class AuthService {
   isLoggedSubject: BehaviorSubject<boolean>;
 
   constructor(private http: HttpClient) {
-    // console.log('new auth service');
-    // localStorage.clear();
     if (this.isLoggedIn()) {
       this.isLoggedSubject = new BehaviorSubject(true);
     } else {
@@ -28,35 +26,25 @@ export class AuthService {
   public getIsLoggedSubject(): Observable<any> {
     return this.isLoggedSubject as Observable<any>;
   }
-  // TODO: static????
-  private static setSession(authResult, email) {
-    const tkn = JSON.parse(atob(authResult.accessToken.split('.')[1]));
-    // const expiresAt = moment().add(authResult.expiresIn, 'second');
-    console.log('setSession:', atob(authResult.accessToken.split('.')[1]));
-    // console.log(JSONmoment.unix(tkn.exp));
-    localStorage.setItem('accessToken', authResult.accessToken);
-    localStorage.setItem('user', email);
-    // json-server-auth token field exp contains epoch of exportation (last 1 hour)
-    localStorage.setItem('expires_at', tkn.exp);
-  }
-
-  login(email: string, password: string): Observable<any> {  // returns object with accessToken
-    return this.http.post<User>('/api/login', {email, password}).pipe(
-      // tap(user => this.isLoggedSubject.next(user)));
-      // tap(res => console.log('AuthService.login() post before delay:')),
-      // delay(2000), // testing correctness code
-      // tap(res => console.log('AuthService.login() post before delay:')),
-      tap(res => AuthService.setSession(res, email)),
+  login(username: string, password: string): Observable<any> {  // returns object with token
+    return this.http.post<any>(`${this.baseUrlApi}/users/authenticate`, {username, password}).pipe(
+      tap(authResult => {
+        console.log(authResult?.token);
+        localStorage.setItem('token', authResult?.token);
+        // const expiresAt = moment().add(authResult.expiresIn, 'second');
+        // console.log(JSONmoment.unix(tkn.exp));
+        localStorage.setItem('username', username);
+      }),
       tap(() => this.isLoggedSubject.next(true))
     );
   }
-  logout(): /* Observable<any> */ void {
+  logout(): void {
     // No server logout for JWT, just remove token from local storage
     this.isLoggedSubject.next(false);
-    localStorage.removeItem('accessToken');
-    localStorage.removeItem('user');
+    localStorage.removeItem('token');
+    localStorage.removeItem('username');
     localStorage.removeItem('expires_at');
-    console.log('AuthService.logout: accessToken removed');
+    localStorage.clear();
   }
 
   public isLoggedIn(): boolean {
