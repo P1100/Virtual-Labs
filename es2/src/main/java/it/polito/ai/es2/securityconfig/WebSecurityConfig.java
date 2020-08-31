@@ -68,8 +68,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter implements W
 //        .antMatchers("/notification/**").permitAll()
 //        .antMatchers("/testing/**").permitAll()
 //        .antMatchers("/api").hasRole("ADMIN")
-//        .antMatchers("/*").authenticated()
 //        .antMatchers("/api").authenticated()
+//        .antMatchers("/*").authenticated()
         .anyRequest().permitAll()
         .and()
         .exceptionHandling().authenticationEntryPoint(jwtAuthenticationEntryPoint) // TODO: Move to Global handler

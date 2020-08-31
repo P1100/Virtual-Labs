@@ -13,14 +13,13 @@ import java.util.List;
 /**
  * Si è scelto di non aggiungere ID (generated), per cercare di uniformarsi a schema di default di jdbcauthentication, rendendo la join table users_roles chiara.
  */
-// TODO: rivedere noargs, e rimuovere costruttori non utilizzati
 @Data
 @NoArgsConstructor
-@Entity(name = "role")
-//@Table(name = "authorities")//, uniqueConstraints = @UniqueConstraint(columnNames = {"username","authority"}))
+@Entity
 public class Role {
   @Id
   private String name;
+  // Only the Role name is used by Spring Security, optional parameter
   private String description;
   @ManyToMany(mappedBy = "roles")
   @ToString.Exclude

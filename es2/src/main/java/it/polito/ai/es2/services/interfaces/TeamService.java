@@ -1,15 +1,17 @@
 package it.polito.ai.es2.services.interfaces;
 
 import it.polito.ai.es2.dtos.StudentDTO;
+import it.polito.ai.es2.dtos.TeamDTO;
 import org.springframework.security.access.prepost.PreAuthorize;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface TeamService {
   @PreAuthorize("hasRole('ADMIN') or hasRole('PROFESSOR') or @mySecurityChecker.isTeamOwner(#teamId,authentication.principal.username)")
   List<StudentDTO> getMembers(Long TeamId);
 
-/*
+  // **************************** -- not reviewd --------------------
   @PreAuthorize("hasRole('ADMIN')")
   List<TeamDTO> getAllTeams();
 
@@ -26,5 +28,4 @@ public interface TeamService {
   boolean evictTeam(Long teamId);
 
   boolean setTeamStatus(Long teamId, boolean status);
- */
 }

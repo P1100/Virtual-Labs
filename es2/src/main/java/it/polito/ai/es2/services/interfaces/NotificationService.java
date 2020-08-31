@@ -1,5 +1,9 @@
 package it.polito.ai.es2.services.interfaces;
 
+import it.polito.ai.es2.dtos.TeamDTO;
+
+import java.util.List;
+
 /**
  * These could be the problem in your task if you are using Gmail Server.
  * <p>
@@ -8,7 +12,6 @@ package it.polito.ai.es2.services.interfaces;
  * 3-Check Your UserName and Password.
  */
 public interface NotificationService {
-/*
   void sendMessage(String address, String subject, String body);
 
   boolean confirm(String token); // per confermare la partecipazione al gruppo
@@ -16,5 +19,4 @@ public interface NotificationService {
   boolean reject(String token); //per esprimere il proprio diniego a partecipare
 
   void notifyTeam(TeamDTO dto, List<Long> memberIds);
-  */
 }

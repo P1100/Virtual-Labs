@@ -1,15 +1,25 @@
 package it.polito.ai.es2.controllers;
 
 import it.polito.ai.es2.controllers.hateoas.ModelHelper;
+import it.polito.ai.es2.domains.TeamViewModel;
 import it.polito.ai.es2.dtos.StudentDTO;
+import it.polito.ai.es2.dtos.TeamDTO;
 import it.polito.ai.es2.services.interfaces.TeamService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.hateoas.CollectionModel;
+import org.springframework.hateoas.Link;
+import org.springframework.http.HttpStatus;
+import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 
+import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
+
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
 @RestController
 @RequestMapping("/api/teams")
@@ -28,7 +38,6 @@ public class APITeams_RestController {
     return members;
   }
 
-/*
   @GetMapping({"", "/"})
   public CollectionModel<TeamDTO> getAllTeams() {
     List<TeamDTO> allTeams = teamService.getAllTeams();
@@ -79,5 +88,4 @@ public class APITeams_RestController {
       return "error_template";
     return "csv_home";
   }
-  */
 }

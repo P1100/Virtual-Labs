@@ -1,5 +1,9 @@
 package it.polito.ai.es2.services;
 
+import it.polito.ai.es2.dtos.TeamDTO;
+import it.polito.ai.es2.entities.Course;
+import it.polito.ai.es2.entities.Team;
+import it.polito.ai.es2.entities.Token;
 import it.polito.ai.es2.repositories.StudentRepository;
 import it.polito.ai.es2.repositories.TeamRepository;
 import it.polito.ai.es2.repositories.TokenRepository;
@@ -8,8 +12,18 @@ import it.polito.ai.es2.services.interfaces.TeamService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.env.Environment;
+import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.net.InetAddress;
+import java.net.UnknownHostException;
+import java.sql.Timestamp;
+import java.time.LocalDateTime;
+import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
 
 /**
  * TODO: add formatted email body
@@ -30,7 +44,7 @@ public class NotificationServiceImpl implements NotificationService {
   String port;
   @Autowired
   Environment environment;
-/*
+
   @Override
   public void sendMessage(String emailAddress, String subject, String body) {
     SimpleMailMessage message = new SimpleMailMessage();
@@ -40,11 +54,11 @@ public class NotificationServiceImpl implements NotificationService {
     emailSender.send(message);
   }
 
-  *//**
+  /**
    * trovare team, e corso?, e rimuovere token
    * if team_corrente ha ancora tokens, ritorna false
    * altrimenti imposta team a status active, e ritorna true
-   *//*
+   */
   @Override
   @Transactional
   public boolean confirm(String idtoken) {
@@ -67,9 +81,9 @@ public class NotificationServiceImpl implements NotificationService {
     return false;
   }
 
-  *//**
+  /**
    * Trova team, rimuovi tutti i token relativi a team corrente (se ce ne sono) e invoca evict team + return true. Altrimenti false
-   *//*
+   */
   @Override
   @Transactional
   public boolean reject(String idtoken) {
@@ -81,9 +95,9 @@ public class NotificationServiceImpl implements NotificationService {
     return teamService.evictTeam(teamId);
   }
 
-  *//**
+  /**
    * Non c'è bisogno di controlli, poichè viene chiamato direttamente da propose team (che fa lui tutti i controlli)
-   *//*
+   */
   @Override
   @Transactional
   public void notifyTeam(TeamDTO teamDTO, List<Long> memberIds) {
@@ -126,5 +140,4 @@ public class NotificationServiceImpl implements NotificationService {
     } else
       return false;
   }
-  */
 }

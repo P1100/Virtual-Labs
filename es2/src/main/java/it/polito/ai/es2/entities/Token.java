@@ -14,12 +14,11 @@ import java.sql.Timestamp;
 public class Token {
   @Id
   private String id; // TODO: lowercase it
-  // TODO: no need to link to team table? Review later
   private Long teamId;
   private Timestamp expiryDate;
 
-  // TODO: ??? Link to student other way?
+  // Remove and change to unique field userId (@UniqueElements)
   @ManyToOne(fetch = FetchType.EAGER)
-  @JoinColumn(name = "student_id", referencedColumnName = "id")
+  @JoinColumn
   Student student;
 }

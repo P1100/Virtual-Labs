@@ -31,7 +31,7 @@ public class GlobalRuntimeExceptionHandler
     extends ResponseEntityExceptionHandler {
   @ExceptionHandler(value = {IllegalArgumentException.class, IllegalStateException.class})
   protected ResponseEntity<Object> genericJavaError(RuntimeException ex, WebRequest request) {
-    String bodyOfResponse = "{\"message\":\"Server Error\", \"status\":\"500\", \"error\":\"INTERNAL SERVER ERROR\"}";
+    String bodyOfResponse = "{\"message\":\"Server Error \", \"status\":\"500\", \"error\":\"INTERNAL SERVER ERROR\"}";
     log.severe(ex + " \n " + request);
     return handleExceptionInternal(ex, bodyOfResponse, new HttpHeaders(), HttpStatus.INTERNAL_SERVER_ERROR, request); // 500
   }
@@ -72,7 +72,10 @@ public class GlobalRuntimeExceptionHandler
     });
     sb.append("\"");
     sb.append(", \"status\":\"422\", \"error\":\"Unprocessable Entity\"}");
-    log.warning("DTO Validation errors: " + errors.values());
+    log.warning("DTO Validation errors: ");
+    for (String k : errors.keySet()) {
+      log.warning(k + errors.get(k));
+    }
     return new ResponseEntity<>(sb.toString(), HttpStatus.UNPROCESSABLE_ENTITY); // 422
   }
 }

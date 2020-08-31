@@ -2,12 +2,14 @@ package it.polito.ai.es2.services;
 
 import it.polito.ai.es2.controllers.APITeams_RestController;
 import it.polito.ai.es2.dtos.StudentDTO;
+import it.polito.ai.es2.dtos.TeamDTO;
+import it.polito.ai.es2.entities.Course;
+import it.polito.ai.es2.entities.Student;
 import it.polito.ai.es2.entities.Team;
 import it.polito.ai.es2.repositories.CourseRepository;
 import it.polito.ai.es2.repositories.StudentRepository;
 import it.polito.ai.es2.repositories.TeamRepository;
-import it.polito.ai.es2.services.exceptions.NullParameterException;
-import it.polito.ai.es2.services.exceptions.TeamNotFoundException;
+import it.polito.ai.es2.services.exceptions.*;
 import it.polito.ai.es2.services.interfaces.NotificationService;
 import it.polito.ai.es2.services.interfaces.TeamService;
 import lombok.extern.java.Log;
@@ -16,10 +18,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -63,21 +62,18 @@ public class TeamServiceImpl implements TeamService {
     return team.get().getMembers().stream().filter(Objects::nonNull).map(y -> modelMapper.map(y, StudentDTO.class)).collect(Collectors.toList());
   }
 
-
-
-  /*
-   *//**
+  /**
    * GET {@link APITeams_RestController#getAllTeams()}
-   *//*
+   */
   @Override
   public List<TeamDTO> getAllTeams() {
     log.info("getAllTeams()");
     return teamRepository.findAll().stream().map(x -> modelMapper.map(x, TeamDTO.class)).collect(Collectors.toList());
   }
 
-  *//**
+  /**
    * GET {@link it.polito.ai.es2.controllers.APITeams_RestController#getTeam(Long)}
-   *//*
+   */
   @Override
   public Optional<TeamDTO> getTeam(Long teamId) {
     log.info("getTeam(" + teamId + ")");
@@ -85,10 +81,9 @@ public class TeamServiceImpl implements TeamService {
     return teamRepository.findById(teamId).map(x -> modelMapper.map(x, TeamDTO.class));
   }
 
-
-  *//**
+  /**
    * {@link it.polito.ai.es2.controllers.APITeams_RestController#proposeTeam(String, String, List)}
-   *//*
+   */
   @Override
   public TeamDTO proposeTeam(String courseName, String team_name, List<Long> memberIds) {
     log.info("proposeTeam(" + courseName + ", " + team_name + ", " + memberIds + ")");
@@ -136,9 +131,9 @@ public class TeamServiceImpl implements TeamService {
     return return_teamDTO;
   }
 
-  *//**
+  /**
    * {@link it.polito.ai.es2.controllers.APITeams_RestController#evictTeam(Long)}
-   *//*
+   */
   @Override
   public boolean evictTeam(Long teamId) {
     log.info("evictTeam(" + teamId + ")");
@@ -157,9 +152,9 @@ public class TeamServiceImpl implements TeamService {
     return true;
   }
 
-  *//**
+  /**
    * @param status true sets team active, false sets team inactive
-   *//*
+   */
   @Override
   public boolean setTeamStatus(Long teamId, boolean status) {
     log.info("setTeamStatus(" + teamId + ", " + status + ")");
@@ -169,7 +164,6 @@ public class TeamServiceImpl implements TeamService {
     team.setActive(status); // no need to save, will be flushed automatically at the end of transaction (since not a new entity)
     return true;
   }
-  */
 }
 
 

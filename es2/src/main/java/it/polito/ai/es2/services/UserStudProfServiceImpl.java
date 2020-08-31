@@ -1,22 +1,25 @@
 package it.polito.ai.es2.services;
 
-import it.polito.ai.es2.dtos.CourseDTO;
-import it.polito.ai.es2.dtos.ProfessorDTO;
-import it.polito.ai.es2.dtos.StudentDTO;
-import it.polito.ai.es2.dtos.TeamDTO;
+import it.polito.ai.es2.dtos.*;
+import it.polito.ai.es2.entities.Professor;
 import it.polito.ai.es2.entities.Student;
+import it.polito.ai.es2.entities.User;
 import it.polito.ai.es2.repositories.CourseRepository;
 import it.polito.ai.es2.repositories.ProfessorRepository;
 import it.polito.ai.es2.repositories.StudentRepository;
+import it.polito.ai.es2.repositories.UserRepository;
 import it.polito.ai.es2.services.exceptions.FailedAddException;
 import it.polito.ai.es2.services.exceptions.NullParameterException;
-import it.polito.ai.es2.services.interfaces.UserService;
+import it.polito.ai.es2.services.exceptions.UsernameAlreadyUsedException;
+import it.polito.ai.es2.services.interfaces.UserStudProfService;
 import lombok.extern.java.Log;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.validation.Valid;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -29,7 +32,7 @@ import java.util.stream.Collectors;
 @Service
 @Transactional
 @Log
-public class UserServiceImpl implements UserService {
+public class UserStudProfServiceImpl implements UserStudProfService {
   @Autowired
   ModelMapper modelMapper;
   @Autowired
@@ -38,27 +41,37 @@ public class UserServiceImpl implements UserService {
   StudentRepository studentRepository;
   @Autowired
   ProfessorRepository professorRepository;
+  @Autowired
+  UserRepository userRepository;
+  // Bean created in WebConfig
+  @Autowired
+  private PasswordEncoder passwordEncoder;
 
   @Override
-  public boolean addProfessor(ProfessorDTO professor) {
-//    log.info("addProfessor(" + professor + ")");
-//    if (professor == null || professor.getId() == null) return false;
-//    Professor p = modelMapper.map(professor, Professor.class);
-//    try {
-//      if (!professorRepository.existsById(professor.getId())) {
-//        professorRepository.save(p);
-//        return true;
-//      }
-//      return false;
-//    } catch (IllegalArgumentException e) {
-//      log.warning("###### IllegalArgumentException:" + e);
-//      e.printStackTrace();
-//      return false;
-//    } catch (Exception e) {
-//      log.warning("###### Other Exception:" + e);
-//      e.printStackTrace();
-    return false;
-//    }
+  public UserDTO addNewUser(@Valid UserDTO user) {
+    if (userRepository.findTopByUsername(user.getUsername()) != null)
+      throw new UsernameAlreadyUsedException(user.getUsername());
+    User newUser = new User();
+    newUser.setUsername(user.getUsername());
+    newUser.setPassword(passwordEncoder.encode(user.getPassword()));
+    newUser.setRoles(UserDTO.convertStringsToRoles(user.getRoles()));
+    newUser.setEnabled(false);
+    newUser.setAccountNonExpired(true);
+    newUser.setAccountNonLocked(true);
+    newUser.setCredentialsNonExpired(true);
+    newUser.setActivationToken(newUser.getActivationToken());
+    System.out.println(newUser);
+    return modelMapper.map(userRepository.save(newUser), UserDTO.class);
+  }
+
+  /**
+   * Used by UserController
+   */
+  public boolean checkUser(String user, String pass) {
+    if (user == null || pass == null)
+      return false;
+    User u = userRepository.findTopByUsername(user);
+    return u != null && passwordEncoder.matches(pass, u.getPassword());
   }
 
   /**
@@ -79,11 +92,15 @@ public class UserServiceImpl implements UserService {
     return studentRepository.findById(studentId).map(x -> modelMapper.map(x, StudentDTO.class));
   }
 
-  /**
-   * POST {@link it.polito.ai.es2.controllers.APIStudents_RestController#addStudent(StudentDTO)}
-   */
+  //  //  {"id":"S33","name":"S33-name","firstName":"S33-FirstName"}
+//  // ---> Nella POST settare ContentType: application/json
+//  @PostMapping()
+//  public StudentDTO addStudent(@Valid @RequestBody StudentDTO studentDTO) {
+//    userService.addStudent(studentDTO);
+//    return modelHelper.enrich(studentDTO);
+//  }
   @Override
-  public void addStudent(StudentDTO student) {
+  public StudentDTO addStudent(@Valid StudentDTO student) {
     log.info("addStudent(" + student + ")");
     if (student == null || student.getId() == null)
       throw new FailedAddException("null parameters");
@@ -91,7 +108,19 @@ public class UserServiceImpl implements UserService {
     if (studentRepository.existsById(student.getId())) {
       throw new FailedAddException("duplicate");
     }
-    studentRepository.save(s);
+    return modelMapper.map(studentRepository.save(s), StudentDTO.class);
+  }
+
+  @Override
+  public ProfessorDTO addProfessor(@Valid ProfessorDTO professor) {
+    log.info("addProfessor(" + professor + ")");
+    if (professor == null || professor.getId() == null)
+      throw new FailedAddException("null parameters");
+    Professor s = modelMapper.map(professor, Professor.class);
+    if (professorRepository.existsById(professor.getId())) {
+      throw new FailedAddException("duplicate");
+    }
+    return modelMapper.map(professorRepository.save(s), ProfessorDTO.class);
   }
 
   /**

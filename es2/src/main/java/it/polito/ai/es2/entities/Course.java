@@ -64,6 +64,7 @@ public class Course {
 
   @Override
   public String toString() {
+    System.out.println("INSIDE TOSTRING");
     return "Course{} " + id;
   }
 
@@ -72,7 +73,7 @@ public class Course {
     if (this == o) return true;
     if (!(o instanceof Course)) return false;
     Course course = (Course) o;
-    return id.equalsIgnoreCase(course.id);
+    return id.equals(course.id);
   }
 
   @Override
