@@ -4,10 +4,10 @@ import {Title} from '@angular/platform-browser';
 import {MatDialog} from '@angular/material/dialog';
 import {AuthService} from '../services/auth.service';
 import {ActivatedRoute, NavigationEnd, Router} from '@angular/router';
-import {Observable, of, Subscription} from 'rxjs';
+import {Observable, Subscription} from 'rxjs';
 import {LoginComponent} from '../dialogs/login/login.component';
 import {CourseService} from '../services/course.service';
-import {distinct, exhaustMap, filter, map, tap} from 'rxjs/operators';
+import {filter, map, tap} from 'rxjs/operators';
 import {CourseEditComponent} from '../dialogs/course-edit/course-edit.component';
 import {Alert, AlertsService} from '../services/alerts.service';
 import {AppSettings} from '../app-settings';
@@ -59,7 +59,7 @@ export class HomeComponent implements OnInit, OnDestroy {
               private changeDetectorRef: ChangeDetectorRef
   ) {
     titleService.setTitle(this.title);
-    // I need to await that courses are actually updated  (toPromis)
+    // I need to await that courses are actually updated  (toPromise)
     const coursesObservable = courseService.getCourses().pipe(tap(x => {
       this.courses = x;
     }));
@@ -69,22 +69,15 @@ export class HomeComponent implements OnInit, OnDestroy {
       .pipe(
         filter((event) => event instanceof NavigationEnd),
         tap(() => subscribe?.unsubscribe()),
-        tap(x => console.log('NAV END')),
         map(() => this.route),
         map((rout) => {
-          // Moving to params child route (StudentsContComponent)
-          // return rout?.firstChild?.firstChild?.firstChild?.firstChild; // --> without "paramsInheritanceStrategy: 'always'"
           let lastchild: ActivatedRoute = rout;
           while (lastchild.firstChild != null) {
             lastchild = lastchild.firstChild;
           }
-          return lastchild; // -> last child will have all the params inherited
+          return lastchild; // -> last child will have all the params inherited (paramsInheritanceStrategy: 'always'")
         }),
-        tap(x => {
-          subscribe = x.params.subscribe(y => console.log(x, 'PRE PARAM MAP UPDATE', y));
-        }),
-        // Observable paramMap can emits multiple values (identical) after navEnd
-        exhaustMap((rout) => (rout != null) ? rout?.paramMap : of(null)), distinct()
+        map(rout => rout.snapshot.paramMap)
       ).subscribe((paramMap) => {
       // Wait for courses to be updated
       coursesObservable.toPromise().then(() => {
