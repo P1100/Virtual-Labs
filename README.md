@@ -1,4 +1,13 @@
-# Virtual Labs
+<h1 align="center">Virtual Labs
+    <br/>
+    <img alt="Virtuallbs" src="https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcRMtrxkSwGoK3DuGR-aXg5dilh_TA1_LCYEpw&usqp=CAU" height="200px" />
+
+</h1>
+<p align="center">
+ <img alt="Languages" src="https://img.shields.io/badge/Languages-Java | Typescript | HTML,CSS,JS-orange"/>
+ <img alt="Framework" src="https://img.shields.io/badge/Framework-Spring | Angular-green"/>
+</p>
+
 This is a didactical learning project, made for the Internet Applications course (2020). It is a web app for handling university courses, teams, students and all their assignments/laboratories. Is it kept up to date
 
 ## Technologies
@@ -21,7 +30,7 @@ This is a didactical learning project, made for the Internet Applications course
 ![](https://i.ibb.co/rGK9cL8/Virtual-Labs-ERmodel.jpg)
 
 ## Questions and Issues
-Feel free to post any.
+Feel free to ask any
 
 ## License
 
