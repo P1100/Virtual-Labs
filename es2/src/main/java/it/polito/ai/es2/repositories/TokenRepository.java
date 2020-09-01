@@ -9,9 +9,7 @@ import java.util.List;
 
 @Repository
 public interface TokenRepository extends JpaRepository<Token, String> {
-  List<Token> findAllByExpiryDateBeforeOrderByExpiryDate(Timestamp expiryDate); //per selezionare quelli scaduti
+  List<Token> findAllByExpiryDateBeforeOrderByExpiryDate(Timestamp expiryDate);
 
-  List<Token> findAllByExpiryDateBeforeOrderByExpiryDateDesc(Timestamp expiryDate); //per selezionare quelli scaduti
-
-  List<Token> findAllByTeamId(Long teamId); //per selezionare quelli legati ad un team
+  List<Token> findAllByTeamId(Long teamId);
 }

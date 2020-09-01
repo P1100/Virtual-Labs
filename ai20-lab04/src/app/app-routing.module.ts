@@ -61,7 +61,7 @@ const routes: Routes = [
                   },
                   {
                     path: 'teams',
-                    component: TeamsComponent
+                    component: UnauthorizedTabComponent
                   },
                   {
                     path: 'assignments',

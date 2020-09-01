@@ -59,7 +59,7 @@ public class TeamServiceImpl implements TeamService {
     Optional<Team> team = teamRepository.findById(teamId);
     if (team.isEmpty())
       throw new TeamNotFoundException(teamId);
-    return team.get().getMembers().stream().filter(Objects::nonNull).map(y -> modelMapper.map(y, StudentDTO.class)).collect(Collectors.toList());
+    return team.get().getStudents().stream().filter(Objects::nonNull).map(y -> modelMapper.map(y, StudentDTO.class)).collect(Collectors.toList());
   }
 
   /**
@@ -104,7 +104,7 @@ public class TeamServiceImpl implements TeamService {
     if (course.getTeams().size() != 0 &&
             course.getTeams()
                 .stream()
-                .map(Team::getMembers)
+                .map(Team::getStudents)
                 .flatMap(List::stream)
                 .distinct()
                 .anyMatch(student -> listStudentsProposal.stream().anyMatch(student::equals))
@@ -123,10 +123,11 @@ public class TeamServiceImpl implements TeamService {
     Team new_team = modelMapper.map(teamDTO, Team.class);
     // aggiungo nuovo team, a studenti e al corso
     for (Student student : new ArrayList<>(listStudentsProposal)) {
-      student.addTeam(new_team); // add su studenti
+      new_team.addStudent(student); //student.addTeam(new_team); // add su studenti
     }
-    course.addTeam(new_team); // add sul singolo corso
-    TeamDTO return_teamDTO = modelMapper.map(teamRepository.save(new_team), TeamDTO.class);
+    new_team.addSetCourse(course); //course.addTeam(new_team); // add sul singolo corso
+    Team savedTeam = teamRepository.save(new_team);
+    TeamDTO return_teamDTO = modelMapper.map(savedTeam, TeamDTO.class);
     notificationService.notifyTeam(return_teamDTO, memberIds);
     return return_teamDTO;
   }
@@ -142,26 +143,13 @@ public class TeamServiceImpl implements TeamService {
       return false;
     Team team_to_delete = optionalTeam.get();
 
-    for (Student student : team_to_delete.getMembers()) {
+    for (Student student : team_to_delete.getStudents()) {
       // usare "student.removeTeam()" rimuoverebbe studenti da team, il che creerebbe problemi in quanto modificherebbe il ciclo foreach enhanced in corso (java.util.ConcurrentModificationException)
       student.getTeams().remove(team_to_delete);
     }
     // --> non serve rimuovere students e course da team, perchè tanto lo cancello
     team_to_delete.getCourse().getTeams().remove(team_to_delete);
     teamRepository.delete(team_to_delete);
-    return true;
-  }
-
-  /**
-   * @param status true sets team active, false sets team inactive
-   */
-  @Override
-  public boolean setTeamStatus(Long teamId, boolean status) {
-    log.info("setTeamStatus(" + teamId + ", " + status + ")");
-    Team team = teamRepository.findById(teamId).orElse(null);
-    if (team == null || team.isActive() == status)
-      return false;
-    team.setActive(status); // no need to save, will be flushed automatically at the end of transaction (since not a new entity)
     return true;
   }
 }

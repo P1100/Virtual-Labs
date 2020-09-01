@@ -13,10 +13,13 @@ import it.polito.ai.es2.services.interfaces.UserStudProfService;
 import lombok.extern.java.Log;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.env.Environment;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.annotation.PostConstruct;
 import javax.validation.Valid;
 import java.util.List;
 import java.util.Optional;
@@ -34,6 +37,8 @@ public class UserStudProfServiceImpl implements UserStudProfService {
   @Autowired
   ModelMapper modelMapper;
   @Autowired
+  private PasswordEncoder passwordEncoder;   // Bean created in WebConfig
+  @Autowired
   CourseRepository courseRepository;
   @Autowired
   StudentRepository studentRepository;
@@ -43,27 +48,56 @@ public class UserStudProfServiceImpl implements UserStudProfService {
   UserRepository userRepository;
   @Autowired
   ImageRepository imageRepository;
-  // Bean created in WebConfig
   @Autowired
-  private PasswordEncoder passwordEncoder;
+  public TokenRepository tokenRepository;
+  //  @Autowired
+//  private NotificationService notificationService;
+  @Value("${server.port}")
+  private String port;
+  @Value("${server.address}")
+  private String address;
+  @Value("${myprop.prefixurl}")
+  private String httpPrefix; // http or https
+  public String baseUrl = "";
+  @Autowired
+  Environment environment;
+
+  @PostConstruct
+  public void init() {
+    baseUrl = httpPrefix + "://" + address + ":" + port;
+  }
 
   @Override
-  public UserDTO addNewUser(@Valid UserDTO user) {
-    if (userRepository.findTopByUsername(user.getUsername()) != null)
-      throw new UsernameAlreadyUsedException(user.getUsername());
+  public UserDTO addNewUser(@Valid UserDTO userDTO) {
+    if (userRepository.findTopByUsername(userDTO.getUsername()) != null)
+      throw new UsernameAlreadyUsedException(userDTO.getUsername());
     User newUser = new User();
-    newUser.setUsername(user.getUsername());
-    newUser.setPassword(passwordEncoder.encode(user.getPassword()));
-    newUser.setRoles(UserDTO.convertStringsToRoles(user.getRoles()));
-    newUser.setEnabled(true);
+    newUser.setUsername(userDTO.getUsername());
+    newUser.setPassword(passwordEncoder.encode(userDTO.getPassword()));
+    newUser.setRoles(UserDTO.convertStringsToRoles(userDTO.getRoles()));
+    newUser.setEnabled(true); // fales
     newUser.setAccountNonExpired(true);
     newUser.setAccountNonLocked(true);
     newUser.setCredentialsNonExpired(true);
-    newUser.setActivationToken(newUser.getActivationToken());
+    newUser.setTypeUser(userDTO.getTypeUser());
     System.out.println(newUser);
-    return modelMapper.map(userRepository.save(newUser), UserDTO.class);
-  }
+    User savedUser = userRepository.save(newUser);
+    System.out.println(savedUser);
 
+    if (userDTO.getTypeUser() == User.TypeUser.STUDENT) {
+      StudentDTO studentDTO = modelMapper.map(userDTO, StudentDTO.class);
+      studentDTO.setId(Long.valueOf(userDTO.getUsername()));
+      System.out.println(studentDTO);
+      addStudent(studentDTO);
+    } else {
+      ProfessorDTO professorDTO = modelMapper.map(userDTO, ProfessorDTO.class);
+      professorDTO.setId(Long.valueOf(userDTO.getUsername()));
+      System.out.println(professorDTO);
+      addProfessor(professorDTO);
+    }
+//    notificationService.notifyUser(userDTO);
+    return modelMapper.map(savedUser, UserDTO.class);
+  }
   @Override
   public StudentDTO addStudent(@Valid StudentDTO studentDTO) {
     log.info("addStudent(" + studentDTO + ")");
@@ -81,8 +115,7 @@ public class UserStudProfServiceImpl implements UserStudProfService {
     return modelMapper.map(studentRepository.save(s), StudentDTO.class);
   }
 
-  @Override
-  public ProfessorDTO addProfessor(@Valid ProfessorDTO professorDTO) {
+  private ProfessorDTO addProfessor(@Valid ProfessorDTO professorDTO) {
     log.info("addProfessor(" + professorDTO + ")");
     if (professorDTO == null || professorDTO.getId() == null)
       throw new FailedAddException("null parameters");

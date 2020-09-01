@@ -34,7 +34,7 @@ public class MySecurityChecker {
   public boolean isTeamOwner(Long id, String principal_username) {
     if (id == null || principal_username.isBlank())
       return false;
-    List<Student> students = teamRepository.findById(id).map(team -> team.getMembers()).orElse(null);
+    List<Student> students = teamRepository.findById(id).map(team -> team.getStudents()).orElse(null);
     if (students == null)
       return false;
     return students.stream().anyMatch(student -> student.getId().equals(principal_username));

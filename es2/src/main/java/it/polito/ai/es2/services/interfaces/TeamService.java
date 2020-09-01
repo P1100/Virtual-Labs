@@ -17,6 +17,4 @@ public interface TeamService {
   TeamDTO proposeTeam(String courseId, String name, List<Long> memberIds);
 
   boolean evictTeam(Long teamId);
-
-  boolean setTeamStatus(Long teamId, boolean status);
 }

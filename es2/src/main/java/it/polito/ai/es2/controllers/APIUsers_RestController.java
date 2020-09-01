@@ -1,8 +1,7 @@
 package it.polito.ai.es2.controllers;
 
-import it.polito.ai.es2.dtos.ProfessorDTO;
-import it.polito.ai.es2.dtos.StudentDTO;
 import it.polito.ai.es2.dtos.UserDTO;
+import it.polito.ai.es2.entities.User;
 import it.polito.ai.es2.securityconfig.jwt.JwtRequest;
 import it.polito.ai.es2.securityconfig.jwt.JwtResponse;
 import it.polito.ai.es2.securityconfig.jwt.JwtTokenUtil;
@@ -28,22 +27,21 @@ import java.util.Arrays;
 @PreAuthorize("permitAll()")
 public class APIUsers_RestController {
   @Autowired
-  private AuthenticationManager authenticationManager;
-  @Autowired
   private JwtTokenUtil jwtTokenUtil;
+  @Autowired
+  private ModelMapper modelMapper;
+  @Autowired
+  private AuthenticationManager authenticationManager;
   @Qualifier("userDetailsServiceImpl")
   @Autowired
   private UserDetailsService userDetailsService;
-  @Autowired
-  private ModelMapper modelMapper;
   @Autowired
   private UserStudProfService userStudProfService;
 
   // {"username":"admin","password":"a"}
   @RequestMapping(value = "/authenticate", method = RequestMethod.POST)
   public ResponseEntity<?> login(@RequestBody JwtRequest authenticationRequest) throws Exception {
-    try {
-      // Using UserDetailsServiceImpl (WebConfig).
+    try { // Using UserDetailsServiceImpl (WebConfig)
       authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(authenticationRequest.getUsername(), authenticationRequest.getPassword()));
     } catch (DisabledException e) {
       throw new Exception("USER_DISABLED", e);
@@ -54,33 +52,27 @@ public class APIUsers_RestController {
     String token = jwtTokenUtil.generateToken(userDetails);
     JwtResponse jwtResponse = new JwtResponse(token);
     jwtResponse.setRole(userDetails.getAuthorities().toArray()[0].toString().toLowerCase().replace("role_", ""));
-    System.out.println(ResponseEntity.ok(jwtResponse));
+//    System.out.println(ResponseEntity.ok(jwtResponse));
     return ResponseEntity.ok(jwtResponse);
   }
 
-  //{"username":"1354623","password":"passss","firstName":"fi","lastName":"la","email":"s111111@studenti.polito.it", "roles":["ADMIN", "user"]}
+  //{"username":"1354623","password":"passss","firstName":"fi","lastName":"la","email":"s111111@studenti.polito.it", "roles":["ADMIN", "STUDENT"]}
   @PostMapping("/student")
   public UserDTO registerStudent(@Valid @RequestBody UserDTO userDTO) {
     System.out.println(userDTO);
     userDTO.setRoles(Arrays.asList("STUDENT"));
-    StudentDTO studentDTO = modelMapper.map(userDTO, StudentDTO.class);
-    studentDTO.setId(Long.valueOf(userDTO.getUsername()));
-    System.out.println(studentDTO);
+    userDTO.setTypeUser(User.TypeUser.STUDENT);
     System.out.println(userStudProfService.addNewUser(userDTO));
-    System.out.println(userStudProfService.addStudent(studentDTO));
     return userDTO;
   }
 
-  // {"username":"345323445","password":"passss","firstName":"prof","lastName":"la","email":"d111111@polito.it", "roles":["ADMIN", "user"]}
+  // {"username":"345323445","password":"passss","firstName":"prof","lastName":"la","email":"d111111@polito.it", "roles":["ADMIN", "PROFESSOR"]}
   @PostMapping("/professor")
   public UserDTO registerProfessor(@Valid @RequestBody UserDTO userDTO) {
     System.out.println(userDTO);
     userDTO.setRoles(Arrays.asList("PROFESSOR"));
-    ProfessorDTO professorDTO = modelMapper.map(userDTO, ProfessorDTO.class);
-    professorDTO.setId(Long.valueOf(userDTO.getUsername()));
-    System.out.println(professorDTO);
+    userDTO.setTypeUser(User.TypeUser.PROFESSOR);
     System.out.println(userStudProfService.addNewUser(userDTO));
-    System.out.println(userStudProfService.addProfessor(professorDTO));
     return userDTO;
   }
 }
