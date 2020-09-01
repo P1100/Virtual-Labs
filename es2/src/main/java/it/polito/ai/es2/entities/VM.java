@@ -38,4 +38,36 @@ public class VM {
   @OneToOne(cascade = CascadeType.MERGE)
   @JoinColumn
   private Image imageVm;
+
+  public void addSetTeam(Team x) {
+    if (team != null)
+      throw new RuntimeException("JPA-Team: overriding a OneToOne or ManyToOne field might be an error");
+    team = x;
+    x.getVms().add(this);
+  }
+
+  public void addSetCreator(Student x) {
+    if (creator != null)
+      throw new RuntimeException("JPA-Team: It's not possible to change course for a team");
+    creator = x;
+    x.getVmsCreated().add(this);
+  }
+
+  public void addShareOwner(Student x) {
+    sharedOwners.add(x);
+    x.getVmsOwned().add(this);
+  }
+
+  public void removeSharedOwner(Student x) {
+    sharedOwners.remove(x);
+    x.getVmsOwned().add(this);
+  }
+
+  public void addSetImage(Image x) {
+    if (imageVm != null)
+      throw new RuntimeException("JPA-Team: overriding a OneToOne or ManyToOne field might be an error");
+    imageVm = x;
+    x.setVm(this);
+  }
+
 }

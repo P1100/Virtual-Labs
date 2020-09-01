@@ -1,7 +1,6 @@
 package it.polito.ai.es2.entities;
 
 import lombok.Data;
-import org.hibernate.validator.constraints.UniqueElements;
 
 import javax.persistence.*;
 import javax.validation.constraints.Email;
@@ -33,17 +32,26 @@ public class Professor {
   @Email
   @Pattern(regexp = "d[0-9]{1,9}@polito\\.it")
   private String email;
+
   @OneToOne(cascade = CascadeType.ALL)
   @JoinColumn
   private Image profilePhoto;
 
-  @ManyToMany(cascade = {CascadeType.MERGE, CascadeType.PERSIST})
-  @JoinTable
-  @UniqueElements
+  @ManyToMany(mappedBy = "professors", cascade = {CascadeType.MERGE, CascadeType.PERSIST})
   private List<Course> courses = new ArrayList<>(); // --> teams, vms
 
   @OneToMany(mappedBy = "creator", cascade = {CascadeType.MERGE, CascadeType.PERSIST})
   private List<Assignment> assignments;
+
+  @OneToOne(mappedBy = "professor")
+  private User user;
+
+  public void addSetProfilePhoto(Image x) {
+    if (profilePhoto != null)
+      throw new RuntimeException("JPA-Team: overriding a OneToOne or ManyToOne field might be an error");
+    profilePhoto = x;
+    x.setProfessor(this);
+  }
 
   @Override
   public String toString() {

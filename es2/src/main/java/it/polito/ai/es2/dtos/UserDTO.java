@@ -1,12 +1,14 @@
 package it.polito.ai.es2.dtos;
 
 import it.polito.ai.es2.entities.Role;
+import it.polito.ai.es2.entities.User;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 
+import javax.persistence.Transient;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Pattern;
@@ -25,16 +27,21 @@ public class UserDTO {
   @Size(min = 6, max = 30)
   private String password;
   private List<String> roles = new ArrayList<>();
+  private User.TypeUser typeUser;
 
+  @Transient
   private Long id;  // alias of username
+  @Transient
   @NotBlank
   private String firstName;
+  @Transient
   @NotBlank
   private String lastName;
+  @Transient
   @Email
   @Pattern(regexp = "[sd][0-9]{1,9}@(studenti\\.)?polito\\.it")
   private String email;
-
+  @Transient
   private Long imageId;
 
   /**

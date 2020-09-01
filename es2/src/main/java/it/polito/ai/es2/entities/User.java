@@ -19,20 +19,30 @@ import java.util.List;
 // "User" is a reserved word in some SQL implementations, so we escape the table name [SQL quoted identifiers]
 @Table(name = "\"user\"")
 public class User {
+  /**
+   * Used only internally by the back end
+   */
+  public enum TypeUser {STUDENT, PROFESSOR}
+
   @Id
   private String username;
   @NotBlank
   private String password;
 
-  boolean enabled = false;
-  boolean accountNonExpired = false;
-  boolean credentialsNonExpired = false;
-  boolean accountNonLocked = true;
+  private boolean enabled = false;
+  private boolean accountNonExpired = false;
+  private boolean credentialsNonExpired = false;
+  private boolean accountNonLocked = true;
 
-  //  @Size(max = 20)
-//  @Column(length = 20)
-//  @JsonIgnore
-  private String activationToken;
+  private TypeUser typeUser;
+
+  @OneToOne(cascade = CascadeType.ALL)
+  @JoinColumn
+  private Student student;
+
+  @OneToOne(cascade = CascadeType.ALL)
+  @JoinColumn
+  private Professor professor;
 
   @ManyToMany(fetch = FetchType.EAGER, cascade = {CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})
   @JoinTable(name = "users_roles", joinColumns = @JoinColumn(name = "username", referencedColumnName = "username"), inverseJoinColumns = @JoinColumn(name = "authority", referencedColumnName = "name"))
@@ -52,5 +62,19 @@ public class User {
       stringRoles.add(role.getName());
     }
     return stringRoles;
+  }
+
+  public void addSetStudent(Student x) {
+    if (student != null)
+      throw new RuntimeException("JPA-Team: overriding a OneToOne or ManyToOne field might be an error");
+    student = x;
+    x.setUser(this);
+  }
+
+  public void addSetProfessor(Professor x) {
+    if (professor != null)
+      throw new RuntimeException("JPA-Team: overriding a OneToOne or ManyToOne field might be an error");
+    professor = x;
+    x.setUser(this);
   }
 }

@@ -4,7 +4,11 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import javax.persistence.*;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.validation.constraints.FutureOrPresent;
 import java.sql.Timestamp;
 
 @Data
@@ -13,12 +17,17 @@ import java.sql.Timestamp;
 @Entity
 public class Token {
   @Id
-  private String id; // TODO: lowercase it
-  private Long teamId;
+  private String id;
+  private Long teamId; // TODO: remove later
+  @FutureOrPresent
   private Timestamp expiryDate;
 
-  // Remove and change to unique field userId (@UniqueElements)
-  @ManyToOne(fetch = FetchType.EAGER)
+  /* Unilateral relationships */
+  @ManyToOne(optional = true)
   @JoinColumn
-  Student student;
+  private User user;
+  // TODO: Must remove teamId first
+//  @ManyToOne(optional = true)
+//  @JoinColumn
+//  private Team team;
 }

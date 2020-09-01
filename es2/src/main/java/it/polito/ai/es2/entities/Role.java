@@ -2,7 +2,6 @@ package it.polito.ai.es2.entities;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.ToString;
 
 import javax.persistence.Entity;
 import javax.persistence.Id;
@@ -21,8 +20,8 @@ public class Role {
   private String name;
   // Only the Role name is used by Spring Security, optional parameter
   private String description;
+
   @ManyToMany(mappedBy = "roles")
-  @ToString.Exclude
   private List<User> users = new ArrayList<>();
 
   public Role(String role) {

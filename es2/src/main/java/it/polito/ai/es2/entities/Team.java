@@ -40,24 +40,25 @@ public class Team {
   @ManyToMany(cascade = {CascadeType.MERGE, CascadeType.PERSIST})
   @JoinTable(name = "teams_students", joinColumns = @JoinColumn(name = "team_id"),
       inverseJoinColumns = @JoinColumn(name = "student_id"))
-  List<Student> members = new ArrayList<>();
+  List<Student> students = new ArrayList<>();
 
   @OneToMany(mappedBy = "team")
   private List<VM> vms = new ArrayList<>();
 
-  public void setCourse(Course new_course) {
+  public void addSetCourse(Course new_course) {
     if (course != null)
-      course.getTeams().remove(this);
-    if (new_course == null) {
-      course = null;
-    } else {
-      new_course.getTeams().add(this);
-      course = new_course;
-    }
+      throw new RuntimeException("JPA-Team: overriding a OneToOne or ManyToOne field might be an error");
+    new_course.getTeams().add(this);
+    course = new_course;
   }
 
   public void addStudent(Student new_student) {
-    members.add(new_student);
+    students.add(new_student);
     new_student.getTeams().add(this);
+  }
+
+  public void removeStudent(Student x) {
+    students.remove(x);
+    x.getTeams().add(this);
   }
 }

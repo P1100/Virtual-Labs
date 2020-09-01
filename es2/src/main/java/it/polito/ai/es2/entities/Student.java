@@ -33,20 +33,19 @@ public class Student {
   @Email
   @Pattern(regexp = "s[0-9]{1,9}@studenti\\.polito\\.it")
   private String email;
+
   @OneToOne(cascade = CascadeType.ALL)
   @JoinColumn
   private Image profilePhoto;
 
-  @ManyToMany
-  @JoinTable(name = "student_course", joinColumns = @JoinColumn(name = "student_id"),
-      inverseJoinColumns = @JoinColumn(name = "course_id"))
+  @ManyToMany(mappedBy = "students")
   @UniqueElements
   private List<Course> courses = new ArrayList<>();
 
   /**
    * Multiple teams because each student might be enrolled in multiple courses at the same time
    */
-  @ManyToMany(mappedBy = "members")
+  @ManyToMany(mappedBy = "students")
   List<Team> teams = new ArrayList<>(); // --> vms total
 
   @OneToMany(mappedBy = "creator")
@@ -58,10 +57,8 @@ public class Student {
   @OneToMany(mappedBy = "student", cascade = CascadeType.ALL)
   private List<Implementation> implementations; // --> assignment
 
-  public void addTeam(Team team) {
-    teams.add(team);
-    team.getMembers().add(this);
-  }
+  @OneToOne(mappedBy = "student")
+  private User user;
 
   @Override
   public String toString() {
