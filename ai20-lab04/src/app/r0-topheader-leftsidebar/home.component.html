@@ -3,7 +3,7 @@
     <button id='toolbar-button'
             type="button" aria-label="Toggle sidenav"
             mat-icon-button
-            (click)="drawer.toggle()">
+            (click)="isLogged ? drawer.toggle() : ''">
       <mat-icon aria-label="Side nav toggle icon">menu</mat-icon>
     </button>
     <a routerLink="/home" class="title-link-not-active">{{title}}</a>
@@ -14,16 +14,9 @@
 
     <span class="fill-remaining-space-header"></span>
 
-    <button mat-button type="button" style="color: chartreuse">Test</button>
-    <button mat-button type="button" (click)="openRegisterDialog()">Register</button>
-    <!--        <button mat-button type="button" *ngIf="loggedUserName == ''">Register</button>-->
-    <button mat-button type="button" *ngIf="isLogged">{{loggedUserName}}</button>
-    <!--  <button mat-button type="button"-->
-    <!--          (click)="openLoginDialogTemplate()">    {{isLogged}}-Test-->
-    <!--  </button>-->
-    <button mat-button
-            type="button" aria-label="login and logout"
-            (click)="clickLoginLogout()">
+    <button *ngIf="!isLogged" mat-button type="button" (click)="openRegisterDialog()">Register</button>
+    <span *ngIf="isLogged" style="font-size: medium">{{loggedUserName}}</span>
+    <button mat-button type="button" aria-label="login and logout" (click)="clickLoginLogout()">
       {{isLogged == true ? 'Logout' : 'Login'}}
     </button>
   </mat-toolbar>
@@ -35,8 +28,8 @@
 </div>
 
 <mat-sidenav-container>
-  <mat-sidenav name="NavListOfCourses" #drawer mode="side" opened position="start">
-    <mat-accordion multi="false" #acc>
+  <mat-sidenav name="NavListOfCourses" #drawer mode="side" [opened]="isLogged" position="start">
+    <mat-accordion multi="false" #acc *ngIf="isLogged">
       <mat-nav-list>
         <mat-list-item id="add-course-button" (click)="openAddCourseDialog()">
           <button mat-raised-button>
@@ -44,7 +37,6 @@
             Add course
           </button>
         </mat-list-item>
-        <!--    TODO: modificare lista corsi, e permessi di edit/delete, in base a login/auth (professor sees all, student only enrolled ones)-->
         <mat-nav-list *ngFor="let course of courses; index as i">
           <mat-expansion-panel togglePosition="before" [class.mat-elevation-z0]="true" dense
                                [(expanded)]="panelOpenState[i]"

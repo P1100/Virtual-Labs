@@ -25,7 +25,7 @@ export class CourseEditComponent {
       (c: Course[]) => this.course = c[0],
       error => {
         this.dialogRef.close();
-        this.alertsService.setAlert('danger', 'Failed to get course. ' + error);
+        this.alertsService.setAlert('danger', 'Course edit: failed to get course info. ' + error);
       });
   }
 

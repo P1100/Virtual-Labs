@@ -1,17 +1,17 @@
 <h1 mat-dialog-title>Login</h1>
 <div mat-dialog-content>
-  <!--TODO: need to add * waiting for server response... * message under login-->
   <form autocomplete="off" novalidate [formGroup]="form">
-    <mat-error *ngIf="form.controls.email.errors?.required"> Missing required fields.</mat-error>
+    <mat-error *ngIf="form.controls.serial.errors?.required || form.controls.password.errors?.required"> Missing required fields.</mat-error>
+    <mat-error *ngIf="form.errors?.fakeName">Username and password must be different!</mat-error>
     <br>
     <mat-form-field>
-      <mat-label>Email:</mat-label>
-      <input matInput placeholder="email" name="email" formControlName="email">
+      <mat-label>Username (serial):</mat-label>
+      <input matInput placeholder="serial" name="serial" formControlName="serial">
     </mat-form-field>
     <br>
     <mat-form-field>
       <mat-label>Password:</mat-label>
-      <input matInput placeholder="password" name="password" formControlName="password" type="password">
+      <input matInput placeholder="password" name="password" formControlName="password" type="password" autocomplete="off">
     </mat-form-field>
   </form>
 
@@ -19,15 +19,4 @@
 <div mat-dialog-actions>
   <button mat-raised-button color="primary" (click)="login()" style="margin-right: 1px">Login</button>
   <button mat-button (click)="onCancelClick()" style="margin-right: 1px">Cancel</button>
-  <!--  <button mat-raised-button color="accent" (click)="logout()">Logout</button>-->
 </div>
-<!-- TODO: TESTING CODE, remove later-->
-<br/>
-<pre>
-form value: {{ form.value | json }}
-  form status: {{ form.status | json }}
-  form valid: {{ form.valid | json }}
-  form email status: {{ form.controls.email.status | json }}
-  form password status: {{ form.controls.password.status | json }}
-  user: {{ user | json}}
-</pre>

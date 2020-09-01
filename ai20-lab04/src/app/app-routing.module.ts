@@ -1,6 +1,6 @@
 import {NgModule} from '@angular/core';
 import {RouterModule, Routes} from '@angular/router';
-import {EmptyComponent} from './r1-tabs-menu/empty.component';
+import {WelcomeEmptyComponent} from './r1-tabs-menu/welcome-empty.component';
 import {VmsContComponent} from './r2-inner-tab/vms/vms-cont.component';
 import {StudentsContComponent} from './r2-inner-tab/teacher/students/students-cont.component';
 import {PageNotFoundComponent} from './r0-topheader-leftsidebar/page-not-found.component';
@@ -9,6 +9,8 @@ import {TabsNavComponent} from './r1-tabs-menu/tabs-nav.component';
 import {HomeComponent} from './r0-topheader-leftsidebar/home.component';
 import {TestingComponent} from './r2-inner-tab/testing/testing.component';
 import {TeamsComponent} from './r2-inner-tab/teams/teams.component';
+import {AuthGuard} from './services/auth.guard';
+import {UnauthorizedComponent} from './r0-topheader-leftsidebar/unauthorized.component';
 
 const routes: Routes = [
   {
@@ -16,26 +18,27 @@ const routes: Routes = [
     component: TestingComponent
   },
   {
+    path: 'unauthorized',
+    component: UnauthorizedComponent
+  },
+  {
     path: '',
     component: HomeComponent,
     children: [
       {
         path: 'home',
-        component: EmptyComponent
+        component: WelcomeEmptyComponent
       },
       {
         path: 'teacher',
+        canActivateChild: [AuthGuard],
         children: [
           {
             path: '',
-            component: EmptyComponent
+            component: WelcomeEmptyComponent
           },
           {
             path: 'course',
-// TODO: reactivate Auth logic later (look es5 commit to be sure, not everything is to uncomment...)
-            // canActivate: [AuthGuard],
-            // canActivateChild: [AuthGuard],
-            // canLoad: []
             children: [
               {
                 path: ':id',

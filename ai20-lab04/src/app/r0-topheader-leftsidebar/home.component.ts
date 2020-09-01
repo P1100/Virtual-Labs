@@ -59,14 +59,22 @@ export class HomeComponent implements OnInit, OnDestroy {
   ) {
     titleService.setTitle(this.title);
     const promise = new Promise((resolve, reject) => {
-      courseService.getCourses().subscribe(courses => {
-        this.courses = courses;
-        resolve('Courses initialized!');
-      });
+      if (this.isLogged) {
+        courseService.getCourses().subscribe(courses => {
+            this.courses = courses;
+            resolve('Courses initialized!');
+          },
+          e => {
+            this.alertsService.setAlert('danger', 'Couldn\'t init courses. ' + e);
+          });
+      } else {
+        resolve('User not logged');
+      }
     });
     // At every routing change, update nameActiveCourse (top toolbar) and idActiveCourse, plus some resets/refresh/checks
     this.router.events
       .pipe(
+        filter(() => this.isLogged),
         filter((event) => event instanceof NavigationEnd),
         map(() => this.route),
         map((rout) => {
@@ -78,7 +86,7 @@ export class HomeComponent implements OnInit, OnDestroy {
         }),
         map(rout => rout.snapshot.paramMap)
       ).subscribe((paramMap) => {
-      // Wait for courses to be initialized at start
+      // Wait for courses to be initialized (init)
       promise.then(() => {
         const oldCourseId = this.idActiveCourse;
         if (this.courses == null || paramMap?.get('id') == null) {
@@ -103,12 +111,19 @@ export class HomeComponent implements OnInit, OnDestroy {
         }
       });
     });
-    this.authSubscription = this.authService.getIsLoggedSubject().subscribe(x => {
-      this.isLogged = x;
-      if (x === true) {
+    this.authSubscription = this.authService.getIsLoggedSubject().subscribe(newLogStatus => {
+      const previousLoggedStatus = this.isLogged;
+      this.isLogged = newLogStatus;
+      if (newLogStatus === true) {
         this.loggedUserName = localStorage.getItem('username');
+        if (previousLoggedStatus == false && newLogStatus == true) {
+          this.courseService.getCourses().subscribe(x => this.courses = x,
+            e => {
+              this.alertsService.setAlert('danger', 'Couldn\'t update courses after login! ' + e);
+              localStorage.clear();
+            });
+        }
       } else {
-        localStorage.removeItem('username');
         this.loggedUserName = null;
       }
     });
@@ -121,63 +136,48 @@ export class HomeComponent implements OnInit, OnDestroy {
       }
     });
   }
-  openRegisterDialog() {
-    if (this.dialogRef) {
-      return;
-    }
-    const dialogRef = this.dialog.open(RegisterComponent, {
-      maxWidth: '400px', autoFocus: true, hasBackdrop: true, disableClose: true, closeOnNavigation: true
-    });
-    dialogRef.afterClosed().subscribe((idImage: number) => {
-        this.dialogRef = null;
-        if (idImage > 0) {
-          this.imageService.getImage(idImage).subscribe(imageDto => this.retrievedImage = imageDto.imageStringBase64);
-        }
-      }, () => this.alertsService.setAlert('danger', 'Dialog Error')
-    );
-  }
   openAddCourseDialog(): void {
     if (this.dialogRef) {
       return;
     }
-    const dialogRef = this.dialog.open(CourseAddComponent, {
+    this.dialogRef = this.dialog.open(CourseAddComponent, {
       maxWidth: '400px', autoFocus: true, hasBackdrop: true, disableClose: true, closeOnNavigation: true
     });
-    dialogRef.afterClosed().subscribe((res: string) => {
+    this.dialogRef.afterClosed().subscribe((res: string) => {
         this.dialogRef = null;
         if (res != undefined) {
           this.courseService.getCourses().subscribe(x => this.courses = x);
         }
-      }, () => this.alertsService.setAlert('danger', 'Dialog Error')
+      }, () => this.alertsService.setAlert('danger', 'Add Course Dialog Error')
     );
   }
   openEditCourseDialog(): void {
     if (this.dialogRef) {
       return;
     }
-    const dialogRef = this.dialog.open(CourseEditComponent, {
+    this.dialogRef = this.dialog.open(CourseEditComponent, {
       maxWidth: '400px', autoFocus: true, hasBackdrop: true, disableClose: true, closeOnNavigation: true,
       data: {courseName: this.nameActiveCourse, courseId: this.idActiveCourse}
     });
-    dialogRef.afterClosed().subscribe((res: string) => {
+    this.dialogRef.afterClosed().subscribe((res: string) => {
         this.dialogRef = null;
-      }, error => this.alertsService.setAlert('danger', 'Dialog Error!')
+      }, error => this.alertsService.setAlert('danger', 'Edit Course Dialog Error!')
     );
   }
   openDeleteCourseDialog(): void {
     if (this.dialogRef) {
       return;
     }
-    const dialogRef = this.dialog.open(CourseDeleteComponent, {
+    this.dialogRef = this.dialog.open(CourseDeleteComponent, {
       maxWidth: '400px', autoFocus: false, hasBackdrop: true, disableClose: false, closeOnNavigation: true,
       data: {courseName: this.nameActiveCourse, courseId: this.idActiveCourse}
     });
-    dialogRef.afterClosed().subscribe((res: string) => {
+    this.dialogRef.afterClosed().subscribe((res: string) => {
         this.dialogRef = null;
         if (res != undefined) {
           this.courseService.getCourses().subscribe(x => this.courses = x);
         }
-      }, error => this.alertsService.setAlert('danger', 'Dialog Error!')
+      }, error => this.alertsService.setAlert('danger', 'Delete COurse Dialog Error!')
     );
   }
   openLoginDialogReactive(): void {
@@ -188,18 +188,33 @@ export class HomeComponent implements OnInit, OnDestroy {
       maxWidth: '400px', autoFocus: true, hasBackdrop: true, disableClose: true, closeOnNavigation: false
     });
     // Settings what to do when dialog is closed
-    this.dialogRef.afterClosed().subscribe(() => this.dialogRef = null);
+    this.dialogRef.afterClosed().subscribe((res: string) => {
+        this.dialogRef = null;
+      }, error => this.alertsService.setAlert('danger', 'Login Dialog Error!')
+    );
+  }
+  openRegisterDialog() {
+    if (this.dialogRef) {
+      return;
+    }
+    this.dialogRef = this.dialog.open(RegisterComponent, {
+      maxWidth: '400px', autoFocus: true, hasBackdrop: true, disableClose: true, closeOnNavigation: true
+    });
+    this.dialogRef.afterClosed().subscribe((idImage: number) => {
+        this.dialogRef = null;
+        if (idImage > 0) {
+          this.imageService.getImage(idImage).subscribe(imageDto => this.retrievedImage = imageDto.imageStringBase64);
+        }
+      }, () => this.alertsService.setAlert('danger', 'Registration Dialog Error')
+    );
   }
   clickLoginLogout() {
     if (this.isLogged) {
-      console.log('logout');
       this.authService.logout();
       this.router.navigateByUrl('/home');
     } else {
-      console.log('login');
       // navigando su doLogin apre in automatico la dialog in ngOnInit
       this.router.navigateByUrl('/home?doLogin=true');
-      console.log(this.dialogRef);
       this.openLoginDialogReactive();
     }
   }

@@ -16,7 +16,7 @@ import {Image} from '../../models/image.model';
   styles: ['mat-form-field {width: 100%} mat-radio-button {margin-right: 12px}']
 })
 export class RegisterComponent {
-  user = new User(null, null, null, null, null,  'd000000@polito.it', []);
+  user = new User(null, null, null, null, null, 'd000000@polito.it', []);
   checkboxNoValidate = true;
   showCheckboxNoValidateForTesting = AppSettings.devtest;
   isStudentRadio = 'student';
@@ -44,9 +44,14 @@ export class RegisterComponent {
       // obs = forkJoin([obs, this.imageService.uploadImage(this.uploadImageData)]);
       promise = new Promise((resolve, reject) => {
         this.imageService.uploadImage(this.uploadImageData).subscribe(x => {
-          returnedImageDto = x;
-          resolve(returnedImageDto);
-        });
+            returnedImageDto = x;
+            resolve(returnedImageDto);
+          },
+          e => {
+            this.alertsService.setAlert('danger', 'Upload image error in registration. ' + e);
+            this.dialogRef.close();
+            return;
+          });
       });
     } else {
       promise = new Promise((resolve, reject) => {

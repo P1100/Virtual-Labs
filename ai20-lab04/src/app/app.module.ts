@@ -32,7 +32,7 @@ import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {AssignmentsContComponent} from './r2-inner-tab/assignments/assignments-cont.component';
 import {BrowserModule} from '@angular/platform-browser';
 import {TestingComponent} from './r2-inner-tab/testing/testing.component';
-import {EmptyComponent} from './r1-tabs-menu/empty.component';
+import {WelcomeEmptyComponent} from './r1-tabs-menu/welcome-empty.component';
 import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
 import {StudentsContComponent} from './r2-inner-tab/teacher/students/students-cont.component';
 import {AppComponent} from './app.component';
@@ -44,6 +44,7 @@ import {MatRadioModule} from '@angular/material/radio';
 import {CourseDeleteComponent} from './dialogs/course-delete/course-delete.component';
 import {CourseAddComponent} from './dialogs/course-add/course-add.component';
 import {AuthInterceptor} from './services/auth.interceptor';
+import {UnauthorizedComponent} from './r0-topheader-leftsidebar/unauthorized.component';
 
 @NgModule({
   imports: [
@@ -90,13 +91,14 @@ import {AuthInterceptor} from './services/auth.interceptor';
     HomeComponent,
     TabsNavComponent,
     LoginComponent,
-    EmptyComponent,
+    WelcomeEmptyComponent,
     LoginComponent,
     RegisterComponent,
     TestingComponent,
     CourseEditComponent,
     CourseDeleteComponent,
     CourseAddComponent,
+    UnauthorizedComponent
   ],
   providers: [HttpClientModule, {provide: MAT_DIALOG_DEFAULT_OPTIONS, useValue: {hasBackdrop: false}},
     {provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true}],

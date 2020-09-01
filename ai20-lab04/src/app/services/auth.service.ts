@@ -1,7 +1,7 @@
 import {Injectable} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
 
-import {catchError, tap} from 'rxjs/operators';
+import {catchError, retry, tap} from 'rxjs/operators';
 import * as moment from 'moment';
 import {User} from '../models/user.model';
 import {BehaviorSubject, Observable} from 'rxjs';
@@ -20,22 +20,25 @@ export class AuthService {
     if (this.isLoggedIn()) {
       this.isLoggedSubject = new BehaviorSubject(true);
     } else {
+      localStorage.clear();
       this.isLoggedSubject = new BehaviorSubject(false);
     }
   }
   public getIsLoggedSubject(): Observable<any> {
     return this.isLoggedSubject as Observable<any>;
   }
-  login(username: string, password: string): Observable<any> {  // returns object with token
+  login(username: string, password: string): Observable<any> {  // returns token object
     return this.http.post<any>(`${this.baseUrlApi}/users/authenticate`, {username, password}).pipe(
+      // {"token":"eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIwMDAwMDAiLCJleHAiOjE1OTk5NzYzNjgsImlhdCI6MTU5ODkzOTU2OH0.RpHPiVshk9ZXDr-ZUA9JEPdqvAfbtNhhEqzTiBQgw3ksXA5nxn0UsiM5bk3hlnWxXTrtqgHFm-UTC6DrV8YoSA"}
       tap(authResult => {
-        console.log(authResult?.token);
-        localStorage.setItem('token', authResult?.token);
-        // const expiresAt = moment().add(authResult.expiresIn, 'second');
-        // console.log(JSONmoment.unix(tkn.exp));
+        const token = authResult?.token;
+        const payload = JSON.parse(atob(token?.split('.')[1]));
+        localStorage.setItem('token', token);
         localStorage.setItem('username', username);
+        localStorage.setItem('expires_at', payload?.exp);
       }),
-      tap(() => this.isLoggedSubject.next(true))
+      tap(() => this.isLoggedSubject.next(true)),
+      retry(AppSettings.RETRIES), catchError(formatErrors)
     );
   }
   logout(): void {
@@ -44,7 +47,7 @@ export class AuthService {
     localStorage.removeItem('token');
     localStorage.removeItem('username');
     localStorage.removeItem('expires_at');
-    localStorage.clear();
+    // localStorage.clear();
   }
 
   public isLoggedIn(): boolean {
