@@ -35,6 +35,7 @@ export class AuthService {
         const payload = JSON.parse(atob(token?.split('.')[1]));
         localStorage.setItem('token', token);
         localStorage.setItem('username', username);
+        localStorage.setItem('role', authResult?.role);
         localStorage.setItem('expires_at', payload?.exp);
       }),
       tap(() => this.isLoggedSubject.next(true)),
@@ -46,10 +47,10 @@ export class AuthService {
     this.isLoggedSubject.next(false);
     localStorage.removeItem('token');
     localStorage.removeItem('username');
+    localStorage.removeItem('role');
     localStorage.removeItem('expires_at');
     // localStorage.clear();
   }
-
   public isLoggedIn(): boolean {
     const exp = localStorage.getItem('expires_at');
     return exp != null && moment().isBefore(moment.unix(+exp));

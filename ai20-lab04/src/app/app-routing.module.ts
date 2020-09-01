@@ -9,8 +9,9 @@ import {TabsNavComponent} from './r1-tabs-menu/tabs-nav.component';
 import {HomeComponent} from './r0-topheader-leftsidebar/home.component';
 import {TestingComponent} from './r2-inner-tab/testing/testing.component';
 import {TeamsComponent} from './r2-inner-tab/teams/teams.component';
-import {AuthGuard} from './services/auth.guard';
 import {UnauthorizedComponent} from './r0-topheader-leftsidebar/unauthorized.component';
+import {AuthStudentGuard} from './services/auth-student.guard';
+import {AuthProfessorGuard} from './services/auth-professor.guard';
 
 const routes: Routes = [
   {
@@ -31,7 +32,7 @@ const routes: Routes = [
       },
       {
         path: 'teacher',
-        canActivateChild: [AuthGuard],
+        canActivateChild: [AuthProfessorGuard],
         children: [
           {
             path: '',
@@ -53,6 +54,39 @@ const routes: Routes = [
                     path: 'students',
                     component: StudentsContComponent
                   },
+                  {
+                    path: 'vms',
+                    component: VmsContComponent
+                  },
+                  {
+                    path: 'teams',
+                    component: TeamsComponent
+                  },
+                  {
+                    path: 'assignments',
+                    component: AssignmentsContComponent
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      {
+        path: 'student',
+        canActivateChild: [AuthStudentGuard],
+        children: [
+          {
+            path: '',
+            component: WelcomeEmptyComponent
+          },
+          {
+            path: 'course',
+            children: [
+              {
+                path: ':id',
+                component: TabsNavComponent,
+                children: [
                   {
                     path: 'vms',
                     component: VmsContComponent

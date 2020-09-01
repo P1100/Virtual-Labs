@@ -6,7 +6,7 @@ import {AuthService} from './auth.service';
 @Injectable({
   providedIn: 'root'
 })
-export class AuthGuard implements CanActivate, CanActivateChild {
+export class AuthProfessorGuard implements CanActivate, CanActivateChild {
   constructor(
     private router: Router,
     private authService: AuthService
@@ -14,14 +14,14 @@ export class AuthGuard implements CanActivate, CanActivateChild {
   }
   canActivate(next: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<boolean | UrlTree> | Promise<boolean | UrlTree> | boolean | UrlTree {
     const role = localStorage.getItem('role');
-    if (!this.authService.isLoggedIn() || (role != 'student' && role != 'professor')) {
+    if (!this.authService.isLoggedIn() || role != 'professor') {
       this.router.navigateByUrl('/unauthorized');
     }
     return true;
   }
   canActivateChild(childRoute: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<boolean | UrlTree> | Promise<boolean | UrlTree> | boolean | UrlTree {
     const role = localStorage.getItem('role');
-    if (!this.authService.isLoggedIn() || (role != 'student' && role != 'professor')) {
+    if (!this.authService.isLoggedIn() || role != 'professor') {
       this.router.navigateByUrl('/unauthorized');
     }
     return true;

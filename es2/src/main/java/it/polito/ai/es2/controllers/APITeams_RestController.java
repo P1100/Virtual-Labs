@@ -1,7 +1,6 @@
 package it.polito.ai.es2.controllers;
 
 import it.polito.ai.es2.controllers.hateoas.ModelHelper;
-import it.polito.ai.es2.domains.TeamViewModel;
 import it.polito.ai.es2.dtos.StudentDTO;
 import it.polito.ai.es2.dtos.TeamDTO;
 import it.polito.ai.es2.services.interfaces.TeamService;
@@ -10,12 +9,9 @@ import org.springframework.hateoas.CollectionModel;
 import org.springframework.hateoas.Link;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.ui.Model;
-import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
-import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
@@ -24,7 +20,7 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
 @RestController
 @RequestMapping("/api/teams")
-@PreAuthorize("isAuthenticated()")
+//@PreAuthorize("isAuthenticated()")
 public class APITeams_RestController {
   @Autowired
   TeamService teamService;
@@ -54,16 +50,14 @@ public class APITeams_RestController {
     return result;
   }
 
-  @PreAuthorize("hasRole('PROFESSOR') or @mySecurityChecker.isTeamOwner(#teamId,authentication.principal.username)")
   @GetMapping("/{teamId}")
+  @PreAuthorize("hasRole('PROFESSOR') or @mySecurityChecker.isTeamOwner(#teamId,authentication.principal.username)")
   public TeamDTO getTeam(@PathVariable Long teamId) {
     Optional<TeamDTO> teamDTO = teamService.getTeam(teamId);
     if (teamDTO.isEmpty())
       throw new ResponseStatusException(HttpStatus.CONFLICT, teamId.toString());
     return modelHelper.enrich(teamDTO.get());
   }
-
-
 
   // http://localhost:8080/api/teams/propose/C0/Team0/100,101,S33
   @PostMapping("/propose/{courseName}/{team_name}/{memberIds}")
@@ -73,26 +67,8 @@ public class APITeams_RestController {
   }
 
   @PostMapping("/evict/{teamId}")
-  @PreAuthorize("hasRole('ADMIN') and @mySecurityChecker.isTeamOwner(#teamId,authentication.principal.username))")
+  @PreAuthorize("hasRole('ADMIN') and  @mySecurityChecker.isTeamOwner(#teamId,authentication.principal.username)")
   public boolean evictTeam(@PathVariable Long teamId) {
     return teamService.evictTeam(teamId);
-  }
-
-  // TODO: fix up this, delete teamviewmodel
-  @PostMapping("/propose")
-  public String propose_team(@ModelAttribute("command") TeamViewModel teamViewModel,
-                             BindingResult bindingResult, Model model) {
-    TeamDTO created_team;
-    teamViewModel.getMemberIds().removeAll(Arrays.asList(0L, null));
-    try {
-      created_team = teamService.proposeTeam(teamViewModel.getCourseId(), teamViewModel.getName(), teamViewModel.getMemberIds());
-    } catch (Exception e) {
-      e.printStackTrace();
-      model.addAttribute("error", e.getMessage());
-      return "error_template";
-    }
-    if (created_team == null)
-      return "error_template";
-    return "csv_home";
   }
 }
