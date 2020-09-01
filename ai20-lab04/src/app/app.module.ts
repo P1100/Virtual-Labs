@@ -15,7 +15,7 @@ import {MatTableModule} from '@angular/material/table';
 import {MatAutocompleteModule} from '@angular/material/autocomplete';
 import {MatCheckboxModule} from '@angular/material/checkbox';
 import {MatCardModule} from '@angular/material/card';
-import {StudentsComponent} from './r2-inner-tab/teacher/students/students.component';
+import {StudentsComponent} from './r2-inner-tab/professor/students/students.component';
 import {MatTabsModule} from '@angular/material/tabs';
 import {MatTooltipModule} from '@angular/material/tooltip';
 import {PageNotFoundComponent} from './r0-topheader-leftsidebar/page-not-found.component';
@@ -34,7 +34,7 @@ import {BrowserModule} from '@angular/platform-browser';
 import {TestingComponent} from './r2-inner-tab/testing/testing.component';
 import {WelcomeEmptyComponent} from './r1-tabs-menu/welcome-empty.component';
 import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
-import {StudentsContComponent} from './r2-inner-tab/teacher/students/students-cont.component';
+import {StudentsContComponent} from './r2-inner-tab/professor/students/students-cont.component';
 import {AppComponent} from './app.component';
 import {MAT_DIALOG_DEFAULT_OPTIONS, MatDialogModule} from '@angular/material/dialog';
 import {RegisterComponent} from './dialogs/register/register.component';
@@ -45,6 +45,7 @@ import {CourseDeleteComponent} from './dialogs/course-delete/course-delete.compo
 import {CourseAddComponent} from './dialogs/course-add/course-add.component';
 import {AuthInterceptor} from './services/auth.interceptor';
 import {UnauthorizedComponent} from './r0-topheader-leftsidebar/unauthorized.component';
+import {UnauthorizedTabComponent} from './r0-topheader-leftsidebar/unauthorized-tab.component';
 
 @NgModule({
   imports: [
@@ -98,7 +99,8 @@ import {UnauthorizedComponent} from './r0-topheader-leftsidebar/unauthorized.com
     CourseEditComponent,
     CourseDeleteComponent,
     CourseAddComponent,
-    UnauthorizedComponent
+    UnauthorizedComponent,
+    UnauthorizedTabComponent
   ],
   providers: [HttpClientModule, {provide: MAT_DIALOG_DEFAULT_OPTIONS, useValue: {hasBackdrop: false}},
     {provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true}],

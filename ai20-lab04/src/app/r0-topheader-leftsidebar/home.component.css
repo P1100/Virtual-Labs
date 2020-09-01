@@ -49,3 +49,7 @@ mat-sidenav-content {
 #delete-course-icon {
   color: firebrick;
 }
+
+select, input, button {
+  border-width: 0px;
+}

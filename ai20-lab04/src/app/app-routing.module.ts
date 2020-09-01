@@ -2,7 +2,7 @@ import {NgModule} from '@angular/core';
 import {RouterModule, Routes} from '@angular/router';
 import {WelcomeEmptyComponent} from './r1-tabs-menu/welcome-empty.component';
 import {VmsContComponent} from './r2-inner-tab/vms/vms-cont.component';
-import {StudentsContComponent} from './r2-inner-tab/teacher/students/students-cont.component';
+import {StudentsContComponent} from './r2-inner-tab/professor/students/students-cont.component';
 import {PageNotFoundComponent} from './r0-topheader-leftsidebar/page-not-found.component';
 import {AssignmentsContComponent} from './r2-inner-tab/assignments/assignments-cont.component';
 import {TabsNavComponent} from './r1-tabs-menu/tabs-nav.component';
@@ -12,6 +12,7 @@ import {TeamsComponent} from './r2-inner-tab/teams/teams.component';
 import {UnauthorizedComponent} from './r0-topheader-leftsidebar/unauthorized.component';
 import {AuthStudentGuard} from './services/auth-student.guard';
 import {AuthProfessorGuard} from './services/auth-professor.guard';
+import {UnauthorizedTabComponent} from './r0-topheader-leftsidebar/unauthorized-tab.component';
 
 const routes: Routes = [
   {
@@ -31,7 +32,7 @@ const routes: Routes = [
         component: WelcomeEmptyComponent
       },
       {
-        path: 'teacher',
+        path: 'professor',
         canActivateChild: [AuthProfessorGuard],
         children: [
           {
@@ -47,7 +48,7 @@ const routes: Routes = [
                 children: [
                   {
                     path: '',
-                    component: StudentsContComponent, // Default view for teacher
+                    component: StudentsContComponent, // Default view for professor
                     pathMatch: 'full'
                   },
                   {
@@ -65,6 +66,10 @@ const routes: Routes = [
                   {
                     path: 'assignments',
                     component: AssignmentsContComponent
+                  },
+                  {
+                    path: '**',
+                    component: UnauthorizedComponent
                   }
                 ]
               }
@@ -88,6 +93,10 @@ const routes: Routes = [
                 component: TabsNavComponent,
                 children: [
                   {
+                    path: '',
+                    component: WelcomeEmptyComponent
+                  },
+                  {
                     path: 'vms',
                     component: VmsContComponent
                   },
@@ -98,6 +107,10 @@ const routes: Routes = [
                   {
                     path: 'assignments',
                     component: AssignmentsContComponent
+                  },
+                  {
+                    path: '**',
+                    component: UnauthorizedTabComponent
                   }
                 ]
               }

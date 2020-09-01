@@ -10,7 +10,7 @@ import {tabs} from '../app-settings';
 })
 export class TabsNavComponent implements OnDestroy {
   // TODO: questo valore deve essere impostato dalla logica di auth
-  prefix = ['/teacher', '/student'];
+  prefix = ['professor', 'student'];
   navLinks = [];
   activeCourse = null;
   paramSubscription: Subscription;
@@ -18,10 +18,11 @@ export class TabsNavComponent implements OnDestroy {
   constructor(private route: ActivatedRoute) {
     // Update tabs link url at every course change
     this.paramSubscription = this.route.url.subscribe(() => {
+      this.prefix = [localStorage.getItem('role')];
       this.activeCourse = this.route.snapshot.paramMap.get('id');
       this.navLinks = [];
       for (const tab of tabs) {
-        this.navLinks.push({path: this.prefix[0] + '/course/' + this.activeCourse + '/' + tab.path, label: tab.label});
+        this.navLinks.push({path: '/' + this.prefix[0] + '/course/' + this.activeCourse + '/' + tab.path, label: tab.label});
       }
     });
   }

@@ -42,6 +42,7 @@ export class HomeComponent implements OnInit, OnDestroy {
   devShowTestingComponents = AppSettings.devtest;
   coursesObservable: Observable<Course[]>;
   retrievedImage: string;
+  role = 'anonymous';
 
   dontExpandPanelOnNameClick(i: number) {
     this.panelOpenState[i] = !this.panelOpenState[i];
@@ -114,8 +115,9 @@ export class HomeComponent implements OnInit, OnDestroy {
     this.authSubscription = this.authService.getIsLoggedSubject().subscribe(newLogStatus => {
       const previousLoggedStatus = this.isLogged;
       this.isLogged = newLogStatus;
-      if (newLogStatus === true) {
-        this.loggedUserName = localStorage.getItem('username');
+      if (newLogStatus == true) {
+        this.role = localStorage.getItem('role');
+        this.loggedUserName = this.role + ' ' + localStorage.getItem('username');
         if (previousLoggedStatus == false && newLogStatus == true) {
           this.courseService.getCourses().subscribe(x => this.courses = x,
             e => {
@@ -125,6 +127,7 @@ export class HomeComponent implements OnInit, OnDestroy {
         }
       } else {
         this.loggedUserName = null;
+        this.role = 'anonymous';
       }
     });
     this.alertsSubscription = this.alertsService.getAlertSubject().subscribe(x => this.alertNgb = x);

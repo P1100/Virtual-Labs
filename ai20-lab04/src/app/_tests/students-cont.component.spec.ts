@@ -1,6 +1,6 @@
 import {async, ComponentFixture, TestBed} from '@angular/core/testing';
 
-import {StudentsContComponent} from '../r2-inner-tab/teacher/students/students-cont.component';
+import {StudentsContComponent} from '../r2-inner-tab/professor/students/students-cont.component';
 import {RouterTestingModule} from '@angular/router/testing';
 import {HttpClientTestingModule} from '@angular/common/http/testing';
 

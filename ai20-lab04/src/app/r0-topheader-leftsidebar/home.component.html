@@ -15,7 +15,7 @@
     <span class="fill-remaining-space-header"></span>
 
     <button *ngIf="!isLogged" mat-button type="button" (click)="openRegisterDialog()">Register</button>
-    <span *ngIf="isLogged" style="font-size: medium">{{loggedUserName}}</span>
+    <span *ngIf="isLogged" style="font-size: medium; color: ghostwhite">Welcome {{loggedUserName}} </span>
     <button mat-button type="button" aria-label="login and logout" (click)="clickLoginLogout()">
       {{isLogged == true ? 'Logout' : 'Login'}}
     </button>
@@ -40,7 +40,7 @@
         <mat-nav-list *ngFor="let course of courses; index as i">
           <mat-expansion-panel togglePosition="before" [class.mat-elevation-z0]="true" dense
                                [(expanded)]="panelOpenState[i]"
-                               routerLink="teacher/course/{{course.id}}">
+                               routerLink="{{role}}/course/{{course.id}}">
             <mat-expansion-panel-header>
               <mat-panel-title>
                 <a mat-list-item (click)="dontExpandPanelOnNameClick(i)" routerLinkActive="active-link-style"
