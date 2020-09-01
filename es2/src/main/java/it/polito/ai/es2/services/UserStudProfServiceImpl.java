@@ -55,7 +55,7 @@ public class UserStudProfServiceImpl implements UserStudProfService {
     newUser.setUsername(user.getUsername());
     newUser.setPassword(passwordEncoder.encode(user.getPassword()));
     newUser.setRoles(UserDTO.convertStringsToRoles(user.getRoles()));
-    newUser.setEnabled(false);
+    newUser.setEnabled(true);
     newUser.setAccountNonExpired(true);
     newUser.setAccountNonLocked(true);
     newUser.setCredentialsNonExpired(true);

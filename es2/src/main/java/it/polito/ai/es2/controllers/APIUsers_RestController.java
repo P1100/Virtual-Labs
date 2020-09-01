@@ -25,8 +25,7 @@ import java.util.Arrays;
 
 @RestController
 @RequestMapping("/api/users")
-//@CrossOrigin
-@PreAuthorize("permitAll()") // doesnt override httpsecurity settings!
+@PreAuthorize("permitAll()")
 public class APIUsers_RestController {
   @Autowired
   private AuthenticationManager authenticationManager;
@@ -42,7 +41,7 @@ public class APIUsers_RestController {
 
   // {"username":"admin","password":"a"}
   @RequestMapping(value = "/authenticate", method = RequestMethod.POST)
-  public ResponseEntity<?> createAuthenticationToken(@RequestBody JwtRequest authenticationRequest) throws Exception {
+  public ResponseEntity<?> login(@RequestBody JwtRequest authenticationRequest) throws Exception {
     try {
       // Using UserDetailsServiceImpl (WebConfig).
       authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(authenticationRequest.getUsername(), authenticationRequest.getPassword()));
@@ -53,7 +52,10 @@ public class APIUsers_RestController {
     }
     UserDetails userDetails = userDetailsService.loadUserByUsername(authenticationRequest.getUsername());
     String token = jwtTokenUtil.generateToken(userDetails);
-    return ResponseEntity.ok(new JwtResponse(token));
+    JwtResponse jwtResponse = new JwtResponse(token);
+    jwtResponse.setRole(userDetails.getAuthorities().toArray()[0].toString().toLowerCase().replace("role_", ""));
+    System.out.println(ResponseEntity.ok(jwtResponse));
+    return ResponseEntity.ok(jwtResponse);
   }
 
   //{"username":"1354623","password":"passss","firstName":"fi","lastName":"la","email":"s111111@studenti.polito.it", "roles":["ADMIN", "user"]}

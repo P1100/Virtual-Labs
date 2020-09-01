@@ -43,7 +43,6 @@ order by `c`.`idname`, `t`.`name`, `st`.`id`;
 ## SQL Scratches
 DROP DATABASE virtuallabs;
 CREATE DATABASE virtuallabs;
-
 INSERT INTO virtuallabs.role (name, description) VALUES ('ROLE_ADMIN', 'Administrator');
 INSERT INTO virtuallabs.role (name, description) VALUES ('ROLE_PROFESSOR', 'Course Professor');
 INSERT INTO virtuallabs.role (name, description) VALUES ('ROLE_STUDENT', 'The Student');

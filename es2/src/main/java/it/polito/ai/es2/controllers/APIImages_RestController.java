@@ -5,6 +5,7 @@ import it.polito.ai.es2.services.interfaces.CourseService;
 import it.polito.ai.es2.services.interfaces.ImageService;
 import lombok.extern.java.Log;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -15,6 +16,7 @@ import javax.validation.constraints.NotNull;
 @RequestMapping(path = "/api/images")
 @Log
 @Validated
+@PreAuthorize("permitAll()")
 public class APIImages_RestController {
   @Autowired
   ImageService imageService;

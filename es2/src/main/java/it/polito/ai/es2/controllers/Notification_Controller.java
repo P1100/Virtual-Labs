@@ -2,11 +2,13 @@ package it.polito.ai.es2.controllers;
 
 import it.polito.ai.es2.services.interfaces.NotificationService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 @Controller
 @RequestMapping("/notification")
+@PreAuthorize("permitAll()")
 public class Notification_Controller {
   @Autowired
   NotificationService notificationService;

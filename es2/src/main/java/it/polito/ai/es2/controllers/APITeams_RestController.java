@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.hateoas.CollectionModel;
 import org.springframework.hateoas.Link;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
@@ -23,6 +24,7 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
 @RestController
 @RequestMapping("/api/teams")
+@PreAuthorize("isAuthenticated()")
 public class APITeams_RestController {
   @Autowired
   TeamService teamService;
@@ -30,6 +32,7 @@ public class APITeams_RestController {
   private ModelHelper modelHelper;
 
   @GetMapping("/{teamId}/members")
+  @PreAuthorize("hasRole('PROFESSOR') or @mySecurityChecker.isTeamOwner(#teamId,authentication.principal.username)")
   public List<StudentDTO> getMembers(@PathVariable Long teamId) {
     List<StudentDTO> members = teamService.getMembers(teamId);
     for (StudentDTO member : members) {
@@ -39,6 +42,7 @@ public class APITeams_RestController {
   }
 
   @GetMapping({"", "/"})
+  @PreAuthorize("hasRole('ADMIN')")
   public CollectionModel<TeamDTO> getAllTeams() {
     List<TeamDTO> allTeams = teamService.getAllTeams();
     for (TeamDTO teamDTO : allTeams) {
@@ -50,6 +54,7 @@ public class APITeams_RestController {
     return result;
   }
 
+  @PreAuthorize("hasRole('PROFESSOR') or @mySecurityChecker.isTeamOwner(#teamId,authentication.principal.username)")
   @GetMapping("/{teamId}")
   public TeamDTO getTeam(@PathVariable Long teamId) {
     Optional<TeamDTO> teamDTO = teamService.getTeam(teamId);
@@ -62,11 +67,13 @@ public class APITeams_RestController {
 
   // http://localhost:8080/api/teams/propose/C0/Team0/100,101,S33
   @PostMapping("/propose/{courseName}/{team_name}/{memberIds}")
+  @PreAuthorize("hasRole('STUDENT')")
   public TeamDTO proposeTeam(@PathVariable String courseName, @PathVariable String team_name, @PathVariable List<Long> memberIds) {
     return teamService.proposeTeam(courseName, team_name, memberIds);
   }
 
   @PostMapping("/evict/{teamId}")
+  @PreAuthorize("hasRole('ADMIN') and @mySecurityChecker.isTeamOwner(#teamId,authentication.principal.username))")
   public boolean evictTeam(@PathVariable Long teamId) {
     return teamService.evictTeam(teamId);
   }
