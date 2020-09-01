@@ -6,18 +6,29 @@ import it.polito.ai.es2.dtos.TeamDTO;
 import it.polito.ai.es2.entities.Course;
 import it.polito.ai.es2.entities.Student;
 import it.polito.ai.es2.entities.Team;
+import it.polito.ai.es2.entities.Token;
 import it.polito.ai.es2.repositories.CourseRepository;
 import it.polito.ai.es2.repositories.StudentRepository;
 import it.polito.ai.es2.repositories.TeamRepository;
+import it.polito.ai.es2.repositories.TokenRepository;
 import it.polito.ai.es2.services.exceptions.*;
 import it.polito.ai.es2.services.interfaces.NotificationService;
 import it.polito.ai.es2.services.interfaces.TeamService;
 import lombok.extern.java.Log;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.validation.Valid;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
+import java.net.InetAddress;
+import java.net.UnknownHostException;
+import java.sql.Timestamp;
+import java.time.LocalDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -40,7 +51,7 @@ public class TeamServiceImpl implements TeamService {
   TeamRepository teamRepository;
   @Autowired
   NotificationService notificationService;
-//  @Autowired
+  //  @Autowired
 //  AssignmentRepository assignmentRepository;
 //  @Autowired
 //  ImageRepository imageRepository;
@@ -48,6 +59,12 @@ public class TeamServiceImpl implements TeamService {
 //  ImplementationRepository implementationRepository;
 //  @Autowired
 //  VMRepository vmRepository;
+  @Autowired
+  public TokenRepository tokenRepository;
+  @Value("${server.port}")
+  String port;
+  @Autowired
+  Environment environment;
 
   /**
    * GET {@link it.polito.ai.es2.controllers.APITeams_RestController#getMembers(Long)}
@@ -128,7 +145,7 @@ public class TeamServiceImpl implements TeamService {
     new_team.addSetCourse(course); //course.addTeam(new_team); // add sul singolo corso
     Team savedTeam = teamRepository.save(new_team);
     TeamDTO return_teamDTO = modelMapper.map(savedTeam, TeamDTO.class);
-    notificationService.notifyTeam(return_teamDTO, memberIds);
+    notifyTeam(return_teamDTO, memberIds);
     return return_teamDTO;
   }
 
@@ -151,5 +168,75 @@ public class TeamServiceImpl implements TeamService {
     team_to_delete.getCourse().getTeams().remove(team_to_delete);
     teamRepository.delete(team_to_delete);
     return true;
+  }
+
+  @Override
+  public boolean confirmTeam(@NotBlank String token) {
+    notificationService.cleanUpOldTokens();
+    Optional<Team> optionalTeam = tokenRepository.findById(token).map(Token::getTeamId).map(teamId1 -> teamRepository.getOne(teamId1));
+    if (optionalTeam.isEmpty())
+      return false;
+    Team team = optionalTeam.get();
+    Long teamId = team.getId();
+    Course course = team.getCourse();
+    tokenRepository.deleteById(token);
+    List<Token> tokenList = tokenRepository.findAllByTeamId(teamId);
+    if (tokenList.size() == 0) {
+      if (team == null || team.isActive() == true) // ??
+        return false;
+      team.setActive(true); // no need to save, will be flushed automatically at the end of transaction (since not a new entity)
+      return true;
+    }
+//    TODO: (??) commented, review later
+//    for (Token token : tokenList) {
+//      tokenRepository.delete(token);
+//    }
+    return false;
+  }
+
+  /**
+   * Trova team, rimuovi tutti i token relativi a team corrente (se ce ne sono) e invoca evict team + return true. Altrimenti false
+   */
+  @Override
+  public boolean rejectTeam(@NotBlank String idtoken) {
+    notificationService.cleanUpOldTokens();
+    Optional<Team> optionalTeam = tokenRepository.findById(idtoken).map(Token::getTeamId).map(teamId1 -> teamRepository.getOne(teamId1));
+    if (optionalTeam.isEmpty())
+      return false;
+    Long teamId = optionalTeam.get().getId();
+    tokenRepository.deleteAll(tokenRepository.findAllByTeamId(teamId));
+    return evictTeam(teamId);
+  }
+
+  /**
+   * Non c'è bisogno di controlli, poichè viene chiamato direttamente da propose team (che fa lui tutti i controlli)
+   */
+  @Override
+  public void notifyTeam(@Valid TeamDTO teamDTO, @NotNull List<Long> memberIds) {
+    for (Long memberId : memberIds) {
+      Token token = new Token();
+      token.setId((UUID.randomUUID().toString().toLowerCase()));
+      token.setTeamId(teamDTO.getId());
+//      token.setStudent(studentRepository.findById(memberId).orElse(null));
+      token.setExpiryDate(Timestamp.valueOf(LocalDateTime.now().plusHours(1)));
+      String url;
+      try {
+        // TODO: does it work in production?
+        url = "http://" + InetAddress.getLocalHost().getHostAddress() + ":" + port;
+        tokenRepository.save(token);
+      } catch (UnknownHostException e) {
+        e.printStackTrace();
+        return;
+      }
+      StringBuffer sb = new StringBuffer();
+      sb.append("Hello ").append(memberId);
+      sb.append("\n\nLink to accept token:\n" + url + "/notification/confirm/" + token.getId());
+      sb.append("\n\nLink to remove token:\n" + url + "/notification/reject/" + token.getId());
+      System.out.println(sb);
+      String mymatricola = environment.getProperty("mymatricola");
+      // TODO: uncommentare in fase di prod (attenzione!)
+      System.out.println("[Forced self] s" + mymatricola + "@studenti.polito.it] s" + memberId + "@studenti.polito.it - Conferma iscrizione al team " + teamDTO.getId());
+//        sendMessage("s" + mymatricola + "@studenti.polito.it", "[Student:" + memberId + "] Conferma iscrizione al team " + teamDTO.getId(), sb.toString());
+    }
   }
 }

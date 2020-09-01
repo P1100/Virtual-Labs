@@ -1,14 +1,12 @@
 package it.polito.ai.es2.services;
 
 import it.polito.ai.es2.dtos.*;
-import it.polito.ai.es2.entities.Image;
-import it.polito.ai.es2.entities.Professor;
-import it.polito.ai.es2.entities.Student;
-import it.polito.ai.es2.entities.User;
+import it.polito.ai.es2.entities.*;
 import it.polito.ai.es2.repositories.*;
 import it.polito.ai.es2.services.exceptions.FailedAddException;
 import it.polito.ai.es2.services.exceptions.NullParameterException;
 import it.polito.ai.es2.services.exceptions.UsernameAlreadyUsedException;
+import it.polito.ai.es2.services.interfaces.NotificationService;
 import it.polito.ai.es2.services.interfaces.UserStudProfService;
 import lombok.extern.java.Log;
 import org.modelmapper.ModelMapper;
@@ -21,6 +19,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.PostConstruct;
 import javax.validation.Valid;
+import javax.validation.constraints.NotBlank;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -50,8 +49,8 @@ public class UserStudProfServiceImpl implements UserStudProfService {
   ImageRepository imageRepository;
   @Autowired
   public TokenRepository tokenRepository;
-  //  @Autowired
-//  private NotificationService notificationService;
+  @Autowired
+  private NotificationService notificationService;
   @Value("${server.port}")
   private String port;
   @Value("${server.address}")
@@ -95,9 +94,42 @@ public class UserStudProfServiceImpl implements UserStudProfService {
       System.out.println(professorDTO);
       addProfessor(professorDTO);
     }
-//    notificationService.notifyUser(userDTO);
+
+    //    Token token = new Token();
+//    token.setId((UUID.randomUUID().toString().toLowerCase()));
+//    token.setUser(savedUser);
+//    token.setTeamId(null);
+//    token.setExpiryDate(Timestamp.valueOf(LocalDateTime.now().plusHours(24)));
+//    tokenRepository.save(token);
+//
+//    StringBuffer sb = new StringBuffer();
+//    sb.append("Hello ").append(userDTO.getFirstName() + ' ' + userDTO.getLastName() + userDTO.getUsername());
+//    if (role.equals("student")) {
+//      sb.append("\n\nLink to accept token:\n" + baseUrl + "/notification/user/confirm/" + token.getId());
+//      sb.append("\n\nLink to remove token:\n" + url + "/notification/user/reject/" + token.getId());
+//    } else { // professor
+//      sb.append("\n\nLink to accept token:\n" + url + "/notification/confirm/" + token.getId());
+//      sb.append("\n\nLink to remove token:\n" + url + "/notification/reject/" + token.getId());
+//    }
+//    System.out.println(sb);
+//    String mymatricola = environment.getProperty("mymatricola");
+//    // TODO: uncommentare in fase di prod (attenzione!)
+//    System.out.println("[Forced self] s" + mymatricola + "@studenti.polito.it] s" + memberId + "@studenti.polito.it - Conferma iscrizione al team " + teamDTO.getId());
+////        sendMessage("s" + mymatricola + "@studenti.polito.it", "[Student:" + memberId + "] Conferma iscrizione al team " + teamDTO.getId(), sb.toString());
+
     return modelMapper.map(savedUser, UserDTO.class);
   }
+
+  @Override public boolean confirmUser(@NotBlank String token) {
+    notificationService.cleanUpOldTokens();
+//    Optional<UserDTO> optionalUserDTO = tokenRepository.findById(token).map(Token::getUser).map(x -> modelMapper.map(x, UserDTO.class));
+    Optional<User> userOptional = tokenRepository.findById(token).map(Token::getUser);
+    if (userOptional.isEmpty()) {
+
+    }
+    return false;
+  }
+
   @Override
   public StudentDTO addStudent(@Valid StudentDTO studentDTO) {
     log.info("addStudent(" + studentDTO + ")");

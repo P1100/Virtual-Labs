@@ -22,10 +22,5 @@ public interface UserStudProfService {
 
   List<TeamDTO> getTeamsForStudent(Long studentId);
 
-
-//  void createPasswordResetTokenForUser(final UserDAO user, final String token);
-//  String validatePasswordResetToken(String token);
-//  Optional<UserDAO> getUserByPasswordResetToken(final String token);
-//  void changeUserPassword(UserDAO user, String password);
-//  void insertAdmin();
+  boolean confirmUser(String token);
 }

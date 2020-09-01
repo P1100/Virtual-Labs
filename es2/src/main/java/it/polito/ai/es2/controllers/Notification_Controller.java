@@ -1,6 +1,8 @@
 package it.polito.ai.es2.controllers;
 
 import it.polito.ai.es2.services.interfaces.NotificationService;
+import it.polito.ai.es2.services.interfaces.TeamService;
+import it.polito.ai.es2.services.interfaces.UserStudProfService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
@@ -18,10 +20,14 @@ import javax.validation.constraints.NotBlank;
 public class Notification_Controller {
   @Autowired
   NotificationService notificationService;
+  @Autowired
+  TeamService teamService;
+  @Autowired
+  UserStudProfService userStudProfService;
 
   @GetMapping("/user/confirm/{token}")
   public String confirmUser(@PathVariable @NotBlank String token) {
-    boolean confirm = notificationService.confirmUser(token);
+    boolean confirm = userStudProfService.confirmUser(token);
     if (confirm) {
       return "token_confirmed";
     } else
@@ -30,7 +36,7 @@ public class Notification_Controller {
 
   @GetMapping("/team/confirm/{token}")
   public String confirmTokenTeam(@PathVariable @NotBlank String token) {
-    boolean confirm = notificationService.confirmTeam(token);
+    boolean confirm = teamService.confirmTeam(token);
     if (confirm)
       return "token_confirmed";
     else
@@ -39,7 +45,7 @@ public class Notification_Controller {
 
   @GetMapping("/team/reject/{token}")
   public String rejectTokenTeam(@PathVariable @NotBlank String token) {
-    boolean reject = notificationService.rejectTeam(token);
+    boolean reject = teamService.rejectTeam(token);
     if (reject)
       return "token_rejcted";
     else
