@@ -1,5 +1,7 @@
 package it.polito.ai.es2.services.interfaces;
 
+import javax.validation.constraints.NotBlank;
+
 /**
  * These could be the problem in your task if you are using Gmail Server.
  * <p>
@@ -10,8 +12,5 @@ package it.polito.ai.es2.services.interfaces;
 public interface NotificationService {
   boolean cleanUpOldTokens();
 
-  void sendMessage(String address, String subject, String body);
-
-
-
+  void sendMessage(@NotBlank String emailAddress, String subject, String body);
 }

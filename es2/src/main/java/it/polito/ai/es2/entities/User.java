@@ -24,6 +24,9 @@ public class User {
    */
   public enum TypeUser {STUDENT, PROFESSOR}
 
+  /**
+   * Username must be equal to student/professor id !!!
+   */
   @Id
   private String username;
   @NotBlank

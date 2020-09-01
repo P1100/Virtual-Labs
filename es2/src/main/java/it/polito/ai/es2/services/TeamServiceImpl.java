@@ -21,6 +21,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.validation.annotation.Validated;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;
@@ -40,6 +41,7 @@ import java.util.stream.Collectors;
 @Service
 @Transactional
 @Log
+@Validated
 public class TeamServiceImpl implements TeamService {
   @Autowired
   ModelMapper modelMapper;
@@ -70,7 +72,7 @@ public class TeamServiceImpl implements TeamService {
    * GET {@link it.polito.ai.es2.controllers.APITeams_RestController#getMembers(Long)}
    */
   @Override
-  public List<StudentDTO> getMembers(Long teamId) {
+  public List<StudentDTO> getMembers(@NotNull Long teamId) {
     log.info("getMembers(" + teamId + ")");
     if (teamId == null) throw new NullParameterException("teamId");
     Optional<Team> team = teamRepository.findById(teamId);
@@ -92,7 +94,7 @@ public class TeamServiceImpl implements TeamService {
    * GET {@link it.polito.ai.es2.controllers.APITeams_RestController#getTeam(Long)}
    */
   @Override
-  public Optional<TeamDTO> getTeam(Long teamId) {
+  public Optional<TeamDTO> getTeam(@NotNull Long teamId) {
     log.info("getTeam(" + teamId + ")");
     if (teamId == null) throw new NullParameterException("null team parameter");
     return teamRepository.findById(teamId).map(x -> modelMapper.map(x, TeamDTO.class));
@@ -102,7 +104,7 @@ public class TeamServiceImpl implements TeamService {
    * {@link it.polito.ai.es2.controllers.APITeams_RestController#proposeTeam(String, String, List)}
    */
   @Override
-  public TeamDTO proposeTeam(String courseName, String team_name, List<Long> memberIds) {
+  public TeamDTO proposeTeam(@NotBlank String courseName, @NotBlank String team_name, @NotNull List<Long> memberIds) {
     log.info("proposeTeam(" + courseName + ", " + team_name + ", " + memberIds + ")");
     if (courseName == null || team_name == null || memberIds == null)
       throw new NullParameterException("null student or course or list of memberIds parameter");
@@ -153,7 +155,7 @@ public class TeamServiceImpl implements TeamService {
    * {@link it.polito.ai.es2.controllers.APITeams_RestController#evictTeam(Long)}
    */
   @Override
-  public boolean evictTeam(Long teamId) {
+  public boolean evictTeam(@NotNull Long teamId) {
     log.info("evictTeam(" + teamId + ")");
     Optional<Team> optionalTeam = teamRepository.findById(teamId);
     if (optionalTeam.isEmpty())

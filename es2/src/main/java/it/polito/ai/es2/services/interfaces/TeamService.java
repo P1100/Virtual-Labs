@@ -10,16 +10,16 @@ import java.util.List;
 import java.util.Optional;
 
 public interface TeamService {
-  List<StudentDTO> getMembers(Long TeamId);
+  List<StudentDTO> getMembers(@NotNull Long TeamId);
 
   // **************************** -- not reviewd --------------------
   List<TeamDTO> getAllTeams();
 
-  Optional<TeamDTO> getTeam(Long teamId);
+  Optional<TeamDTO> getTeam(@NotNull Long teamId);
 
-  TeamDTO proposeTeam(String courseId, String name, List<Long> memberIds);
+  TeamDTO proposeTeam(@NotBlank String courseId, @NotBlank String name, @NotNull List<Long> memberIds);
 
-  boolean evictTeam(Long teamId);
+  boolean evictTeam(@NotNull Long teamId);
 
   boolean confirmTeam(@NotBlank String token);
 

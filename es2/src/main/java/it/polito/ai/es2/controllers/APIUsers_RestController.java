@@ -52,7 +52,6 @@ public class APIUsers_RestController {
     String token = jwtTokenUtil.generateToken(userDetails);
     JwtResponse jwtResponse = new JwtResponse(token);
     jwtResponse.setRole(userDetails.getAuthorities().toArray()[0].toString().toLowerCase().replace("role_", ""));
-//    System.out.println(ResponseEntity.ok(jwtResponse));
     return ResponseEntity.ok(jwtResponse);
   }
 
@@ -62,17 +61,16 @@ public class APIUsers_RestController {
     System.out.println(userDTO);
     userDTO.setRoles(Arrays.asList("STUDENT"));
     userDTO.setTypeUser(User.TypeUser.STUDENT);
-    System.out.println(userStudProfService.addNewUser(userDTO));
+    userStudProfService.addNewUser(userDTO);
     return userDTO;
   }
 
   // {"username":"345323445","password":"passss","firstName":"prof","lastName":"la","email":"d111111@polito.it", "roles":["ADMIN", "PROFESSOR"]}
   @PostMapping("/professor")
   public UserDTO registerProfessor(@Valid @RequestBody UserDTO userDTO) {
-    System.out.println(userDTO);
     userDTO.setRoles(Arrays.asList("PROFESSOR"));
     userDTO.setTypeUser(User.TypeUser.PROFESSOR);
-    System.out.println(userStudProfService.addNewUser(userDTO));
+    userStudProfService.addNewUser(userDTO);
     return userDTO;
   }
 }

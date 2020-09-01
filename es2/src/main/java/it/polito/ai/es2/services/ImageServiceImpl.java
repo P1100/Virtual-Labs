@@ -12,8 +12,10 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.validation.constraints.NotNull;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.Base64;
@@ -30,6 +32,7 @@ import java.util.zip.Inflater;
 @Service
 @Transactional
 @Log
+@Validated
 public class ImageServiceImpl implements ImageService {
   @Autowired
   ModelMapper modelMapper;
@@ -56,7 +59,7 @@ public class ImageServiceImpl implements ImageService {
    * @return
    */
   @Override
-  public ImageDTO uploadImage(MultipartFile file) {
+  public ImageDTO uploadImage(@NotNull MultipartFile file) {
     if (file == null)
       throw new ImageException("null parameter");
     if (file.isEmpty())
@@ -80,7 +83,7 @@ public class ImageServiceImpl implements ImageService {
    * GET {@link it.polito.ai.es2.controllers.APIImages_RestController#getImage(Long)}
    */
   @Override
-  public ImageDTO getImage(Long imageId) {
+  public ImageDTO getImage(@NotNull Long imageId) {
     if (imageId == null)
       throw new ImageException("null id");
     Optional<Image> imageOptional = imageRepository.findById(imageId);
