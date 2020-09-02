@@ -27,6 +27,8 @@ export class TeamsComponent implements OnInit, OnDestroy {
   private enrolledSelectedForProposal: Student[];
   dialogRef: MatDialogRef<any>;
   selection = new SelectionModel<Student>(true, []);
+  courseMin: number;
+  courseMax: number;
 
   @ViewChild(MatSort, {static: true}) sort: MatSort;
 
@@ -45,27 +47,34 @@ export class TeamsComponent implements OnInit, OnDestroy {
   }
   ngOnInit() {
     this.dataSource.sort = this.sort;
+    this.courseMin = +localStorage.getItem('coursemin');
+    this.courseMax = +localStorage.getItem('coursemax');
   }
 
   openProposeTeamDialog() {
     if (this.dialogRef?.getState() == MatDialogState.OPEN) {
       throw new Error('Error: Dialog stil open while opening a new one');
     }
-    if (this.selection.selected.length > 4) {
-      throw new Error('Error: Selected more than 4 students');
-    }
     if (this.selection.selected.length == 0) {
       this.alertsService.setAlert('warning', 'No students selected!');
       return;
     }
+    if (this.selection.selected.length < this.courseMin) {
+      this.alertsService.setAlert('warning', `Selected less than ${this.courseMin} students (course minimum)`);
+      return;
+    }
+    if (this.selection.selected.length > this.courseMax) {
+      this.alertsService.setAlert('warning', `Selected more than ${this.courseMax} students, (course maximum)`);
+      return;
+    }
     this.dialogRef = this.dialog.open(TeamProposeComponent, {
       maxWidth: '400px', autoFocus: true, hasBackdrop: true, disableClose: true, closeOnNavigation: true,
-      data: {studentsProposal: this.selection.selected}
+      data: this.selection.selected
     });
     this.dialogRef.afterClosed().subscribe((res: string) => {
-        this.dialogRef = null;
-        if (res != undefined) {
-          this.forceUploadData.emit(null);
+      this.dialogRef = null;
+      if (res != undefined) {
+        this.forceUploadData.emit(null);
         }
       }, () => this.alertsService.setAlert('danger', 'Team Proposal dialog error')
     );
@@ -88,8 +97,8 @@ export class TeamsComponent implements OnInit, OnDestroy {
   ngOnDestroy(): void {
     this.dialogRef?.close();
   }
-  checkboxAreFourOrMoreSelected(row: Student) {
-    if (!this.selection.isSelected(row) && this.selection.selected.length >= 4) {
+  checkboxDisableMinMax(row: Student) {
+    if (!this.selection.isSelected(row) && this.selection.selected.length >= this.courseMax) {
       return true;
     }
     return false;

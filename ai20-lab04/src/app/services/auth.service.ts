@@ -32,11 +32,12 @@ export class AuthService {
       // {"token":"eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIwMDAwMDAiLCJleHAiOjE1OTk5NzYzNjgsImlhdCI6MTU5ODkzOTU2OH0.RpHPiVshk9ZXDr-ZUA9JEPdqvAfbtNhhEqzTiBQgw3ksXA5nxn0UsiM5bk3hlnWxXTrtqgHFm-UTC6DrV8YoSA"}
       tap(authResult => {
         const token = authResult?.token;
-        const payload = JSON.parse(atob(token?.split('.')[1]));
+        const payloadToken = JSON.parse(atob(token?.split('.')[1]));
         localStorage.setItem('token', token);
         localStorage.setItem('username', username);
+        localStorage.setItem('id', username);
         localStorage.setItem('role', authResult?.role);
-        localStorage.setItem('expires_at', payload?.exp);
+        localStorage.setItem('expires_at', payloadToken?.exp);
       }),
       tap(() => this.isLoggedSubject.next(true)),
       retry(AppSettings.RETRIES), catchError(formatErrors)
@@ -47,6 +48,7 @@ export class AuthService {
     this.isLoggedSubject.next(false);
     localStorage.removeItem('token');
     localStorage.removeItem('username');
+    localStorage.removeItem('id');
     localStorage.removeItem('role');
     localStorage.removeItem('expires_at');
     // localStorage.clear();

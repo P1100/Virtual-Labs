@@ -104,6 +104,8 @@ export class HomeComponent implements OnInit, OnDestroy {
         }
         if (this.idActiveCourse != oldCourseId && this.idActiveCourse != null) { // reset alerts
           this.alertsService.closeAlert();
+          localStorage.setItem('coursemin', this.courses.find(value => value.id == this.idActiveCourse).minSizeTeam.toString());
+          localStorage.setItem('coursemax', this.courses.find(value => value.id == this.idActiveCourse).maxSizeTeam.toString());
         }
         if (this.idActiveCourse != oldCourseId) { // closing all panels,
           for (let i = 0; i < this.panelOpenState.length; i++) {

@@ -5,7 +5,7 @@ import {MAT_DIALOG_DATA, MatDialogRef} from '@angular/material/dialog';
 import {AlertsService} from '../../services/alerts.service';
 import {CourseService} from '../../services/course.service';
 import {Router} from '@angular/router';
-import {dialogCourseData} from '../../r0-topheader-leftsidebar/home.component';
+import {Student} from '../../models/student.model';
 
 @Component({
   selector: 'app-team-propose',
@@ -17,10 +17,13 @@ export class TeamProposeComponent {
   private selectedFile: File;
   checkboxNoValidate = false;
   showCheckboxNoValidateForTesting = AppSettings.devtest;
+  current: string;
+  nameTeam: string;
+  timeoutTeam: number;
 
   constructor(private courseService: CourseService, private dialogRef: MatDialogRef<TeamProposeComponent>,
-              @Inject(MAT_DIALOG_DATA) public data: dialogCourseData, private router: Router, private alertsService: AlertsService) {
-    console.log(data);
+              @Inject(MAT_DIALOG_DATA) public data: Student[], private router: Router, private alertsService: AlertsService) {
+    this.current = localStorage.getItem('id');
   }
 
   onCancelClick(): void {

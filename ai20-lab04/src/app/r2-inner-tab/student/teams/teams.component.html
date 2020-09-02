@@ -18,7 +18,7 @@
       <td *matCellDef="let rowStudent" mat-cell>
         <mat-checkbox (click)="$event.stopPropagation()"
                       (change)="$event ? checkboxChangeSelection(rowStudent) : null"
-                      [checked]="selection.isSelected(rowStudent)" [disabled]="checkboxAreFourOrMoreSelected(rowStudent)"></mat-checkbox>
+                      [checked]="selection.isSelected(rowStudent)" [disabled]="checkboxDisableMinMax(rowStudent)"></mat-checkbox>
       </td>
     </ng-container>
 
