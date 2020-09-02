@@ -141,9 +141,6 @@ export class HomeComponent implements OnInit, OnDestroy {
     this.changeDetectorRef.detectChanges();
   }
   openAddCourseDialog(): void {
-    if (this.dialogRef) {
-      return;
-    }
     this.dialogRef = this.dialog.open(CourseAddComponent, {
       maxWidth: '400px', autoFocus: true, hasBackdrop: true, disableClose: true, closeOnNavigation: true
     });
@@ -156,9 +153,6 @@ export class HomeComponent implements OnInit, OnDestroy {
     );
   }
   openEditCourseDialog(): void {
-    if (this.dialogRef) {
-      return;
-    }
     this.dialogRef = this.dialog.open(CourseEditComponent, {
       maxWidth: '400px', autoFocus: true, hasBackdrop: true, disableClose: true, closeOnNavigation: true,
       data: {courseName: this.nameActiveCourse, courseId: this.idActiveCourse}
@@ -169,9 +163,6 @@ export class HomeComponent implements OnInit, OnDestroy {
     );
   }
   openDeleteCourseDialog(): void {
-    if (this.dialogRef) {
-      return;
-    }
     this.dialogRef = this.dialog.open(CourseDeleteComponent, {
       maxWidth: '400px', autoFocus: false, hasBackdrop: true, disableClose: false, closeOnNavigation: true,
       data: {courseName: this.nameActiveCourse, courseId: this.idActiveCourse}
@@ -185,9 +176,6 @@ export class HomeComponent implements OnInit, OnDestroy {
     );
   }
   openLoginDialogReactive(): void {
-    if (this.dialogRef) {
-      return;
-    }
     this.dialogRef = this.dialog.open(LoginComponent, {
       maxWidth: '400px', autoFocus: true, hasBackdrop: true, disableClose: true, closeOnNavigation: false
     });
@@ -198,9 +186,6 @@ export class HomeComponent implements OnInit, OnDestroy {
     );
   }
   openRegisterDialog() {
-    if (this.dialogRef) {
-      return;
-    }
     this.dialogRef = this.dialog.open(RegisterComponent, {
       maxWidth: '400px', autoFocus: true, hasBackdrop: true, disableClose: true, closeOnNavigation: true
     });
