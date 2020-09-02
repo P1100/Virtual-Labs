@@ -35,7 +35,7 @@ public interface CourseService {
 
   List<TeamDTO> getTeamsForCourse(String courseName);
 
-  List<StudentDTO> getStudentsInTeams(String courseName);
+  List<StudentDTO> getEnrolledWithTeam(String courseName);
 
-  List<StudentDTO> getAvailableStudents(String courseName);
+  List<StudentDTO> getEnrolledWithoutTeam(String courseName);
 }

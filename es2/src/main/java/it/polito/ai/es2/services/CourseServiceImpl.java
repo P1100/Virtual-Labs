@@ -74,7 +74,15 @@ public class CourseServiceImpl implements CourseService {
     Optional<Course> courseOptional = courseRepository.findById(courseId);
     if (courseOptional.isEmpty())
       throw new CourseNotFoundException(courseId);
-    return courseOptional.get().getStudents().stream().map(x -> modelMapper.map(x, StudentDTO.class)).collect(Collectors.toList());
+    return courseOptional.get().getStudents().stream()
+        .map(st -> {
+          st.setTeamName(st.getTeams().stream()
+              .filter(t -> t.getCourse().getId().equals(courseId))
+              .findAny().map(t -> t.getName() + "found").orElse("not")); // TODO: clean later
+          return st;
+        })
+        .map(x -> modelMapper.map(x, StudentDTO.class))
+        .collect(Collectors.toList());
   }
 
   /**
@@ -279,10 +287,10 @@ public class CourseServiceImpl implements CourseService {
   }
 
   /**
-   * GET {@link it.polito.ai.es2.controllers.APICourses_RestController#getStudentsInTeams(String)}
+   * GET {@link it.polito.ai.es2.controllers.APICourses_RestController#getEnrolledWithTeam(String)}
    */
   @Override
-  public List<StudentDTO> getStudentsInTeams(String courseId) {
+  public List<StudentDTO> getEnrolledWithTeam(String courseId) {
     log.info("getStudentsInTeams(" + courseId + ")");
     if (courseId == null) throw new CourseNotFoundException("[null]");
     if (!courseRepository.existsById(courseId)) throw new CourseNotFoundException(courseId);
@@ -290,10 +298,10 @@ public class CourseServiceImpl implements CourseService {
   }
 
   /**
-   * GET {@link it.polito.ai.es2.controllers.APICourses_RestController#getAvailableStudents(String)}
+   * GET {@link it.polito.ai.es2.controllers.APICourses_RestController#getEnrolledWithoutTeam(String)}
    */
   @Override
-  public List<StudentDTO> getAvailableStudents(String courseId) {
+  public List<StudentDTO> getEnrolledWithoutTeam(String courseId) {
     log.info("getAvailableStudents(" + courseId + ")");
     if (courseId == null) throw new CourseNotFoundException("[null]");
     if (!courseRepository.existsById(courseId)) throw new CourseNotFoundException(courseId);

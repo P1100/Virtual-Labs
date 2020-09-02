@@ -52,33 +52,37 @@
     <button (click)="studentsRemove()" mat-button>Delete selected</button>
   </form>
 
-  <table (matSortChange)="sortChange($event)" [dataSource]="dataSource" mat-table matSort>
-    <ng-container matColumnDef="select">
-      <th *matHeaderCellDef mat-header-cell>
-        <mat-checkbox (change)="checkboxSetAllPage($event.checked)"
-                      [checked]="checkboxMasterCompleted"
-                      [indeterminate]="checkboxMasterIndeterminate">
-        </mat-checkbox>
-      </th>
-      <td *matCellDef="let element" mat-cell>
-        <mat-checkbox
-          (change)="checkboxChangeSelection($event,element.id)"
-          [checked]="checkboxIsChecked(element.id)"></mat-checkbox>
-      </td>
-    </ng-container>
-    <!-- Slice used because we dont need 'select' here -->
-    <ng-container *ngFor="let column of displayedColumnsTable | slice:1;let i = index" matColumnDef="{{column}}">
-      <th *matHeaderCellDef mat-header-cell mat-sort-header> {{column}}</th>
-      <td *matCellDef="let element" mat-cell> {{element[column]}} </td>
-    </ng-container>
-    <tr *matHeaderRowDef="displayedColumnsTable" mat-header-row></tr>
-    <tr *matRowDef="let row; columns: displayedColumnsTable;" mat-row></tr>
-  </table>
+  <div name="tableWithPaginator" class="mat-elevation-z8">
+    <table (matSortChange)="sortChange($event)" [dataSource]="dataSource" mat-table matSort>
+      <!-- Select column-->
+      <ng-container matColumnDef="select">
+        <th *matHeaderCellDef mat-header-cell>
+          <mat-checkbox (change)="checkboxSetAllPage($event.checked)"
+                        [checked]="checkboxMasterCompleted"
+                        [indeterminate]="checkboxMasterIndeterminate">
+          </mat-checkbox>
+        </th>
+        <td *matCellDef="let element" mat-cell>
+          <mat-checkbox
+            (click)="$event.stopPropagation()"
+            (change)="checkboxChangeSelection($event,element.id)"
+            [checked]="checkboxIsChecked(element.id)"></mat-checkbox>
+        </td>
+      </ng-container>
+      <!-- Rest of the table. Slice used because we dont need 'select' here -->
+      <ng-container *ngFor="let column of displayedColumnsTable | slice:1;let i = index" matColumnDef="{{column}}">
+        <th *matHeaderCellDef mat-header-cell mat-sort-header> {{column}}</th>
+        <td *matCellDef="let element" mat-cell> {{element[column]}} </td>
+      </ng-container>
 
-  <mat-paginator [length]="length"
-                 [pageSizeOptions]="pageSizeOptions"
-                 [pageSize]="pageSize"
-                 (page)="paginatorUpdate()"
-                 showFirstLastButtons>
-  </mat-paginator>
+      <tr *matHeaderRowDef="displayedColumnsTable" mat-header-row></tr>
+      <tr *matRowDef="let row; columns: displayedColumnsTable;" mat-row></tr>
+    </table>
+    <mat-paginator [length]="length"
+                   [pageSizeOptions]="pageSizeOptions"
+                   [pageSize]="pageSize"
+                   (page)="paginatorUpdate()"
+                   showFirstLastButtons>
+    </mat-paginator>
+  </div>
 </div>

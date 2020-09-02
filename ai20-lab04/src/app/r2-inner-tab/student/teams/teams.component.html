@@ -1,0 +1,48 @@
+<h2 style="margin-left: 25px; margin-right: 5px">Available students
+  <button mat-raised-button color="primary" (click)="openProposeTeamDialog()" style=" float: right;">
+    <mat-icon>playlist_add</mat-icon>
+    Propose new team
+  </button>
+</h2>
+
+<div class="table-container">
+  <table mat-table matSort [dataSource]="dataSource" class="mat-elevation-z8">
+
+    <ng-container matColumnDef="select">
+      <th *matHeaderCellDef mat-header-cell>a
+        <!--        <mat-checkbox (change)="checkboxSetAllPage($event.checked)"-->
+        <!--                      [checked]="checkboxMasterCompleted"-->
+        <!--                      [indeterminate]="checkboxMasterIndeterminate">-->
+        <!--        </mat-checkbox>-->
+      </th>
+      <td *matCellDef="let element" mat-cell>b
+        <!--        <mat-checkbox-->
+        <!--                      (click)="$event.stopPropagation()"            (change)="checkboxChangeSelection($event,element.id)"-->
+        <!--          [checked]="checkboxIsChecked(element.id)"></mat-checkbox>-->
+        <!--      </td>-->
+    </ng-container>
+
+    <ng-container matColumnDef="id">
+      <th mat-header-cell mat-sort-header *matHeaderCellDef>Id</th>
+      <td mat-cell *matCellDef="let element">{{element.id}}</td>
+    </ng-container>
+
+    <ng-container matColumnDef="firstName">
+      <th mat-header-cell mat-sort-header *matHeaderCellDef>firstName</th>
+      <td mat-cell *matCellDef="let element"> {{element.firstName}} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="lastName">
+      <th mat-header-cell mat-sort-header *matHeaderCellDef>lastName</th>
+      <td mat-cell *matCellDef="let element"> {{element.lastName}} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="email">
+      <th mat-header-cell mat-sort-header *matHeaderCellDef>email</th>
+      <td mat-cell *matCellDef="let element"> {{element.email}} </td>
+    </ng-container>
+
+    <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
+    <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+  </table>
+</div>

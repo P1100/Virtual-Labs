@@ -47,13 +47,13 @@ public class ModelHelper {
     courseDTO.add(Link.of(baseUrl + "/api/courses/" + courseDTO.getId() + "/disable").withRel("disable (POST)"));
 
     courseDTO.add(linkTo(methodOn(APICourses_RestController.class)
-                             .getEnrolledStudents(courseDTO.getId())).withRel("enrolled"));
+        .getEnrolledStudents(courseDTO.getId())).withRel("enrolled"));
     courseDTO.add(linkTo(methodOn(APICourses_RestController.class)
-                             .getStudentsInTeams(courseDTO.getId())).withRel("students-in-teams"));
+        .getEnrolledWithTeam(courseDTO.getId())).withRel("students-in-teams"));
     courseDTO.add(linkTo(methodOn(APICourses_RestController.class)
-                             .getAvailableStudents(courseDTO.getId())).withRel("students-available"));
+        .getEnrolledWithoutTeam(courseDTO.getId())).withRel("students-available"));
     courseDTO.add(linkTo(methodOn(APICourses_RestController.class)
-                             .getTeamsForCourse(courseDTO.getId())).withRel("teams"));
+        .getTeamsForCourse(courseDTO.getId())).withRel("teams"));
     return courseDTO;
   }
 

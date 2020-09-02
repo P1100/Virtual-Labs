@@ -5,6 +5,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.hateoas.RepresentationModel;
 
+import javax.persistence.Transient;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Pattern;
@@ -22,6 +23,9 @@ public class StudentDTO extends RepresentationModel<StudentDTO> {
   @Email
   @Pattern(regexp = "s[0-9]{1,9}@studenti\\.polito\\.it")
   private String email;
+  @Transient
   private Long imageId;
+  @Transient
+  private String teamName;
 }
 

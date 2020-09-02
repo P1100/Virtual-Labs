@@ -20,7 +20,7 @@ import {MatTabsModule} from '@angular/material/tabs';
 import {MatTooltipModule} from '@angular/material/tooltip';
 import {PageNotFoundComponent} from './r0-topheader-leftsidebar/page-not-found.component';
 import {MatButtonModule} from '@angular/material/button';
-import {TeamsComponent} from './r2-inner-tab/teams/teams.component';
+import {TeamsComponent} from './r2-inner-tab/student/teams/teams.component';
 import {LayoutModule} from '@angular/cdk/layout';
 import {VmsContComponent} from './r2-inner-tab/vms/vms-cont.component';
 import {HTTP_INTERCEPTORS, HttpClientModule} from '@angular/common/http';
@@ -46,6 +46,7 @@ import {CourseAddComponent} from './dialogs/course-add/course-add.component';
 import {AuthInterceptor} from './services/auth.interceptor';
 import {UnauthorizedComponent} from './r0-topheader-leftsidebar/unauthorized.component';
 import {UnauthorizedTabComponent} from './r0-topheader-leftsidebar/unauthorized-tab.component';
+import {TeamsContComponent} from './r2-inner-tab/student/teams/teams-cont.component';
 
 @NgModule({
   imports: [
@@ -100,7 +101,8 @@ import {UnauthorizedTabComponent} from './r0-topheader-leftsidebar/unauthorized-
     CourseDeleteComponent,
     CourseAddComponent,
     UnauthorizedComponent,
-    UnauthorizedTabComponent
+    UnauthorizedTabComponent,
+    TeamsContComponent
   ],
   providers: [HttpClientModule, {provide: MAT_DIALOG_DEFAULT_OPTIONS, useValue: {hasBackdrop: false}},
     {provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true}],

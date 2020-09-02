@@ -14,7 +14,7 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.server.ResponseStatusException;
 
 import javax.validation.Valid;
-import javax.validation.constraints.NotNull;
+import javax.validation.constraints.NotBlank;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -124,7 +124,7 @@ public class APICourses_RestController {
 
   @RequestMapping(value = "/{courseId}/enroll-csv", method = {RequestMethod.PUT, RequestMethod.POST})
   @PreAuthorize("hasRole('PROFESSOR')")
-  public List<Boolean> enrollStudentsCSV(@PathVariable String courseId, @RequestParam("file") @NotNull MultipartFile file) {
+  public List<Boolean> enrollStudentsCSV(@PathVariable @NotBlank String courseId, @RequestParam("file") MultipartFile file) {
     List<Boolean> booleanList;
     if (file == null || file.isEmpty() || file.getContentType() == null)
       throw new ResponseStatusException(HttpStatus.CONFLICT, "null or empty file");
@@ -152,25 +152,25 @@ public class APICourses_RestController {
         linkTo(methodOn(APICourses_RestController.class).getTeamsForCourse(courseId)).withSelfRel());
   }
 
-  @GetMapping("/{courseId}/students-in-teams")
+  @GetMapping("/{courseId}/students-with-team")
   @PreAuthorize("hasRole('STUDENT') or hasRole('PROFESSOR')")
-  public CollectionModel<StudentDTO> getStudentsInTeams(@PathVariable String courseId) {
-    List<StudentDTO> students = courseService.getStudentsInTeams(courseId);
+  public CollectionModel<StudentDTO> getEnrolledWithTeam(@PathVariable String courseId) {
+    List<StudentDTO> students = courseService.getEnrolledWithTeam(courseId);
     for (StudentDTO student : students) {
       modelHelper.enrich(student);
     }
     return CollectionModel.of(students,
-        linkTo(methodOn(APICourses_RestController.class).getStudentsInTeams(courseId)).withSelfRel());
+        linkTo(methodOn(APICourses_RestController.class).getEnrolledWithTeam(courseId)).withSelfRel());
   }
 
-  @GetMapping("/{courseId}/students-available")
+  @GetMapping("/{courseId}/students-without-team")
   @PreAuthorize("hasRole('STUDENT') or hasRole('PROFESSOR')")
-  public CollectionModel<StudentDTO> getAvailableStudents(@PathVariable String courseId) {
-    List<StudentDTO> students = courseService.getAvailableStudents(courseId);
+  public CollectionModel<StudentDTO> getEnrolledWithoutTeam(@PathVariable String courseId) {
+    List<StudentDTO> students = courseService.getEnrolledWithoutTeam(courseId);
     for (StudentDTO student : students) {
       modelHelper.enrich(student);
     }
     return CollectionModel.of(students,
-        linkTo(methodOn(APICourses_RestController.class).getAvailableStudents(courseId)).withSelfRel());
+        linkTo(methodOn(APICourses_RestController.class).getEnrolledWithoutTeam(courseId)).withSelfRel());
   }
 }

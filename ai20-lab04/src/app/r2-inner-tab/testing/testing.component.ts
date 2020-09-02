@@ -68,9 +68,9 @@ export class TestingComponent {
     this.courseService.getTeamsForCourse(c).subscribe();
   }
   getStudentsInTeams(c: string) {
-    this.courseService.getStudentsInTeams(c).subscribe();
+    this.courseService.getEnrolledWithTeam(c).subscribe();
   }
   getAvailableStudents(c: string) {
-    this.courseService.getAvailableStudents(c).subscribe();
+    this.courseService.getEnrolledWithoutTeam(c).subscribe();
   }
 }

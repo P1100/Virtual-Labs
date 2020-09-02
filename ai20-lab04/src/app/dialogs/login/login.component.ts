@@ -29,10 +29,9 @@ export class LoginComponent implements OnDestroy {
       {
         serial: ['111111', [Validators.required]],
         password: ['222222', [Validators.required]],
-      },
-      {
-        validators: fakeNameValidator
-      }) as FormGroup;
+      }
+      // , {validators: fakeNameValidator}
+    ) as FormGroup;
     this.form.valueChanges.pipe(
       filter(() => this.form.valid)
     ).subscribe(form => {

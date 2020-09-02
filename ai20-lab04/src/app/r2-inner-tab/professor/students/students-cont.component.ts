@@ -73,8 +73,8 @@ export class StudentsContComponent implements OnDestroy {
           this.backendService.enroll(student, this.courseId) as Observable<any>
         ),
         toArray()  // so it waits for all inner observables to collect, after source complete
-      ) as Observable<any>;
-    this.updateEnrolledStudents(observable, 'enroll');
+      ) as Observable<Student[]>;
+    this.updateEnrolledAfterEnrollChange(observable, 'enroll');
   }
   onStudentsToDisenroll(studentsToDisenroll: Student[]) {
     if (studentsToDisenroll === null || studentsToDisenroll.length === 0) {
@@ -86,11 +86,11 @@ export class StudentsContComponent implements OnDestroy {
         this.backendService.disenroll(student, this.courseId) as Observable<any>
       ),
       toArray()  // so it waits for all inner observables to collect
-    ) as Observable<any>;
-    this.updateEnrolledStudents(observable, 'disenroll');
+    ) as Observable<Student[]>;
+    this.updateEnrolledAfterEnrollChange(observable, 'disenroll');
   }
   // Updating table data, basically
-  private updateEnrolledStudents(o: any, message: string) {
+  private updateEnrolledAfterEnrollChange(o: Observable<Student[]>, message: string) {
     o.subscribe(() => {
       this.backendService.getEnrolledStudents(this.courseId).subscribe(
         (ss: Student[]) => {

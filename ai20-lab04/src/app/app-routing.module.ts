@@ -8,11 +8,11 @@ import {AssignmentsContComponent} from './r2-inner-tab/assignments/assignments-c
 import {TabsNavComponent} from './r1-tabs-menu/tabs-nav.component';
 import {HomeComponent} from './r0-topheader-leftsidebar/home.component';
 import {TestingComponent} from './r2-inner-tab/testing/testing.component';
-import {TeamsComponent} from './r2-inner-tab/teams/teams.component';
 import {UnauthorizedComponent} from './r0-topheader-leftsidebar/unauthorized.component';
 import {AuthStudentGuard} from './services/auth-student.guard';
 import {AuthProfessorGuard} from './services/auth-professor.guard';
 import {UnauthorizedTabComponent} from './r0-topheader-leftsidebar/unauthorized-tab.component';
+import {TeamsContComponent} from './r2-inner-tab/student/teams/teams-cont.component';
 
 const routes: Routes = [
   {
@@ -92,17 +92,22 @@ const routes: Routes = [
                 path: ':id',
                 component: TabsNavComponent,
                 children: [
-                  {
+                  { // TODO: remove later, testing
                     path: '',
-                    component: WelcomeEmptyComponent
+                    component: StudentsContComponent, // Default view for professor
+                    pathMatch: 'full'
                   },
+                  // {  // TODO: restore later, testing
+                  //   path: '',
+                  //   component: WelcomeEmptyComponent
+                  // },
                   {
                     path: 'vms',
                     component: VmsContComponent
                   },
                   {
                     path: 'teams',
-                    component: TeamsComponent
+                    component: TeamsContComponent
                   },
                   {
                     path: 'assignments',

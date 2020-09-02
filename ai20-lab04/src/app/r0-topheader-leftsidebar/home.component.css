@@ -51,5 +51,7 @@ mat-sidenav-content {
 }
 
 select, input, button {
-  border-width: 0;
+  /*border-width: 0;*/
+  border: none;
+  outline: none;
 }

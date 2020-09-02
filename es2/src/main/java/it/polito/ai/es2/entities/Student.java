@@ -33,6 +33,8 @@ public class Student {
   @Email
   @Pattern(regexp = "s[0-9]{1,9}@studenti\\.polito\\.it")
   private String email;
+  @Transient
+  private String teamName; // commodity field
 
   @OneToOne(cascade = CascadeType.ALL)
   @JoinColumn

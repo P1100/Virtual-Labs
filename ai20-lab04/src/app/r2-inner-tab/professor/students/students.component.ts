@@ -19,7 +19,7 @@ export class StudentsComponent implements AfterViewInit, OnChanges {
   @Input()
   private students: Student[];
   // displayedColumnsTable is based on Student model (manual sync). It controls various formatting elements
-  displayedColumnsTable: string[] = ['select', 'id', 'firstName', 'lastName', 'team']; // email removed
+  displayedColumnsTable: string[] = ['select', 'id', 'firstName', 'lastName', 'teamName']; // email removed per specifications
   // Table data, connected directly to the data sent from the cont component (see above)
   dataSource: MatTableDataSource<Student> = new MatTableDataSource<Student>();
   @Input()

@@ -1,0 +1,17 @@
+.table-container {
+  height: 400px;
+  overflow: auto;
+}
+
+table {
+  width: 100%;
+}
+
+mat-form-field {
+  max-width: 450px;
+  width: 70%;
+}
+
+select, input, button {
+  border-width: 0;
+}

@@ -23,10 +23,10 @@
     <button mat-raised-button class="btn btn-light btn-sm" (click)="getTeamsForCourse(course.value)">getTeamsForCourse
     </button>
     <button mat-raised-button class="btn btn-light btn-sm" (click)="getStudentsInTeams(course.value)">
-      getStudentsInTeams
+      getEnrolledWithTeam
     </button>
     <button mat-raised-button class="btn btn-light btn-sm" (click)="getAvailableStudents(course.value)">
-      getAvailableStudents
+      getEnrolledWithoutTeam
     </button>
   </div>
   <br>
@@ -40,12 +40,4 @@
     <button mat-raised-button class="btn btn-light btn-sm" (click)="enrollStudents(student.value, stud2.value, course.value)">enrollStudents</button>
     <button mat-raised-button class="btn btn-light btn-sm" (click)="disenrollStudent(student.value, course.value)"> disenrollStudent</button>
   </div>
-</div>
-
-<br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>
-<div class="button-request" align="right">
-  <button mat-raised-button color="primary">
-    <mat-icon>playlist_add</mat-icon>
-    Richiesta composizione gruppo
-  </button>
 </div>

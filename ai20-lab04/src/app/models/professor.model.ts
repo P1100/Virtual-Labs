@@ -1,5 +1,5 @@
 /* Also used for professor */
-export class Student {
+export class Professor {
   id: number;
   firstName: string;
   lastName: string;

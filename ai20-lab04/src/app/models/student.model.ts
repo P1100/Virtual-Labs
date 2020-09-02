@@ -4,6 +4,7 @@ export class Student {
   firstName: string;
   lastName: string;
   email: string;
+  teamName?: string;
 
   constructor(id: number, firstName: string, lastName: string, email: string) {
     this.id = id;
@@ -16,6 +17,7 @@ export class Student {
     return this.lastName + ' ' +
       this.firstName + ' (' +
       this.id + ')' + ' (' +
+      this.teamName + ')' + ' (' +
       this.email + ')'
       ;
   }

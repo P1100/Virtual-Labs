@@ -70,14 +70,16 @@ export class CourseService {
       .pipe(map(object => removeHATEOAS(object)),
         retry(AppSettings.RETRIES), catchError(formatErrors));
   }
-  getStudentsInTeams(courseId: string): Observable<Student[]> {
-    return this.http.get<HateoasModel>(`${this.baseUrlApi}/${courseId}/students-in-teams`, AppSettings.JSON_HTTP_OPTIONS)
+  getEnrolledWithTeam(courseId: string): Observable<Student[]> {
+    return this.http.get<HateoasModel>(`${this.baseUrlApi}/${courseId}/students-with-team`, AppSettings.JSON_HTTP_OPTIONS)
       .pipe(map(object => removeHATEOAS(object)),
-        retry(AppSettings.RETRIES), catchError(formatErrors));
+        retry(AppSettings.RETRIES), catchError(formatErrors),
+        tap(res => console.log('--getEnrolledWithTeam:', res)));
   }
-  getAvailableStudents(courseId: string): Observable<Student[]> {
-    return this.http.get<HateoasModel>(`${this.baseUrlApi}/${courseId}/students-available`, AppSettings.JSON_HTTP_OPTIONS)
+  getEnrolledWithoutTeam(courseId: string): Observable<Student[]> {
+    return this.http.get<HateoasModel>(`${this.baseUrlApi}/${courseId}/students-without-team`, AppSettings.JSON_HTTP_OPTIONS)
       .pipe(map(object => removeHATEOAS(object)),
-        retry(AppSettings.RETRIES), catchError(formatErrors));
+        retry(AppSettings.RETRIES), catchError(formatErrors),
+        tap(res => console.log('--getEnrolledWithoutTeam:', res)));
   }
 }
