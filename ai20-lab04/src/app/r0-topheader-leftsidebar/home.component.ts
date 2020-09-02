@@ -1,7 +1,7 @@
 import {ChangeDetectorRef, Component, OnDestroy, OnInit} from '@angular/core';
 import {Course} from '../models/course.model';
 import {Title} from '@angular/platform-browser';
-import {MatDialog} from '@angular/material/dialog';
+import {MatDialog, MatDialogRef} from '@angular/material/dialog';
 import {AuthService} from '../services/auth.service';
 import {ActivatedRoute, NavigationEnd, Router} from '@angular/router';
 import {Observable, Subscription} from 'rxjs';
@@ -31,7 +31,7 @@ export class HomeComponent implements OnInit, OnDestroy {
   courses: Course[] = null;
   nameActiveCourse: string; // used for toolbar, dialog
   idActiveCourse: string; // dialog
-  dialogRef = undefined;
+  dialogRef: MatDialogRef<any>;
   panelOpenState = [];
   authSubscription: Subscription;
   loggedUserName = '';
@@ -44,10 +44,7 @@ export class HomeComponent implements OnInit, OnDestroy {
   retrievedImage: string;
   role = 'anonymous';
 
-  dontExpandPanelOnNameClick(i: number) {
-    this.panelOpenState[i] = !this.panelOpenState[i];
-    this.changeDetectorRef.detectChanges();
-  }
+  private obsUpdateCourses = this.courseService.getCourses(); // no parameters -> reusable
   constructor(private titleService: Title,
               private courseService: CourseService,
               public dialog: MatDialog,
@@ -61,7 +58,7 @@ export class HomeComponent implements OnInit, OnDestroy {
     titleService.setTitle(this.title);
     const promise = new Promise((resolve, reject) => {
       if (this.isLogged) {
-        courseService.getCourses().subscribe(courses => {
+        this.obsUpdateCourses.subscribe(courses => {
             this.courses = courses;
             resolve('Courses initialized!');
           },
@@ -119,7 +116,7 @@ export class HomeComponent implements OnInit, OnDestroy {
         this.role = localStorage.getItem('role');
         this.loggedUserName = this.role + ' ' + localStorage.getItem('username');
         if (previousLoggedStatus == false && newLogStatus == true) {
-          this.courseService.getCourses().subscribe(x => this.courses = x,
+          this.obsUpdateCourses.subscribe(x => this.courses = x,
             e => {
               this.alertsService.setAlert('danger', 'Couldn\'t update courses after login! ' + e);
               localStorage.clear();
@@ -139,6 +136,10 @@ export class HomeComponent implements OnInit, OnDestroy {
       }
     });
   }
+  dontExpandPanelOnNameClick(i: number) {
+    this.panelOpenState[i] = !this.panelOpenState[i];
+    this.changeDetectorRef.detectChanges();
+  }
   openAddCourseDialog(): void {
     if (this.dialogRef) {
       return;
@@ -147,9 +148,9 @@ export class HomeComponent implements OnInit, OnDestroy {
       maxWidth: '400px', autoFocus: true, hasBackdrop: true, disableClose: true, closeOnNavigation: true
     });
     this.dialogRef.afterClosed().subscribe((res: string) => {
-        this.dialogRef = null;
-        if (res != undefined) {
-          this.courseService.getCourses().subscribe(x => this.courses = x);
+      this.dialogRef = null;
+      if (res != undefined) {
+        this.obsUpdateCourses.subscribe(x => this.courses = x);
         }
       }, () => this.alertsService.setAlert('danger', 'Add Course Dialog Error')
     );
@@ -178,7 +179,7 @@ export class HomeComponent implements OnInit, OnDestroy {
     this.dialogRef.afterClosed().subscribe((res: string) => {
         this.dialogRef = null;
         if (res != undefined) {
-          this.courseService.getCourses().subscribe(x => this.courses = x);
+          this.obsUpdateCourses.subscribe(x => this.courses = x);
         }
       }, error => this.alertsService.setAlert('danger', 'Delete COurse Dialog Error!')
     );
@@ -225,6 +226,7 @@ export class HomeComponent implements OnInit, OnDestroy {
     this.alertNgb = null;
   }
   ngOnDestroy(): void {
+    this.dialogRef.close();
     this.authSubscription.unsubscribe();
     this.routeSubscription.unsubscribe();
     this.alertsSubscription.unsubscribe();
