@@ -63,7 +63,7 @@ public class VirtualLabsApplication {
           courseService.addCourse(new CourseDTO("c6", "Test: Disabled Course", 1, 500, false, null));
           courseService.addCourse(new CourseDTO("c7", "Test: min2 max3", 2, 3, true, null));
 
-          userStudProfService.addStudent(new StudentDTO(1L, "Pietro", "Giasone", "s1@studenti.polito.it", null, null));
+          userStudProfService.addStudent(new StudentDTO(1L, "Paolo", "Verdi", "s1@studenti.polito.it", null, null));
           userStudProfService.addStudent(new StudentDTO(2L, "Giuseppe", "Rossi", "s2@studenti.polito.it", null, null));
           userStudProfService.addStudent(new StudentDTO(3L, "Antonio", "Bianchi", "s3@studenti.polito.it", null, null));
           userStudProfService.addStudent(new StudentDTO(4L, "Angelo", "Verdi", "s4@studenti.polito.it", null, null));

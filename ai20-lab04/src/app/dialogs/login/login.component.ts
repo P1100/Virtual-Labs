@@ -39,12 +39,11 @@ export class LoginComponent implements OnDestroy {
     });
   }
   ngOnDestroy(): void {
-    this.dialogRef.close(); // Destroys the dialog!
     this.router.navigateByUrl('/home');
   }
   onCancelClick(): void {
     this.subscriptionLogin?.unsubscribe();
-    this.dialogRef.close(); // Destroys the dialog!
+    this.dialogRef.close();
   }
   login() {
     if (!this.form.valid) {

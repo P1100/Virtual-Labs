@@ -7,6 +7,7 @@ import {CourseAddComponent} from '../../../dialogs/course-add/course-add.compone
 import {AlertsService} from '../../../services/alerts.service';
 import {MatDialog, MatDialogRef, MatDialogState} from '@angular/material/dialog';
 import {CourseService} from '../../../services/course.service';
+import {SelectionModel} from '@angular/cdk/collections';
 
 @Component({
   selector: 'app-teams',
@@ -21,14 +22,11 @@ import {CourseService} from '../../../services/course.service';
   ]
 })
 export class TeamsComponent implements OnInit, OnDestroy {
-  dataSource: MatTableDataSource<Student> = new MatTableDataSource<Student>();
+  dataSource = new MatTableDataSource<Student>();
   displayedColumns: string[] = ['select', 'id', 'firstName', 'lastName', 'email'];
   private enrolledSelectedForProposal: Student[];
   dialogRef: MatDialogRef<any>;
-  /* Checkbox Logic */
-  checkboxMasterCompleted = false;
-  checkboxMasterIndeterminate = false;
-  checked: Map<number, boolean> = new Map();
+  selection = new SelectionModel<Student>(true, []);
 
   @ViewChild(MatSort, {static: true}) sort: MatSort;
 
@@ -38,7 +36,6 @@ export class TeamsComponent implements OnInit, OnDestroy {
   @Input()
   set enrolledWithoutTeams(array: Student[]) {
     this.dataSource.data = [...array];
-    this.checked = new Map(array.map(x => [+x.id, false]));
   }
   get enrolledWithoutTeams(): Student[] {
     return this.dataSource.data;
@@ -60,40 +57,35 @@ export class TeamsComponent implements OnInit, OnDestroy {
       data: {studentsProposal: enrolledSelectedForProposal}
     });
     this.dialogRef.afterClosed().subscribe((res: string) => {
-      this.dialogRef = null;
-      if (res != undefined) {
-        this.forceUploadData.emit(null);
-      }
+        this.dialogRef = null;
+        if (res != undefined) {
+          this.forceUploadData.emit(null);
+        }
       }, () => this.alertsService.setAlert('danger', 'Team Proposal dialog error')
     );
   }
-  // change selection, sort update, paginator update
-  private updateMasterCheckbox() {
-    const entriesCheckbox = [...this.checked.entries()];
-    this.checkboxMasterCompleted = entriesCheckbox.every(t => t[1] === true);
-    this.checkboxMasterIndeterminate = !this.checkboxMasterCompleted && entriesCheckbox.filter(x => x[1] === true).length > 0;
+  /** Whether the number of selected elements matches the total number of rows. */
+  isAllSelected() {
+    const numSelected = this.selection.selected.length;
+    const numRows = this.dataSource.data.length;
+    return numSelected === numRows;
   }
-  checkboxChangeSelection({checked}: { checked: boolean }, id) { // destructuring
-    console.log(this.checked);
-    // console.log('sads',[...this.checked.values()],[...this.checked.values()].filter((x: boolean) => x),
-    //   [...this.checked.values()].filter((x: boolean) => x).length);
-    // if ([...this.checked.values()].filter((x: boolean) => x).length >= 4)
-    //   return;
-    // console.log('set', id, checked);
-    // this.checked.set(+id, checked);
-    // this.updateMasterCheckbox();
+  /** Selects all rows if they are not all selected; otherwise clear selection. */
+  masterToggle() {
+    this.isAllSelected() ?
+      this.selection.clear() :
+      this.dataSource.data.forEach(row => this.selection.select(row));
   }
-  checkboxIsChecked(id: number) {
-    // console.log(this.checked, this.checked.get(+id));
-    // console.log('isChecked', id, this.checked.get(+id));
-    return this.checked.get(+id);
-  }
-  checkboxSetAll(completed: boolean) {
-    [...this.checked.entries()].forEach((t: [number, boolean]) => this.checked.set(+t[0], completed)); // converting iterable to array (spread)
-    this.checkboxMasterCompleted = completed;
-    this.checkboxMasterIndeterminate = false;
+  checkboxChangeSelection(row: Student) {
+    this.selection.toggle(row);
   }
   ngOnDestroy(): void {
-    this.dialogRef.close();
+    this.dialogRef?.close();
+  }
+  areFourOrMoreSelected(row: Student) {
+    if (!this.selection.isSelected(row) && this.selection.selected.length >= 4) {
+      return true;
+    }
+    return false;
   }
 }

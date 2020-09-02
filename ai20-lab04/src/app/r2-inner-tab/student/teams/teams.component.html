@@ -10,15 +10,15 @@
 
     <ng-container matColumnDef="select">
       <th *matHeaderCellDef mat-header-cell>
-        <mat-checkbox (change)="checkboxSetAll($event.checked)"
-                      [checked]="checkboxMasterCompleted"
-                      [indeterminate]="checkboxMasterIndeterminate">
-        </mat-checkbox>
+        <!--        <mat-checkbox (change)="$event ? masterToggle() : null"-->
+        <!--                      [checked]="selection.hasValue() && isAllSelected()"-->
+        <!--                      [indeterminate]="selection.hasValue() && !isAllSelected()">-->
+        <!--        </mat-checkbox>-->
       </th>
-      <td *matCellDef="let element" mat-cell>
-        <mat-checkbox
-          (click)="$event.stopPropagation()" (change)="checkboxChangeSelection($event,element.id)"
-          checked="false"></mat-checkbox>
+      <td *matCellDef="let rowStudent" mat-cell>
+        <mat-checkbox (click)="$event.stopPropagation()"
+                      (change)="$event ? checkboxChangeSelection(rowStudent) : null"
+                      [checked]="selection.isSelected(rowStudent)" [disabled]="areFourOrMoreSelected(rowStudent)"></mat-checkbox>
       </td>
     </ng-container>
 
