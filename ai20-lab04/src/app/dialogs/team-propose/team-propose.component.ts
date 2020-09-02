@@ -19,7 +19,7 @@ export class TeamProposeComponent {
   showCheckboxNoValidateForTesting = AppSettings.devtest;
 
   constructor(private courseService: CourseService, private dialogRef: MatDialogRef<TeamProposeComponent>,
-              @Inject(MAT_DIALOG_DATA) private data: dialogCourseData, private router: Router, private alertsService: AlertsService) {
+              @Inject(MAT_DIALOG_DATA) public data: dialogCourseData, private router: Router, private alertsService: AlertsService) {
   }
 
   onCancelClick(): void {
