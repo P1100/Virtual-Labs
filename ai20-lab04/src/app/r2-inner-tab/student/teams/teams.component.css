@@ -13,7 +13,8 @@ mat-form-field {
 }
 
 select, input, button {
-  border-width: 0;
+  border: none;
+  outline: none;
 }
 
 .mat-column-select {

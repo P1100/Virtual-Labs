@@ -3,11 +3,11 @@ import {Student} from '../../../models/student.model';
 import {MatTableDataSource} from '@angular/material/table';
 import {MatSort} from '@angular/material/sort';
 import {animate, state, style, transition, trigger} from '@angular/animations';
-import {CourseAddComponent} from '../../../dialogs/course-add/course-add.component';
 import {AlertsService} from '../../../services/alerts.service';
 import {MatDialog, MatDialogRef, MatDialogState} from '@angular/material/dialog';
 import {CourseService} from '../../../services/course.service';
 import {SelectionModel} from '@angular/cdk/collections';
+import {TeamProposeComponent} from '../../../dialogs/team-propose/team-propose.component';
 
 @Component({
   selector: 'app-teams',
@@ -49,12 +49,18 @@ export class TeamsComponent implements OnInit, OnDestroy {
 
   openProposeTeamDialog() {
     if (this.dialogRef?.getState() == MatDialogState.OPEN) {
-      throw new Error('Dialog stil open while opening a new one');
+      throw new Error('Error: Dialog stil open while opening a new one');
     }
-    let enrolledSelectedForProposal;
-    this.dialogRef = this.dialog.open(CourseAddComponent, {
+    if (this.selection.selected.length >= 4) {
+      throw new Error('Error: Selected more than 4 students');
+    }
+    if (this.selection.selected.length == 0) {
+      this.alertsService.setAlert('warning', 'No students selected!');
+      return;
+    }
+    this.dialogRef = this.dialog.open(TeamProposeComponent, {
       maxWidth: '400px', autoFocus: true, hasBackdrop: true, disableClose: true, closeOnNavigation: true,
-      data: {studentsProposal: enrolledSelectedForProposal}
+      data: {studentsProposal: this.selection.selected}
     });
     this.dialogRef.afterClosed().subscribe((res: string) => {
         this.dialogRef = null;
@@ -65,14 +71,14 @@ export class TeamsComponent implements OnInit, OnDestroy {
     );
   }
   /** Whether the number of selected elements matches the total number of rows. */
-  isAllSelected() {
+  checkboxIsAllSelected() {
     const numSelected = this.selection.selected.length;
     const numRows = this.dataSource.data.length;
     return numSelected === numRows;
   }
   /** Selects all rows if they are not all selected; otherwise clear selection. */
-  masterToggle() {
-    this.isAllSelected() ?
+  checkboxMasterToggle() {
+    this.checkboxIsAllSelected() ?
       this.selection.clear() :
       this.dataSource.data.forEach(row => this.selection.select(row));
   }
@@ -82,7 +88,7 @@ export class TeamsComponent implements OnInit, OnDestroy {
   ngOnDestroy(): void {
     this.dialogRef?.close();
   }
-  areFourOrMoreSelected(row: Student) {
+  checkboxAreFourOrMoreSelected(row: Student) {
     if (!this.selection.isSelected(row) && this.selection.selected.length >= 4) {
       return true;
     }

@@ -7,18 +7,18 @@
 
 <div class="table-container">
   <table mat-table matSort [dataSource]="dataSource" class="mat-elevation-z8">
-
     <ng-container matColumnDef="select">
       <th *matHeaderCellDef mat-header-cell>
-        <!--        <mat-checkbox (change)="$event ? masterToggle() : null"-->
-        <!--                      [checked]="selection.hasValue() && isAllSelected()"-->
-        <!--                      [indeterminate]="selection.hasValue() && !isAllSelected()">-->
+        <!--        <mat-checkbox (change)="$event ? checkboxMasterToggle() : null"-->
+        <!--                      [checked]="selection.hasValue() && checkboxIsAllSelected()"-->
+        <!--                      [indeterminate]="selection.hasValue() && !checkboxIsAllSelected()">-->
         <!--        </mat-checkbox>-->
+        <mat-checkbox disabled (click)="selection.clear()"></mat-checkbox>
       </th>
       <td *matCellDef="let rowStudent" mat-cell>
         <mat-checkbox (click)="$event.stopPropagation()"
                       (change)="$event ? checkboxChangeSelection(rowStudent) : null"
-                      [checked]="selection.isSelected(rowStudent)" [disabled]="areFourOrMoreSelected(rowStudent)"></mat-checkbox>
+                      [checked]="selection.isSelected(rowStudent)" [disabled]="checkboxAreFourOrMoreSelected(rowStudent)"></mat-checkbox>
       </td>
     </ng-container>
 
