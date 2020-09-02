@@ -1,5 +1,5 @@
 import {Component, OnDestroy} from '@angular/core';
-import {FormBuilder, FormGroup, ValidationErrors, Validators} from '@angular/forms';
+import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {Subscription} from 'rxjs';
 import {MatDialogRef} from '@angular/material/dialog';
 import {AuthService} from '../../services/auth.service';
@@ -25,13 +25,11 @@ export class LoginComponent implements OnDestroy {
               public router: Router,
               public activatedRoute: ActivatedRoute,
               public alertsService: AlertsService) {
-    console.log('INITI DIALOG');
     this.form = this.fb.group(
       {
         serial: ['111111', [Validators.required]],
         password: ['222222', [Validators.required]],
       }
-      // , {validators: fakeNameValidator}
     ) as FormGroup;
     this.form.valueChanges.pipe(
       filter(() => this.form.valid)
@@ -41,35 +39,27 @@ export class LoginComponent implements OnDestroy {
     });
   }
   ngOnDestroy(): void {
-    console.log('asdasda');
     this.dialogRef.close(); // Destroys the dialog!
     this.router.navigateByUrl('/home');
   }
   onCancelClick(): void {
-    console.log('cancel');
-    // this.subscriptionLogin?.unsubscribe();
+    this.subscriptionLogin?.unsubscribe();
     this.dialogRef.close(); // Destroys the dialog!
   }
   login() {
-    console.log('asdasdas');
     if (!this.form.valid) {
       return;
     }
-
-    console.log('2', this.form.value.serial, this.form.value.password);
     if (this.form.value?.serial && this.form.value?.password) {
-      console.log('3');
       this.subscriptionLogin = this.authService.login(this.form.value.serial, this.form.value.password)
         .subscribe(
           x => {
-            console.log('4');
-            // this.dialogRef.close('success');
-            // this.router.navigateByUrl('/');
-            console.log(this.dialogRef?.getState(), 'dialog close');
+            this.dialogRef.close('success');
+            this.router.navigateByUrl('/');
             this.alertsService.setAlert('success', 'Logged in!');
           },
           e => {
-            // this.dialogRef.close();
+            this.dialogRef.close();
             this.alertsService.setAlert('danger', 'Login failed: ' + e);
           }
         );
@@ -78,10 +68,4 @@ export class LoginComponent implements OnDestroy {
   logout() {
     this.authService.logout();
   }
-}
-
-function fakeNameValidator(control: FormGroup): ValidationErrors | null {
-  const password = control.get('password');
-  const serial = control.get('serial');
-  return password && serial && password.value === serial.value ? {fakeName: true} : null;
 }

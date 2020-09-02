@@ -28,11 +28,9 @@ export class AuthService {
     return this.isLoggedSubject as Observable<any>;
   }
   login(username: string, password: string): Observable<any> {  // returns token object
-    console.log('5');
     return this.http.post<any>(`${this.baseUrlApi}/users/authenticate`, {username, password}).pipe(
       // {"token":"eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIwMDAwMDAiLCJleHAiOjE1OTk5NzYzNjgsImlhdCI6MTU5ODkzOTU2OH0.RpHPiVshk9ZXDr-ZUA9JEPdqvAfbtNhhEqzTiBQgw3ksXA5nxn0UsiM5bk3hlnWxXTrtqgHFm-UTC6DrV8YoSA"}
       tap(authResult => {
-        console.log('6');
         const token = authResult?.token;
         const payload = JSON.parse(atob(token?.split('.')[1]));
         localStorage.setItem('token', token);

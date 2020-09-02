@@ -188,11 +188,9 @@ export class HomeComponent implements OnInit, OnDestroy {
     if (this.dialogRef?.getState() == MatDialogState.OPEN) {
       throw new Error('Dialog stil open while opening a new one');
     }
-    console.log('11111adsasdas');
     this.dialogRef = this.dialog.open(LoginComponent, {
       maxWidth: '400px', autoFocus: true, hasBackdrop: true, disableClose: true, closeOnNavigation: false
     });
-    console.log('2222222222');
     // Settings what to do when dialog is closed
     this.dialogRef.afterClosed().subscribe((res: string) => {
       }, error => this.alertsService.setAlert('danger', 'Login Dialog Error!')
