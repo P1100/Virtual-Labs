@@ -9,7 +9,7 @@
     <a routerLink="/home" class="title-link-not-active">{{title}}</a>
     <a id="TestingPageLink-devOnly" routerLink="/testing" style="padding-left: 10px; color: chartreuse" *ngIf="devShowTestingComponents">Test Page</a>
     <div *ngIf="devShowTestingComponents && retrievedImage?.length>100">
-      <img d="showProfilePhoto-devOnly" src="{{'data:image/jpg;base64,' + retrievedImage}}" width="40px" height="40px" style="margin: 5px">
+      <img id="showProfilePhoto-devOnly" src="{{'data:image/jpg;base64,' + retrievedImage}}" width="40px" height="40px" style="margin: 5px">
     </div>
 
     <span class="fill-remaining-space-header"></span>
@@ -28,7 +28,7 @@
 </div>
 
 <mat-sidenav-container>
-  <mat-sidenav name="NavListOfCourses" #drawer mode="side" [opened]="isLogged" position="start">
+  <mat-sidenav id="NavListOfCourses" #drawer mode="side" [opened]="isLogged" position="start">
     <mat-accordion multi="false" #acc *ngIf="isLogged">
       <mat-nav-list>
         <mat-list-item id="add-course-button" (click)="openAddCourseDialog()">

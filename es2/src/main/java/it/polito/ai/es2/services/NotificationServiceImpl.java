@@ -38,6 +38,7 @@ public class NotificationServiceImpl implements NotificationService {
     } else
       return false;
   }
+
   @Override
   public void sendMessage(@NotBlank String emailAddress, String subject, String body) {
     SimpleMailMessage message = new SimpleMailMessage();

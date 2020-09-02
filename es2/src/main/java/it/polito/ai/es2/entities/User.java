@@ -52,7 +52,7 @@ public class User {
   private List<Role> roles = new ArrayList<>();
 
   public Collection<? extends GrantedAuthority> getAuthorities() {
-    List<GrantedAuthority> authorities = new ArrayList<GrantedAuthority>();
+    List<GrantedAuthority> authorities = new ArrayList<>();
     for (Role role : roles) {
       authorities.add(new SimpleGrantedAuthority(role.getName()));
     }

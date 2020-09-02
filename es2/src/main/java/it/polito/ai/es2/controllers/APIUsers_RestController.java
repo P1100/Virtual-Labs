@@ -21,6 +21,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.Arrays;
+import java.util.Collections;
 
 @RestController
 @RequestMapping("/api/users")
@@ -59,7 +60,7 @@ public class APIUsers_RestController {
   @PostMapping("/student")
   public UserDTO registerStudent(@Valid @RequestBody UserDTO userDTO) {
     System.out.println(userDTO);
-    userDTO.setRoles(Arrays.asList("STUDENT"));
+    userDTO.setRoles(Collections.singletonList("STUDENT"));
     userDTO.setTypeUser(User.TypeUser.STUDENT);
     userStudProfService.addNewUser(userDTO);
     return userDTO;

@@ -73,8 +73,8 @@ public class GlobalRuntimeExceptionHandler
     sb.append("\"");
     sb.append(", \"status\":\"422\", \"error\":\"Unprocessable Entity\"}");
     log.warning("DTO Validation errors: ");
-    for (String k : errors.keySet()) {
-      log.warning(k + errors.get(k));
+    for (Map.Entry<String, String> entry : errors.entrySet()) {
+      log.warning(entry.getKey() + entry.getValue());
     }
     return new ResponseEntity<>(sb.toString(), HttpStatus.UNPROCESSABLE_ENTITY); // 422
   }

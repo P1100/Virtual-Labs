@@ -184,7 +184,7 @@ public class TeamServiceImpl implements TeamService {
     tokenRepository.deleteById(token);
     List<Token> tokenList = tokenRepository.findAllByTeamId(teamId);
     if (tokenList.size() == 0) {
-      if (team == null || team.isActive() == true) // ??
+      if (team.isActive() == true) // ??
         return false;
       team.setActive(true); // no need to save, will be flushed automatically at the end of transaction (since not a new entity)
       return true;

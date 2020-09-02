@@ -15,8 +15,8 @@ import {filter, map, startWith} from 'rxjs/operators';
 })
 /* Data is always obtained from the container component, which calls the service, which calls the back end */
 export class StudentsComponent implements AfterViewInit, OnChanges {
-  @Input()
   // Superset of filteredOptions, used in autocomplete
+  @Input()
   private students: Student[];
   // displayedColumnsTable is based on Student model (manual sync). It controls various formatting elements
   displayedColumnsTable: string[] = ['select', 'id', 'firstName', 'lastName', 'team']; // email removed

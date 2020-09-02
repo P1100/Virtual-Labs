@@ -75,6 +75,5 @@ export class LoginComponent implements OnDestroy {
 function fakeNameValidator(control: FormGroup): ValidationErrors | null {
   const password = control.get('password');
   const serial = control.get('serial');
-  const ret = password && serial && password.value === serial.value ? {fakeName: true} : null;
-  return ret;
+  return password && serial && password.value === serial.value ? {fakeName: true} : null;
 }

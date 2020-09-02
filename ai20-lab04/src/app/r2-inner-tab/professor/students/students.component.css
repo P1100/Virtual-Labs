@@ -22,5 +22,5 @@ img .avatars {
 }
 
 select, input, button {
-  border-width: 0px;
+  border-width: 0;
 }

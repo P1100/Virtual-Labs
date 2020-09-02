@@ -23,7 +23,7 @@ public class Token {
   private Timestamp expiryDate;
 
   /* Unilateral relationships */
-  @ManyToOne(optional = true)
+  @ManyToOne()
   @JoinColumn
   private User user;
   // TODO: Must remove teamId first
