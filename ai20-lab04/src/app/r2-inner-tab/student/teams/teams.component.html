@@ -9,17 +9,17 @@
   <table mat-table matSort [dataSource]="dataSource" class="mat-elevation-z8">
 
     <ng-container matColumnDef="select">
-      <th *matHeaderCellDef mat-header-cell>a
-        <!--        <mat-checkbox (change)="checkboxSetAllPage($event.checked)"-->
-        <!--                      [checked]="checkboxMasterCompleted"-->
-        <!--                      [indeterminate]="checkboxMasterIndeterminate">-->
-        <!--        </mat-checkbox>-->
+      <th *matHeaderCellDef mat-header-cell>
+        <mat-checkbox (change)="checkboxSetAll($event.checked)"
+                      [checked]="checkboxMasterCompleted"
+                      [indeterminate]="checkboxMasterIndeterminate">
+        </mat-checkbox>
       </th>
-      <td *matCellDef="let element" mat-cell>b
-        <!--        <mat-checkbox-->
-        <!--                      (click)="$event.stopPropagation()"            (change)="checkboxChangeSelection($event,element.id)"-->
-        <!--          [checked]="checkboxIsChecked(element.id)"></mat-checkbox>-->
-        <!--      </td>-->
+      <td *matCellDef="let element" mat-cell>
+        <mat-checkbox
+          (click)="$event.stopPropagation()" (change)="checkboxChangeSelection($event,element.id)"
+          [checked]="checkboxIsChecked(element.id)"></mat-checkbox>
+      </td>
     </ng-container>
 
     <ng-container matColumnDef="id">
