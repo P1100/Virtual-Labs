@@ -20,11 +20,12 @@ export class LoginComponent implements OnDestroy {
   subscriptionLogin: Subscription;
 
   constructor(public dialogRef: MatDialogRef<LoginComponent>,
-              private fb: FormBuilder,
-              private authService: AuthService,
-              private router: Router,
-              private activatedRoute: ActivatedRoute,
-              private alertsService: AlertsService) {
+              public fb: FormBuilder,
+              public authService: AuthService,
+              public router: Router,
+              public activatedRoute: ActivatedRoute,
+              public alertsService: AlertsService) {
+    console.log('INITI DIALOG');
     this.form = this.fb.group(
       {
         serial: ['111111', [Validators.required]],
@@ -40,27 +41,35 @@ export class LoginComponent implements OnDestroy {
     });
   }
   ngOnDestroy(): void {
-    this.onCancelClick();
-  }
-  onCancelClick(): void {
-    this.subscriptionLogin?.unsubscribe();
+    console.log('asdasda');
     this.dialogRef.close(); // Destroys the dialog!
     this.router.navigateByUrl('/home');
   }
+  onCancelClick(): void {
+    console.log('cancel');
+    // this.subscriptionLogin?.unsubscribe();
+    this.dialogRef.close(); // Destroys the dialog!
+  }
   login() {
+    console.log('asdasdas');
     if (!this.form.valid) {
       return;
     }
+
+    console.log('2', this.form.value.serial, this.form.value.password);
     if (this.form.value?.serial && this.form.value?.password) {
+      console.log('3');
       this.subscriptionLogin = this.authService.login(this.form.value.serial, this.form.value.password)
         .subscribe(
           x => {
-            this.dialogRef.close('success');
-            this.router.navigateByUrl('/');
+            console.log('4');
+            // this.dialogRef.close('success');
+            // this.router.navigateByUrl('/');
+            console.log(this.dialogRef?.getState(), 'dialog close');
             this.alertsService.setAlert('success', 'Logged in!');
           },
           e => {
-            this.dialogRef.close();
+            // this.dialogRef.close();
             this.alertsService.setAlert('danger', 'Login failed: ' + e);
           }
         );

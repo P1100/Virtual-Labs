@@ -1,7 +1,7 @@
 import {ChangeDetectorRef, Component, OnDestroy, OnInit} from '@angular/core';
 import {Course} from '../models/course.model';
 import {Title} from '@angular/platform-browser';
-import {MatDialog, MatDialogRef} from '@angular/material/dialog';
+import {MatDialog, MatDialogRef, MatDialogState} from '@angular/material/dialog';
 import {AuthService} from '../services/auth.service';
 import {ActivatedRoute, NavigationEnd, Router} from '@angular/router';
 import {Observable, Subscription} from 'rxjs';
@@ -56,6 +56,9 @@ export class HomeComponent implements OnInit, OnDestroy {
               private changeDetectorRef: ChangeDetectorRef
   ) {
     titleService.setTitle(this.title);
+    this.obsUpdateCourses.subscribe(courses => {
+      this.courses = courses;
+    });
     const promise = new Promise((resolve, reject) => {
       if (this.isLogged) {
         this.obsUpdateCourses.subscribe(courses => {
@@ -141,56 +144,68 @@ export class HomeComponent implements OnInit, OnDestroy {
     this.changeDetectorRef.detectChanges();
   }
   openAddCourseDialog(): void {
+    if (this.dialogRef?.getState() == MatDialogState.OPEN) {
+      throw new Error('Dialog stil open while opening a new one');
+    }
     this.dialogRef = this.dialog.open(CourseAddComponent, {
       maxWidth: '400px', autoFocus: true, hasBackdrop: true, disableClose: true, closeOnNavigation: true
     });
     this.dialogRef.afterClosed().subscribe((res: string) => {
-      this.dialogRef = null;
-      if (res != undefined) {
-        this.obsUpdateCourses.subscribe(x => this.courses = x);
+        if (res != undefined) {
+          this.obsUpdateCourses.subscribe(x => this.courses = x);
         }
       }, () => this.alertsService.setAlert('danger', 'Add Course Dialog Error')
     );
   }
   openEditCourseDialog(): void {
+    if (this.dialogRef?.getState() == MatDialogState.OPEN) {
+      throw new Error('Dialog stil open while opening a new one');
+    }
     this.dialogRef = this.dialog.open(CourseEditComponent, {
       maxWidth: '400px', autoFocus: true, hasBackdrop: true, disableClose: true, closeOnNavigation: true,
       data: {courseName: this.nameActiveCourse, courseId: this.idActiveCourse}
     });
     this.dialogRef.afterClosed().subscribe((res: string) => {
-        this.dialogRef = null;
       }, error => this.alertsService.setAlert('danger', 'Edit Course Dialog Error!')
     );
   }
   openDeleteCourseDialog(): void {
+    if (this.dialogRef?.getState() == MatDialogState.OPEN) {
+      throw new Error('Dialog stil open while opening a new one');
+    }
     this.dialogRef = this.dialog.open(CourseDeleteComponent, {
       maxWidth: '400px', autoFocus: false, hasBackdrop: true, disableClose: false, closeOnNavigation: true,
       data: {courseName: this.nameActiveCourse, courseId: this.idActiveCourse}
     });
     this.dialogRef.afterClosed().subscribe((res: string) => {
-        this.dialogRef = null;
         if (res != undefined) {
           this.obsUpdateCourses.subscribe(x => this.courses = x);
         }
-      }, error => this.alertsService.setAlert('danger', 'Delete COurse Dialog Error!')
+      }, error => this.alertsService.setAlert('danger', 'Delete Course Dialog Error!')
     );
   }
   openLoginDialogReactive(): void {
+    if (this.dialogRef?.getState() == MatDialogState.OPEN) {
+      throw new Error('Dialog stil open while opening a new one');
+    }
+    console.log('11111adsasdas');
     this.dialogRef = this.dialog.open(LoginComponent, {
       maxWidth: '400px', autoFocus: true, hasBackdrop: true, disableClose: true, closeOnNavigation: false
     });
+    console.log('2222222222');
     // Settings what to do when dialog is closed
     this.dialogRef.afterClosed().subscribe((res: string) => {
-        this.dialogRef = null;
       }, error => this.alertsService.setAlert('danger', 'Login Dialog Error!')
     );
   }
   openRegisterDialog() {
+    if (this.dialogRef?.getState() == MatDialogState.OPEN) {
+      throw new Error('Dialog stil open while opening a new one');
+    }
     this.dialogRef = this.dialog.open(RegisterComponent, {
       maxWidth: '400px', autoFocus: true, hasBackdrop: true, disableClose: true, closeOnNavigation: true
     });
     this.dialogRef.afterClosed().subscribe((idImage: number) => {
-        this.dialogRef = null;
         if (idImage > 0) {
           this.imageService.getImage(idImage).subscribe(imageDto => this.retrievedImage = imageDto.imageStringBase64);
         }
@@ -200,10 +215,10 @@ export class HomeComponent implements OnInit, OnDestroy {
   clickLoginLogout() {
     if (this.isLogged) {
       this.authService.logout();
-      this.router.navigateByUrl('/home');
+      // this.router.navigateByUrl('/home');
     } else {
       // navigando su doLogin apre in automatico la dialog in ngOnInit
-      this.router.navigateByUrl('/home?doLogin=true');
+      // this.router.navigateByUrl('/home?doLogin=true');
       this.openLoginDialogReactive();
     }
   }
@@ -211,7 +226,6 @@ export class HomeComponent implements OnInit, OnDestroy {
     this.alertNgb = null;
   }
   ngOnDestroy(): void {
-    this.dialogRef.close();
     this.authSubscription.unsubscribe();
     this.routeSubscription.unsubscribe();
     this.alertsSubscription.unsubscribe();

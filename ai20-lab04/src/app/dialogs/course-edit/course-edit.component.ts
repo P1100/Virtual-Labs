@@ -40,8 +40,8 @@ export class CourseEditComponent {
         this.alertsService.setAlert('success', 'Course updated!');
       },
       e => {
-        this.alertsService.setAlert('danger', 'Couldn\'t update course! ' + e);
         this.dialogRef.close();
+        this.alertsService.setAlert('danger', 'Couldn\'t update course! ' + e);
       }
     );
   }

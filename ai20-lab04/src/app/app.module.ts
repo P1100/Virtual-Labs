@@ -47,6 +47,7 @@ import {AuthInterceptor} from './services/auth.interceptor';
 import {UnauthorizedComponent} from './r0-topheader-leftsidebar/unauthorized.component';
 import {UnauthorizedTabComponent} from './r0-topheader-leftsidebar/unauthorized-tab.component';
 import {TeamsContComponent} from './r2-inner-tab/student/teams/teams-cont.component';
+import {TeamProposeComponent} from './dialogs/team-propose/team-propose.component';
 
 @NgModule({
   imports: [
@@ -102,7 +103,8 @@ import {TeamsContComponent} from './r2-inner-tab/student/teams/teams-cont.compon
     CourseAddComponent,
     UnauthorizedComponent,
     UnauthorizedTabComponent,
-    TeamsContComponent
+    TeamsContComponent,
+    TeamProposeComponent
   ],
   providers: [HttpClientModule, {provide: MAT_DIALOG_DEFAULT_OPTIONS, useValue: {hasBackdrop: false}},
     {provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true}],

@@ -18,7 +18,7 @@
       <td *matCellDef="let element" mat-cell>
         <mat-checkbox
           (click)="$event.stopPropagation()" (change)="checkboxChangeSelection($event,element.id)"
-          [checked]="checkboxIsChecked(element.id)"></mat-checkbox>
+          checked="false"></mat-checkbox>
       </td>
     </ng-container>
 

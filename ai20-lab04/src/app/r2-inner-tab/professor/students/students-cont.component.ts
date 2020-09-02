@@ -46,7 +46,7 @@ export class StudentsContComponent implements OnDestroy {
         this.subEnrolledStudentsCourse = this.backendService.getEnrolledStudents(this.courseId)
           .subscribe((students: Student[]) => {
               this.enrolledStudents = Array.isArray(students) ? [...students] : [];
-            }, error => this.alertsService.setAlert('danger', 'Couldn\t get enrolled students! ' + error)
+            }, error => this.alertsService.setAlert('danger', 'Couldn\'t get enrolled students! ' + error)
           );
         this.subAllStudents = this.backendService.getAllStudents()
           .subscribe((students: Student[]) => {

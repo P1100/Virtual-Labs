@@ -5,7 +5,7 @@ import {MatSort} from '@angular/material/sort';
 import {animate, state, style, transition, trigger} from '@angular/animations';
 import {CourseAddComponent} from '../../../dialogs/course-add/course-add.component';
 import {AlertsService} from '../../../services/alerts.service';
-import {MatDialog, MatDialogRef} from '@angular/material/dialog';
+import {MatDialog, MatDialogRef, MatDialogState} from '@angular/material/dialog';
 import {CourseService} from '../../../services/course.service';
 
 @Component({
@@ -51,18 +51,19 @@ export class TeamsComponent implements OnInit, OnDestroy {
   }
 
   openProposeTeamDialog() {
-    if (this.dialogRef) {
-      return;
+    if (this.dialogRef?.getState() == MatDialogState.OPEN) {
+      throw new Error('Dialog stil open while opening a new one');
     }
+    let enrolledSelectedForProposal;
     this.dialogRef = this.dialog.open(CourseAddComponent, {
       maxWidth: '400px', autoFocus: true, hasBackdrop: true, disableClose: true, closeOnNavigation: true,
-      data: {studentsProposal: this.enrolledSelectedForProposal}
+      data: {studentsProposal: enrolledSelectedForProposal}
     });
     this.dialogRef.afterClosed().subscribe((res: string) => {
-        this.dialogRef = null;
-        if (res != undefined) {
-          this.forceUploadData.emit(null);
-        }
+      this.dialogRef = null;
+      if (res != undefined) {
+        this.forceUploadData.emit(null);
+      }
       }, () => this.alertsService.setAlert('danger', 'Team Proposal dialog error')
     );
   }
@@ -73,10 +74,18 @@ export class TeamsComponent implements OnInit, OnDestroy {
     this.checkboxMasterIndeterminate = !this.checkboxMasterCompleted && entriesCheckbox.filter(x => x[1] === true).length > 0;
   }
   checkboxChangeSelection({checked}: { checked: boolean }, id) { // destructuring
-    this.checked.set(+id, checked);
-    this.updateMasterCheckbox();
+    console.log(this.checked);
+    // console.log('sads',[...this.checked.values()],[...this.checked.values()].filter((x: boolean) => x),
+    //   [...this.checked.values()].filter((x: boolean) => x).length);
+    // if ([...this.checked.values()].filter((x: boolean) => x).length >= 4)
+    //   return;
+    // console.log('set', id, checked);
+    // this.checked.set(+id, checked);
+    // this.updateMasterCheckbox();
   }
   checkboxIsChecked(id: number) {
+    // console.log(this.checked, this.checked.get(+id));
+    // console.log('isChecked', id, this.checked.get(+id));
     return this.checked.get(+id);
   }
   checkboxSetAll(completed: boolean) {

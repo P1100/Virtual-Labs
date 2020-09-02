@@ -31,8 +31,8 @@ export class CourseDeleteComponent {
         this.alertsService.setAlert('success', 'Course deleted!');
       },
       e => {
-        this.alertsService.setAlert('danger', 'Couldn\'t delete course! ' + e);
         this.dialogRef.close();
+        this.alertsService.setAlert('danger', 'Couldn\'t delete course! ' + e);
       }
     );
   }
