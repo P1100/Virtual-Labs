@@ -51,7 +51,7 @@ export class TeamsComponent implements OnInit, OnDestroy {
     if (this.dialogRef?.getState() == MatDialogState.OPEN) {
       throw new Error('Error: Dialog stil open while opening a new one');
     }
-    if (this.selection.selected.length >= 4) {
+    if (this.selection.selected.length > 4) {
       throw new Error('Error: Selected more than 4 students');
     }
     if (this.selection.selected.length == 0) {

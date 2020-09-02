@@ -20,6 +20,7 @@ export class TeamProposeComponent {
 
   constructor(private courseService: CourseService, private dialogRef: MatDialogRef<TeamProposeComponent>,
               @Inject(MAT_DIALOG_DATA) public data: dialogCourseData, private router: Router, private alertsService: AlertsService) {
+    console.log(data);
   }
 
   onCancelClick(): void {
