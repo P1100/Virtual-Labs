@@ -1,10 +1,11 @@
-import {Component} from '@angular/core';
+import {Component, Inject} from '@angular/core';
 import {Course} from '../../models/course.model';
 import {AppSettings} from '../../app-settings';
-import {MatDialogRef} from '@angular/material/dialog';
+import {MAT_DIALOG_DATA, MatDialogRef} from '@angular/material/dialog';
 import {AlertsService} from '../../services/alerts.service';
 import {CourseService} from '../../services/course.service';
 import {Router} from '@angular/router';
+import {dialogCourseData} from '../../r0-topheader-leftsidebar/home.component';
 
 @Component({
   selector: 'app-team-propose',
@@ -17,7 +18,8 @@ export class TeamProposeComponent {
   checkboxNoValidate = false;
   showCheckboxNoValidateForTesting = AppSettings.devtest;
 
-  constructor(private courseService: CourseService, public dialogRef: MatDialogRef<TeamProposeComponent>, private router: Router, private alertsService: AlertsService) {
+  constructor(private courseService: CourseService, private dialogRef: MatDialogRef<TeamProposeComponent>,
+              @Inject(MAT_DIALOG_DATA) private data: dialogCourseData, private router: Router, private alertsService: AlertsService) {
   }
 
   onCancelClick(): void {

@@ -17,7 +17,7 @@ export class CourseAddComponent {
   checkboxNoValidate = false;
   showCheckboxNoValidateForTesting = AppSettings.devtest;
 
-  constructor(private courseService: CourseService, public dialogRef: MatDialogRef<CourseAddComponent>, private router: Router, private alertsService: AlertsService) {
+  constructor(private courseService: CourseService, private dialogRef: MatDialogRef<CourseAddComponent>, private router: Router, private alertsService: AlertsService) {
   }
 
   onCancelClick(): void {

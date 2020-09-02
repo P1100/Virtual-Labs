@@ -19,12 +19,12 @@ export class LoginComponent implements OnDestroy {
   form: FormGroup;
   subscriptionLogin: Subscription;
 
-  constructor(public dialogRef: MatDialogRef<LoginComponent>,
-              public fb: FormBuilder,
-              public authService: AuthService,
-              public router: Router,
-              public activatedRoute: ActivatedRoute,
-              public alertsService: AlertsService) {
+  constructor(private dialogRef: MatDialogRef<LoginComponent>,
+              private fb: FormBuilder,
+              private authService: AuthService,
+              private router: Router,
+              private activatedRoute: ActivatedRoute,
+              private alertsService: AlertsService) {
     this.form = this.fb.group(
       {
         serial: ['111111', [Validators.required]],

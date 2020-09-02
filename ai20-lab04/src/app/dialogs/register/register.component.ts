@@ -25,8 +25,8 @@ export class RegisterComponent {
   @ViewChild('labelImageFile')
   label: ElementRef;
 
-  constructor(private courseService: CourseService, public dialogRef: MatDialogRef<RegisterComponent>, private router: Router,
-              private alertsService: AlertsService, private authService: AuthService, public imageService: ImageService) {
+  constructor(private courseService: CourseService, private dialogRef: MatDialogRef<RegisterComponent>, private router: Router,
+              private alertsService: AlertsService, private authService: AuthService, private imageService: ImageService) {
   }
 
   onCancelClick(): void {

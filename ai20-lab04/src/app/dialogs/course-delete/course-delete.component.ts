@@ -18,8 +18,8 @@ export class CourseDeleteComponent {
   noValidateForTesting = AppSettings.devtest;
 
   constructor(private courseService: CourseService,
-              public dialogRef: MatDialogRef<CourseDeleteComponent>,
-              @Inject(MAT_DIALOG_DATA) public data: dialogCourseData, private router: Router, private alertsService: AlertsService) {
+              private dialogRef: MatDialogRef<CourseDeleteComponent>,
+              @Inject(MAT_DIALOG_DATA) private data: dialogCourseData, private router: Router, private alertsService: AlertsService) {
     this.courseToDeleteId = data?.courseId;
     this.courseToDeleteName = data?.courseName;
   }

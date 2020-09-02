@@ -19,8 +19,8 @@ export class CourseEditComponent {
   showCheckboxNoValidateForTesting = AppSettings.devtest;
 
   constructor(private courseService: CourseService,
-              public dialogRef: MatDialogRef<CourseEditComponent>,
-              @Inject(MAT_DIALOG_DATA) public data: dialogCourseData, private router: Router, private alertsService: AlertsService) {
+              private dialogRef: MatDialogRef<CourseEditComponent>,
+              @Inject(MAT_DIALOG_DATA) private data: dialogCourseData, private router: Router, private alertsService: AlertsService) {
     const subscription = courseService.getCourse(data?.courseId).subscribe(
       (c: Course[]) => this.course = c[0],
       error => {
