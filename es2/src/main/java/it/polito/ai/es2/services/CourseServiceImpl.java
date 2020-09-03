@@ -140,15 +140,18 @@ public class CourseServiceImpl implements CourseService {
       throw new FailedUpdateException("null parameters");
     if (!courseRepository.existsById(courseDTO.getId()))
       throw new FailedUpdateException("not found");
-    Course old = courseRepository.findById(courseDTO.getId()).orElse(null);
     int min = courseDTO.getMinSizeTeam();
     int max = courseDTO.getMaxSizeTeam();
     if (max < min)
       throw new CourseCardinalityConstrainsException(courseDTO.getId(), min + " < " + max);
     if (courseRepository.countTeamsThatViolateCardinality(courseDTO.getId(), min, max) != 0)
       throw new CourseCardinalityConstrainsException(courseDTO.getId(), "new cardinalities incompatible with existing teams");
-    Course save = courseRepository.save(modelMapper.map(courseDTO, Course.class));
-    return;
+    Course old = courseRepository.findById(courseDTO.getId()).orElse(null);
+    Course neww = modelMapper.map(courseDTO, Course.class);
+    /* NEEDED! Because owning side overwrites join table */
+    neww.setStudents(old.getStudents());
+    neww.setProfessors(old.getProfessors());
+    courseRepository.save(neww);
   }
 
   /**
