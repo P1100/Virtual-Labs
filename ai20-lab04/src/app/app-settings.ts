@@ -18,15 +18,19 @@ export class AppSettings {
     })
     , responseType: 'json'
   };
-}
 
 // Dynamic build of r1 tabs menu
-export const tabs = [
-  {path: 'students', label: 'Students'},
-  {path: 'teams', label: 'Teams'},
-  {path: 'vms', label: 'VMs'},
-  {path: 'assignments', label: 'Assignments'}
-];
+  static tabsStudent = [
+    {path: 'teams', label: 'Teams'},
+    {path: 'vms', label: 'VMs'},
+    {path: 'assignments', label: 'Assignments'}
+  ];
+  static tabsProfessor = [
+    {path: 'students', label: 'Students'},
+    {path: 'vms', label: 'VMs'},
+    {path: 'assignments', label: 'Assignments'}
+  ];
+}
 
 /* HATEOAS api DESIGN: all http returned objects are converted to array (empty, full, or singleton), to uniform handling. TODO: look for alternatives, like @Projection */
 export function removeHATEOAS(container: HateoasModel): any[] {

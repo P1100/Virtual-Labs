@@ -32,7 +32,7 @@ import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {AssignmentsContComponent} from './r2-inner-tab/assignments/assignments-cont.component';
 import {BrowserModule} from '@angular/platform-browser';
 import {TestingComponent} from './r2-inner-tab/testing/testing.component';
-import {WelcomeEmptyComponent} from './r1-tabs-menu/welcome-empty.component';
+import {WelcomeEmptyComponent} from './r0-topheader-leftsidebar/welcome-empty.component';
 import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
 import {StudentsContComponent} from './r2-inner-tab/professor/students/students-cont.component';
 import {AppComponent} from './app.component';

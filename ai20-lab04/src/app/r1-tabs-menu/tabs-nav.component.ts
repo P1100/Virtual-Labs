@@ -1,7 +1,7 @@
 import {Component, OnDestroy} from '@angular/core';
 import {ActivatedRoute} from '@angular/router';
 import {Subscription} from 'rxjs';
-import {tabs} from '../app-settings';
+import {AppSettings} from '../app-settings';
 
 @Component({
   selector: 'app-tabs',
@@ -21,6 +21,7 @@ export class TabsNavComponent implements OnDestroy {
       this.prefix = [localStorage.getItem('role')];
       this.activeCourse = this.route.snapshot.paramMap.get('id');
       this.navLinks = [];
+      const tabs = localStorage.getItem('role') == 'professor' ? AppSettings.tabsProfessor : AppSettings.tabsStudent;
       for (const tab of tabs) {
         this.navLinks.push({path: '/' + this.prefix[0] + '/course/' + this.activeCourse + '/' + tab.path, label: tab.label});
       }
