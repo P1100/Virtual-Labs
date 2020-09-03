@@ -55,9 +55,9 @@ public class APITeams_RestController {
   }
 
   // http://localhost:8080/api/teams/propose/C0/Team0/100,101,S33
-  @PostMapping("/propose/{courseName}/{team_name}/{memberIds}")
-  public TeamDTO proposeTeam(@PathVariable String courseName, @PathVariable String team_name, @PathVariable List<Long> memberIds) {
-    return teamService.proposeTeam(courseName, team_name, memberIds);
+  @PostMapping("/propose/{courseId}/{teamName}/{hoursTimeout}/{memberIds}")
+  public TeamDTO proposeTeam(@PathVariable String courseId, @PathVariable String teamName, @PathVariable List<Long> memberIds, @PathVariable Long hoursTimeout) {
+    return teamService.proposeTeam(courseId, teamName, memberIds, hoursTimeout);
   }
 
   @PostMapping("/evict/{teamId}")

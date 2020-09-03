@@ -64,7 +64,4 @@ export class LoginComponent implements OnDestroy {
         );
     }
   }
-  logout() {
-    this.authService.logout();
-  }
 }

@@ -64,7 +64,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter implements W
         .cors().and()
 //       .formLogin()
         .authorizeRequests()
-        .antMatchers("/courses/**").hasAnyRole("STUDENT", "PROFESSOR")
+        .antMatchers("/courses/**").permitAll() //.hasAnyRole("STUDENT", "PROFESSOR")
         .antMatchers("/students/**").authenticated()
         .antMatchers("/teams/**").authenticated()
         .antMatchers("/api/images/**").permitAll()

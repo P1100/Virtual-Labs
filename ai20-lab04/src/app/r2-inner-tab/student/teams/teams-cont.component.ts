@@ -8,7 +8,8 @@ import {CourseService} from '../../../services/course.service';
 @Component({
   selector: 'app-teams-cont',
   template: `
-    <app-teams [enrolledWithoutTeams]="enrolledWithoutTeams" (forceUploadData)="onForceUploadData($event)" [courseId]="courseId">
+    <app-teams [enrolledWithoutTeams]="enrolledWithoutTeams" (forceUploadData)="onForceUploadData($event)"
+               [courseId]="courseId" [courseMin]="courseMin" [courseMax]="courseMax">
       <!--                  [students]="allStudents"-->
       <!--                  (enrolledEvent)="onStudentsToEnroll($event)"-->
       <!--                  (disenrolledEvent)="onStudentsToDisenroll($event)"-->
@@ -23,29 +24,34 @@ export class TeamsContComponent implements OnDestroy {
   private observableEnrolledWithoutTeam: Observable<Student[]>;
   subEnrolledWithTeams: Subscription = null;
   subRouteParam: Subscription = null;
+  private subCurrentCourse: Subscription;
+  courseMin: number;
+  courseMax: number;
 
   constructor(private courseService: CourseService, private activatedRoute: ActivatedRoute, private alertsService: AlertsService) {
     this.subRouteParam = this.activatedRoute.paramMap.subscribe(() => {
         this.courseId = this.activatedRoute.parent.snapshot.paramMap.get('id');
-        this.observableEnrolledWithoutTeam = this.courseService.getEnrolledWithoutTeam(this.courseId); // reusable only for the same course id
-        this.subEnrolledWithTeams = this.observableEnrolledWithoutTeam
-          .subscribe((students: Student[]) => {
-              console.log('observableEnrolledWithoutTeam init', students);
-              this.enrolledWithoutTeams = Array.isArray(students) ? [...students] : [];
-            }, error => this.alertsService.setAlert('danger', 'Couldn\'t get enrolled without team! ' + error)
-          );
+        console.log('COURSE ID', this.courseId);
+        this.onForceUploadData(null);
       }
     );
   }
   ngOnDestroy(): void {
     this.subRouteParam?.unsubscribe();
     this.subEnrolledWithTeams?.unsubscribe();
+    this.subCurrentCourse?.unsubscribe;
   }
   onForceUploadData($event: any) {
-    this.observableEnrolledWithoutTeam.subscribe((students: Student[]) => {
-        console.log('observableEnrolledWithoutTeam update', students);
-        this.enrolledWithoutTeams = Array.isArray(students) ? [...students] : [];
-      }, error => this.alertsService.setAlert('danger', 'Couldn\'t get enrolled without team! ' + error)
-    );
+    this.subEnrolledWithTeams = this.courseService.getEnrolledWithoutTeam(this.courseId)
+      .subscribe((students: Student[]) => {
+          console.log('observableEnrolledWithoutTeam init', students);
+          this.enrolledWithoutTeams = Array.isArray(students) ? [...students] : [];
+        }, error => this.alertsService.setAlert('danger', 'Couldn\'t get enrolled without team! ' + error)
+      );
+    this.subCurrentCourse = this.courseService.getCourse(this.courseId).subscribe(c => {
+      console.log('getCourse team', c, c[0]);
+      this.courseMin = c[0].minSizeTeam;
+      this.courseMax = c[0].maxSizeTeam;
+    });
   }
 }

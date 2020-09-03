@@ -34,7 +34,9 @@ export class TeamsComponent implements OnInit, OnDestroy {
   selection = new SelectionModel<Student>(true, []);
   @Input()
   courseId: string;
+  @Input()
   courseMin: number;
+  @Input()
   courseMax: number;
 
   @ViewChild(MatSort, {static: true}) sort: MatSort;
@@ -54,11 +56,10 @@ export class TeamsComponent implements OnInit, OnDestroy {
   }
   ngOnInit() {
     this.dataSource.sort = this.sort;
-    this.courseMin = +localStorage.getItem('coursemin');
-    this.courseMax = +localStorage.getItem('coursemax');
   }
 
   openProposeTeamDialog() {
+    console.log('DIALOG', this.courseMin, this.courseMax);
     if (this.dialogRef?.getState() == MatDialogState.OPEN) {
       throw new Error('Error: Dialog stil open while opening a new one');
     }

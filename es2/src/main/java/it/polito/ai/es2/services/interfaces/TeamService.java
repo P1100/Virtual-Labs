@@ -2,6 +2,7 @@ package it.polito.ai.es2.services.interfaces;
 
 import it.polito.ai.es2.dtos.StudentDTO;
 import it.polito.ai.es2.dtos.TeamDTO;
+import org.springframework.security.access.prepost.PreAuthorize;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;
@@ -16,7 +17,7 @@ public interface TeamService {
 
   Optional<TeamDTO> getTeam(@NotNull Long teamId);
 
-  TeamDTO proposeTeam(@NotBlank String courseId, @NotBlank String name, @NotNull List<Long> memberIds);
+  @PreAuthorize("hasRole('STUDENT')") TeamDTO proposeTeam(@NotBlank String courseName, @NotBlank String team_name, @NotNull List<Long> memberIds, @NotNull Long hoursTimeout);
 
   boolean evictTeam(@NotNull Long teamId);
 

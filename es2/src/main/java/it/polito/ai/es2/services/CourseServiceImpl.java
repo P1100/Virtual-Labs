@@ -50,7 +50,7 @@ public class CourseServiceImpl implements CourseService {
    * GET {@link APICourses_RestController#getAllCourses()}
    */
   @Override
-  @PreAuthorize("isAuthenticated()") // overrides class roles
+//  @PreAuthorize("isAuthenticated()") // overrides class roles
   public List<CourseDTO> getAllCourses() {
     log.info("getAllCourses");
     return courseRepository.findAll().stream().map(x -> modelMapper.map(x, CourseDTO.class)).collect(Collectors.toList());
@@ -119,7 +119,7 @@ public class CourseServiceImpl implements CourseService {
    * POST {@link it.polito.ai.es2.controllers.APICourses_RestController#addCourse(CourseDTO)}
    */
   @Override
-  @PreAuthorize("hasRole('PROFESSOR')")
+//  @PreAuthorize("hasRole('PROFESSOR')")
   public void addCourse(CourseDTO courseDTO) {
     log.info("addCourse(" + courseDTO + ")");
     if (courseDTO == null || courseDTO.getId() == null)
@@ -140,13 +140,15 @@ public class CourseServiceImpl implements CourseService {
       throw new FailedUpdateException("null parameters");
     if (!courseRepository.existsById(courseDTO.getId()))
       throw new FailedUpdateException("not found");
+    Course old = courseRepository.findById(courseDTO.getId()).orElse(null);
     int min = courseDTO.getMinSizeTeam();
     int max = courseDTO.getMaxSizeTeam();
     if (max < min)
       throw new CourseCardinalityConstrainsException(courseDTO.getId(), min + " < " + max);
     if (courseRepository.countTeamsThatViolateCardinality(courseDTO.getId(), min, max) != 0)
       throw new CourseCardinalityConstrainsException(courseDTO.getId(), "new cardinalities incompatible with existing teams");
-    courseRepository.save(modelMapper.map(courseDTO, Course.class));
+    Course save = courseRepository.save(modelMapper.map(courseDTO, Course.class));
+    return;
   }
 
   /**
@@ -194,7 +196,7 @@ public class CourseServiceImpl implements CourseService {
    * {@link it.polito.ai.es2.controllers.APICourses_RestController#enrollStudent(String, Map)}
    */
   @Override
-  @PreAuthorize("hasRole('PROFESSOR')")
+//  @PreAuthorize("hasRole('PROFESSOR')")
   public void enrollStudent(Long studentId, String courseId) {
     log.info("enrollStudent(" + studentId + ", " + courseId + ")");
     if (studentId == null || courseId == null) throw new NullParameterException("student id, course id");

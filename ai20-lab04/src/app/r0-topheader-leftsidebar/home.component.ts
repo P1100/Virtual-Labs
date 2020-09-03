@@ -35,7 +35,7 @@ export class HomeComponent implements OnInit, OnDestroy {
   panelOpenState = [];
   authSubscription: Subscription;
   loggedUserName = '';
-  isLogged = false;
+  isLogged = undefined;
   routeSubscription: Subscription;
   alertsSubscription: Subscription;
   alertNgb: Alert; // ngb-alert
@@ -45,6 +45,9 @@ export class HomeComponent implements OnInit, OnDestroy {
   role = 'anonymous';
 
   private obsUpdateCourses = this.courseService.getCourses(); // no parameters -> reusable
+  private coursesInitializedPromise: Promise<unknown>;
+  private authInitPromise: Promise<unknown>;
+
   constructor(private titleService: Title,
               private courseService: CourseService,
               public dialog: MatDialog,
@@ -56,45 +59,74 @@ export class HomeComponent implements OnInit, OnDestroy {
               private changeDetectorRef: ChangeDetectorRef
   ) {
     titleService.setTitle(this.title);
-    this.obsUpdateCourses.subscribe(courses => {
-      this.courses = courses;
+
+    this.authInitPromise = new Promise((resolve, reject) => {
+      console.log('PROMISE TWO');
+      // Updates tool welcome message, post login refresh
+      this.authSubscription = this.authService.getIsLoggedSubject().subscribe(newLogStatus => {
+        const previousLoggedStatus = this.isLogged;
+        if (newLogStatus == true) {
+          this.role = localStorage.getItem('role');
+          this.loggedUserName = this.role + ' ' + localStorage.getItem('username');
+          if (previousLoggedStatus === undefined) {
+            this.coursesInitializedPromise = new Promise((resolve, reject) => {
+              console.log('PROMISE ONE');
+              this.obsUpdateCourses.subscribe(courses => {
+                  console.log('PROMISE DONE');
+                  this.courses = courses;
+                  resolve('Courses initialized!');
+                },
+                e => {
+                  this.alertsService.setAlert('danger', 'Couldn\'t init courses. ' + e);
+                });
+            });
+          } else if (previousLoggedStatus == false && newLogStatus == true) {
+            console.log('AUTH UPDATE COURSES');
+            this.obsUpdateCourses.subscribe(x => this.courses = x,
+              error => {
+                this.alertsService.setAlert('danger', 'Couldn\'t update courses after login! ' + error);
+              });
+          }
+        } else {
+          this.loggedUserName = null;
+          this.role = 'anonymous';
+        }
+        this.isLogged = newLogStatus;
+        resolve('Auth initialized!');
+      });
     });
-    const promise = new Promise((resolve, reject) => {
-      if (this.isLogged) {
-        this.obsUpdateCourses.subscribe(courses => {
-            this.courses = courses;
-            resolve('Courses initialized!');
-          },
-          e => {
-            this.alertsService.setAlert('danger', 'Couldn\'t init courses. ' + e);
-          });
-      } else {
-        resolve('User not logged');
+    this.authInitPromise.then(value => this.setupRoutingUpdateChain());
+  }
+  ngOnInit(): void {
+    this.alertsSubscription = this.alertsService.getAlertSubject().subscribe(x => this.alertNgb = x);
+    this.routeSubscription = this.route.queryParams.subscribe(params => {
+      if (params.doLogin === 'true') {
+        this.openLoginDialogReactive();
       }
     });
+  }
+  private setupRoutingUpdateChain() {
     // At every routing change, update nameActiveCourse (top toolbar) and idActiveCourse, plus some resets/refresh/checks
-    this.router.events
-      .pipe(
-        filter(() => this.isLogged),
-        filter((event) => event instanceof NavigationEnd),
-        map(() => this.route),
-        map((rout) => {
-          let lastchild: ActivatedRoute = rout;
-          while (lastchild.firstChild != null) {
-            lastchild = lastchild.firstChild;
-          }
-          return lastchild; // -> last child will have all the params inherited (paramsInheritanceStrategy: 'always'")
-        }),
-        map(rout => rout.snapshot.paramMap)
-      ).subscribe((paramMap) => {
-      // Wait for courses to be initialized (init)
-      promise.then(() => {
-        const oldCourseId = this.idActiveCourse;
+    this.router.events.pipe(
+      filter(() => this.isLogged),
+      filter((event) => event instanceof NavigationEnd),
+      map(() => this.route),
+      map((rout) => {
+        let lastchild: ActivatedRoute = rout;
+        while (lastchild.firstChild != null) {
+          lastchild = lastchild.firstChild;
+        }
+        return lastchild; // -> last child will have all the params inherited (paramsInheritanceStrategy: 'always'")
+      }),
+      map(rout => rout.snapshot.paramMap)
+    ).subscribe((paramMap) => {
+      const oldCourseId = this.idActiveCourse;
+      this.idActiveCourse = paramMap.get('id');
+      this.coursesInitializedPromise?.then(() => {
         if (this.courses == null || paramMap?.get('id') == null) {
           this.nameActiveCourse = null;
           this.idActiveCourse = null;
         } else {
-          this.idActiveCourse = paramMap.get('id');
           for (const course of this.courses) {
             // tslint:disable-next-line:triple-equals
             if (course.id == this.idActiveCourse) { // dont use === here
@@ -104,8 +136,6 @@ export class HomeComponent implements OnInit, OnDestroy {
         }
         if (this.idActiveCourse != oldCourseId && this.idActiveCourse != null) { // reset alerts
           this.alertsService.closeAlert();
-          localStorage.setItem('coursemin', this.courses.find(value => value.id == this.idActiveCourse).minSizeTeam.toString());
-          localStorage.setItem('coursemax', this.courses.find(value => value.id == this.idActiveCourse).maxSizeTeam.toString());
         }
         if (this.idActiveCourse != oldCourseId) { // closing all panels,
           for (let i = 0; i < this.panelOpenState.length; i++) {
@@ -113,31 +143,6 @@ export class HomeComponent implements OnInit, OnDestroy {
           }
         }
       });
-    });
-    this.authSubscription = this.authService.getIsLoggedSubject().subscribe(newLogStatus => {
-      const previousLoggedStatus = this.isLogged;
-      this.isLogged = newLogStatus;
-      if (newLogStatus == true) {
-        this.role = localStorage.getItem('role');
-        this.loggedUserName = this.role + ' ' + localStorage.getItem('username');
-        if (previousLoggedStatus == false && newLogStatus == true) {
-          this.obsUpdateCourses.subscribe(x => this.courses = x,
-            e => {
-              this.alertsService.setAlert('danger', 'Couldn\'t update courses after login! ' + e);
-            });
-        }
-      } else {
-        this.loggedUserName = null;
-        this.role = 'anonymous';
-      }
-    });
-    this.alertsSubscription = this.alertsService.getAlertSubject().subscribe(x => this.alertNgb = x);
-  }
-  ngOnInit(): void {
-    this.routeSubscription = this.route.queryParams.subscribe(params => {
-      if (params.doLogin === 'true') {
-        this.openLoginDialogReactive();
-      }
     });
   }
   dontExpandPanelOnNameClick(i: number) {
@@ -214,11 +219,9 @@ export class HomeComponent implements OnInit, OnDestroy {
   clickLoginLogout() {
     if (this.isLogged) {
       this.authService.logout();
-      // this.router.navigateByUrl('/home');
+      this.router.navigateByUrl('/home');
     } else {
-      // navigando su doLogin apre in automatico la dialog in ngOnInit
-      // this.router.navigateByUrl('/home?doLogin=true');
-      this.openLoginDialogReactive();
+      this.router.navigateByUrl('/home?doLogin=true');
     }
   }
   closeAlert() {

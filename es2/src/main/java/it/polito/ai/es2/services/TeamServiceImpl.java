@@ -105,12 +105,12 @@ public class TeamServiceImpl implements TeamService {
   }
 
   /**
-   * {@link it.polito.ai.es2.controllers.APITeams_RestController#proposeTeam(String, String, List)}
+   * {@link it.polito.ai.es2.controllers.APITeams_RestController#proposeTeam(String, String, List, Long)}
    */
   @Override
   @PreAuthorize("hasRole('STUDENT')")
-  public TeamDTO proposeTeam(@NotBlank String courseName, @NotBlank String team_name, @NotNull List<Long> memberIds) {
-    log.info("proposeTeam(" + courseName + ", " + team_name + ", " + memberIds + ")");
+  public TeamDTO proposeTeam(@NotBlank String courseName, @NotBlank String team_name, @NotNull List<Long> memberIds, @NotNull Long hoursTimeout) {
+    log.info("proposeTeam(" + courseName + ", " + team_name + ", " + memberIds + ", " + hoursTimeout + ")");
     if (courseName == null || team_name == null || memberIds == null)
       throw new NullParameterException("null student or course or list of memberIds parameter");
     Optional<Course> oc = courseRepository.findById(courseName);

@@ -51,7 +51,8 @@ public class VirtualLabsApplication {
       @Override
       public void run(String... args) {
         // TODO: remove in prod, add external sql script. Note: MUST COMMENT SECURITY 'HASROLE' PREAUTHORIZE on methods, before executing
-        boolean init = false;
+        boolean init;
+        init = (long) courseService.getAllCourses().size() <= 0;
         if (init == true) {
           System.out.println("***************** Command Line Runner DB INITIALIZATION (check order of fields!) **********************");
           courseService.addCourse(new CourseDTO("c1", "Internet Applications", 1, 500, true, null));
