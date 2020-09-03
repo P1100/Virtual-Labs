@@ -37,7 +37,7 @@ public class Course {
   private String vmModelPath;
 
   @ManyToMany(cascade = {CascadeType.MERGE, CascadeType.PERSIST})
-  @JoinTable
+  @JoinTable(name = "course_student") // otherwise jpa-ql console wont find it
   private List<Student> students = new ArrayList<>();
 
   @ManyToMany(cascade = {CascadeType.MERGE, CascadeType.PERSIST})
