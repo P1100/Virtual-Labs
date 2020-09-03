@@ -9,6 +9,11 @@ import {CourseService} from '../../../services/course.service';
 import {SelectionModel} from '@angular/cdk/collections';
 import {TeamProposeComponent} from '../../../dialogs/team-propose/team-propose.component';
 
+export interface dialogProposalData {
+  courseId: string,
+  members: Student[]
+}
+
 @Component({
   selector: 'app-teams',
   templateUrl: './teams.component.html',
@@ -27,6 +32,8 @@ export class TeamsComponent implements OnInit, OnDestroy {
   private enrolledSelectedForProposal: Student[];
   dialogRef: MatDialogRef<any>;
   selection = new SelectionModel<Student>(true, []);
+  @Input()
+  courseId: string;
   courseMin: number;
   courseMax: number;
 
@@ -67,14 +74,14 @@ export class TeamsComponent implements OnInit, OnDestroy {
       this.alertsService.setAlert('warning', `Selected more than ${this.courseMax} students, (course maximum)`);
       return;
     }
+    const dialogData: dialogProposalData = {courseId: this.courseId, members: this.selection.selected};
     this.dialogRef = this.dialog.open(TeamProposeComponent, {
-      maxWidth: '400px', autoFocus: true, hasBackdrop: true, disableClose: true, closeOnNavigation: true,
-      data: this.selection.selected
+      maxWidth: '400px', autoFocus: true, hasBackdrop: true, disableClose: true, closeOnNavigation: true, data: dialogData
     });
     this.dialogRef.afterClosed().subscribe((res: string) => {
-      this.dialogRef = null;
-      if (res != undefined) {
-        this.forceUploadData.emit(null);
+        this.dialogRef = null;
+        if (res != undefined) {
+          this.forceUploadData.emit(null);
         }
       }, () => this.alertsService.setAlert('danger', 'Team Proposal dialog error')
     );
@@ -85,12 +92,12 @@ export class TeamsComponent implements OnInit, OnDestroy {
     const numRows = this.dataSource.data.length;
     return numSelected === numRows;
   }
-  /** Selects all rows if they are not all selected; otherwise clear selection. */
-  checkboxMasterToggle() {
-    this.checkboxIsAllSelected() ?
-      this.selection.clear() :
-      this.dataSource.data.forEach(row => this.selection.select(row));
-  }
+  // /** Selects all rows if they are not all selected; otherwise clear selection. */
+  // checkboxMasterToggle() {
+  //   this.checkboxIsAllSelected() ?
+  //     this.selection.clear() :
+  //     this.dataSource.data.forEach(row => this.selection.select(row));
+  // }
   checkboxChangeSelection(row: Student) {
     this.selection.toggle(row);
   }

@@ -1,7 +1,8 @@
-<h1 mat-dialog-title class="text-center mb-3">Team composition</h1>
+<h1 mat-dialog-title class="text-center mb-3">Team proposal</h1>
+Members:
 <ul>
-  <li> Current user: {{current}}</li>
-  <li *ngFor="let el of data"> ({{el.id}}) - {{el.firstName}} {{el.lastName}} {{el.email}}</li>
+  <li> ({{idStringLoggedStudent}}) - idStringLoggedStudent user</li>
+  <li *ngFor="let el of data.members"> ({{el.id}}) - {{el.firstName}} {{el.lastName}} {{el.email}}</li>
 </ul>
 <form #cf="ngForm" (ngSubmit)="onSubmit()" class="text-center border border-light p-3" [noValidate]="checkboxNoValidate">
   <div>
@@ -13,18 +14,18 @@
     <br>
     <mat-form-field class="form-group">
       <mat-label>Timeout</mat-label>
-      <input matInput #timeout="ngModel" name="timeout" [(ngModel)]="timeoutTeam" required type="datetime-local">
+      <input matInput #timeout="ngModel" name="timeout" [(ngModel)]="hoursTimeoutTeam" required type="number">
       <mat-error *ngIf="timeout.invalid && !timeout.pristine">Timeout is required</mat-error>
     </mat-form-field>
   </div>
   <br>
   <div mat-dialog-actions>
-    <button mat-raised-button color="primary" mat-button
-            [disabled]="(!cf.valid || cf.pristine) && !checkboxNoValidate">Add
+    <button mat-raised-button color="primary" mat-button [disabled]="(!cf.valid || cf.pristine) && !checkboxNoValidate">
+      Add
     </button>
-    <button type="button" mat-button (click)="onCancelClick()">Cancel</button>
-    <mat-checkbox style="margin: 2px" name="noval" [(ngModel)]="checkboxNoValidate"
-                  *ngIf="showCheckboxNoValidateForTesting">Form No Validate
-    </mat-checkbox>
+    <button type="button" mat-button (click)="onCancelClick()">
+      Cancel
+    </button>
+    <mat-checkbox style="margin: 2px" name="noval" [(ngModel)]="checkboxNoValidate" *ngIf="showCheckboxNoValidateForTesting"> Form No Validate</mat-checkbox>
   </div>
 </form>

@@ -8,8 +8,7 @@ import {CourseService} from '../../../services/course.service';
 @Component({
   selector: 'app-teams-cont',
   template: `
-    <app-teams [enrolledWithoutTeams]="enrolledWithoutTeams"
-               (forceUploadData)="onForceUploadData($event)">
+    <app-teams [enrolledWithoutTeams]="enrolledWithoutTeams" (forceUploadData)="onForceUploadData($event)" [courseId]="courseId">
       <!--                  [students]="allStudents"-->
       <!--                  (enrolledEvent)="onStudentsToEnroll($event)"-->
       <!--                  (disenrolledEvent)="onStudentsToDisenroll($event)"-->
