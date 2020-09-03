@@ -63,9 +63,9 @@ public class ModelHelper {
     studentDTO.add(Link.of(baseUrl + "/api/students").withRel("students"));
     studentDTO.add(Link.of(baseUrl + "/api/students/" + studentDTO.getId()).withSelfRel());
     studentDTO.add(linkTo(methodOn(APIStudents_RestController.class)
-                              .getCourses(studentDTO.getId())).withRel("courses"));
+        .getEnrolledCourses(studentDTO.getId())).withRel("courses"));
     studentDTO.add(linkTo(methodOn(APIStudents_RestController.class)
-                              .getTeamsForStudent(studentDTO.getId())).withRel("teams"));
+        .getTeamsForStudent(studentDTO.getId())).withRel("teams"));
     return studentDTO;
   }
 

@@ -9,7 +9,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.hateoas.CollectionModel;
 import org.springframework.hateoas.Link;
 import org.springframework.http.HttpStatus;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -24,7 +23,6 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
 @RestController
 @RequestMapping("/api/students")
-@PreAuthorize("isAuthenticated()")
 public class APIStudents_RestController {
   @Autowired
   UserStudProfService userStudProfService;
@@ -32,7 +30,6 @@ public class APIStudents_RestController {
   private ModelHelper modelHelper;
 
   @GetMapping()
-  @PreAuthorize("hasRole('PROFESSOR')")
   public CollectionModel<StudentDTO> getAllStudents() {
     List<StudentDTO> allStudents = userStudProfService.getAllStudents();
     for (StudentDTO studentDTO : allStudents) {
@@ -44,7 +41,6 @@ public class APIStudents_RestController {
   }
 
   @GetMapping("/{student_id}")
-  @PreAuthorize("hasRole('STUDENT') or hasRole('PROFESSOR')")
   public StudentDTO getStudent(@PathVariable Long student_id) {
     Optional<StudentDTO> studentDTO = userStudProfService.getStudent(student_id);
     if (studentDTO.isEmpty())
@@ -53,19 +49,17 @@ public class APIStudents_RestController {
   }
 
   @GetMapping("/{student_id}/courses")
-  @PreAuthorize("hasRole('STUDENT') or hasRole('PROFESSOR')")
-  public CollectionModel<CourseDTO> getCourses(@PathVariable Long student_id) {
+  public CollectionModel<CourseDTO> getEnrolledCourses(@PathVariable Long student_id) {
     List<CourseDTO> courses = userStudProfService.getEnrolledCourses(student_id);
     for (CourseDTO courseDTO : courses) {
       modelHelper.enrich(courseDTO);
     }
     CollectionModel<CourseDTO> courseDTOS = CollectionModel.of(courses,
-        linkTo(methodOn(APIStudents_RestController.class).getCourses(student_id)).withSelfRel());
+        linkTo(methodOn(APIStudents_RestController.class).getEnrolledCourses(student_id)).withSelfRel());
     return courseDTOS;
   }
 
   @GetMapping("/{student_id}/teams")
-  @PreAuthorize("hasRole('STUDENT') or hasRole('PROFESSOR')")
   public CollectionModel<TeamDTO> getTeamsForStudent(@PathVariable Long student_id) {
     List<TeamDTO> teams = userStudProfService.getTeamsForStudent(student_id);
     for (TeamDTO team : teams) {

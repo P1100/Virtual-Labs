@@ -8,7 +8,6 @@ import it.polito.ai.es2.services.interfaces.CourseService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.hateoas.CollectionModel;
 import org.springframework.http.HttpStatus;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.server.ResponseStatusException;
@@ -29,7 +28,6 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
 @RestController
 @RequestMapping("/api/courses")
-@PreAuthorize("isAuthenticated()") // doesnt override WebSecurityConfig settings
 public class APICourses_RestController {
   @Autowired
   private CourseService courseService;
@@ -37,7 +35,6 @@ public class APICourses_RestController {
   private ModelHelper modelHelper;
 
   @GetMapping()
-  @PreAuthorize("isAuthenticated()") // overrides class roles
   public CollectionModel<CourseDTO> getAllCourses() {
     List<CourseDTO> courses = courseService.getAllCourses().stream().map(modelHelper::enrich).collect(Collectors.toList());
     return CollectionModel.of(courses,
@@ -46,7 +43,6 @@ public class APICourses_RestController {
 
   //   {"name":"C33","min":1,"max":100,"enabled":true,"professor":"malnati"} - ContentType: application/json
   @GetMapping("/{courseId}")
-  @PreAuthorize("hasRole('STUDENT') or hasRole('PROFESSOR')")
   public CourseDTO getCourse(@PathVariable String courseId) {
     Optional<CourseDTO> courseDTO = courseService.getCourse(courseId);
     if (courseDTO.isEmpty())
@@ -55,37 +51,31 @@ public class APICourses_RestController {
   }
 
   @PostMapping()
-  @PreAuthorize("hasRole('PROFESSOR')")
   public void addCourse(@Valid @RequestBody CourseDTO courseDTO) {
     courseService.addCourse(courseDTO);
   }
 
   @PutMapping()
-  @PreAuthorize("hasRole('PROFESSOR')")
   public void updateCourse(@Valid @RequestBody CourseDTO courseDTO) {
     courseService.updateCourse(courseDTO);
   }
 
   @DeleteMapping("/{courseId}")
-  @PreAuthorize("hasRole('PROFESSOR')")
   public void deleteCourse(@PathVariable String courseId) {
     courseService.deleteCourse(courseId);
   }
 
   @RequestMapping(value = "/{courseId}/enable", method = {RequestMethod.POST, RequestMethod.PUT})
-  @PreAuthorize("hasRole('PROFESSOR')")
   public void enableCourse(@PathVariable String courseId) {
     courseService.enableCourse(courseId);
   }
 
   @RequestMapping(value = "/{courseId}/disable", method = {RequestMethod.POST, RequestMethod.PUT})
-  @PreAuthorize("hasRole('PROFESSOR')")
   public void disableCourse(@PathVariable String courseId) {
     courseService.disableCourse(courseId);
   }
 
   @GetMapping("/{courseId}/enrolled")
-  @PreAuthorize("hasRole('STUDENT') or hasRole('PROFESSOR')")
   public CollectionModel<StudentDTO> getEnrolledStudents(@PathVariable String courseId) {
     List<StudentDTO> students = courseService.getEnrolledStudents(courseId);
     for (StudentDTO student : students) {
@@ -97,14 +87,12 @@ public class APICourses_RestController {
 
   // TODO: remove team if no more students in it?
   @PutMapping("/{courseId}/disenroll/{studentId}")
-  @PreAuthorize("hasRole('PROFESSOR')")
   public void disenrollStudent(@PathVariable Long studentId, @PathVariable String courseId) {
     courseService.disenrollStudent(studentId, courseId);
   }
 
   // ContentType:json. Body:{"id":"S33","name":"S33-name","firstName":"S33-FirstName"}
   @RequestMapping(value = "/{courseId}/enroll", method = {RequestMethod.PUT, RequestMethod.POST})
-  @PreAuthorize("hasRole('PROFESSOR')")
   public void enrollStudent(@PathVariable String courseId, @RequestBody Map<String, String> studentMap) { // StudentDTO
     Long studentId;
     if (studentMap == null) throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "null student");
@@ -117,13 +105,11 @@ public class APICourses_RestController {
 
   //["S33","S44"]
   @RequestMapping(value = "/{courseId}/enroll-all", method = {RequestMethod.PUT, RequestMethod.POST})
-  @PreAuthorize("hasRole('PROFESSOR')") // and @mySecurityChecker.isCourseOwner(#courseName,authentication.principal.username))")
   public List<Boolean> enrollStudents(@RequestBody List<Long> studentIds, @PathVariable String courseId) {
     return courseService.enrollStudents(studentIds, courseId);
   }
 
   @RequestMapping(value = "/{courseId}/enroll-csv", method = {RequestMethod.PUT, RequestMethod.POST})
-  @PreAuthorize("hasRole('PROFESSOR')")
   public List<Boolean> enrollStudentsCSV(@PathVariable @NotBlank String courseId, @RequestParam("file") MultipartFile file) {
     List<Boolean> booleanList;
     if (file == null || file.isEmpty() || file.getContentType() == null)
@@ -142,7 +128,6 @@ public class APICourses_RestController {
   }
 
   @GetMapping("/{courseId}/teams")
-  @PreAuthorize("hasRole('STUDENT') or hasRole('PROFESSOR')")
   public CollectionModel<TeamDTO> getTeamsForCourse(@PathVariable String courseId) {
     List<TeamDTO> teams = courseService.getTeamsForCourse(courseId);
     for (TeamDTO team : teams) {
@@ -153,7 +138,6 @@ public class APICourses_RestController {
   }
 
   @GetMapping("/{courseId}/students-with-team")
-  @PreAuthorize("hasRole('STUDENT') or hasRole('PROFESSOR')")
   public CollectionModel<StudentDTO> getEnrolledWithTeam(@PathVariable String courseId) {
     List<StudentDTO> students = courseService.getEnrolledWithTeam(courseId);
     for (StudentDTO student : students) {
@@ -164,7 +148,6 @@ public class APICourses_RestController {
   }
 
   @GetMapping("/{courseId}/students-without-team")
-  @PreAuthorize("hasRole('STUDENT') or hasRole('PROFESSOR')")
   public CollectionModel<StudentDTO> getEnrolledWithoutTeam(@PathVariable String courseId) {
     List<StudentDTO> students = courseService.getEnrolledWithoutTeam(courseId);
     for (StudentDTO student : students) {

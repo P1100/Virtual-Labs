@@ -4,7 +4,6 @@ import it.polito.ai.es2.services.interfaces.NotificationService;
 import it.polito.ai.es2.services.interfaces.TeamService;
 import it.polito.ai.es2.services.interfaces.UserStudProfService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -16,7 +15,6 @@ import javax.validation.constraints.NotBlank;
 @Controller
 @RequestMapping("/notification")
 @Validated
-@PreAuthorize("permitAll()")
 public class Notification_Controller {
   @Autowired
   NotificationService notificationService;

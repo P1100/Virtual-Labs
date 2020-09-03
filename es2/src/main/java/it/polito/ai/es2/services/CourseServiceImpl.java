@@ -17,6 +17,7 @@ import it.polito.ai.es2.services.interfaces.CourseService;
 import lombok.extern.java.Log;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -49,6 +50,7 @@ public class CourseServiceImpl implements CourseService {
    * GET {@link APICourses_RestController#getAllCourses()}
    */
   @Override
+  @PreAuthorize("isAuthenticated()") // overrides class roles
   public List<CourseDTO> getAllCourses() {
     log.info("getAllCourses");
     return courseRepository.findAll().stream().map(x -> modelMapper.map(x, CourseDTO.class)).collect(Collectors.toList());
@@ -58,6 +60,7 @@ public class CourseServiceImpl implements CourseService {
    * GET {@link it.polito.ai.es2.controllers.APICourses_RestController#getCourse(String)}
    */
   @Override
+  @PreAuthorize("hasRole('STUDENT') or hasRole('PROFESSOR')")
   public Optional<CourseDTO> getCourse(String courseId) {
     log.info("getCourse(" + courseId + ")");
     if (courseId == null) return Optional.empty();
@@ -68,6 +71,7 @@ public class CourseServiceImpl implements CourseService {
    * GET {@link it.polito.ai.es2.controllers.APICourses_RestController#getEnrolledStudents(String)}
    */
   @Override
+  @PreAuthorize("hasRole('STUDENT') or hasRole('PROFESSOR')")
   public List<StudentDTO> getEnrolledStudents(String courseId) {
     log.info("getEnrolledStudents(" + courseId + ")");
     if (courseId == null) throw new CourseNotFoundException("null parameter");
@@ -89,6 +93,7 @@ public class CourseServiceImpl implements CourseService {
    * {@link it.polito.ai.es2.controllers.APICourses_RestController#enableCourse(String)}
    */
   @Override
+  @PreAuthorize("hasRole('PROFESSOR')")
   public void enableCourse(String courseId) {
     log.info("enableCourse(" + courseId + ")");
     if (courseId == null) throw new CourseNotFoundException();
@@ -101,6 +106,7 @@ public class CourseServiceImpl implements CourseService {
    * {@link it.polito.ai.es2.controllers.APICourses_RestController#disableCourse(String)}
    */
   @Override
+  @PreAuthorize("hasRole('PROFESSOR')")
   public void disableCourse(String courseId) {
     log.info("disableCourse(" + courseId + ")");
     if (courseId == null) throw new CourseNotFoundException();
@@ -113,6 +119,7 @@ public class CourseServiceImpl implements CourseService {
    * POST {@link it.polito.ai.es2.controllers.APICourses_RestController#addCourse(CourseDTO)}
    */
   @Override
+  @PreAuthorize("hasRole('PROFESSOR')")
   public void addCourse(CourseDTO courseDTO) {
     log.info("addCourse(" + courseDTO + ")");
     if (courseDTO == null || courseDTO.getId() == null)
@@ -126,6 +133,7 @@ public class CourseServiceImpl implements CourseService {
    * PUT {@link it.polito.ai.es2.controllers.APICourses_RestController#updateCourse(CourseDTO)}
    */
   @Override
+  @PreAuthorize("hasRole('PROFESSOR')")
   public void updateCourse(CourseDTO courseDTO) {
     log.info("updateCourse(" + courseDTO + ")");
     if (courseDTO == null || courseDTO.getId() == null)
@@ -145,6 +153,7 @@ public class CourseServiceImpl implements CourseService {
    * DELETE {@link it.polito.ai.es2.controllers.APICourses_RestController#deleteCourse(String)}
    */
   @Override
+  @PreAuthorize("hasRole('PROFESSOR')")
   public void deleteCourse(String courseId) {
     log.info("deleteCourse(" + courseId + ")");
     if (courseId == null)
@@ -170,6 +179,7 @@ public class CourseServiceImpl implements CourseService {
    * {@link it.polito.ai.es2.controllers.APICourses_RestController#disenrollStudent(Long, String)}
    */
   @Override
+  @PreAuthorize("hasRole('PROFESSOR')")
   public void disenrollStudent(Long studentId, String courseId) {
     log.info("disenrollStudent(" + studentId + ", " + courseId + ")");
     if (studentId == null || courseId == null) throw new NullParameterException("student id, course id");
@@ -184,6 +194,7 @@ public class CourseServiceImpl implements CourseService {
    * {@link it.polito.ai.es2.controllers.APICourses_RestController#enrollStudent(String, Map)}
    */
   @Override
+  @PreAuthorize("hasRole('PROFESSOR')")
   public void enrollStudent(Long studentId, String courseId) {
     log.info("enrollStudent(" + studentId + ", " + courseId + ")");
     if (studentId == null || courseId == null) throw new NullParameterException("student id, course id");
@@ -203,6 +214,7 @@ public class CourseServiceImpl implements CourseService {
    * {@link it.polito.ai.es2.controllers.APICourses_RestController#enrollStudents(List, String)}
    */
   @Override
+  @PreAuthorize("hasRole('PROFESSOR')") // and @mySecurityChecker.isCourseOwner(#courseName,authentication.principal.username))")
   public List<Boolean> enrollStudents(List<Long> studentIds, String courseId) {
     log.info("enrollStudents(" + studentIds + ", " + courseId + ")");
     if (studentIds == null || courseId == null)
@@ -238,6 +250,7 @@ public class CourseServiceImpl implements CourseService {
    * {@link it.polito.ai.es2.controllers.APICourses_RestController#enrollStudentsCSV(String, MultipartFile)}
    */
   @Override
+  @PreAuthorize("hasRole('PROFESSOR')")
   public List<Boolean> enrollStudentsCSV(Reader reader, String courseId) {
     log.info("enrollStudentsCSV(" + reader + ", " + courseId + ")");
     if (reader == null || courseId == null) throw new NullParameterException("reader, course id");
@@ -278,6 +291,7 @@ public class CourseServiceImpl implements CourseService {
    * GET {@link it.polito.ai.es2.controllers.APICourses_RestController#getTeamsForCourse(String)}
    */
   @Override
+  @PreAuthorize("hasRole('STUDENT') or hasRole('PROFESSOR')")
   public List<TeamDTO> getTeamsForCourse(String courseId) {
     log.info("getTeamsForCourse(" + courseId + ")");
     if (courseId == null) throw new CourseNotFoundException("[null]");
@@ -290,6 +304,7 @@ public class CourseServiceImpl implements CourseService {
    * GET {@link it.polito.ai.es2.controllers.APICourses_RestController#getEnrolledWithTeam(String)}
    */
   @Override
+  @PreAuthorize("hasRole('STUDENT') or hasRole('PROFESSOR')")
   public List<StudentDTO> getEnrolledWithTeam(String courseId) {
     log.info("getStudentsInTeams(" + courseId + ")");
     if (courseId == null) throw new CourseNotFoundException("[null]");
@@ -301,6 +316,7 @@ public class CourseServiceImpl implements CourseService {
    * GET {@link it.polito.ai.es2.controllers.APICourses_RestController#getEnrolledWithoutTeam(String)}
    */
   @Override
+  @PreAuthorize("hasRole('STUDENT') or hasRole('PROFESSOR')")
   public List<StudentDTO> getEnrolledWithoutTeam(String courseId) {
     log.info("getAvailableStudents(" + courseId + ")");
     if (courseId == null) throw new CourseNotFoundException("[null]");

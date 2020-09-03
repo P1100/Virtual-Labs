@@ -10,7 +10,6 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.DisabledException;
@@ -25,7 +24,6 @@ import java.util.Collections;
 
 @RestController
 @RequestMapping("/api/users")
-@PreAuthorize("permitAll()")
 public class APIUsers_RestController {
   @Autowired
   private JwtTokenUtil jwtTokenUtil;

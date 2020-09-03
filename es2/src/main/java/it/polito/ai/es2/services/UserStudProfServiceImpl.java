@@ -11,6 +11,7 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.env.Environment;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -105,8 +106,9 @@ public class UserStudProfServiceImpl implements UserStudProfService {
     sb.append("Hello ").append(userDTO.getFirstName() + ' ' + userDTO.getLastName() + " - " + userDTO.getUsername());
     sb.append("\n\nLink to confirm registration:\n" + baseUrl + "/notification/user/confirm/" + token.getId());
     String mymatricola = environment.getProperty("mymatricola");
-    System.out.println("[Forced self] s" + mymatricola + "@studenti.polito.it] s" + savedUser.getUsername() + "@studenti.polito.it - Conferma iscrizione a Virtual Labs");
-    notificationService.sendMessage("s" + mymatricola + "@studenti.polito.it", "[Student:" + userDTO.getUsername() + "] Virtual Labs email verification", sb.toString());
+    System.out.println(sb);
+    // TODO: uncomment when needed
+//    notificationService.sendMessage("s" + mymatricola + "@studenti.polito.it", "[Student:" + userDTO.getUsername() + "] Virtual Labs email verification", sb.toString());
 
     return modelMapper.map(savedUser, UserDTO.class);
   }
@@ -159,6 +161,7 @@ public class UserStudProfServiceImpl implements UserStudProfService {
    * GET {@link it.polito.ai.es2.controllers.APIStudents_RestController#getAllStudents()}
    */
   @Override
+  @PreAuthorize("hasRole('PROFESSOR')")
   public List<StudentDTO> getAllStudents() {
     log.info("getAllStudents()");
     return studentRepository.findAll().stream().map(x -> modelMapper.map(x, StudentDTO.class)).collect(Collectors.toList());
@@ -168,15 +171,17 @@ public class UserStudProfServiceImpl implements UserStudProfService {
    * GET {@link it.polito.ai.es2.controllers.APIStudents_RestController#getStudent(Long)}
    */
   @Override
+  @PreAuthorize("hasRole('STUDENT') or hasRole('PROFESSOR')")
   public Optional<StudentDTO> getStudent(Long studentId) {
     log.info("getStudent(" + studentId + ")");
     return studentRepository.findById(studentId).map(x -> modelMapper.map(x, StudentDTO.class));
   }
 
   /**
-   * GET {@link it.polito.ai.es2.controllers.APIStudents_RestController#getCourses(Long)}
+   * GET {@link it.polito.ai.es2.controllers.APIStudents_RestController#getEnrolledCourses(Long)}
    */
   @Override
+  @PreAuthorize("hasRole('STUDENT') or hasRole('PROFESSOR')")
   public List<CourseDTO> getEnrolledCourses(Long studentId) {
     log.info("getCourses(" + studentId + ")");
     if (studentId == null) throw new NullParameterException("student id");
@@ -187,6 +192,7 @@ public class UserStudProfServiceImpl implements UserStudProfService {
    * GET {@link it.polito.ai.es2.controllers.APIStudents_RestController#getTeamsForStudent(Long)}
    */
   @Override
+  @PreAuthorize("hasRole('STUDENT') or hasRole('PROFESSOR')")
   public List<TeamDTO> getTeamsForStudent(Long studentId) {
     log.info("getTeamsForStudent(" + studentId + ")");
     if (studentId == null) throw new NullParameterException("student id");

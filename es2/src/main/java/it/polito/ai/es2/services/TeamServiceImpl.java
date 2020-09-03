@@ -19,6 +19,7 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.env.Environment;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.annotation.Validated;
@@ -72,6 +73,7 @@ public class TeamServiceImpl implements TeamService {
    * GET {@link it.polito.ai.es2.controllers.APITeams_RestController#getMembers(Long)}
    */
   @Override
+  @PreAuthorize("hasRole('PROFESSOR') or @mySecurityChecker.isTeamOwner(#teamId,authentication.principal.username)")
   public List<StudentDTO> getMembers(@NotNull Long teamId) {
     log.info("getMembers(" + teamId + ")");
     if (teamId == null) throw new NullParameterException("teamId");
@@ -85,6 +87,7 @@ public class TeamServiceImpl implements TeamService {
    * GET {@link APITeams_RestController#getAllTeams()}
    */
   @Override
+  @PreAuthorize("hasRole('ADMIN')")
   public List<TeamDTO> getAllTeams() {
     log.info("getAllTeams()");
     return teamRepository.findAll().stream().map(x -> modelMapper.map(x, TeamDTO.class)).collect(Collectors.toList());
@@ -94,6 +97,7 @@ public class TeamServiceImpl implements TeamService {
    * GET {@link it.polito.ai.es2.controllers.APITeams_RestController#getTeam(Long)}
    */
   @Override
+  @PreAuthorize("hasRole('PROFESSOR') or @mySecurityChecker.isTeamOwner(#teamId,authentication.principal.username)")
   public Optional<TeamDTO> getTeam(@NotNull Long teamId) {
     log.info("getTeam(" + teamId + ")");
     if (teamId == null) throw new NullParameterException("null team parameter");
@@ -104,6 +108,7 @@ public class TeamServiceImpl implements TeamService {
    * {@link it.polito.ai.es2.controllers.APITeams_RestController#proposeTeam(String, String, List)}
    */
   @Override
+  @PreAuthorize("hasRole('STUDENT')")
   public TeamDTO proposeTeam(@NotBlank String courseName, @NotBlank String team_name, @NotNull List<Long> memberIds) {
     log.info("proposeTeam(" + courseName + ", " + team_name + ", " + memberIds + ")");
     if (courseName == null || team_name == null || memberIds == null)
@@ -155,6 +160,7 @@ public class TeamServiceImpl implements TeamService {
    * {@link it.polito.ai.es2.controllers.APITeams_RestController#evictTeam(Long)}
    */
   @Override
+  @PreAuthorize("hasRole('ADMIN') and  @mySecurityChecker.isTeamOwner(#teamId,authentication.principal.username)")
   public boolean evictTeam(@NotNull Long teamId) {
     log.info("evictTeam(" + teamId + ")");
     Optional<Team> optionalTeam = teamRepository.findById(teamId);

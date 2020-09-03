@@ -12,7 +12,6 @@ import java.util.Optional;
 public interface TeamService {
   List<StudentDTO> getMembers(@NotNull Long TeamId);
 
-  // **************************** -- not reviewd --------------------
   List<TeamDTO> getAllTeams();
 
   Optional<TeamDTO> getTeam(@NotNull Long teamId);

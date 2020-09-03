@@ -8,6 +8,7 @@ import it.polito.ai.es2.services.interfaces.NotificationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.annotation.Validated;
 
@@ -19,6 +20,7 @@ import java.util.List;
 // TODO: add formatted email body
 @Service
 @Validated
+@PreAuthorize("permitAll()")
 public class NotificationServiceImpl implements NotificationService {
   @Autowired
   public JavaMailSender emailSender;

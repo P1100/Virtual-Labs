@@ -10,6 +10,7 @@ import it.polito.ai.es2.services.interfaces.NotificationService;
 import lombok.extern.java.Log;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.annotation.Validated;
@@ -33,6 +34,7 @@ import java.util.zip.Inflater;
 @Transactional
 @Log
 @Validated
+@PreAuthorize("permitAll()")
 public class ImageServiceImpl implements ImageService {
   @Autowired
   ModelMapper modelMapper;
