@@ -124,7 +124,6 @@ export class HomeComponent implements OnInit, OnDestroy {
           this.obsUpdateCourses.subscribe(x => this.courses = x,
             e => {
               this.alertsService.setAlert('danger', 'Couldn\'t update courses after login! ' + e);
-              localStorage.clear();
             });
         }
       } else {

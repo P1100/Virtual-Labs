@@ -1,6 +1,8 @@
 package it.polito.ai.es2.entities;
 
-import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.Setter;
 import org.hibernate.validator.constraints.UniqueElements;
 
 import javax.persistence.*;
@@ -19,7 +21,9 @@ import java.util.List;
  * può creare/cancellare/eseguire/arrestare/spegnere istanze di macchine virtuali di quel gruppo.
  * <p>Lo studente può essere iscritto a zero, uno o più corsi.
  */
-@Data
+@Getter
+@Setter
+@EqualsAndHashCode(exclude = "profilePhoto")
 @Entity
 public class Student {
   @Id

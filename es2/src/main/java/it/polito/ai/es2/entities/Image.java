@@ -1,6 +1,8 @@
 package it.polito.ai.es2.entities;
 
-import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.Setter;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
@@ -9,15 +11,19 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.PositiveOrZero;
 import java.sql.Timestamp;
 
-@Data
+@Getter
+@Setter
+@EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @Entity(name = "image")
 public class Image {
   @Id
   @GeneratedValue
   private Long id;
   @NotBlank
+  @EqualsAndHashCode.Include
   private String name;
   @NotBlank
+  @EqualsAndHashCode.Include
   private String type;
   @PositiveOrZero
   private int revisionCycle;   // number of iteration for Implementation

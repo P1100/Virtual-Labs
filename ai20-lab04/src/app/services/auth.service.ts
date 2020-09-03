@@ -20,7 +20,6 @@ export class AuthService {
     if (this.isLoggedIn()) {
       this.isLoggedSubject = new BehaviorSubject(true);
     } else {
-      localStorage.clear();
       this.isLoggedSubject = new BehaviorSubject(false);
     }
   }
@@ -51,7 +50,6 @@ export class AuthService {
     localStorage.removeItem('id');
     localStorage.removeItem('role');
     localStorage.removeItem('expires_at');
-    // localStorage.clear();
   }
   public isLoggedIn(): boolean {
     const exp = localStorage.getItem('expires_at');

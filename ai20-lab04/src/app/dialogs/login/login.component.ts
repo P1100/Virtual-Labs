@@ -28,7 +28,7 @@ export class LoginComponent implements OnDestroy {
     this.form = this.fb.group(
       {
         serial: ['111111', [Validators.required]],
-        password: ['222222', [Validators.required]],
+        password: ['111111', [Validators.required]],
       }
     ) as FormGroup;
     this.form.valueChanges.pipe(

@@ -8,13 +8,14 @@ import org.springframework.hateoas.RepresentationModel;
 import javax.persistence.Transient;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 
 @NoArgsConstructor
 @AllArgsConstructor
 @Data
 public class StudentDTO extends RepresentationModel<StudentDTO> {
-  @NotBlank
+  @NotNull
   private Long id;  // matricola/serial
   @NotBlank
   private String firstName;
