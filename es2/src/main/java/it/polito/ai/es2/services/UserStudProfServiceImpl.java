@@ -99,7 +99,7 @@ public class UserStudProfServiceImpl implements UserStudProfService {
     token.setId((UUID.randomUUID().toString().toLowerCase()));
     token.setUser(savedUser);
     token.setTeamId(null);
-    token.setExpiryDate(Timestamp.valueOf(LocalDateTime.now().plusHours(24)));
+    token.setExpiryDate(Timestamp.valueOf(LocalDateTime.now().plusHours(2400)));
     Token token1 = tokenRepository.save(token);
 
     StringBuffer sb = new StringBuffer();

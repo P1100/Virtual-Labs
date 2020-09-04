@@ -72,7 +72,6 @@ public class Course {
 
   @Override
   public String toString() {
-    System.out.println("INSIDE TOSTRING");
     return "Course{} " + id;
   }
 

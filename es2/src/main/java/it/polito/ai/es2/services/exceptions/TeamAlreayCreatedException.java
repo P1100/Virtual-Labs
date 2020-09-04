@@ -9,7 +9,7 @@ public class TeamAlreayCreatedException extends RuntimeException {
     super("Team already created.");
   }
 
-  public TeamAlreayCreatedException(String s) {
-    super("Team " + s + " already created. ");
+  public TeamAlreayCreatedException(String s, String c) {
+    super("Team " + s + " already created in course " + c + "".trim());
   }
 }

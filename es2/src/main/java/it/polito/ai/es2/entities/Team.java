@@ -32,6 +32,8 @@ public class Team {
   private boolean active = false; // status
   @PositiveOrZero
   private int maxVcpu, maxDisk, maxRam, maxRunningVM, maxTotVM; // sum of enabled and disabled
+  @PositiveOrZero
+  private long hoursTimeout;
 
   @ManyToOne(cascade = {CascadeType.MERGE, CascadeType.PERSIST}, optional = false)
   @JoinColumn(name = "course_id")

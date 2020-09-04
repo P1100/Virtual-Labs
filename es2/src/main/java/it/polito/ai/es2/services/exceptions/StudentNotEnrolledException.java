@@ -10,6 +10,6 @@ public class StudentNotEnrolledException extends RuntimeException {
   }
 
   public StudentNotEnrolledException(String s) {
-    super("Student " + s + " not enrolled. ");
+    super("Students " + s + " not enrolled. ".trim());
   }
 }

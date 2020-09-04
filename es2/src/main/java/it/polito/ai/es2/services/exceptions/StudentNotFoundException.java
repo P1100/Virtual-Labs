@@ -10,6 +10,6 @@ public class StudentNotFoundException extends RuntimeException {
   }
 
   public StudentNotFoundException(String s) {
-    super("Student " + s + " not found. ");
+    super("Students " + s + " not found. ".trim());
   }
 }

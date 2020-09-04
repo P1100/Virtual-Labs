@@ -101,47 +101,54 @@ public class TeamServiceImpl extends CommonURL implements TeamService {
    */
   @Override
   @PreAuthorize("hasRole('STUDENT')")
-  public TeamDTO proposeTeam(@NotBlank String courseName, @NotBlank String team_name, @NotNull List<Long> memberIds, @NotNull Long hoursTimeout) {
-    log.info("proposeTeam(" + courseName + ", " + team_name + ", " + memberIds + ", " + hoursTimeout + ")");
-    if (courseName == null || team_name == null || memberIds == null)
-      throw new NullParameterException("null student or course or list of memberIds parameter");
-    Optional<Course> oc = courseRepository.findById(courseName);
-    if (oc.isEmpty()) throw new CourseNotFoundException("proposeTeam - course not found");
-    if (!oc.get().isEnabled()) throw new CourseNotEnabledException("proposeTeam() - course not enabled");
-    List<Optional<Student>> streamopt_listStudentsProposal = memberIds.stream().map(x -> studentRepository.findById(x)).collect(Collectors.toList());
-    if (!streamopt_listStudentsProposal.stream().allMatch(Optional::isPresent))
-      throw new StudentNotFoundException("proposeTeam() - student not found");
-
+  public TeamDTO proposeTeam(@NotBlank String courseId, @NotBlank String team_name, @NotNull List<Long> memberIds, @NotNull Long hoursTimeout) {
+    log.info("proposeTeam(" + courseId + ", " + team_name + ", " + memberIds + ", " + hoursTimeout + ")");
+    if (courseId == null || team_name == null || memberIds == null)
+      throw new NullParameterException("proposeTeam (" + courseId + ", " + team_name + ", " + memberIds + ", " + hoursTimeout + ")");
+    if (teamRepository.findFirstByNameAndCourse_id(team_name, courseId) != null)
+      throw new TeamAlreayCreatedException(team_name, courseId);
+    Optional<Course> oc = courseRepository.findById(courseId);
+    if (oc.isEmpty()) throw new CourseNotFoundException(courseId);
     Course course = oc.get();
-    List<Student> listStudentsProposal = streamopt_listStudentsProposal.stream().map(Optional::get).collect(Collectors.toList());
-    if (!course.getStudents().containsAll(listStudentsProposal)) // !listStudentsProposal.stream().allMatch(x -> course.getStudents().contains(x))
-      throw new StudentNotEnrolledException("proposeTeam() - non tutti gli studenti sono iscritti al corso " + course.getId());
-    // Controllo se tra gli studenti dei vari teams del corso, ce n'è qualcuno tra quelli presenti nella proposta
-    if (course.getTeams().size() != 0 &&
-            course.getTeams()
-                .stream()
-                .map(Team::getStudents)
-                .flatMap(List::stream)
-                .distinct()
-                .anyMatch(student -> listStudentsProposal.stream().anyMatch(student::equals))
-    )
-      throw new StudentInMultipleTeamsException("proposeTeam() - studenti fanno parte di altri gruppi nell’ambito dello stesso corso");
-    if (listStudentsProposal.size() < course.getMinSizeTeam() || listStudentsProposal.size() > course.getMaxSizeTeam())
-      throw new CourseCardinalityConstrainsException(course.getId(), "Proposal rejected");
-    if (!listStudentsProposal.stream().allMatch(new HashSet<>()::add))
-      throw new StudentDuplicatesInProposalException("proposeTeam() - duplicati nell'elenco dei partecipanti della proposta team");
-    if (teamRepository.findFirstByNameAndCourse_id(team_name, courseName) != null)
-      throw new TeamAlreayCreatedException("proposeTeam() - team già creato");
+    if (!course.isEnabled()) throw new CourseNotEnabledException(courseId);
+    StringBuilder notFoundStudents = new StringBuilder();
+    StringBuilder notEnrolledStudents = new StringBuilder();
+    StringBuilder alreadyWithTeam = new StringBuilder();
+    List<Student> listFoundStudentsProposal = memberIds.stream().map(x -> {
+      Optional<Student> op = studentRepository.findById(x);
+      if (op.isEmpty())
+        notFoundStudents.append(x + " ");
+      else if (!course.getStudents().contains(op.get()))
+        notEnrolledStudents.append(x + " ");
+      else if (course.getTeams().size() != 0 && course.getTeams().stream().filter(Team::isActive).map(Team::getStudents).flatMap(List::stream)
+          .map(Student::getId).distinct().anyMatch(id -> id.equals(op.get().getId())))
+        alreadyWithTeam.append(x + " ");
+      return op;
+    }).filter(Optional::isPresent).map(Optional::get).collect(Collectors.toList());
+    if (notFoundStudents.length() != 0)
+      throw new StudentNotFoundException(notFoundStudents.toString());
+    if (notEnrolledStudents.length() != 0)
+      throw new StudentNotEnrolledException(notEnrolledStudents.toString());
+    if (alreadyWithTeam.length() != 0)
+      throw new StudentInMultipleTeamsException(alreadyWithTeam.toString());
+
+    if (listFoundStudentsProposal.size() < course.getMinSizeTeam())
+      throw new CourseCardinalityConstrainsException(courseId, listFoundStudentsProposal.size() + " < " + course.getMinSizeTeam());
+    if (listFoundStudentsProposal.size() > course.getMaxSizeTeam())
+      throw new CourseCardinalityConstrainsException(courseId, listFoundStudentsProposal.size() + " > " + course.getMaxSizeTeam());
+    if (!listFoundStudentsProposal.stream().allMatch(new HashSet<>()::add))
+      throw new StudentDuplicatesInProposalException(Arrays.toString(memberIds.toArray()));
 
     TeamDTO teamDTO = new TeamDTO();
     teamDTO.setName(team_name);
     teamDTO.setActive(false);
+    teamDTO.setHoursTimeout(hoursTimeout);
     Team new_team = modelMapper.map(teamDTO, Team.class);
     // aggiungo nuovo team, a studenti e al corso
-    for (Student student : new ArrayList<>(listStudentsProposal)) {
-      new_team.addStudent(student); //student.addTeam(new_team); // add su studenti
+    for (Student student : new ArrayList<>(listFoundStudentsProposal)) {
+      new_team.addStudent(student);
     }
-    new_team.addSetCourse(course); //course.addTeam(new_team); // add sul singolo corso
+    new_team.addSetCourse(course);
     Team savedTeam = teamRepository.save(new_team);
     TeamDTO return_teamDTO = modelMapper.map(savedTeam, TeamDTO.class);
     notifyTeam(return_teamDTO, memberIds);
@@ -150,6 +157,7 @@ public class TeamServiceImpl extends CommonURL implements TeamService {
 
   @Override
   public void notifyTeam(@Valid TeamDTO teamDTO, @NotNull List<Long> memberIds) {
+    log.info("notifyTeam(" + teamDTO + ", " + memberIds + ")");
     for (Long memberId : memberIds) {
       Token token = new Token();
       token.setId((UUID.randomUUID().toString().toLowerCase()));
@@ -163,7 +171,7 @@ public class TeamServiceImpl extends CommonURL implements TeamService {
       System.out.println(sb);
       String mymatricola = environment.getProperty("mymatricola");
       // TODO: uncommentare in fase di prod (attenzione!)
-      System.out.println("[Forced self] s" + mymatricola + "@studenti.polito.it] s" + memberId + "@studenti.polito.it - Conferma iscrizione al team " + teamDTO.getId());
+      System.out.println("[s" + mymatricola + "@studenti.polito.it] s" + memberId + "@studenti.polito.it - Conferma iscrizione al team " + teamDTO.getId());
 //        sendMessage("s" + mymatricola + "@studenti.polito.it", "[Student:" + memberId + "] Conferma iscrizione al team " + teamDTO.getId(), sb.toString());
     }
   }
@@ -227,5 +235,4 @@ public class TeamServiceImpl extends CommonURL implements TeamService {
     tokenRepository.deleteAll(tokenRepository.findAllByTeamId(teamId));
     return evictTeam(teamId);
   }
-
 }
