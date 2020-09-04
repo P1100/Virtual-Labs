@@ -214,10 +214,14 @@ public class TeamServiceImpl extends CommonURL implements TeamService {
         log.severe("Notification error: team was already active");
         return false;
       }
-      if (team.getStudents().stream().map(x -> x.getTeams().stream().filter(y->y.getCourse().getId() == team.getCourse().getId())
-      .filter(z->z.isActive())).count() > 0)
+      if (team.getStudents().stream().flatMap(x -> x.getTeams().stream().filter(y -> y.getCourse().getId() == team.getCourse().getId())
+          .filter(z -> z.isActive())).count() > 0)
         throw new StudentInMultipleActiveTeamsException();
-      team.setActive(true); // no need to save, will be flushed automatically at the end of transaction (since not a new entity)
+      if (team.isDisabled() == false) {
+        team.setActive(true); // no need to save, will be flushed automatically at the end of transaction (since not a new entity)
+        team.getStudents().stream().flatMap(x -> x.getTeams().stream().filter(y -> y.getCourse().getId() == team.getCourse().getId())
+            .filter(z -> !z.isActive())).forEach(t -> t.setDisabled(true));
+      }
     }
     return true; // token accepted
   }

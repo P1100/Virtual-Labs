@@ -29,7 +29,8 @@ public class Team {
   private Long id;
   @NotBlank
   private String name;
-  private boolean active = false; // status
+  private boolean active = false; // false for proposals
+  private boolean disabled = false;
   @PositiveOrZero
   private int maxVcpu, maxDisk, maxRam, maxRunningVM, maxTotVM; // sum of enabled and disabled
 

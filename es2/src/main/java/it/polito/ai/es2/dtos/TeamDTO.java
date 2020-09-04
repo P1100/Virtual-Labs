@@ -14,6 +14,7 @@ public class TeamDTO extends RepresentationModel<TeamDTO> {
   @NotBlank
   private String name;
   private boolean active;
+  private boolean disabled;
   @PositiveOrZero
   private int maxVcpu,
       maxDisk,

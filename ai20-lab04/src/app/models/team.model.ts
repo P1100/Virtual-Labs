@@ -9,6 +9,7 @@ export class Team {
               public maxRam: number,
               public maxRunningVM: number,
               public maxTotVM: number,
+              public disabled: boolean,
               public students?: Student[]) { // sum of enabled and disabled)
   }
 }
