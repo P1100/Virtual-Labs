@@ -17,8 +17,6 @@ import it.polito.ai.es2.services.interfaces.TeamService;
 import lombok.extern.java.Log;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.core.env.Environment;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -27,8 +25,6 @@ import org.springframework.validation.annotation.Validated;
 import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
-import java.net.InetAddress;
-import java.net.UnknownHostException;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.util.*;
@@ -43,7 +39,7 @@ import java.util.stream.Collectors;
 @Transactional
 @Log
 @Validated
-public class TeamServiceImpl implements TeamService {
+public class TeamServiceImpl extends CommonURL implements TeamService {
   @Autowired
   ModelMapper modelMapper;
   @Autowired
@@ -64,10 +60,6 @@ public class TeamServiceImpl implements TeamService {
 //  VMRepository vmRepository;
   @Autowired
   public TokenRepository tokenRepository;
-  @Value("${server.port}")
-  String port;
-  @Autowired
-  Environment environment;
 
   /**
    * GET {@link it.polito.ai.es2.controllers.APITeams_RestController#getMembers(Long)}
@@ -156,6 +148,26 @@ public class TeamServiceImpl implements TeamService {
     return return_teamDTO;
   }
 
+  @Override
+  public void notifyTeam(@Valid TeamDTO teamDTO, @NotNull List<Long> memberIds) {
+    for (Long memberId : memberIds) {
+      Token token = new Token();
+      token.setId((UUID.randomUUID().toString().toLowerCase()));
+      token.setTeamId(teamDTO.getId());
+//      token.setStudent(studentRepository.findById(memberId).orElse(null));
+      token.setExpiryDate(Timestamp.valueOf(LocalDateTime.now().plusHours(1)));
+      StringBuffer sb = new StringBuffer();
+      sb.append("Hello ").append(memberId);
+      sb.append("\n\nLink to accept token:\n" + baseUrl + "/notification/confirm/" + token.getId());
+      sb.append("\n\nLink to remove token:\n" + baseUrl + "/notification/reject/" + token.getId());
+      System.out.println(sb);
+      String mymatricola = environment.getProperty("mymatricola");
+      // TODO: uncommentare in fase di prod (attenzione!)
+      System.out.println("[Forced self] s" + mymatricola + "@studenti.polito.it] s" + memberId + "@studenti.polito.it - Conferma iscrizione al team " + teamDTO.getId());
+//        sendMessage("s" + mymatricola + "@studenti.polito.it", "[Student:" + memberId + "] Conferma iscrizione al team " + teamDTO.getId(), sb.toString());
+    }
+  }
+
   /**
    * {@link it.polito.ai.es2.controllers.APITeams_RestController#evictTeam(Long)}
    */
@@ -216,35 +228,4 @@ public class TeamServiceImpl implements TeamService {
     return evictTeam(teamId);
   }
 
-  /**
-   * Non c'è bisogno di controlli, poichè viene chiamato direttamente da propose team (che fa lui tutti i controlli)
-   */
-  @Override
-  public void notifyTeam(@Valid TeamDTO teamDTO, @NotNull List<Long> memberIds) {
-    for (Long memberId : memberIds) {
-      Token token = new Token();
-      token.setId((UUID.randomUUID().toString().toLowerCase()));
-      token.setTeamId(teamDTO.getId());
-//      token.setStudent(studentRepository.findById(memberId).orElse(null));
-      token.setExpiryDate(Timestamp.valueOf(LocalDateTime.now().plusHours(1)));
-      String url;
-      try {
-        // TODO: does it work in production?
-        url = "http://" + InetAddress.getLocalHost().getHostAddress() + ":" + port;
-        tokenRepository.save(token);
-      } catch (UnknownHostException e) {
-        e.printStackTrace();
-        return;
-      }
-      StringBuffer sb = new StringBuffer();
-      sb.append("Hello ").append(memberId);
-      sb.append("\n\nLink to accept token:\n" + url + "/notification/confirm/" + token.getId());
-      sb.append("\n\nLink to remove token:\n" + url + "/notification/reject/" + token.getId());
-      System.out.println(sb);
-      String mymatricola = environment.getProperty("mymatricola");
-      // TODO: uncommentare in fase di prod (attenzione!)
-      System.out.println("[Forced self] s" + mymatricola + "@studenti.polito.it] s" + memberId + "@studenti.polito.it - Conferma iscrizione al team " + teamDTO.getId());
-//        sendMessage("s" + mymatricola + "@studenti.polito.it", "[Student:" + memberId + "] Conferma iscrizione al team " + teamDTO.getId(), sb.toString());
-    }
-  }
 }
