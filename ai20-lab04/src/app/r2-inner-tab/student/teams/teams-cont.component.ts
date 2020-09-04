@@ -1,6 +1,6 @@
 import {Component, OnDestroy} from '@angular/core';
 import {Student} from '../../../models/student.model';
-import {Observable, Subscription} from 'rxjs';
+import {Subscription} from 'rxjs';
 import {ActivatedRoute} from '@angular/router';
 import {AlertsService} from '../../../services/alerts.service';
 import {CourseService} from '../../../services/course.service';
@@ -10,10 +10,6 @@ import {CourseService} from '../../../services/course.service';
   template: `
     <app-teams [enrolledWithoutTeams]="enrolledWithoutTeams" (forceUploadData)="onForceUploadData($event)"
                [courseId]="courseId" [courseMin]="courseMin" [courseMax]="courseMax">
-      <!--                  [students]="allStudents"-->
-      <!--                  (enrolledEvent)="onStudentsToEnroll($event)"-->
-      <!--                  (disenrolledEvent)="onStudentsToDisenroll($event)"-->
-      <!--                  (uploadCsvEvent)="onCsvUpload($event)"-->
     </app-teams>
   `,
   styleUrls: []
@@ -21,7 +17,6 @@ import {CourseService} from '../../../services/course.service';
 export class TeamsContComponent implements OnDestroy {
   enrolledWithoutTeams: Student[] = [];
   courseId = '0';
-  private observableEnrolledWithoutTeam: Observable<Student[]>;
   subEnrolledWithTeams: Subscription = null;
   subRouteParam: Subscription = null;
   private subCurrentCourse: Subscription;
@@ -44,8 +39,8 @@ export class TeamsContComponent implements OnDestroy {
   onForceUploadData($event: any) {
     this.subEnrolledWithTeams = this.courseService.getEnrolledWithoutTeam(this.courseId)
       .subscribe((students: Student[]) => {
-          console.log('observableEnrolledWithoutTeam init', students);
-          this.enrolledWithoutTeams = Array.isArray(students) ? [...students] : [];
+        console.log('Update Data init', students);
+        this.enrolledWithoutTeams = Array.isArray(students) ? [...students] : [];
         }, error => this.alertsService.setAlert('danger', 'Couldn\'t get enrolled without team! ' + error)
       );
     this.subCurrentCourse = this.courseService.getCourse(this.courseId).subscribe(c => {

@@ -29,11 +29,17 @@ export interface dialogProposalData {
 export class TeamsComponent implements OnInit, OnDestroy {
   dataSource = new MatTableDataSource<Student>();
   displayedColumns: string[] = ['select', 'id', 'firstName', 'lastName', 'email'];
-  private enrolledSelectedForProposal: Student[];
   dialogRef: MatDialogRef<any>;
   selection = new SelectionModel<Student>(true, []);
+  innerCourseId: string;
   @Input()
-  courseId: string;
+  set courseId(id: string) {
+    this.innerCourseId = id;
+    this.selection.clear();
+  }
+  get courseId() {
+    return this.innerCourseId;
+  }
   @Input()
   courseMin: number;
   @Input()
