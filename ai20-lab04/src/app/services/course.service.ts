@@ -12,7 +12,7 @@ import {Team} from '../models/team.model';
   providedIn: 'root'
 })
 export class CourseService {
-  private baseUrlApi = AppSettings.baseUrl + '/courses';
+  private baseUrlApi = AppSettings.baseUrl + '/api/courses';
 
   constructor(private http: HttpClient) {
   }

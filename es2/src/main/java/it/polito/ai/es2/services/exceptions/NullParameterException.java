@@ -12,4 +12,7 @@ public class NullParameterException extends RuntimeException {
   public NullParameterException(String commaSeparatedNullParametersName) {
     super("Null parameters. (" + commaSeparatedNullParametersName + ")");
   }
+  public NullParameterException(Long commaSeparatedNullParametersName) {
+    super("Null parameters. (" + commaSeparatedNullParametersName + ")");
+  }
 }

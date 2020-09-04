@@ -54,6 +54,17 @@ public class APITeams_RestController {
     return modelHelper.enrich(teamDTO.get());
   }
 
+  @GetMapping("/{student_id}/teams/{courseId}")
+  public CollectionModel<TeamDTO> getTeamsForStudentCourse(@PathVariable Long student_id, @PathVariable String courseId) {
+    List<TeamDTO> teams = teamService.getTeamsForStudentCourse(student_id, courseId);
+    for (TeamDTO team : teams) {
+      modelHelper.enrich(team);
+    }
+    CollectionModel<TeamDTO> teamsHAL = CollectionModel.of(teams,
+        linkTo(methodOn(APITeams_RestController.class).getTeamsForStudentCourse(student_id, courseId)).withSelfRel());
+    return teamsHAL;
+  }
+
   // http://localhost:8080/api/teams/propose/C0/Team0/100,101,S33
   @PostMapping("/propose/{courseId}/{teamName}/{hoursTimeout}/{memberIds}")
   public TeamDTO proposeTeam(@PathVariable String courseId, @PathVariable String teamName, @PathVariable List<Long> memberIds, @PathVariable Long hoursTimeout) {

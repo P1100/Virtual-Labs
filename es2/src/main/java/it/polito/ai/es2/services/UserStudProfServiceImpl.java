@@ -185,15 +185,4 @@ public class UserStudProfServiceImpl implements UserStudProfService {
     if (studentId == null) throw new NullParameterException("student id");
     return studentRepository.getOne(studentId).getCourses().stream().map(x -> modelMapper.map(x, CourseDTO.class)).collect(Collectors.toList());
   }
-
-  /**
-   * GET {@link it.polito.ai.es2.controllers.APIStudents_RestController#getTeamsForStudent(Long)}
-   */
-  @Override
-  @PreAuthorize("hasRole('STUDENT') or hasRole('PROFESSOR')")
-  public List<TeamDTO> getTeamsForStudent(Long studentId) {
-    log.info("getTeamsForStudent(" + studentId + ")");
-    if (studentId == null) throw new NullParameterException("student id");
-    return studentRepository.getOne(studentId).getTeams().stream().map(x -> modelMapper.map(x, TeamDTO.class)).collect(Collectors.toList());
-  }
 }

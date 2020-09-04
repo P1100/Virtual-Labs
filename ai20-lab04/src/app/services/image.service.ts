@@ -9,7 +9,7 @@ import {Image} from '../models/image.model';
   providedIn: 'root'
 })
 export class ImageService {
-  private baseUrlApi = AppSettings.baseUrl + '/images';
+  private baseUrlApi = AppSettings.baseUrl + '/api/images';
 
   constructor(private http: HttpClient) {
   }

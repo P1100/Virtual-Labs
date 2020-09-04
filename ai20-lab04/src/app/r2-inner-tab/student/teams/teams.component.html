@@ -1,48 +1,70 @@
-<h2 style="margin-left: 25px; margin-right: 5px">Available students
-  <button mat-raised-button color="primary" (click)="openProposeTeamDialog()" style=" float: right;">
-    <mat-icon>playlist_add</mat-icon>
-    Propose new team
-  </button>
-</h2>
+<div [hidden]="hideAllGUItillActiveTeamIsChecked">
+  <div *ngIf="activeTeam != null" style="padding: 20px"><h1 style="text-align: center">{{activeTeam.name}}</h1>
+    <h2>Members</h2>
+    <ul>
+      <li *ngFor="let s of activeTeam.students; index as i">
+        ({{s.id}}) {{s.firstName}} {{s.lastName}} {{s.email}}
+      </li>
+    </ul>
+    <h2>Team Details</h2>
+    <ul>
+      <li>Id: {{activeTeam.id}}</li>
+      <li>Max VCPU: {{activeTeam.maxVcpu}}</li>
+      <li>Max Size Disk: {{activeTeam.maxDisk}}</li>
+      <li>Max RAM: {{activeTeam.maxRam}}</li>
+      <li>Max Running VM: {{activeTeam.maxRunningVM}}</li>
+      <li>Max TOT VM: {{activeTeam.maxTotVM}}</li>
+    </ul>
+  </div>
 
-<div class="table-container">
-  <table mat-table matSort [dataSource]="dataSource" class="mat-elevation-z8">
-    <ng-container matColumnDef="select">
-      <th *matHeaderCellDef mat-header-cell>
-        <!--        <mat-checkbox (change)="$event ? checkboxMasterToggle() : null"-->
-        <!--                      [checked]="selection.hasValue() && checkboxIsAllSelected()"-->
-        <!--                      [indeterminate]="selection.hasValue() && !checkboxIsAllSelected()">-->
-        <!--        </mat-checkbox>-->
-        <mat-checkbox disabled (click)="selection.clear()"></mat-checkbox>
-      </th>
-      <td *matCellDef="let rowStudent" mat-cell>
-        <mat-checkbox (click)="$event.stopPropagation()"
-                      (change)="$event ? checkboxChangeSelection(rowStudent) : null"
-                      [checked]="selection.isSelected(rowStudent)" [disabled]="checkboxDisableMinMax(rowStudent)"></mat-checkbox>
-      </td>
-    </ng-container>
+  <div *ngIf="activeTeam == null && enrolledWithoutTeams != []">
+    <h2 style="margin-left: 25px; margin-right: 5px">Available students
+      <button mat-raised-button color="primary" (click)="openProposeTeamDialog()" style=" float: right;">
+        <mat-icon>playlist_add</mat-icon>
+        Propose new team
+      </button>
+    </h2>
 
-    <ng-container matColumnDef="id">
-      <th mat-header-cell mat-sort-header *matHeaderCellDef>Id</th>
-      <td mat-cell *matCellDef="let element">{{element.id}}</td>
-    </ng-container>
+    <div class="table-container">
+      <table mat-table matSort [dataSource]="dataSource" class="mat-elevation-z8">
+        <ng-container matColumnDef="select">
+          <th *matHeaderCellDef mat-header-cell>
+            <!--        <mat-checkbox (change)="$event ? checkboxMasterToggle() : null"-->
+            <!--                      [checked]="selection.hasValue() && checkboxIsAllSelected()"-->
+            <!--                      [indeterminate]="selection.hasValue() && !checkboxIsAllSelected()">-->
+            <!--        </mat-checkbox>-->
+            <mat-checkbox disabled (click)="selection.clear()"></mat-checkbox>
+          </th>
+          <td *matCellDef="let rowStudent" mat-cell>
+            <mat-checkbox (click)="$event.stopPropagation()"
+                          (change)="$event ? checkboxChangeSelection(rowStudent) : null"
+                          [checked]="selection.isSelected(rowStudent)" [disabled]="checkboxDisableMinMax(rowStudent)"></mat-checkbox>
+          </td>
+        </ng-container>
 
-    <ng-container matColumnDef="firstName">
-      <th mat-header-cell mat-sort-header *matHeaderCellDef>firstName</th>
-      <td mat-cell *matCellDef="let element"> {{element.firstName}} </td>
-    </ng-container>
+        <ng-container matColumnDef="id">
+          <th mat-header-cell mat-sort-header *matHeaderCellDef>Id</th>
+          <td mat-cell *matCellDef="let element">{{element.id}}</td>
+        </ng-container>
 
-    <ng-container matColumnDef="lastName">
-      <th mat-header-cell mat-sort-header *matHeaderCellDef>lastName</th>
-      <td mat-cell *matCellDef="let element"> {{element.lastName}} </td>
-    </ng-container>
+        <ng-container matColumnDef="firstName">
+          <th mat-header-cell mat-sort-header *matHeaderCellDef>firstName</th>
+          <td mat-cell *matCellDef="let element"> {{element.firstName}} </td>
+        </ng-container>
 
-    <ng-container matColumnDef="email">
-      <th mat-header-cell mat-sort-header *matHeaderCellDef>email</th>
-      <td mat-cell *matCellDef="let element"> {{element.email}} </td>
-    </ng-container>
+        <ng-container matColumnDef="lastName">
+          <th mat-header-cell mat-sort-header *matHeaderCellDef>lastName</th>
+          <td mat-cell *matCellDef="let element"> {{element.lastName}} </td>
+        </ng-container>
 
-    <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
-    <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
-  </table>
+        <ng-container matColumnDef="email">
+          <th mat-header-cell mat-sort-header *matHeaderCellDef>email</th>
+          <td mat-cell *matCellDef="let element"> {{element.email}} </td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+      </table>
+    </div>
+  </div>
 </div>

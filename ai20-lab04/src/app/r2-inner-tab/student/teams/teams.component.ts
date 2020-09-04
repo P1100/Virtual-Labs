@@ -8,6 +8,7 @@ import {MatDialog, MatDialogRef, MatDialogState} from '@angular/material/dialog'
 import {CourseService} from '../../../services/course.service';
 import {SelectionModel} from '@angular/cdk/collections';
 import {TeamProposeComponent} from '../../../dialogs/team-propose/team-propose.component';
+import {Team} from '../../../models/team.model';
 
 export interface dialogProposalData {
   courseId: string,
@@ -27,10 +28,21 @@ export interface dialogProposalData {
   ]
 })
 export class TeamsComponent implements OnInit, OnDestroy {
+  @ViewChild(MatSort, {static: true}) sort: MatSort;
   dataSource = new MatTableDataSource<Student>();
+  dataSource2 = new MatTableDataSource<Team>();
   displayedColumns: string[] = ['select', 'id', 'firstName', 'lastName', 'email'];
   dialogRef: MatDialogRef<any>;
   selection = new SelectionModel<Student>(true, []);
+  @Input()
+  activeTeam: Team = null;
+  @Input()
+  set notActiveTeams(t: Team[]) {
+    this.dataSource2.data = t;
+  }
+  get notActiveTeams(): Team[] {
+    return this.dataSource2.data;
+  }
   innerCourseId: string;
   @Input()
   set courseId(id: string) {
@@ -44,12 +56,8 @@ export class TeamsComponent implements OnInit, OnDestroy {
   courseMin: number;
   @Input()
   courseMax: number;
-
-  @ViewChild(MatSort, {static: true}) sort: MatSort;
-
   @Output()
   forceUploadData = new EventEmitter<any>();
-
   @Input()
   set enrolledWithoutTeams(array: Student[]) {
     this.dataSource.data = [...array];
@@ -57,6 +65,8 @@ export class TeamsComponent implements OnInit, OnDestroy {
   get enrolledWithoutTeams(): Student[] {
     return this.dataSource.data;
   }
+  @Input()
+  hideAllGUItillActiveTeamIsChecked: boolean;
 
   constructor(private alertsService: AlertsService, private courseService: CourseService, public dialog: MatDialog,) {
   }

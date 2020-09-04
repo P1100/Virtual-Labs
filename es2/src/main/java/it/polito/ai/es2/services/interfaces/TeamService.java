@@ -10,17 +10,24 @@ import java.util.List;
 import java.util.Optional;
 
 public interface TeamService {
-  List<StudentDTO> getMembers(@NotNull Long TeamId);
+  @PreAuthorize("hasRole('PROFESSOR') or @mySecurityChecker.isTeamOwner(#teamId,authentication.principal.username)")
+  List<StudentDTO> getMembers(@NotNull Long teamId);
 
-  List<TeamDTO> getAllTeams();
+  @PreAuthorize("hasRole('ADMIN')") List<TeamDTO> getAllTeams();
 
+  @PreAuthorize("hasRole('PROFESSOR') or @mySecurityChecker.isTeamOwner(#teamId,authentication.principal.username)")
   Optional<TeamDTO> getTeam(@NotNull Long teamId);
 
-  @PreAuthorize("hasRole('STUDENT')") TeamDTO proposeTeam(@NotBlank String courseName, @NotBlank String team_name, @NotNull List<Long> memberIds, @NotNull Long hoursTimeout);
+  @PreAuthorize("hasRole('STUDENT') or hasRole('PROFESSOR')")
+  List<TeamDTO> getTeamsForStudentCourse(Long studentId, String courseId);
 
-  boolean evictTeam(@NotNull Long teamId);
+  @PreAuthorize("hasRole('STUDENT')")
+  TeamDTO proposeTeam(@NotBlank String courseId, @NotBlank String team_name, @NotNull List<Long> memberIds, @NotNull Long hoursTimeout);
 
   boolean confirmTeam(@NotBlank String token);
 
   boolean rejectTeam(@NotBlank String idtoken);
+
+  @PreAuthorize("hasRole('ADMIN') and  @mySecurityChecker.isTeamOwner(#teamId,authentication.principal.username)")
+  boolean evictTeam(@NotNull Long teamId);
 }

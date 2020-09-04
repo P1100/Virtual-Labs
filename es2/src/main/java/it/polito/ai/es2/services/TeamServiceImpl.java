@@ -95,6 +95,28 @@ public class TeamServiceImpl extends CommonURL implements TeamService {
     if (teamId == null) throw new NullParameterException("null team parameter");
     return teamRepository.findById(teamId).map(x -> modelMapper.map(x, TeamDTO.class));
   }
+  /**
+   * GET {@link it.polito.ai.es2.controllers.APITeams_RestController#getTeamsForStudentCourse(Long,String)}
+   */
+  @Override
+  @PreAuthorize("hasRole('STUDENT') or hasRole('PROFESSOR')")
+  public List<TeamDTO> getTeamsForStudentCourse(Long studentId, String courseId) {
+    log.info("getTeamsForStudent(" + studentId + ")");
+    if (studentId == null || courseId == null) throw new NullParameterException(studentId + " " + courseId);
+    Optional<Student> optionalStudent = studentRepository.findById(studentId);
+    if (optionalStudent.isEmpty()) {
+      throw new StudentNotFoundException(studentId);
+    }
+    Optional<Course> optionalCourse = courseRepository.findById(courseId);
+    if (optionalCourse.isEmpty()) {
+      throw new CourseNotFoundException(courseId);
+    }
+    List<TeamDTO> teamDTOS = optionalStudent.get().getTeams().stream().filter(t -> t.getCourse().getId() == courseId)
+        .map(x -> modelMapper.map(x, TeamDTO.class)).collect(Collectors.toList());
+    if (teamDTOS.stream().filter(x->x.isActive()).count() > 1)
+      throw new StudentInMultipleActiveTeamsException(studentId);
+    return teamDTOS;
+  }
 
   /**
    * {@link it.polito.ai.es2.controllers.APITeams_RestController#proposeTeam(String, String, List, Long)}
@@ -130,7 +152,7 @@ public class TeamServiceImpl extends CommonURL implements TeamService {
     if (notEnrolledStudents.length() != 0)
       throw new StudentNotEnrolledException(notEnrolledStudents.toString());
     if (alreadyWithTeam.length() != 0)
-      throw new StudentInMultipleTeamsException(alreadyWithTeam.toString());
+      throw new StudentInMultipleActiveTeamsException(alreadyWithTeam.toString());
 
     if (listFoundStudentsProposal.size() < course.getMinSizeTeam())
       throw new CourseCardinalityConstrainsException(courseId, listFoundStudentsProposal.size() + " < " + course.getMinSizeTeam());
@@ -162,10 +184,11 @@ public class TeamServiceImpl extends CommonURL implements TeamService {
       token.addSetTeam(savedTeam);
 //      token.setStudent(studentRepository.findById(memberId).orElse(null));
       token.setExpiryDate(Timestamp.valueOf(LocalDateTime.now().plusHours(hoursTimeout)));
+      tokenRepository.save(token);
       StringBuffer sb = new StringBuffer();
       sb.append("Hello ").append(memberId);
-      sb.append("\n\nLink to accept token:\n" + baseUrl + "/notification/confirm/" + token.getId());
-      sb.append("\n\nLink to remove token:\n" + baseUrl + "/notification/reject/" + token.getId());
+      sb.append("\n\nLink to accept token:\n" + baseUrl + "/notification/team/confirm/" + token.getId());
+      sb.append("\n\nLink to remove token:\n" + baseUrl + "/notification/team/reject/" + token.getId());
       System.out.println(sb);
       String mymatricola = environment.getProperty("mymatricola");
       // TODO: uncommentare in fase di prod (attenzione!)
@@ -184,7 +207,6 @@ public class TeamServiceImpl extends CommonURL implements TeamService {
     if (optionalTeam.isEmpty())
       return false;
     Team team = optionalTeam.get();
-    Long teamId = team.getId();
     tokenRepository.deleteById(token);
     List<Token> tokenList = team.getTokens();
     if (tokenList.size() == 0) {
@@ -192,6 +214,9 @@ public class TeamServiceImpl extends CommonURL implements TeamService {
         log.severe("Notification error: team was already active");
         return false;
       }
+      if (team.getStudents().stream().map(x -> x.getTeams().stream().filter(y->y.getCourse().getId() == team.getCourse().getId())
+      .filter(z->z.isActive())).count() > 0)
+        throw new StudentInMultipleActiveTeamsException();
       team.setActive(true); // no need to save, will be flushed automatically at the end of transaction (since not a new entity)
     }
     return true; // token accepted

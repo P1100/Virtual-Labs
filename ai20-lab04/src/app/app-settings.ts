@@ -6,7 +6,7 @@ import {environment} from '../environments/environment';
 /* Shared settings, constants and functions */
 export class AppSettings {
   // Back end URL
-  public static baseUrl = 'http://localhost:8080/api';
+  public static baseUrl = 'http://localhost:8080';
   public static devtest: boolean = environment.dev; // to show logs, tests, and other components
 
   // HTTP Settings (services)

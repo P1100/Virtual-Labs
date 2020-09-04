@@ -3,8 +3,10 @@ package it.polito.ai.es2.dtos;
 import lombok.Data;
 import org.springframework.hateoas.RepresentationModel;
 
+import javax.persistence.Transient;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.PositiveOrZero;
+import java.util.List;
 
 @Data
 public class TeamDTO extends RepresentationModel<TeamDTO> {
@@ -20,4 +22,6 @@ public class TeamDTO extends RepresentationModel<TeamDTO> {
       maxTotVM; // sum of enabled and disabled
   @PositiveOrZero
   private long hoursTimeout;
+  @Transient
+  private List<StudentDTO> students;
 }

@@ -1,3 +1,5 @@
+import {Student} from './student.model';
+
 export class Team {
   constructor(public id: number,
               public name: string,
@@ -6,6 +8,7 @@ export class Team {
               public maxDisk: number,
               public maxRam: number,
               public maxRunningVM: number,
-              public maxTotVM: number) { // sum of enabled and disabled)
+              public maxTotVM: number,
+              public students?: Student[]) { // sum of enabled and disabled)
   }
 }

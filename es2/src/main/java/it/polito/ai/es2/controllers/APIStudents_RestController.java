@@ -3,7 +3,6 @@ package it.polito.ai.es2.controllers;
 import it.polito.ai.es2.controllers.hateoas.ModelHelper;
 import it.polito.ai.es2.dtos.CourseDTO;
 import it.polito.ai.es2.dtos.StudentDTO;
-import it.polito.ai.es2.dtos.TeamDTO;
 import it.polito.ai.es2.services.interfaces.UserStudProfService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.hateoas.CollectionModel;
@@ -58,16 +57,4 @@ public class APIStudents_RestController {
         linkTo(methodOn(APIStudents_RestController.class).getEnrolledCourses(student_id)).withSelfRel());
     return courseDTOS;
   }
-
-  @GetMapping("/{student_id}/teams")
-  public CollectionModel<TeamDTO> getTeamsForStudent(@PathVariable Long student_id) {
-    List<TeamDTO> teams = userStudProfService.getTeamsForStudent(student_id);
-    for (TeamDTO team : teams) {
-      modelHelper.enrich(team);
-    }
-    CollectionModel<TeamDTO> teamsHAL = CollectionModel.of(teams,
-        linkTo(methodOn(APIStudents_RestController.class).getTeamsForStudent(student_id)).withSelfRel());
-    return teamsHAL;
-  }
-
 }

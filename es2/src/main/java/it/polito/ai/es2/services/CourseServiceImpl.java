@@ -124,6 +124,8 @@ public class CourseServiceImpl implements CourseService {
     log.info("addCourse(" + courseDTO + ")");
     if (courseDTO == null || courseDTO.getId() == null)
       throw new FailedAddException("null parameters");
+    if (courseDTO.getMinSizeTeam() < 1 || courseDTO.getMaxSizeTeam() < 1 || courseDTO.getMinSizeTeam() > courseDTO.getMaxSizeTeam())
+      throw new CourseCardinalityConstrainsException(courseDTO.getMinSizeTeam() + " " + courseDTO.getMinSizeTeam());
     if (courseRepository.existsById(courseDTO.getId()))
       throw new FailedAddException("duplicate");
     courseRepository.save(modelMapper.map(courseDTO, Course.class));

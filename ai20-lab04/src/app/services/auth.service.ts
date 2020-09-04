@@ -12,7 +12,7 @@ import {Student} from '../models/student.model';
   providedIn: 'root'
 })
 export class AuthService {
-  private baseUrlApi = AppSettings.baseUrl;
+  private baseUrlApi = AppSettings.baseUrl + '/api';
   user: User;
   isLoggedSubject: BehaviorSubject<boolean>;
 

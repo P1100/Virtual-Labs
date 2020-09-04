@@ -10,7 +10,7 @@ import {HateoasModel} from '../models/hateoas.model';
   providedIn: 'root'
 })
 export class StudentService {
-  private baseUrlApi = AppSettings.baseUrl;
+  private baseUrlApi = AppSettings.baseUrl + '/api';
 
   constructor(private http: HttpClient) {
   }
