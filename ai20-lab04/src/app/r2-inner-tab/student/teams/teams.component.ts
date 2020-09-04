@@ -1,4 +1,4 @@
-import {Component, EventEmitter, Input, OnDestroy, OnInit, Output, ViewChild} from '@angular/core';
+import {AfterViewInit, Component, EventEmitter, Input, OnDestroy, OnInit, Output, ViewChild} from '@angular/core';
 import {Student} from '../../../models/student.model';
 import {MatTableDataSource} from '@angular/material/table';
 import {MatSort} from '@angular/material/sort';
@@ -9,6 +9,7 @@ import {CourseService} from '../../../services/course.service';
 import {SelectionModel} from '@angular/cdk/collections';
 import {TeamProposeComponent} from '../../../dialogs/team-propose/team-propose.component';
 import {Team} from '../../../models/team.model';
+import {MatPaginator} from '@angular/material/paginator';
 
 export interface dialogProposalData {
   courseId: string,
@@ -23,25 +24,31 @@ export interface dialogProposalData {
     trigger('detailExpand', [
       state('collapsed', style({height: '0px', minHeight: '0'})),
       state('expanded', style({height: '*'})),
-      transition('expanded <=> collapsed', animate('225ms cubic-bezier(0.4, 0.0, 0.2, 1)'))
-    ])
-  ]
+      transition('expanded <=> collapsed', animate('225ms cubic-bezier(0.4, 0.0, 0.2, 1)')),
+    ]),
+  ],
 })
-export class TeamsComponent implements OnInit, OnDestroy {
+export class TeamsComponent implements AfterViewInit, OnDestroy {
+  displayedColumnsTable1: string[] = ['select', 'id', 'firstName', 'lastName', 'email'];
+  columnsToDisplayTable2: string[] =   ['nav', 'name', 'active', 'disabled'];
+  columnsToDisplayTeam: string[] =   ['name', 'active', 'disabled'];
+  columnsToDisplayStudent: string[] = ['id', 'firstName', 'lastName', 'email'];
+  expandedElement: Student | null;
+
   @ViewChild(MatSort, {static: true}) sort: MatSort;
+  @ViewChild(MatPaginator) paginator: MatPaginator;
   dataSource = new MatTableDataSource<Student>();
-  dataSource2 = new MatTableDataSource<Team>();
-  displayedColumns: string[] = ['select', 'id', 'firstName', 'lastName', 'email'];
+  dataSourceTeams = new MatTableDataSource<Team>();
   dialogRef: MatDialogRef<any>;
   selection = new SelectionModel<Student>(true, []);
   @Input()
   activeTeam: Team = null;
   @Input()
   set notActiveTeams(t: Team[]) {
-    this.dataSource2.data = t;
+    this.dataSourceTeams.data = t;
   }
   get notActiveTeams(): Team[] {
-    return this.dataSource2.data;
+    return this.dataSourceTeams.data;
   }
   innerCourseId: string;
   @Input()
@@ -61,6 +68,10 @@ export class TeamsComponent implements OnInit, OnDestroy {
   @Input()
   set enrolledWithoutTeams(array: Student[]) {
     this.dataSource.data = [...array];
+    // Should help making sure table data is loaded when sort is assigned
+    setTimeout(() => {
+      this.dataSource.sort = this.sort;
+    })
   }
   get enrolledWithoutTeams(): Student[] {
     return this.dataSource.data;
@@ -70,7 +81,8 @@ export class TeamsComponent implements OnInit, OnDestroy {
 
   constructor(private alertsService: AlertsService, private courseService: CourseService, public dialog: MatDialog,) {
   }
-  ngOnInit() {
+  ngAfterViewInit() {
+    this.dataSource.paginator = this.paginator;
     this.dataSource.sort = this.sort;
   }
 
@@ -115,6 +127,7 @@ export class TeamsComponent implements OnInit, OnDestroy {
   //     this.selection.clear() :
   //     this.dataSource.data.forEach(row => this.selection.select(row));
   // }
+  idOpenExpansionStatus: boolean[];
   checkboxChangeSelection(row: Student) {
     this.selection.toggle(row);
   }
@@ -122,9 +135,11 @@ export class TeamsComponent implements OnInit, OnDestroy {
     this.dialogRef?.close();
   }
   checkboxDisableMinMax(row: Student) {
-    if (!this.selection.isSelected(row) && this.selection.selected.length >= (this.courseMax-1)) {
+    if (!this.selection.isSelected(row) && this.selection.selected.length >= (this.courseMax - 1)) {
       return true;
     }
     return false;
+  }
+  removeDisabledTeams() {
   }
 }

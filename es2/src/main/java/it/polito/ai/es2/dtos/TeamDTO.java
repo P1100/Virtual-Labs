@@ -25,4 +25,7 @@ public class TeamDTO extends RepresentationModel<TeamDTO> {
   private long hoursTimeout;
   @Transient
   private List<StudentDTO> students;
+//  @Transient
+//  private StudentDTO proposer; // TODO: update logic
+//  private Timestamp dateProposal;
 }

@@ -2,10 +2,12 @@ package it.polito.ai.es2.entities;
 
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import org.hibernate.annotations.CreationTimestamp;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.PositiveOrZero;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -33,6 +35,8 @@ public class Team {
   private boolean disabled = false;
   @PositiveOrZero
   private int maxVcpu, maxDisk, maxRam, maxRunningVM, maxTotVM; // sum of enabled and disabled
+  @CreationTimestamp
+  private Timestamp dateProposal;
 
   @ManyToOne(cascade = {CascadeType.MERGE, CascadeType.PERSIST}, optional = false)
   @JoinColumn(name = "course_id")
@@ -42,6 +46,10 @@ public class Team {
   @JoinTable(name = "teams_students", joinColumns = @JoinColumn(name = "team_id"),
       inverseJoinColumns = @JoinColumn(name = "student_id"))
   List<Student> students = new ArrayList<>();
+//
+//  @ManyToOne
+//  @JoinColumn
+//  private Student proposer;
 
   @OneToMany(mappedBy = "team")
   private List<Token> tokens = new ArrayList<>();

@@ -8,8 +8,9 @@ export class Team {
               public maxDisk: number,
               public maxRam: number,
               public maxRunningVM: number,
-              public maxTotVM: number,
+              public maxTotVM: number, // sum of enabled and disabled)
               public disabled: boolean,
-              public students?: Student[]) { // sum of enabled and disabled)
+              public dateProposal: Date,
+              public students?: Student[]) {
   }
 }

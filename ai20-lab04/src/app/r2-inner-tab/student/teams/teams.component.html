@@ -1,4 +1,4 @@
-<div [hidden]="hideAllGUItillActiveTeamIsChecked">
+<div [hidden]="hideAllGUItillActiveTeamIsChecked" name="part1">
   <div *ngIf="activeTeam != null" style="padding: 20px"><h1 style="text-align: center">{{activeTeam.name}}</h1>
     <h2>Members</h2>
     <ul>
@@ -16,17 +16,15 @@
       <li>Max TOT VM: {{activeTeam.maxTotVM}}</li>
     </ul>
   </div>
-
-  <div *ngIf="activeTeam == null && enrolledWithoutTeams != []">
+  <div>
     <h2 style="margin-left: 25px; margin-right: 5px">Available students
       <button mat-raised-button color="primary" (click)="openProposeTeamDialog()" style=" float: right;">
         <mat-icon>playlist_add</mat-icon>
         Propose new team
       </button>
     </h2>
-
-    <div class="table-container">
-      <table mat-table matSort [dataSource]="dataSource" class="mat-elevation-z8">
+    <table mat-table matSort [dataSource]="dataSource" class="mat-elevation-z8">
+      <div *ngIf="activeTeam == null">
         <ng-container matColumnDef="select">
           <th *matHeaderCellDef mat-header-cell>
             <!--        <mat-checkbox (change)="$event ? checkboxMasterToggle() : null"-->
@@ -62,9 +60,70 @@
           <td mat-cell *matCellDef="let element"> {{element.email}} </td>
         </ng-container>
 
-        <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
-        <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
-      </table>
-    </div>
+        <tr mat-header-row *matHeaderRowDef="displayedColumnsTable1; sticky: true"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumnsTable1;"></tr>
+      </div>
+    </table>
+    <mat-paginator pageSize="5" [pageSizeOptions]="[2, 5, 10, 15, 20, 50, 200]" showFirstLastButtons></mat-paginator>
   </div>
+</div>
+
+<br>
+
+<div name="part2">
+  <h2 style="margin-left: 25px; margin-right: 5px">Proposals
+    <button mat-raised-button color="warn" (click)="removeDisabledTeams()" style=" float: right;">
+      <mat-icon>delete_sweep</mat-icon>
+      Clean up disabled
+    </button>
+  </h2>
+  <table mat-table [dataSource]="dataSourceTeams" multiTemplateDataRows>
+    <ng-container matColumnDef="nav">
+      <th *matHeaderCellDef mat-header-cell>
+      </th>
+      <td *matCellDef="let element" mat-cell>
+        <mat-icon *ngIf="expandedElement && element == expandedElement">expand_less</mat-icon>
+        <mat-icon *ngIf="!(expandedElement && element == expandedElement)">expand_more</mat-icon>
+      </td>
+    </ng-container>
+    <ng-container matColumnDef="{{column}}" *ngFor="let column of columnsToDisplayTeam">
+      <th mat-header-cell *matHeaderCellDef> {{column}} </th>
+      <td mat-cell *matCellDef="let element"> {{element[column]}}</td>
+    </ng-container>
+    <!-- Expanded Content Column - The detail row is made up of this one column that spans across all columns -->
+    <ng-container matColumnDef="expandedDetail">
+      <td mat-cell *matCellDef="let element" [attr.colspan]="columnsToDisplayStudent.length">
+        <div class="example-element-detail" [@detailExpand]="element == expandedElement ? 'expanded' : 'collapsed'">
+          <table mat-table matSort [dataSource]="element.students">
+            <ng-container matColumnDef="id">
+              <th mat-header-cell mat-sort-header *matHeaderCellDef>Id</th>
+              <td mat-cell *matCellDef="let element">{{element.id}}</td>
+            </ng-container>
+            <ng-container matColumnDef="firstName">
+              <th mat-header-cell mat-sort-header *matHeaderCellDef>firstName</th>
+              <td mat-cell *matCellDef="let element"> {{element.firstName}} </td>
+            </ng-container>
+            <ng-container matColumnDef="lastName">
+              <th mat-header-cell mat-sort-header *matHeaderCellDef>lastName</th>
+              <td mat-cell *matCellDef="let element"> {{element.lastName}} </td>
+            </ng-container>
+            <ng-container matColumnDef="email">
+              <th mat-header-cell mat-sort-header *matHeaderCellDef>email</th>
+              <td mat-cell *matCellDef="let element"> {{element.email}} </td>
+            </ng-container>
+            <tr mat-header-row *matHeaderRowDef="columnsToDisplayStudent; sticky: true"></tr>
+            <tr mat-row *matRowDef="let row; columns: columnsToDisplayStudent;"></tr>
+          </table>
+        </div>
+      </td>
+    </ng-container>
+
+    <tr mat-header-row *matHeaderRowDef="columnsToDisplayTable2"></tr>
+    <tr mat-row *matRowDef="let element; columns: columnsToDisplayTable2;"
+        class="example-element-row"
+        [class.example-expanded-row]="expandedElement === element"
+        (click)="expandedElement = expandedElement === element ? null : element">
+    </tr>
+    <tr mat-row *matRowDef="let row; columns: ['expandedDetail']" class="example-detail-row"></tr>
+  </table>
 </div>

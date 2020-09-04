@@ -136,7 +136,7 @@ public class TeamServiceImpl extends CommonURL implements TeamService {
     StringBuilder notFoundStudents = new StringBuilder();
     StringBuilder notEnrolledStudents = new StringBuilder();
     StringBuilder alreadyWithTeam = new StringBuilder();
-    List<Student> listFoundStudentsProposal = memberIds.stream().map(x -> {
+    List<Student> listFoundStudents = memberIds.stream().map(x -> {
       Optional<Student> op = studentRepository.findById(x);
       if (op.isEmpty())
         notFoundStudents.append(x + " ");
@@ -154,11 +154,11 @@ public class TeamServiceImpl extends CommonURL implements TeamService {
     if (alreadyWithTeam.length() != 0)
       throw new StudentInMultipleActiveTeamsException(alreadyWithTeam.toString());
 
-    if (listFoundStudentsProposal.size() < course.getMinSizeTeam())
-      throw new CourseCardinalityConstrainsException(courseId, listFoundStudentsProposal.size() + " < " + course.getMinSizeTeam());
-    if (listFoundStudentsProposal.size() > course.getMaxSizeTeam())
-      throw new CourseCardinalityConstrainsException(courseId, listFoundStudentsProposal.size() + " > " + course.getMaxSizeTeam());
-    if (!listFoundStudentsProposal.stream().allMatch(new HashSet<>()::add))
+    if (listFoundStudents.size() < course.getMinSizeTeam())
+      throw new CourseCardinalityConstrainsException(courseId, listFoundStudents.size() + " < " + course.getMinSizeTeam());
+    if (listFoundStudents.size() > course.getMaxSizeTeam())
+      throw new CourseCardinalityConstrainsException(courseId, listFoundStudents.size() + " > " + course.getMaxSizeTeam());
+    if (!listFoundStudents.stream().allMatch(new HashSet<>()::add))
       throw new StudentDuplicatesInProposalException(Arrays.toString(memberIds.toArray()));
 
     TeamDTO teamDTO = new TeamDTO();
@@ -166,7 +166,7 @@ public class TeamServiceImpl extends CommonURL implements TeamService {
     teamDTO.setActive(false);
     Team new_team = modelMapper.map(teamDTO, Team.class);
     // aggiungo nuovo team, a studenti e al corso
-    for (Student student : new ArrayList<>(listFoundStudentsProposal)) {
+    for (Student student : new ArrayList<>(listFoundStudents)) {
       new_team.addStudent(student);
     }
     new_team.addSetCourse(course);
