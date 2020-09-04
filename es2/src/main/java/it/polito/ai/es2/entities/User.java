@@ -51,6 +51,9 @@ public class User {
   @JoinTable(name = "users_roles", joinColumns = @JoinColumn(name = "username", referencedColumnName = "username"), inverseJoinColumns = @JoinColumn(name = "authority", referencedColumnName = "name"))
   private List<Role> roles = new ArrayList<>();
 
+  @OneToMany(mappedBy = "user")
+  private List<Token> tokens = new ArrayList<>();
+
   public Collection<? extends GrantedAuthority> getAuthorities() {
     List<GrantedAuthority> authorities = new ArrayList<>();
     for (Role role : roles) {
@@ -58,6 +61,7 @@ public class User {
     }
     return authorities;
   }
+
 
   public List<String> convertStringsToRoles() {
     List<String> stringRoles = new ArrayList<>();

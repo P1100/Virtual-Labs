@@ -142,7 +142,6 @@ public class TeamServiceImpl extends CommonURL implements TeamService {
     TeamDTO teamDTO = new TeamDTO();
     teamDTO.setName(team_name);
     teamDTO.setActive(false);
-    teamDTO.setHoursTimeout(hoursTimeout);
     Team new_team = modelMapper.map(teamDTO, Team.class);
     // aggiungo nuovo team, a studenti e al corso
     for (Student student : new ArrayList<>(listFoundStudentsProposal)) {
@@ -151,19 +150,18 @@ public class TeamServiceImpl extends CommonURL implements TeamService {
     new_team.addSetCourse(course);
     Team savedTeam = teamRepository.save(new_team);
     TeamDTO return_teamDTO = modelMapper.map(savedTeam, TeamDTO.class);
-    notifyTeam(return_teamDTO, memberIds);
+    notifyTeam(return_teamDTO, memberIds, hoursTimeout, savedTeam);
     return return_teamDTO;
   }
 
-  @Override
-  public void notifyTeam(@Valid TeamDTO teamDTO, @NotNull List<Long> memberIds) {
+  private void notifyTeam(@Valid TeamDTO teamDTO, @NotNull List<Long> memberIds, @NotNull Long hoursTimeout, @Valid Team savedTeam) {
     log.info("notifyTeam(" + teamDTO + ", " + memberIds + ")");
     for (Long memberId : memberIds) {
       Token token = new Token();
       token.setId((UUID.randomUUID().toString().toLowerCase()));
-      token.setTeamId(teamDTO.getId());
+      token.addSetTeam(savedTeam);
 //      token.setStudent(studentRepository.findById(memberId).orElse(null));
-      token.setExpiryDate(Timestamp.valueOf(LocalDateTime.now().plusHours(1)));
+      token.setExpiryDate(Timestamp.valueOf(LocalDateTime.now().plusHours(hoursTimeout)));
       StringBuffer sb = new StringBuffer();
       sb.append("Hello ").append(memberId);
       sb.append("\n\nLink to accept token:\n" + baseUrl + "/notification/confirm/" + token.getId());
@@ -174,6 +172,42 @@ public class TeamServiceImpl extends CommonURL implements TeamService {
       System.out.println("[s" + mymatricola + "@studenti.polito.it] s" + memberId + "@studenti.polito.it - Conferma iscrizione al team " + teamDTO.getId());
 //        sendMessage("s" + mymatricola + "@studenti.polito.it", "[Student:" + memberId + "] Conferma iscrizione al team " + teamDTO.getId(), sb.toString());
     }
+  }
+
+  /**
+   * {@link it.polito.ai.es2.controllers.Notification_Controller#confirmUser(String)}
+   */
+  @Override
+  public boolean confirmTeam(@NotBlank String token) {
+    notificationService.cleanUpOldTokens();
+    Optional<Team> optionalTeam = tokenRepository.findById(token).map(Token::getTeam);
+    if (optionalTeam.isEmpty())
+      return false;
+    Team team = optionalTeam.get();
+    Long teamId = team.getId();
+    tokenRepository.deleteById(token);
+    List<Token> tokenList = team.getTokens();
+    if (tokenList.size() == 0) {
+      if (team.isActive()) {
+        log.severe("Notification error: team was already active");
+        return false;
+      }
+      team.setActive(true); // no need to save, will be flushed automatically at the end of transaction (since not a new entity)
+    }
+    return true; // token accepted
+  }
+
+  /**
+   * {@link it.polito.ai.es2.controllers.Notification_Controller#rejectTokenTeam(String)}
+   */
+  @Override
+  public boolean rejectTeam(@NotBlank String idtoken) {
+    Optional<Team> optionalTeam = tokenRepository.findById(idtoken).map(Token::getTeam);
+    if (optionalTeam.isEmpty())
+      return false;
+    tokenRepository.deleteAll(optionalTeam.get().getTokens());
+    notificationService.cleanUpOldTokens();
+    return true;
   }
 
   /**
@@ -196,43 +230,5 @@ public class TeamServiceImpl extends CommonURL implements TeamService {
     team_to_delete.getCourse().getTeams().remove(team_to_delete);
     teamRepository.delete(team_to_delete);
     return true;
-  }
-
-  @Override
-  public boolean confirmTeam(@NotBlank String token) {
-    notificationService.cleanUpOldTokens();
-    Optional<Team> optionalTeam = tokenRepository.findById(token).map(Token::getTeamId).map(teamId1 -> teamRepository.getOne(teamId1));
-    if (optionalTeam.isEmpty())
-      return false;
-    Team team = optionalTeam.get();
-    Long teamId = team.getId();
-    Course course = team.getCourse();
-    tokenRepository.deleteById(token);
-    List<Token> tokenList = tokenRepository.findAllByTeamId(teamId);
-    if (tokenList.size() == 0) {
-      if (team.isActive() == true) // ??
-        return false;
-      team.setActive(true); // no need to save, will be flushed automatically at the end of transaction (since not a new entity)
-      return true;
-    }
-//    TODO: (??) commented, review later
-//    for (Token token : tokenList) {
-//      tokenRepository.delete(token);
-//    }
-    return false;
-  }
-
-  /**
-   * Trova team, rimuovi tutti i token relativi a team corrente (se ce ne sono) e invoca evict team + return true. Altrimenti false
-   */
-  @Override
-  public boolean rejectTeam(@NotBlank String idtoken) {
-    notificationService.cleanUpOldTokens();
-    Optional<Team> optionalTeam = tokenRepository.findById(idtoken).map(Token::getTeamId).map(teamId1 -> teamRepository.getOne(teamId1));
-    if (optionalTeam.isEmpty())
-      return false;
-    Long teamId = optionalTeam.get().getId();
-    tokenRepository.deleteAll(tokenRepository.findAllByTeamId(teamId));
-    return evictTeam(teamId);
   }
 }

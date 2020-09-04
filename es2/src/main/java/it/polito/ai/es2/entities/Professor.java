@@ -41,7 +41,7 @@ public class Professor {
   private List<Course> courses = new ArrayList<>(); // --> teams, vms
 
   @OneToMany(mappedBy = "creator", cascade = {CascadeType.MERGE, CascadeType.PERSIST})
-  private List<Assignment> assignments;
+  private List<Assignment> assignments = new ArrayList<>();
 
   @OneToOne(mappedBy = "professor")
   private User user;

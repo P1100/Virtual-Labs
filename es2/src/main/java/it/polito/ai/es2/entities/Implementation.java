@@ -6,6 +6,7 @@ import org.hibernate.validator.constraints.Length;
 import javax.persistence.*;
 import javax.validation.constraints.PastOrPresent;
 import java.sql.Timestamp;
+import java.util.ArrayList;
 import java.util.List;
 
 @Data
@@ -32,5 +33,5 @@ public class Implementation {
   private Assignment assignment; // --> course, professor
 
   @OneToMany(mappedBy = "submission")
-  private List<Image> imageSubmissions;
+  private List<Image> imageSubmissions = new ArrayList<>();
 }

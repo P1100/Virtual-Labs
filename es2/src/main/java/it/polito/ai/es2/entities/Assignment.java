@@ -7,6 +7,7 @@ import javax.validation.constraints.FutureOrPresent;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.PastOrPresent;
 import java.sql.Timestamp;
+import java.util.ArrayList;
 import java.util.List;
 
 @Data
@@ -37,7 +38,7 @@ public class Assignment {
   private Professor creator;
 
   @OneToMany(mappedBy = "assignment")
-  private List<Implementation> implementations;
+  private List<Implementation> implementations = new ArrayList<>();
 
   // Parameters and initialization needed at entity creation
   void initNewEntity(Course c, Professor p, Image i) {

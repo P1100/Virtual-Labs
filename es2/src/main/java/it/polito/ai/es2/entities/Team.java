@@ -32,8 +32,6 @@ public class Team {
   private boolean active = false; // status
   @PositiveOrZero
   private int maxVcpu, maxDisk, maxRam, maxRunningVM, maxTotVM; // sum of enabled and disabled
-  @PositiveOrZero
-  private long hoursTimeout;
 
   @ManyToOne(cascade = {CascadeType.MERGE, CascadeType.PERSIST}, optional = false)
   @JoinColumn(name = "course_id")
@@ -43,6 +41,9 @@ public class Team {
   @JoinTable(name = "teams_students", joinColumns = @JoinColumn(name = "team_id"),
       inverseJoinColumns = @JoinColumn(name = "student_id"))
   List<Student> students = new ArrayList<>();
+
+  @OneToMany(mappedBy = "team")
+  private List<Token> tokens = new ArrayList<>();
 
   @OneToMany(mappedBy = "team")
   private List<VM> vms = new ArrayList<>();

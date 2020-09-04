@@ -16,6 +16,7 @@ import javax.validation.constraints.NotBlank;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 
 // TODO: add formatted email body
 @Service
@@ -35,6 +36,10 @@ public class NotificationServiceImpl implements NotificationService {
   public boolean cleanUpOldTokens() {
     List<Token> tokenExpiredList = tokenRepository.findAllByExpiryDateBeforeOrderByExpiryDate(Timestamp.valueOf(LocalDateTime.now()));
     if (tokenExpiredList.size() > 0) {
+      for (Token token : tokenExpiredList) {
+        Optional.ofNullable(token.getTeam()).ifPresent(x -> x.getTokens().remove(token));
+        Optional.ofNullable(token.getUser()).ifPresent(x -> x.getTokens().remove(token));
+      }
       tokenRepository.deleteAll(tokenExpiredList);
       return true;
     } else

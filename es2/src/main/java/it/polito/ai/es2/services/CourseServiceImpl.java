@@ -50,7 +50,7 @@ public class CourseServiceImpl implements CourseService {
    * GET {@link APICourses_RestController#getAllCourses()}
    */
   @Override
-//  @PreAuthorize("isAuthenticated()") // overrides class roles
+  @PreAuthorize("isAuthenticated()") // overrides class roles
   public List<CourseDTO> getAllCourses() {
     log.info("getAllCourses");
     return courseRepository.findAll().stream().map(x -> modelMapper.map(x, CourseDTO.class)).collect(Collectors.toList());
@@ -119,7 +119,7 @@ public class CourseServiceImpl implements CourseService {
    * POST {@link it.polito.ai.es2.controllers.APICourses_RestController#addCourse(CourseDTO)}
    */
   @Override
-//  @PreAuthorize("hasRole('PROFESSOR')")
+  @PreAuthorize("hasRole('PROFESSOR')")
   public void addCourse(CourseDTO courseDTO) {
     log.info("addCourse(" + courseDTO + ")");
     if (courseDTO == null || courseDTO.getId() == null)
@@ -199,7 +199,7 @@ public class CourseServiceImpl implements CourseService {
    * {@link it.polito.ai.es2.controllers.APICourses_RestController#enrollStudent(String, Map)}
    */
   @Override
-//  @PreAuthorize("hasRole('PROFESSOR')")
+  @PreAuthorize("hasRole('PROFESSOR')")
   public void enrollStudent(Long studentId, String courseId) {
     log.info("enrollStudent(" + studentId + ", " + courseId + ")");
     if (studentId == null || courseId == null) throw new NullParameterException("student id, course id");

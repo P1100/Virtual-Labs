@@ -4,7 +4,6 @@ import it.polito.ai.es2.dtos.StudentDTO;
 import it.polito.ai.es2.dtos.TeamDTO;
 import org.springframework.security.access.prepost.PreAuthorize;
 
-import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import java.util.List;
@@ -24,6 +23,4 @@ public interface TeamService {
   boolean confirmTeam(@NotBlank String token);
 
   boolean rejectTeam(@NotBlank String idtoken);
-
-  void notifyTeam(@Valid TeamDTO teamDTO, @NotNull List<Long> memberIds);
 }

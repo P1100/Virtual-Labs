@@ -72,13 +72,13 @@ export class TeamsComponent implements OnInit, OnDestroy {
     if (this.selection.selected.length == 0) {
       this.alertsService.setAlert('warning', 'No students selected!');
       return;
-    }
-    if (this.selection.selected.length < this.courseMin) {
-      this.alertsService.setAlert('warning', `Selected less than ${this.courseMin} students (course minimum)`);
+    } /* -1 because logged in user is automatically added */
+    if (this.selection.selected.length < (this.courseMin-1)) {
+      this.alertsService.setAlert('warning', `Selected less than ${this.courseMin-1} students (course minimum)`);
       return;
     }
-    if (this.selection.selected.length > this.courseMax) {
-      this.alertsService.setAlert('warning', `Selected more than ${this.courseMax} students, (course maximum)`);
+    if (this.selection.selected.length > (this.courseMax-1)) {
+      this.alertsService.setAlert('warning', `Selected more than ${this.courseMax-1} students, (course maximum)`);
       return;
     }
     const dialogData: dialogProposalData = {courseId: this.courseId, members: this.selection.selected};
@@ -112,7 +112,7 @@ export class TeamsComponent implements OnInit, OnDestroy {
     this.dialogRef?.close();
   }
   checkboxDisableMinMax(row: Student) {
-    if (!this.selection.isSelected(row) && this.selection.selected.length >= this.courseMax) {
+    if (!this.selection.isSelected(row) && this.selection.selected.length >= (this.courseMax-1)) {
       return true;
     }
     return false;

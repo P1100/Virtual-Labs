@@ -97,8 +97,7 @@ public class UserStudProfServiceImpl implements UserStudProfService {
     /* NOTIFY USER */
     Token token = new Token();
     token.setId((UUID.randomUUID().toString().toLowerCase()));
-    token.setUser(savedUser);
-    token.setTeamId(null);
+    token.addSetUser(savedUser);
     token.setExpiryDate(Timestamp.valueOf(LocalDateTime.now().plusHours(2400)));
     Token token1 = tokenRepository.save(token);
 
@@ -109,7 +108,6 @@ public class UserStudProfServiceImpl implements UserStudProfService {
     System.out.println(sb);
     // TODO: uncomment when needed
 //    notificationService.sendMessage("s" + mymatricola + "@studenti.polito.it", "[Student:" + userDTO.getUsername() + "] Virtual Labs email verification", sb.toString());
-
     return modelMapper.map(savedUser, UserDTO.class);
   }
 

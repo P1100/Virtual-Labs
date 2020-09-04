@@ -4,10 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
+import javax.persistence.*;
 import javax.validation.constraints.FutureOrPresent;
 import java.sql.Timestamp;
 
@@ -18,16 +15,28 @@ import java.sql.Timestamp;
 public class Token {
   @Id
   private String id;
-  private Long teamId; // TODO: remove later
   @FutureOrPresent
   private Timestamp expiryDate;
 
-  /* Unilateral relationships */
-  @ManyToOne()
+  @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.PERSIST})
   @JoinColumn
   private User user;
-  // TODO: Must remove teamId first
-//  @ManyToOne(optional = true)
-//  @JoinColumn
-//  private Team team;
+
+  @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.PERSIST})
+  @JoinColumn
+  private Team team;
+
+  public void addSetUser(User savedUser) {
+    if (user != null)
+      throw new RuntimeException("JPA-Team: overriding a OneToOne or ManyToOne field might be an error");
+    user = savedUser;
+    savedUser.getTokens().add(this);
+  }
+
+  public void addSetTeam(Team t) {
+    if (user != null)
+      throw new RuntimeException("JPA-Team: overriding a OneToOne or ManyToOne field might be an error");
+    team = t;
+    team.getTokens().add(this);
+  }
 }
