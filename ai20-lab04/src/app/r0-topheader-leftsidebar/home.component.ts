@@ -65,6 +65,8 @@ export class HomeComponent implements OnInit, OnDestroy {
   private setupAuthUpdateLogic() {
     this.authSubscription = this.authService.getIsLoggedSubject().subscribe(newLogStatus => {
       const previousLoggedStatus = this.isLogged;
+      this.role = localStorage.getItem('role');
+      this.loggedUserName = this.role + ' ' + localStorage.getItem('username');
       if (previousLoggedStatus === undefined && newLogStatus === true) { // bootstrap
         this.obsUpdateCourses.subscribe(x => {
             this.courses = x;
@@ -74,8 +76,6 @@ export class HomeComponent implements OnInit, OnDestroy {
             this.alertsService.setAlert('danger', 'Couldn\'t update courses after login! ' + error);
           });
       } else if (previousLoggedStatus === false && newLogStatus === true) { // login
-        this.role = localStorage.getItem('role');
-        this.loggedUserName = this.role + ' ' + localStorage.getItem('username');
         this.obsUpdateCourses.subscribe(x => {
             this.courses = x;
             this.router.navigateByUrl('/loggedin');
