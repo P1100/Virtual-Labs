@@ -44,12 +44,12 @@ export class AuthService {
   }
   logout(): void {
     // No server logout for JWT, just remove token from local storage
-    this.isLoggedSubject.next(false);
     localStorage.removeItem('token');
     localStorage.removeItem('username');
     localStorage.removeItem('id');
     localStorage.removeItem('role');
     localStorage.removeItem('expires_at');
+    this.isLoggedSubject.next(false);
   }
   public isLoggedIn(): boolean {
     const exp = localStorage.getItem('expires_at');

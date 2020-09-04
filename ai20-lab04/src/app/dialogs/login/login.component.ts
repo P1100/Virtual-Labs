@@ -39,7 +39,7 @@ export class LoginComponent implements OnDestroy {
     });
   }
   ngOnDestroy(): void {
-    this.router.navigateByUrl('/home');
+    // this.router.navigateByUrl('/home');
   }
   onCancelClick(): void {
     this.subscriptionLogin?.unsubscribe();

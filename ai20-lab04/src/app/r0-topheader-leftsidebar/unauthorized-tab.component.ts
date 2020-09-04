@@ -14,6 +14,6 @@ export class UnauthorizedTabComponent {
   constructor(private router: Router) {
   }
   goHome() {
-    this.router.navigateByUrl('/home');
+    this.router.navigateByUrl('/');
   }
 }

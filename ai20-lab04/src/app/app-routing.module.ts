@@ -29,11 +29,8 @@ const routes: Routes = [
     children: [
       {
         path: '',
-        component: WelcomeEmptyComponent
-      },
-      {
-        path: 'home',
-        component: WelcomeEmptyComponent
+        component: WelcomeEmptyComponent,
+        pathMatch: 'full'
       },
       {
         path: 'professor',
@@ -126,6 +123,11 @@ const routes: Routes = [
             ]
           }
         ]
+      },
+      {
+        path: ':string',
+        component: WelcomeEmptyComponent,
+        pathMatch: 'full'
       }
     ]
   },

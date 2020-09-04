@@ -39,7 +39,7 @@ export class TeamsContComponent implements OnDestroy {
   ngOnDestroy(): void {
     this.subRouteParam?.unsubscribe();
     this.subEnrolledWithTeams?.unsubscribe();
-    this.subCurrentCourse?.unsubscribe;
+    this.subCurrentCourse?.unsubscribe();
   }
   onForceUploadData($event: any) {
     this.subEnrolledWithTeams = this.courseService.getEnrolledWithoutTeam(this.courseId)

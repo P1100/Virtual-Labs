@@ -6,7 +6,7 @@
             (click)="isLogged ? drawer.toggle() : ''">
       <mat-icon aria-label="Side nav toggle icon">menu</mat-icon>
     </button>
-    <a routerLink="/home" class="title-link-not-active">{{title}}</a>
+    <a routerLink="/" class="title-link-not-active">{{title}}</a>
     <a id="TestingPageLink-devOnly" routerLink="/testing" style="padding-left: 10px; color: chartreuse" *ngIf="devShowTestingComponents">Test Page</a>
     <div *ngIf="devShowTestingComponents && retrievedImage?.length>100">
       <img id="showProfilePhoto-devOnly" src="{{'data:image/jpg;base64,' + retrievedImage}}" width="40px" height="40px" style="margin: 5px">
@@ -16,9 +16,8 @@
 
     <button *ngIf="!isLogged" mat-button type="button" (click)="openRegisterDialog()">Register</button>
     <span *ngIf="isLogged" style="font-size: medium; color: ghostwhite">Welcome {{loggedUserName}} </span>
-    <button mat-button type="button" aria-label="login and logout" (click)="clickLoginLogout()">
-      {{isLogged == true ? 'Logout' : 'Login'}}
-    </button>
+    <button *ngIf="!this.isLogged" mat-button type="button" (click)="login()">Login</button>
+    <button *ngIf="this.isLogged" mat-button type="button" (click)="logout()">Logout</button>
   </mat-toolbar>
 </div>
 
