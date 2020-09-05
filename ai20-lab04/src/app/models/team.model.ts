@@ -10,7 +10,8 @@ export class Team {
               public maxRunningVM: number,
               public maxTotVM: number, // sum of enabled and disabled)
               public disabled: boolean,
-              public dateProposal: Date,
+              private createdDate: any,
+              /* Proposals DTO Transient data */
               public students?: Student[]) {
   }
 }

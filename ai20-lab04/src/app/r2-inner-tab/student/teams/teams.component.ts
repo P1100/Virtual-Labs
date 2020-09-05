@@ -13,7 +13,7 @@ import {MatPaginator} from '@angular/material/paginator';
 
 export interface dialogProposalData {
   courseId: string,
-  members: Student[]
+  membersWithProposerFirst: Student[]
 }
 
 @Component({
@@ -30,14 +30,14 @@ export interface dialogProposalData {
 })
 export class TeamsComponent implements AfterViewInit, OnDestroy {
   displayedColumnsTable1: string[] = ['select', 'id', 'firstName', 'lastName', 'email'];
-  columnsToDisplayTable2: string[] =   ['nav', 'name', 'active', 'disabled'];
+  columnsToDisplayProposals: string[] =   ['nav', 'proposer', 'name']; //, 'accept', 'reject'
   columnsToDisplayTeam: string[] =   ['name', 'active', 'disabled'];
-  columnsToDisplayStudent: string[] = ['id', 'firstName', 'lastName', 'email'];
+  columnsToDisplayStudent: string[] = ['id', 'firstName', 'lastName'];
   expandedElement: Student | null;
 
   @ViewChild(MatSort, {static: true}) sort: MatSort;
   @ViewChild(MatPaginator) paginator: MatPaginator;
-  dataSource = new MatTableDataSource<Student>();
+  dataSourceEnrolledNoTeams = new MatTableDataSource<Student>();
   dataSourceTeams = new MatTableDataSource<Team>();
   dialogRef: MatDialogRef<any>;
   selection = new SelectionModel<Student>(true, []);
@@ -65,16 +65,19 @@ export class TeamsComponent implements AfterViewInit, OnDestroy {
   courseMax: number;
   @Output()
   forceUploadData = new EventEmitter<any>();
+  loggedUserStudent: Student;
   @Input()
   set enrolledWithoutTeams(array: Student[]) {
-    this.dataSource.data = [...array];
+    this.loggedUserStudent = array.find(s => s.id == +localStorage.getItem('id'));
+    array.splice(array.indexOf(this.loggedUserStudent));
+    this.dataSourceEnrolledNoTeams.data = [...array];
     // Should help making sure table data is loaded when sort is assigned
     setTimeout(() => {
-      this.dataSource.sort = this.sort;
+      this.dataSourceEnrolledNoTeams.sort = this.sort;
     })
   }
   get enrolledWithoutTeams(): Student[] {
-    return this.dataSource.data;
+    return this.dataSourceEnrolledNoTeams.data;
   }
   @Input()
   hideAllGUItillActiveTeamIsChecked: boolean;
@@ -82,8 +85,8 @@ export class TeamsComponent implements AfterViewInit, OnDestroy {
   constructor(private alertsService: AlertsService, private courseService: CourseService, public dialog: MatDialog,) {
   }
   ngAfterViewInit() {
-    this.dataSource.paginator = this.paginator;
-    this.dataSource.sort = this.sort;
+    this.dataSourceEnrolledNoTeams.paginator = this.paginator;
+    this.dataSourceEnrolledNoTeams.sort = this.sort;
   }
 
   openProposeTeamDialog() {
@@ -103,9 +106,9 @@ export class TeamsComponent implements AfterViewInit, OnDestroy {
       this.alertsService.setAlert('warning', `Selected more than ${this.courseMax-1} students, (course maximum)`);
       return;
     }
-    const dialogData: dialogProposalData = {courseId: this.courseId, members: this.selection.selected};
+    const proposalData: dialogProposalData = {courseId: this.courseId, membersWithProposerFirst: [this.loggedUserStudent, ...this.selection.selected]};
     this.dialogRef = this.dialog.open(TeamProposeComponent, {
-      maxWidth: '400px', autoFocus: true, hasBackdrop: true, disableClose: true, closeOnNavigation: true, data: dialogData
+      maxWidth: '400px', autoFocus: true, hasBackdrop: true, disableClose: true, closeOnNavigation: true, data: proposalData
     });
     this.dialogRef.afterClosed().subscribe((res: string) => {
         this.dialogRef = null;
@@ -118,14 +121,14 @@ export class TeamsComponent implements AfterViewInit, OnDestroy {
   /** Whether the number of selected elements matches the total number of rows. */
   checkboxIsAllSelected() {
     const numSelected = this.selection.selected.length;
-    const numRows = this.dataSource.data.length;
+    const numRows = this.dataSourceEnrolledNoTeams.data.length;
     return numSelected === numRows;
   }
   // /** Selects all rows if they are not all selected; otherwise clear selection. */
   // checkboxMasterToggle() {
   //   this.checkboxIsAllSelected() ?
   //     this.selection.clear() :
-  //     this.dataSource.data.forEach(row => this.selection.select(row));
+  //     this.dataSourceEnrolledNoTeams.data.forEach(row => this.selection.select(row));
   // }
   idOpenExpansionStatus: boolean[];
   checkboxChangeSelection(row: Student) {

@@ -6,6 +6,7 @@ import org.springframework.hateoas.RepresentationModel;
 import javax.persistence.Transient;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.PositiveOrZero;
+import java.sql.Timestamp;
 import java.util.List;
 
 @Data
@@ -23,9 +24,8 @@ public class TeamDTO extends RepresentationModel<TeamDTO> {
       maxTotVM; // sum of enabled and disabled
   @PositiveOrZero
   private long hoursTimeout;
+  private StudentDTO proposer;
+  private Timestamp createdDate;
   @Transient
   private List<StudentDTO> students;
-//  @Transient
-//  private StudentDTO proposer; // TODO: update logic
-//  private Timestamp dateProposal;
 }

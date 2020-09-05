@@ -18,17 +18,17 @@ import {Team} from '../../../models/team.model';
   styleUrls: []
 })
 export class TeamsContComponent implements OnDestroy {
-  enrolledWithoutTeams: Student[] = [];
+  enrolledWithoutTeams: Student[] = []; // always includes logged user
   courseId = '0';
   subEnrolledWithTeams: Subscription = null;
   subRouteParam: Subscription = null;
-  private subCurrentCourse: Subscription;
+  subCurrentCourse: Subscription;
   courseMin: number;
   courseMax: number;
-  private idStringLoggedStudent: string;
+  idStringLoggedStudent: string;
   activeTeam: Team = null;
   notActiveTeams: Team[];
-  hideAllGUItillActiveTeamIsChecked = true;
+  hideAllGUItillActiveTeamIsChecked = true; // to avoid loading flicker
 
   constructor(private courseService: CourseService, private activatedRoute: ActivatedRoute, private alertsService: AlertsService,
               private vlServiceService: VlServiceService) {

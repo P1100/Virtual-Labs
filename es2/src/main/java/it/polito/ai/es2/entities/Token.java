@@ -18,13 +18,13 @@ public class Token {
   @FutureOrPresent
   private Timestamp expiryDate;
 
-  @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.PERSIST})
+  @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.PERSIST}, optional = true)
   @JoinColumn
-  private User user;
+  private User user; // registration token
 
   @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.PERSIST})
   @JoinColumn
-  private Team team;
+  private Team team; // team token
 
   public void addSetUser(User savedUser) {
     if (user != null)

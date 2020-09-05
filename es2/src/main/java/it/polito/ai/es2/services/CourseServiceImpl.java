@@ -82,7 +82,7 @@ public class CourseServiceImpl implements CourseService {
         .map(st -> {
           st.setTeamName(st.getTeams().stream()
               .filter(t -> t.getCourse().getId().equals(courseId))
-              .findAny().map(t -> t.getName() + "found").orElse("not")); // TODO: clean later
+              .findAny().map(t -> t.getName()).orElse(null)); // TODO: clean later
           return st;
         })
         .map(x -> modelMapper.map(x, StudentDTO.class))
@@ -282,7 +282,7 @@ public class CourseServiceImpl implements CourseService {
 //User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal(); user.getAuthorities();
 //                                httpServletRequest.isUserInRole("ADMIN");
 // !!!!!                          printWelcome(ModelMap model, Authentication authentication)
-//                                printWelcome(ModelMap model, Pricipal principal)
+//                                printWelcome(ModelMap model, Principal principal)
                                 if (optionalStudent_fromDb.isEmpty()) {
                                   if (!adminRoleAddAll)
                                     return null;

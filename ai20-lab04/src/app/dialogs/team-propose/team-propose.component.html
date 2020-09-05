@@ -1,8 +1,7 @@
 <h1 mat-dialog-title class="text-center mb-3">Team proposal</h1>
 Members:
 <ul>
-  <li> ({{idStringLoggedStudent}}) - idStringLoggedStudent user</li>
-  <li *ngFor="let el of data.members"> ({{el.id}}) - {{el.firstName}} {{el.lastName}} {{el.email}}</li>
+  <li *ngFor="let el of data.membersWithProposerFirst"> ({{el.id}}) - {{el.firstName}} {{el.lastName}} {{el.email}}</li>
 </ul>
 <form #cf="ngForm" (ngSubmit)="onSubmit()" class="text-center border border-light p-3" [noValidate]="checkboxNoValidate">
   <div>

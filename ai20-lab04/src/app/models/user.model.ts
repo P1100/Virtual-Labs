@@ -5,7 +5,9 @@ export class User {
               public firstName: string,
               public lastName: string,
               public email: string,
+              /* Transient DTO Data */
               public roles?: string[],
-              public imageId?: number) {
+              public imageId?: number,
+              teamName?: string) {
   }
 }

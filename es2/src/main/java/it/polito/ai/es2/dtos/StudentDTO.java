@@ -26,5 +26,7 @@ public class StudentDTO extends RepresentationModel<StudentDTO> {
   private String email;
   @Transient
   private Long imageId;
+  @Transient
+  private String teamName;
 }
 

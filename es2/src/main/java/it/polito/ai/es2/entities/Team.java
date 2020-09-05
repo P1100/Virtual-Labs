@@ -36,20 +36,17 @@ public class Team {
   @PositiveOrZero
   private int maxVcpu, maxDisk, maxRam, maxRunningVM, maxTotVM; // sum of enabled and disabled
   @CreationTimestamp
-  private Timestamp dateProposal;
+  private Timestamp createdDate;
 
   @ManyToOne(cascade = {CascadeType.MERGE, CascadeType.PERSIST}, optional = false)
   @JoinColumn(name = "course_id")
   Course course; // --> model vm
 
+  /* Proposer is the first added */
   @ManyToMany(cascade = {CascadeType.MERGE, CascadeType.PERSIST})
   @JoinTable(name = "teams_students", joinColumns = @JoinColumn(name = "team_id"),
       inverseJoinColumns = @JoinColumn(name = "student_id"))
   List<Student> students = new ArrayList<>();
-//
-//  @ManyToOne
-//  @JoinColumn
-//  private Student proposer;
 
   @OneToMany(mappedBy = "team")
   private List<Token> tokens = new ArrayList<>();

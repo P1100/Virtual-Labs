@@ -19,7 +19,7 @@ public interface TeamService {
   Optional<TeamDTO> getTeam(@NotNull Long teamId);
 
   @PreAuthorize("hasRole('STUDENT') or hasRole('PROFESSOR')")
-  List<TeamDTO> getTeamsForStudentCourse(Long studentId, String courseId);
+  List<TeamDTO> getTeamsForStudentInCourse(Long studentId, String courseId);
 
   @PreAuthorize("hasRole('STUDENT')")
   TeamDTO proposeTeam(@NotBlank String courseId, @NotBlank String team_name, @NotNull List<Long> memberIds, @NotNull Long hoursTimeout);

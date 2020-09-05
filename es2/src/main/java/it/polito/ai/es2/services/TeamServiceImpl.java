@@ -95,12 +95,13 @@ public class TeamServiceImpl extends CommonURL implements TeamService {
     if (teamId == null) throw new NullParameterException("null team parameter");
     return teamRepository.findById(teamId).map(x -> modelMapper.map(x, TeamDTO.class));
   }
+
   /**
-   * GET {@link it.polito.ai.es2.controllers.APITeams_RestController#getTeamsForStudentCourse(Long,String)}
+   * GET {@link it.polito.ai.es2.controllers.APITeams_RestController#getTeamsForStudentCourse(Long, String)}
    */
   @Override
   @PreAuthorize("hasRole('STUDENT') or hasRole('PROFESSOR')")
-  public List<TeamDTO> getTeamsForStudentCourse(Long studentId, String courseId) {
+  public List<TeamDTO> getTeamsForStudentInCourse(Long studentId, String courseId) {
     log.info("getTeamsForStudent(" + studentId + ")");
     if (studentId == null || courseId == null) throw new NullParameterException(studentId + " " + courseId);
     Optional<Student> optionalStudent = studentRepository.findById(studentId);
@@ -161,16 +162,16 @@ public class TeamServiceImpl extends CommonURL implements TeamService {
     if (!listFoundStudents.stream().allMatch(new HashSet<>()::add))
       throw new StudentDuplicatesInProposalException(Arrays.toString(memberIds.toArray()));
 
-    TeamDTO teamDTO = new TeamDTO();
+    Team teamDTO = new Team();
     teamDTO.setName(team_name);
     teamDTO.setActive(false);
-    Team new_team = modelMapper.map(teamDTO, Team.class);
-    // aggiungo nuovo team, a studenti e al corso
+    Team map = modelMapper.map(teamDTO, Team.class);
+    map.setCourse(course);
+    Team savedTeam = teamRepository.save(map);
     for (Student student : new ArrayList<>(listFoundStudents)) {
-      new_team.addStudent(student);
+      savedTeam.addStudent(student);
     }
-    new_team.addSetCourse(course);
-    Team savedTeam = teamRepository.save(new_team);
+//    savedTeam.addSetCourse(course);
     TeamDTO return_teamDTO = modelMapper.map(savedTeam, TeamDTO.class);
     notifyTeam(return_teamDTO, memberIds, hoursTimeout, savedTeam);
     return return_teamDTO;
@@ -182,7 +183,6 @@ public class TeamServiceImpl extends CommonURL implements TeamService {
       Token token = new Token();
       token.setId((UUID.randomUUID().toString().toLowerCase()));
       token.addSetTeam(savedTeam);
-//      token.setStudent(studentRepository.findById(memberId).orElse(null));
       token.setExpiryDate(Timestamp.valueOf(LocalDateTime.now().plusHours(hoursTimeout)));
       tokenRepository.save(token);
       StringBuffer sb = new StringBuffer();

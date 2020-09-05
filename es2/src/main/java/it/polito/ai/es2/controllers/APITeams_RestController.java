@@ -56,7 +56,7 @@ public class APITeams_RestController {
 
   @GetMapping("/{student_id}/teams/{courseId}")
   public CollectionModel<TeamDTO> getTeamsForStudentCourse(@PathVariable Long student_id, @PathVariable String courseId) {
-    List<TeamDTO> teams = teamService.getTeamsForStudentCourse(student_id, courseId);
+    List<TeamDTO> teams = teamService.getTeamsForStudentInCourse(student_id, courseId);
     for (TeamDTO team : teams) {
       modelHelper.enrich(team);
     }
