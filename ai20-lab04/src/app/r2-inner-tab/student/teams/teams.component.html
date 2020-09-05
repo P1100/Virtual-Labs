@@ -24,7 +24,6 @@
       </button>
     </h2>
     <table mat-table matSort [dataSource]="dataSourceEnrolledNoTeams" class="mat-elevation-z8">
-      <div *ngIf="activeTeam == null">
         <ng-container matColumnDef="select">
           <th *matHeaderCellDef mat-header-cell>
             <!--        <mat-checkbox (change)="$event ? checkboxMasterToggle() : null"-->
@@ -58,7 +57,6 @@
 
         <tr mat-header-row *matHeaderRowDef="displayedColumnsTable1; sticky: true"></tr>
         <tr mat-row *matRowDef="let row; columns: displayedColumnsTable1;"></tr>
-      </div>
     </table>
     <mat-paginator pageSize="5" [pageSizeOptions]="[2, 5, 10, 15, 20, 50, 200]" showFirstLastButtons></mat-paginator>
 
@@ -71,18 +69,17 @@
           Clean up disabled
         </button>
       </h2>
-      <table mat-table [dataSource]="dataSourceTeams" multiTemplateDataRows>
-        <div *ngIf="activeTeam == null">
-          <ng-container matColumnDef="nav">
-            <th *matHeaderCellDef mat-header-cell>
-            </th>
-            <td *matCellDef="let element" mat-cell>
-              <mat-icon *ngIf="expandedElement && element == expandedElement">expand_less</mat-icon>
-              <mat-icon *ngIf="!(expandedElement && element == expandedElement)">expand_more</mat-icon>
-            </td>
-          </ng-container>
-          <ng-container matColumnDef="proposer">
-            <th *matHeaderCellDef mat-header-cell>proposer</th>
+      <table mat-table [dataSource]="dataSourceTeams" multiTemplateDataRows class="mat-elevation-z8">
+        <ng-container matColumnDef="nav">
+          <th *matHeaderCellDef mat-header-cell>
+          </th>
+          <td *matCellDef="let element" mat-cell>
+            <mat-icon *ngIf="expandedElement && element == expandedElement">expand_less</mat-icon>
+            <mat-icon *ngIf="!(expandedElement && element == expandedElement)">expand_more</mat-icon>
+          </td>
+        </ng-container>
+        <ng-container matColumnDef="proposer">
+          <th *matHeaderCellDef mat-header-cell>proposer</th>
             <td *matCellDef="let element" mat-cell>
               {{element.students[0].firstName + ' ' + element.students[0].lastName}}
             </td>
@@ -126,7 +123,6 @@
               (click)="expandedElement = element.disabled ? expandedElement : ((expandedElement === element) ? null : element)">
           </tr>
           <tr mat-row *matRowDef="let row; columns: ['expandedDetail']" class="example-detail-row"></tr>
-        </div>
       </table>
     </div>
   </div>
