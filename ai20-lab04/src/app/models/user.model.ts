@@ -8,6 +8,7 @@ export class User {
               /* Transient DTO Data */
               public roles?: string[],
               public imageId?: number,
+              /* DONT DELETE! Commodity field, used for mapping user to student */
               teamName?: string) {
   }
 }

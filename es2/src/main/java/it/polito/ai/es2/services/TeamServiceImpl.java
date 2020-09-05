@@ -162,16 +162,15 @@ public class TeamServiceImpl extends CommonURL implements TeamService {
     if (!listFoundStudents.stream().allMatch(new HashSet<>()::add))
       throw new StudentDuplicatesInProposalException(Arrays.toString(memberIds.toArray()));
 
-    Team teamDTO = new Team();
-    teamDTO.setName(team_name);
-    teamDTO.setActive(false);
-    Team map = modelMapper.map(teamDTO, Team.class);
-    map.setCourse(course);
-    Team savedTeam = teamRepository.save(map);
+    Team team = new Team();
+    team.setName(team_name);
+    team.setActive(false);
+    team.setCourse(course);
     for (Student student : new ArrayList<>(listFoundStudents)) {
-      savedTeam.addStudent(student);
+      team.addStudent(student);
     }
-//    savedTeam.addSetCourse(course);
+    team.addSetCourse(course);
+    Team savedTeam = teamRepository.saveAndFlush(team);
     TeamDTO return_teamDTO = modelMapper.map(savedTeam, TeamDTO.class);
     notifyTeam(return_teamDTO, memberIds, hoursTimeout, savedTeam);
     return return_teamDTO;

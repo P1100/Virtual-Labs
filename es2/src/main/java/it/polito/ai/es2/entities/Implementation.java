@@ -25,11 +25,11 @@ public class Implementation {
   private Timestamp readStatus, definitiveStatus; // cant use 'read' as column name, mariadb error
 
   @ManyToOne(optional = false, cascade = CascadeType.MERGE)
-  @JoinColumn
+  @JoinColumn(nullable = false)
   private Student student;
 
   @ManyToOne(optional = false, cascade = CascadeType.MERGE)
-  @JoinColumn
+  @JoinColumn(nullable = false)
   private Assignment assignment; // --> course, professor
 
   @OneToMany(mappedBy = "submission")

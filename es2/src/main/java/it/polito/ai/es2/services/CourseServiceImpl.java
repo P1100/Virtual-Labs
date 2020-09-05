@@ -79,11 +79,11 @@ public class CourseServiceImpl implements CourseService {
     if (courseOptional.isEmpty())
       throw new CourseNotFoundException(courseId);
     return courseOptional.get().getStudents().stream()
-        .map(st -> {
-          st.setTeamName(st.getTeams().stream()
+        .peek(student -> {
+          student.setTeamName(student.getTeams().stream()
               .filter(t -> t.getCourse().getId().equals(courseId))
-              .findAny().map(t -> t.getName()).orElse(null)); // TODO: clean later
-          return st;
+              .filter(x -> x.isActive())
+              .findAny().map(t -> t.getName()).orElse(null));
         })
         .map(x -> modelMapper.map(x, StudentDTO.class))
         .collect(Collectors.toList());
@@ -149,11 +149,11 @@ public class CourseServiceImpl implements CourseService {
     if (courseRepository.countTeamsThatViolateCardinality(courseDTO.getId(), min, max) != 0)
       throw new CourseCardinalityConstrainsException(courseDTO.getId(), "new cardinalities incompatible with existing teams");
     Course old = courseRepository.findById(courseDTO.getId()).orElse(null);
-    Course neww = modelMapper.map(courseDTO, Course.class);
-    /* NEEDED! Because owning side overwrites join table */
-    neww.setStudents(old.getStudents());
-    neww.setProfessors(old.getProfessors());
-    courseRepository.save(neww);
+    Course newCourse = modelMapper.map(courseDTO, Course.class);
+    /* NEEDED! Because owning side overwrites join tables */
+    newCourse.setStudents(old.getStudents());
+    newCourse.setProfessors(old.getProfessors());
+    courseRepository.save(newCourse);
   }
 
   /**

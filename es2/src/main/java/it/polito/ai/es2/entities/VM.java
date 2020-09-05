@@ -23,7 +23,7 @@ public class VM {
 // --> vmModel saved in course
 
   @ManyToOne(optional = false, cascade = CascadeType.MERGE)
-  @JoinColumn
+  @JoinColumn(nullable = false)
   private Team team; // --> course
 
   // TODO: check on add, students must be in same team

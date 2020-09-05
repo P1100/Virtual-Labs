@@ -23,7 +23,7 @@ public class Assignment {
   private Timestamp expireDate;
 
   @OneToOne(optional = false)
-  @JoinColumn
+  @JoinColumn(nullable = false)
   @NotNull
   private Image content;
 
@@ -33,7 +33,7 @@ public class Assignment {
   private Course course;
 
   @ManyToOne(optional = false, cascade = CascadeType.MERGE)
-  @JoinColumn
+  @JoinColumn(nullable = false)
   @NotNull
   private Professor creator;
 

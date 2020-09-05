@@ -39,7 +39,7 @@ public class Team {
   private Timestamp createdDate;
 
   @ManyToOne(cascade = {CascadeType.MERGE, CascadeType.PERSIST}, optional = false)
-  @JoinColumn(name = "course_id")
+  @JoinColumn(name = "course_id", nullable = false)
   Course course; // --> model vm
 
   /* Proposer is the first added */
