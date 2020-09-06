@@ -37,7 +37,6 @@ export class TeamsContComponent implements OnDestroy {
     this.idStringLoggedStudent = localStorage.getItem('id');
     this.subRouteParam = this.activatedRoute.paramMap.subscribe(() => {
         this.courseId = this.activatedRoute.parent.snapshot.paramMap.get('id');
-      console.log('this.courseId ');
         this.onForceUploadData(null);
       }
     );

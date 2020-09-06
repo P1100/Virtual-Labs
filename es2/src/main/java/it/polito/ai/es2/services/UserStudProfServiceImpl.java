@@ -8,7 +8,7 @@ import it.polito.ai.es2.entities.*;
 import it.polito.ai.es2.repositories.*;
 import it.polito.ai.es2.services.exceptions.FailedAddException;
 import it.polito.ai.es2.services.exceptions.NullParameterException;
-import it.polito.ai.es2.services.exceptions.UserAlreadyEnabled;
+import it.polito.ai.es2.services.exceptions.UserAlreadyEnabledException;
 import it.polito.ai.es2.services.exceptions.UsernameAlreadyUsedException;
 import it.polito.ai.es2.services.interfaces.UserStudProfService;
 import lombok.extern.java.Log;
@@ -126,7 +126,7 @@ public class UserStudProfServiceImpl implements UserStudProfService {
       return false;
     }
     if (userOptional.get().isEnabled()) {
-      throw new UserAlreadyEnabled(userOptional.get().getUsername());
+      throw new UserAlreadyEnabledException(userOptional.get().getUsername());
     }
     if (LocalDateTime.now().isAfter(tokenOptional.get().getExpiryDate().toLocalDateTime())) {
       userOptional.get().setEnabled(false);

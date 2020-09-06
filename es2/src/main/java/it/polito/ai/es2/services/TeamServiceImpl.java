@@ -112,28 +112,41 @@ public class TeamServiceImpl extends CommonURL implements TeamService {
       throw new CourseNotFoundException(courseId);
     }
     List<Team> teams = optionalStudent.get().getTeams().stream().filter(t -> t.getCourse().getId().equals(courseId)).collect(Collectors.toList());
+    List<TeamDTO> teamDTOS = new ArrayList<>();
     for (Team team : teams) {
-      if (team.isActive()) {
-        if (teams.size() > 1)
-          log.warning("Team proposals should be deleted once one is made active (or invalid multiple active teams)");
-        continue;
+      TeamDTO tt = modelMapper.map(team, TeamDTO.class);
+      List<StudentDTO> sd = new ArrayList<>();
+      if (team.isActive() && teams.size() > 1) {
+        log.warning("Team proposals should be deleted once one is made active (or invalid multiple active teams)");
+      }
+      if (team.isActive() && team.isDisabled()) {
+        throw new InvalidDataException("Tema both active an disabled");
       }
       /* Putting in transient data */
       for (Student student : team.getStudents()) {
+        StudentDTO sdto = modelMapper.map(student, StudentDTO.class);
+        if (team.isActive()) {
+          sd.add(sdto);
+          continue;
+        }
         List<Token> tokenList = student.getTokens().stream().filter(t -> t.getTeam().equals(team)).collect(Collectors.toList());
         if (tokenList.size() == 0) {
-          log.warning("no tokens associated with student in proposal");
+          log.warning("No tokens associated with student in inactive proposal");
+          sd.add(sdto);
           continue;
         }
         if (tokenList.size() > 1)
           throw new InvalidDataException("Invalid data: Multiple tokens for same Team detected");
         Token tk = tokenList.get(0);
-        student.setProposalAccepted(tk.isConfirmed());
-        student.setUrlTokenConfirm(tk.getUrlConfirm());
-        student.setUrlTokenReject(tk.getUrlReject());
+        sdto.setProposalAccepted(tk.isConfirmed());
+        sdto.setUrlTokenConfirm(tk.getUrlConfirm());
+        sdto.setUrlTokenReject(tk.getUrlReject());
+        sd.add(sdto);
       }
+      tt.setStudents(sd);
+      teamDTOS.add(tt);
     }
-    List<TeamDTO> teamDTOS = teams.stream().map(x -> modelMapper.map(x, TeamDTO.class)).collect(Collectors.toList());
+//    List<TeamDTO> teamDTOS = teams.stream().map(x -> modelMapper.map(x, TeamDTO.class)).collect(Collectors.toList());
     if (teamDTOS.stream().filter(TeamDTO::isActive).count() > 1)
       throw new StudentsInMultipleActiveTeamsException(studentId);
     return teamDTOS;
@@ -198,9 +211,9 @@ public class TeamServiceImpl extends CommonURL implements TeamService {
     return return_teamDTO;
   }
 
-  private void notifyTeam(@NotNull Long hoursTimeout, @Valid Team savedTeam2, @Valid List<Student> members) {
-    Team savedTeam = teamRepository.findById(savedTeam2.getId()).get();
-    log.info("notifyTeam(" + modelMapper.map(savedTeam2, TeamDTO.class) + ", " + members.stream().map(students -> modelMapper.map(students, StudentDTO.class)).collect(Collectors.toList()) + ")");
+  private void notifyTeam(@NotNull Long hoursTimeout, @Valid Team savedTeam, @Valid List<Student> members) {
+    log.info("notifyTeam(" + modelMapper.map(savedTeam, TeamDTO.class) + ", " + members.stream().map(students -> modelMapper.map(students, StudentDTO.class)).collect(Collectors.toList()) + ")");
+    int proposer = 0;
     for (Student student : members) {
       Long memberId = student.getId();
       Token token = new Token();
@@ -217,6 +230,12 @@ public class TeamServiceImpl extends CommonURL implements TeamService {
       token.setUrlReject(urlReject);
       token.addSetStudent(student);
       token.addSetTeam(savedTeam);
+      if (proposer == 0) {
+        token.setConfirmed(true);
+        tokenRepository.save(token);
+        proposer++;
+        continue;
+      }
       tokenRepository.save(token);
       String mymatricola = environment.getProperty("mymatricola");
       // TODO: uncommentare in fase di prod (attenzione!)

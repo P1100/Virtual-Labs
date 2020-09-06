@@ -10,6 +10,7 @@ import it.polito.ai.es2.dtos.TeamDTO;
 import it.polito.ai.es2.entities.Course;
 import it.polito.ai.es2.entities.Professor;
 import it.polito.ai.es2.entities.Student;
+import it.polito.ai.es2.entities.Team;
 import it.polito.ai.es2.repositories.CourseRepository;
 import it.polito.ai.es2.repositories.StudentRepository;
 import it.polito.ai.es2.services.exceptions.*;
@@ -78,12 +79,10 @@ public class CourseServiceImpl implements CourseService {
     if (courseOptional.isEmpty())
       throw new CourseNotFoundException(courseId);
     return courseOptional.get().getStudents().stream()
-        .peek(student -> {
-          student.setTeamName(student.getTeams().stream()
-              .filter(t -> t.getCourse().getId().equals(courseId))
-              .filter(x -> x.isActive())
-              .findAny().map(t -> t.getName()).orElse(null));
-        })
+        .peek(student -> student.setTeamName(student.getTeams().stream()
+            .filter(t -> t.getCourse().getId().equals(courseId))
+            .filter(Team::isActive)
+            .findAny().map(Team::getName).orElse(null)))
         .map(x -> modelMapper.map(x, StudentDTO.class))
         .collect(Collectors.toList());
   }
@@ -212,7 +211,7 @@ public class CourseServiceImpl implements CourseService {
     if (!c.isEnabled())
       throw new CourseNotEnabledException(courseId);
     if (c.getStudents().stream().anyMatch(x -> x.getId().equals(studentId)))
-      throw new StudentAlreadyEnrolled(studentId.toString(), courseId);
+      throw new StudentAlreadyEnrolledException(studentId.toString(), courseId);
     c.addStudent(studentOptional.get());
   }
 
@@ -277,7 +276,7 @@ public class CourseServiceImpl implements CourseService {
                               {
                                 Optional<Student> optionalStudent_fromDb = studentRepository.findById(new_studentDTO.getId());
                                 Student newStudent = modelMapper.map(new_studentDTO, Student.class);
-                                // return null if you want only to add, and not enroll if missing
+                                // return null if you want only to add, and not enroll if missing (y -> y != null)
                                 return studentRepository.save(newStudent);
                               })
                               .map(y -> y != null ? y.getId() : null).collect(Collectors.toList());

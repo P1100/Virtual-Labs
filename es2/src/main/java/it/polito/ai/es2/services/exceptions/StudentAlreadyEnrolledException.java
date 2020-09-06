@@ -4,12 +4,12 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
 @ResponseStatus(code = HttpStatus.CONFLICT)
-public class StudentAlreadyEnrolled extends RuntimeException {
-  public StudentAlreadyEnrolled() {
+public class StudentAlreadyEnrolledException extends RuntimeException {
+  public StudentAlreadyEnrolledException() {
     super("Student already enrolled!");
   }
 
-  public StudentAlreadyEnrolled(String s, String c) {
+  public StudentAlreadyEnrolledException(String s, String c) {
     super("Student " + s + " already enrolled in course " + c);
   }
 }

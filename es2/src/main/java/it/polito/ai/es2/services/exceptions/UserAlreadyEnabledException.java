@@ -4,8 +4,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
 @ResponseStatus(code = HttpStatus.CONFLICT)
-public class UserAlreadyEnabled extends RuntimeException {
-  public UserAlreadyEnabled(String s) {
+public class UserAlreadyEnabledException extends RuntimeException {
+  public UserAlreadyEnabledException(String s) {
     super("User " + s + " already enabled");
   }
 }

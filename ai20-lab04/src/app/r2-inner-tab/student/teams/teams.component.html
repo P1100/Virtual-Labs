@@ -63,7 +63,7 @@
     <br>
 
     <div name="part2">
-      <h2 style="margin-left: 25px; margin-right: 5px">Proposals
+      <h2 style="margin-left: 25px; margin-right: 5px">Team Proposals
         <button mat-raised-button color="warn" (click)="removeDisabledTeams()" style=" float: right;">
           <mat-icon>delete_sweep</mat-icon>
           Delete expired
@@ -87,13 +87,13 @@
         <ng-container matColumnDef="confirm">
           <th *matHeaderCellDef mat-header-cell>confirm</th>
           <td *matCellDef="let element; let k = dataIndex" mat-cell>
-            <a mat-stroked-button href={{element.students[indexLoggedUser[k]].urlTokenConfirm}} target="_blank">Link</a>
+            <a *ngIf="loggedUserStudent?.id != dataSourceTeams.data[k]?.students[0]?.id" mat-stroked-button href={{element?.students[indexLoggedUser[k]]?.urlTokenConfirm}} target="_blank">Link</a>
           </td>
         </ng-container>
         <ng-container matColumnDef="reject">
           <th *matHeaderCellDef mat-header-cell>reject</th>
-          <td *matCellDef="let element; let k = dataIndex" mat-cell>
-            <a mat-stroked-button [href]="element.students[indexLoggedUser[k]].urlTokenReject" target="_blank">Link</a>
+          <td *matCellDef="let element; let k = dataIndex" mat-cell>{{k}}{{indexLoggedUser[k]}}{{element.id}}
+            <a *ngIf="loggedUserStudent?.id != dataSourceTeams?.data[k]?.students[0]?.id" mat-stroked-button [href]="element?.students[indexLoggedUser[k]]?.urlTokenReject" target="_blank">Link</a>
           </td>
         </ng-container>
           <ng-container matColumnDef="{{column}}" *ngFor="let column of columnsToLoadFromTeam">
