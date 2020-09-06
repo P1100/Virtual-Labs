@@ -1,10 +1,15 @@
 package it.polito.ai.es2.services;
 
-import it.polito.ai.es2.dtos.*;
+import it.polito.ai.es2.dtos.CourseDTO;
+import it.polito.ai.es2.dtos.ProfessorDTO;
+import it.polito.ai.es2.dtos.StudentDTO;
+import it.polito.ai.es2.dtos.UserDTO;
 import it.polito.ai.es2.entities.*;
 import it.polito.ai.es2.repositories.*;
-import it.polito.ai.es2.services.exceptions.*;
-import it.polito.ai.es2.services.interfaces.NotificationService;
+import it.polito.ai.es2.services.exceptions.FailedAddException;
+import it.polito.ai.es2.services.exceptions.NullParameterException;
+import it.polito.ai.es2.services.exceptions.UserAlreadyEnabled;
+import it.polito.ai.es2.services.exceptions.UsernameAlreadyUsedException;
 import it.polito.ai.es2.services.interfaces.UserStudProfService;
 import lombok.extern.java.Log;
 import org.modelmapper.ModelMapper;
@@ -53,8 +58,6 @@ public class UserStudProfServiceImpl implements UserStudProfService {
   ImageRepository imageRepository;
   @Autowired
   public TokenRepository tokenRepository;
-  @Autowired
-  private NotificationService notificationService;
   @Value("${server.port}")
   private String port;
   @Value("${server.address}")
@@ -88,17 +91,17 @@ public class UserStudProfServiceImpl implements UserStudProfService {
     if (userDTO.getTypeUser() == User.TypeUser.STUDENT) {
       StudentDTO studentDTO = modelMapper.map(userDTO, StudentDTO.class);
       studentDTO.setId(Long.valueOf(userDTO.getUsername()));
-      addStudent(studentDTO);
+      addStudent(studentDTO); // imageId in studentDTO, mapped from userDTO
     } else {
       ProfessorDTO professorDTO = modelMapper.map(userDTO, ProfessorDTO.class);
       professorDTO.setId(Long.valueOf(userDTO.getUsername()));
-      addProfessor(professorDTO);
+      addProfessor(professorDTO); // imageId in professorDTO, mapped from userDTO
     }
     /* NOTIFY USER */
     Token token = new Token();
     token.setId((UUID.randomUUID().toString().toLowerCase()));
-    token.addSetUser(savedUser);
     token.setExpiryDate(Timestamp.valueOf(LocalDateTime.now().plusHours(2400)));
+    token.addSetUser(savedUser);
     Token token1 = tokenRepository.save(token);
 
     StringBuffer sb = new StringBuffer();
@@ -112,18 +115,32 @@ public class UserStudProfServiceImpl implements UserStudProfService {
   }
 
   @Override public boolean confirmUser(@NotBlank String token) {
-    notificationService.cleanUpOldTokens();
-    Optional<User> userOptional = tokenRepository.findById(token).map(Token::getUser);
+    Optional<Token> tokenOptional = tokenRepository.findById(token);
+    if (tokenOptional.isEmpty()) {
+      log.warning("Token not found, or expired: " + token);
+      return false;
+    }
+    Optional<User> userOptional = tokenOptional.map(Token::getUser);
     if (userOptional.isEmpty()) {
-      throw new UserNotFoundException("No user associated with token " + token);
+      log.warning("No user associated with token " + token);
+      return false;
     }
     if (userOptional.get().isEnabled()) {
       throw new UserAlreadyEnabled(userOptional.get().getUsername());
     }
+    if (LocalDateTime.now().isAfter(tokenOptional.get().getExpiryDate().toLocalDateTime())) {
+      userOptional.get().setEnabled(false);
+      userOptional.get().setTokenSignup(null);
+      tokenRepository.delete(tokenOptional.get());
+      return false;
+    }
     userOptional.get().setEnabled(true);
+    userOptional.get().setTokenSignup(null);
+    tokenRepository.delete(tokenOptional.get());
     return true;
   }
 
+  // TODO: make private, remove from command line runner
   @Override
   public StudentDTO addStudent(@Valid StudentDTO studentDTO) {
     log.info("addStudent(" + studentDTO + ")");

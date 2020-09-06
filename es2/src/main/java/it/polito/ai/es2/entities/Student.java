@@ -37,8 +37,15 @@ public class Student {
   @Email
   @Pattern(regexp = "s[0-9]{1,9}@studenti\\.polito\\.it")
   private String email;
+  /* Convenient values related to a Team and Course */
   @Transient
   private String teamName;
+  @Transient
+  private boolean proposalAccepted;
+  @Transient
+  private String urlTokenConfirm;
+  @Transient
+  private String urlTokenReject;
 
   @OneToOne(cascade = CascadeType.ALL)
   @JoinColumn
@@ -65,6 +72,9 @@ public class Student {
 
   @OneToOne(mappedBy = "student")
   private User user;
+
+  @OneToMany(mappedBy = "student", cascade = {CascadeType.MERGE, CascadeType.PERSIST})
+  private List<Token> tokens = new ArrayList<>();
 
   @Override
   public String toString() {

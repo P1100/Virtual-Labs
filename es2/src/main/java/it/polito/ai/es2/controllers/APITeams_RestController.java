@@ -7,12 +7,9 @@ import it.polito.ai.es2.services.interfaces.TeamService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.hateoas.CollectionModel;
 import org.springframework.hateoas.Link;
-import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
-import java.util.Optional;
 
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
@@ -41,18 +38,18 @@ public class APITeams_RestController {
       modelHelper.enrich(teamDTO);
     }
     Link link = linkTo(methodOn(APITeams_RestController.class)
-                           .getAllTeams()).withSelfRel();
+        .getAllTeams()).withSelfRel();
     CollectionModel<TeamDTO> result = CollectionModel.of(allTeams, link);
     return result;
   }
 
-  @GetMapping("/{teamId}")
-  public TeamDTO getTeam(@PathVariable Long teamId) {
-    Optional<TeamDTO> teamDTO = teamService.getTeam(teamId);
-    if (teamDTO.isEmpty())
-      throw new ResponseStatusException(HttpStatus.CONFLICT, teamId.toString());
-    return modelHelper.enrich(teamDTO.get());
-  }
+//  @GetMapping("/{teamId}")
+//  public TeamDTO getTeam(@PathVariable Long teamId) {
+//    Optional<TeamDTO> teamDTO = teamService.getTeam(teamId);
+//    if (teamDTO.isEmpty())
+//      throw new ResponseStatusException(HttpStatus.CONFLICT, teamId.toString());
+//    return modelHelper.enrich(teamDTO.get());
+//  }
 
   @GetMapping("/{student_id}/teams/{courseId}")
   public CollectionModel<TeamDTO> getTeamsForStudentCourse(@PathVariable Long student_id, @PathVariable String courseId) {

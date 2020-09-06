@@ -1,6 +1,5 @@
 package it.polito.ai.es2.services;
 
-import it.polito.ai.es2.controllers.APITeams_RestController;
 import it.polito.ai.es2.dtos.StudentDTO;
 import it.polito.ai.es2.dtos.TeamDTO;
 import it.polito.ai.es2.entities.Course;
@@ -61,23 +60,23 @@ public class TeamServiceImpl extends CommonURL implements TeamService {
   @Autowired
   public TokenRepository tokenRepository;
 
-  /**
-   * GET {@link it.polito.ai.es2.controllers.APITeams_RestController#getMembers(Long)}
-   */
-  @Override
-  @PreAuthorize("hasRole('PROFESSOR') or @mySecurityChecker.isTeamOwner(#teamId,authentication.principal.username)")
-  public List<StudentDTO> getMembers(@NotNull Long teamId) {
-    log.info("getMembers(" + teamId + ")");
-    if (teamId == null) throw new NullParameterException("teamId");
-    Optional<Team> team = teamRepository.findById(teamId);
-    if (team.isEmpty())
-      throw new TeamNotFoundException(teamId);
-    return team.get().getStudents().stream().filter(Objects::nonNull).map(y -> modelMapper.map(y, StudentDTO.class)).collect(Collectors.toList());
-  }
+//  /**
+//   * GET {@link it.polito.ai.es2.controllers.APITeams_RestController#getMembers(Long)}
+//   */
+@Override
+@PreAuthorize("hasRole('PROFESSOR') or @mySecurityChecker.isTeamOwner(#teamId,authentication.principal.username)")
+public List<StudentDTO> getMembers(@NotNull Long teamId) {
+  log.info("getMembers(" + teamId + ")");
+  if (teamId == null) throw new NullParameterException("teamId");
+  Optional<Team> team = teamRepository.findById(teamId);
+  if (team.isEmpty())
+    throw new TeamNotFoundException(teamId);
+  return team.get().getStudents().stream().filter(Objects::nonNull).map(y -> modelMapper.map(y, StudentDTO.class)).collect(Collectors.toList());
+}
 
-  /**
-   * GET {@link APITeams_RestController#getAllTeams()}
-   */
+  //  /**
+//   * GET {@link APITeams_RestController#getAllTeams()}
+//   */
   @Override
   @PreAuthorize("hasRole('ADMIN')")
   public List<TeamDTO> getAllTeams() {
@@ -85,10 +84,10 @@ public class TeamServiceImpl extends CommonURL implements TeamService {
     return teamRepository.findAll().stream().map(x -> modelMapper.map(x, TeamDTO.class)).collect(Collectors.toList());
   }
 
-  /**
-   * GET {@link it.polito.ai.es2.controllers.APITeams_RestController#getTeam(Long)}
-   */
-  @Override
+  //  /**
+//   * GET {@link it.polito.ai.es2.controllers.APITeams_RestController#getTeam(Long)}
+//   */
+//  @Override
   @PreAuthorize("hasRole('PROFESSOR') or @mySecurityChecker.isTeamOwner(#teamId,authentication.principal.username)")
   public Optional<TeamDTO> getTeam(@NotNull Long teamId) {
     log.info("getTeam(" + teamId + ")");
@@ -112,10 +111,27 @@ public class TeamServiceImpl extends CommonURL implements TeamService {
     if (optionalCourse.isEmpty()) {
       throw new CourseNotFoundException(courseId);
     }
-    List<TeamDTO> teamDTOS = optionalStudent.get().getTeams().stream().filter(t -> t.getCourse().getId() == courseId)
-        .map(x -> modelMapper.map(x, TeamDTO.class)).collect(Collectors.toList());
-    if (teamDTOS.stream().filter(x->x.isActive()).count() > 1)
-      throw new StudentInMultipleActiveTeamsException(studentId);
+    List<Team> teams = optionalStudent.get().getTeams().stream().filter(t -> t.getCourse().getId().equals(courseId)).collect(Collectors.toList());
+    for (Team team : teams) {
+      if (team.isActive()) {
+        if (teams.size() > 1)
+          throw new InvalidDataException("Invalid data: Team proposals should be deleted once one is made active. Or invalid multiple active teams");
+        continue;
+      }
+      /* Putting in transient data */
+      for (Student student : team.getStudents()) {
+        List<Token> tokenList = student.getTokens().stream().filter(t -> t.getTeam().equals(team)).collect(Collectors.toList());
+        if (tokenList.size() != 1)
+          throw new InvalidDataException("Invalid data: Multiple tokens for same Team detected");
+        Token tk = tokenList.get(0);
+        student.setProposalAccepted(tk.isConfirmed());
+        student.setUrlTokenConfirm(tk.getUrlConfirm());
+        student.setUrlTokenReject(tk.getUrlReject());
+      }
+    }
+    List<TeamDTO> teamDTOS = teams.stream().map(x -> modelMapper.map(x, TeamDTO.class)).collect(Collectors.toList());
+    if (teamDTOS.stream().filter(TeamDTO::isActive).count() > 1)
+      throw new StudentsInMultipleActiveTeamsException(studentId);
     return teamDTOS;
   }
 
@@ -137,12 +153,12 @@ public class TeamServiceImpl extends CommonURL implements TeamService {
     StringBuilder notFoundStudents = new StringBuilder();
     StringBuilder notEnrolledStudents = new StringBuilder();
     StringBuilder alreadyWithTeam = new StringBuilder();
-    List<Student> listFoundStudents = memberIds.stream().map(x -> {
+    List<Student> foundStudents = memberIds.stream().map(x -> {
       Optional<Student> op = studentRepository.findById(x);
       if (op.isEmpty())
-        notFoundStudents.append(x + " ");
+        notFoundStudents.append(x).append(" ");
       else if (!course.getStudents().contains(op.get()))
-        notEnrolledStudents.append(x + " ");
+        notEnrolledStudents.append(x).append(" ");
       else if (course.getTeams().size() != 0 && course.getTeams().stream().filter(Team::isActive).map(Team::getStudents).flatMap(List::stream)
           .map(Student::getId).distinct().anyMatch(id -> id.equals(op.get().getId())))
         alreadyWithTeam.append(x + " ");
@@ -152,47 +168,55 @@ public class TeamServiceImpl extends CommonURL implements TeamService {
       throw new StudentNotFoundException(notFoundStudents.toString());
     if (notEnrolledStudents.length() != 0)
       throw new StudentNotEnrolledException(notEnrolledStudents.toString());
-    if (alreadyWithTeam.length() != 0)
-      throw new StudentInMultipleActiveTeamsException(alreadyWithTeam.toString());
+    if (alreadyWithTeam.length() > 1)
+      throw new StudentsInMultipleActiveTeamsException(alreadyWithTeam.toString());
+    if (alreadyWithTeam.length() == 1)
+      throw new StudentAlreadyInTeamException(alreadyWithTeam.toString());
 
-    if (listFoundStudents.size() < course.getMinSizeTeam())
-      throw new CourseCardinalityConstrainsException(courseId, listFoundStudents.size() + " < " + course.getMinSizeTeam());
-    if (listFoundStudents.size() > course.getMaxSizeTeam())
-      throw new CourseCardinalityConstrainsException(courseId, listFoundStudents.size() + " > " + course.getMaxSizeTeam());
-    if (!listFoundStudents.stream().allMatch(new HashSet<>()::add))
+    if (foundStudents.size() < course.getMinSizeTeam())
+      throw new CourseCardinalityConstrainsException(courseId, foundStudents.size() + " < " + course.getMinSizeTeam());
+    if (foundStudents.size() > course.getMaxSizeTeam())
+      throw new CourseCardinalityConstrainsException(courseId, foundStudents.size() + " > " + course.getMaxSizeTeam());
+    if (!foundStudents.stream().allMatch(new HashSet<>()::add))
       throw new StudentDuplicatesInProposalException(Arrays.toString(memberIds.toArray()));
 
     Team team = new Team();
     team.setName(team_name);
     team.setActive(false);
     team.setCourse(course);
-    for (Student student : new ArrayList<>(listFoundStudents)) {
+    for (Student student : new ArrayList<>(foundStudents)) {
       team.addStudent(student);
     }
     team.addSetCourse(course);
-    Team savedTeam = teamRepository.saveAndFlush(team);
+    Team savedTeam = teamRepository.save(team);
     TeamDTO return_teamDTO = modelMapper.map(savedTeam, TeamDTO.class);
-    notifyTeam(return_teamDTO, memberIds, hoursTimeout, savedTeam);
+    notifyTeam(hoursTimeout, savedTeam, foundStudents);
     return return_teamDTO;
   }
 
-  private void notifyTeam(@Valid TeamDTO teamDTO, @NotNull List<Long> memberIds, @NotNull Long hoursTimeout, @Valid Team savedTeam) {
-    log.info("notifyTeam(" + teamDTO + ", " + memberIds + ")");
-    for (Long memberId : memberIds) {
+  private void notifyTeam(@NotNull Long hoursTimeout, @Valid Team savedTeam, @Valid List<Student> members) {
+    log.info("notifyTeam(" + modelMapper.map(savedTeam, TeamDTO.class) + ", " + members.stream().map(students -> modelMapper.map(students, StudentDTO.class)).collect(Collectors.toList()) + ")");
+    for (Student student : members) {
+      Long memberId = student.getId();
       Token token = new Token();
       token.setId((UUID.randomUUID().toString().toLowerCase()));
-      token.addSetTeam(savedTeam);
       token.setExpiryDate(Timestamp.valueOf(LocalDateTime.now().plusHours(hoursTimeout)));
-      tokenRepository.save(token);
+      token.addSetTeam(savedTeam);
+      token.addSetStudent(student);
       StringBuffer sb = new StringBuffer();
       sb.append("Hello ").append(memberId);
-      sb.append("\n\nLink to accept token:\n" + baseUrl + "/notification/team/confirm/" + token.getId());
-      sb.append("\n\nLink to remove token:\n" + baseUrl + "/notification/team/reject/" + token.getId());
+      String urlConfirm = baseUrl + "/notification/team/confirm/";
+      sb.append("\n\nLink to accept token:\n" + urlConfirm + token.getId());
+      String urlReject = baseUrl + "/notification/team/reject/";
+      sb.append("\n\nLink to remove token:\n" + urlReject + token.getId());
       System.out.println(sb);
+      token.setUrlConfirm(urlConfirm);
+      token.setUrlReject(urlReject);
+      tokenRepository.save(token);
       String mymatricola = environment.getProperty("mymatricola");
       // TODO: uncommentare in fase di prod (attenzione!)
-      System.out.println("[s" + mymatricola + "@studenti.polito.it] s" + memberId + "@studenti.polito.it - Conferma iscrizione al team " + teamDTO.getId());
-//        sendMessage("s" + mymatricola + "@studenti.polito.it", "[Student:" + memberId + "] Conferma iscrizione al team " + teamDTO.getId(), sb.toString());
+      System.out.println("[s" + mymatricola + "@studenti.polito.it] s" + memberId + "@studenti.polito.it - Conferma iscrizione al team " + savedTeam.getName());
+//        sendMessage("s" + mymatricola + "@studenti.polito.it", "[Student:" + memberId + "] Conferma iscrizione al team " + savedTeam.getName(), sb.toString());
     }
   }
 
@@ -200,29 +224,47 @@ public class TeamServiceImpl extends CommonURL implements TeamService {
    * {@link it.polito.ai.es2.controllers.Notification_Controller#confirmUser(String)}
    */
   @Override
-  public boolean confirmTeam(@NotBlank String token) {
-    notificationService.cleanUpOldTokens();
-    Optional<Team> optionalTeam = tokenRepository.findById(token).map(Token::getTeam);
-    if (optionalTeam.isEmpty())
+  public boolean confirmTeam(@NotBlank String idtoken) {
+    Optional<Token> tokenOptional = tokenRepository.findById(idtoken);
+    if (tokenOptional.isEmpty())
       return false;
-    Team team = optionalTeam.get();
-    tokenRepository.deleteById(token);
-    List<Token> tokenList = team.getTokens();
-    if (tokenList.size() == 0) {
-      if (team.isActive()) {
-        log.severe("Notification error: team was already active");
-        return false;
-      }
-      if (team.getStudents().stream().flatMap(x -> x.getTeams().stream().filter(y -> y.getCourse().getId() == team.getCourse().getId())
-          .filter(z -> z.isActive())).count() > 0)
-        throw new StudentInMultipleActiveTeamsException();
-      if (team.isDisabled() == false) {
-        team.setActive(true); // no need to save, will be flushed automatically at the end of transaction (since not a new entity)
-        team.getStudents().stream().flatMap(x -> x.getTeams().stream().filter(y -> y.getCourse().getId() == team.getCourse().getId())
-            .filter(z -> !z.isActive())).forEach(t -> t.setDisabled(true));
-      }
+    Token token = tokenOptional.get();
+    Team team = token.getTeam();
+    if (team == null) {
+      log.warning("No team associated with this token: " + token);
+      return false;
     }
-    return true; // token accepted
+    if (team.isActive() && team.isDisabled())
+      throw new InvalidDataException("Critical data error: Team is both disabled and active");
+    if (team.isDisabled())
+      return false;
+    if (team.isActive()) {
+      log.severe("Critical data error: team associated with token is already active");
+      return false;
+    }
+    if (token.isConfirmed() && token.isRejected())
+      throw new InvalidDataException("Critical invalid data error: token both confirmed and rejected");
+    if (token.isConfirmed() || token.isRejected())
+      return false;
+    List<Token> tokenList = team.getTokens();
+    if (tokenList.size() == 0)
+      throw new InvalidDataException("Critical invalid data error: Team has no associated tokens");
+    token.setConfirmed(true);
+    if (team.getTokens().stream().allMatch(t -> (t.isConfirmed() && !t.isRejected()))) {
+      if (team.getStudents().stream().flatMap(x -> x.getTeams().stream().filter(y -> y.getCourse().getId().equals(team.getCourse().getId()))
+          .filter(Team::isActive)).count() > 0)
+        throw new StudentsInMultipleActiveTeamsException();
+      /* Disable all others team proposals, for each students, in the same course */
+      team.getStudents().stream().flatMap(x -> x.getTeams().stream().filter(y -> y.getCourse().getId().equals(team.getCourse().getId()))
+          .filter(z -> !z.isActive())).forEach(t -> t.setDisabled(true));
+      for (Token tok : tokenList) {
+        tok.getStudent().getTokens().remove(tok);
+      }
+      tokenRepository.deleteAll(tokenList);
+      team.setActive(true); // no need to save, will be flushed automatically at the end of transaction (since not a new entity)
+      return true;
+    } else
+      return false;
   }
 
   /**
@@ -230,11 +272,29 @@ public class TeamServiceImpl extends CommonURL implements TeamService {
    */
   @Override
   public boolean rejectTeam(@NotBlank String idtoken) {
-    Optional<Team> optionalTeam = tokenRepository.findById(idtoken).map(Token::getTeam);
-    if (optionalTeam.isEmpty())
+    Optional<Token> tokenOptional = tokenRepository.findById(idtoken);
+    if (tokenOptional.isEmpty())
       return false;
-    tokenRepository.deleteAll(optionalTeam.get().getTokens());
-    notificationService.cleanUpOldTokens();
+    Token token = tokenOptional.get();
+    Team team = token.getTeam();
+    if (team == null) {
+      log.warning("No team associated with this token: " + token);
+      return false;
+    }
+    if (team.isActive() && team.isDisabled())
+      throw new InvalidDataException("Critical data error: Team is both disabled and active");
+    if (team.isDisabled())
+      return false;
+    if (team.isActive()) {
+      log.severe("Critical data error: team associated with token is already active");
+      return false;
+    }
+    if (token.isConfirmed() && token.isRejected())
+      throw new InvalidDataException("Critical invalid data error: token both confirmed and rejected");
+    if (token.isConfirmed() || token.isRejected())
+      return false;
+    token.setRejected(true);
+    team.setDisabled(true);
     return true;
   }
 

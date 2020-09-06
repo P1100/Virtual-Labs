@@ -38,7 +38,7 @@ public class NotificationServiceImpl implements NotificationService {
     if (tokenExpiredList.size() > 0) {
       for (Token token : tokenExpiredList) {
         Optional.ofNullable(token.getTeam()).ifPresent(x -> x.getTokens().remove(token));
-        Optional.ofNullable(token.getUser()).ifPresent(x -> x.getTokens().remove(token));
+        Optional.ofNullable(token.getUser()).ifPresent(x -> x.setTokenSignup(null));
       }
       tokenRepository.deleteAll(tokenExpiredList);
       return true;

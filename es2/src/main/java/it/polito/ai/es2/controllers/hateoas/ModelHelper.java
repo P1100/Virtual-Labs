@@ -72,8 +72,7 @@ public class ModelHelper {
       return new TeamDTO();
     teamDTO.add(Link.of(baseUrl + "/api/teams").withRel("teams"));
     teamDTO.add(Link.of(baseUrl + "/api/teams/" + teamDTO.getId()).withSelfRel());
-    teamDTO.add(linkTo(methodOn(APITeams_RestController.class)
-                           .getMembers(teamDTO.getId())).withRel("members"));
+    teamDTO.add(linkTo(methodOn(APITeams_RestController.class).getMembers(teamDTO.getId())).withRel("members"));
     return teamDTO;
   }
 }

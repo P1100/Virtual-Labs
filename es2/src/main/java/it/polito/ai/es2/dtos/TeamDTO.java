@@ -24,8 +24,7 @@ public class TeamDTO extends RepresentationModel<TeamDTO> {
       maxTotVM; // sum of enabled and disabled
   @PositiveOrZero
   private long hoursTimeout;
-  private StudentDTO proposer;
   private Timestamp createdDate;
   @Transient
-  private List<StudentDTO> students;
+  private List<StudentDTO> students; // first student is the proposer
 }

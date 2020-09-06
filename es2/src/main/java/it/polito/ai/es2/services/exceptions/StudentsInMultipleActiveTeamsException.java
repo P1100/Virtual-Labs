@@ -4,15 +4,16 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
 @ResponseStatus(code = HttpStatus.CONFLICT)
-public class StudentInMultipleActiveTeamsException extends RuntimeException {
-  public StudentInMultipleActiveTeamsException() {
+public class StudentsInMultipleActiveTeamsException extends RuntimeException {
+  public StudentsInMultipleActiveTeamsException() {
     super("Student in multiple teams.");
   }
 
-  public StudentInMultipleActiveTeamsException(String s) {
+  public StudentsInMultipleActiveTeamsException(String s) {
     super("Student " + s + " in multiple teams. ");
   }
-  public StudentInMultipleActiveTeamsException(Long s) {
+
+  public StudentsInMultipleActiveTeamsException(Long s) {
     super("Student " + s + " in multiple teams. ");
   }
 }

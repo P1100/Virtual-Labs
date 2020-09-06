@@ -42,11 +42,10 @@ public class Team {
   @JoinColumn(name = "course_id", nullable = false)
   Course course; // --> model vm
 
-  /* Proposer is the first added */
   @ManyToMany(cascade = {CascadeType.MERGE, CascadeType.PERSIST})
   @JoinTable(name = "teams_students", joinColumns = @JoinColumn(name = "team_id"),
       inverseJoinColumns = @JoinColumn(name = "student_id"))
-  List<Student> students = new ArrayList<>();
+  List<Student> students = new ArrayList<>(); // Proposer is the first added!
 
   @OneToMany(mappedBy = "team")
   private List<Token> tokens = new ArrayList<>();

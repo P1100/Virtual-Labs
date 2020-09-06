@@ -41,6 +41,9 @@ public class UserDTO {
   @Email
   @Pattern(regexp = "[sd][0-9]{1,9}@(studenti\\.)?polito\\.it")
   private String email;
+  /**
+   * Used for convenient mapping in userDTOs, studentDTOs, and professorDTOs. Don't remove!
+   */
   @Transient
   private Long imageId;
 

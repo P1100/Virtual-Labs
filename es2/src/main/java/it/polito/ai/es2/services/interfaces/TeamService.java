@@ -7,16 +7,18 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import java.util.List;
-import java.util.Optional;
 
 public interface TeamService {
-  @PreAuthorize("hasRole('PROFESSOR') or @mySecurityChecker.isTeamOwner(#teamId,authentication.principal.username)")
-  List<StudentDTO> getMembers(@NotNull Long teamId);
 
+  //  /**
+  //   * GET {@link it.polito.ai.es2.controllers.APITeams_RestController#getMembers(Long)}
+  //   */
+  @PreAuthorize("hasRole('PROFESSOR') or @mySecurityChecker.isTeamOwner(#teamId,authentication.principal.username)") List<StudentDTO> getMembers(@NotNull Long teamId);
+
+  //  /**
+  //   * GET {@link APITeams_RestController#getAllTeams()}
+  //   */
   @PreAuthorize("hasRole('ADMIN')") List<TeamDTO> getAllTeams();
-
-  @PreAuthorize("hasRole('PROFESSOR') or @mySecurityChecker.isTeamOwner(#teamId,authentication.principal.username)")
-  Optional<TeamDTO> getTeam(@NotNull Long teamId);
 
   @PreAuthorize("hasRole('STUDENT') or hasRole('PROFESSOR')")
   List<TeamDTO> getTeamsForStudentInCourse(Long studentId, String courseId);

@@ -51,8 +51,8 @@ public class User {
   @JoinTable(name = "users_roles", joinColumns = @JoinColumn(name = "username", referencedColumnName = "username"), inverseJoinColumns = @JoinColumn(name = "authority", referencedColumnName = "name"))
   private List<Role> roles = new ArrayList<>();
 
-  @OneToMany(mappedBy = "user")
-  private List<Token> tokens = new ArrayList<>();
+  @OneToOne(mappedBy = "user")
+  private Token tokenSignup;
 
   public Collection<? extends GrantedAuthority> getAuthorities() {
     List<GrantedAuthority> authorities = new ArrayList<>();
@@ -73,14 +73,14 @@ public class User {
 
   public void addSetStudent(Student x) {
     if (student != null)
-      throw new RuntimeException("JPA-Team: overriding a OneToOne or ManyToOne field might be an error");
+      throw new RuntimeException("JPA-User: overriding a OneToOne or ManyToOne field might be an error");
     student = x;
     x.setUser(this);
   }
 
   public void addSetProfessor(Professor x) {
     if (professor != null)
-      throw new RuntimeException("JPA-Team: overriding a OneToOne or ManyToOne field might be an error");
+      throw new RuntimeException("JPA-User: overriding a OneToOne or ManyToOne field might be an error");
     professor = x;
     x.setUser(this);
   }
