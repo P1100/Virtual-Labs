@@ -30,8 +30,8 @@ export interface dialogProposalData {
 })
 export class TeamsComponent implements AfterViewInit, OnDestroy {
   displayedColumnsTable1: string[] = ['select', 'id', 'firstName', 'lastName', 'email'];
-  columnsToDisplayProposals: string[] =   ['nav', 'proposer', 'name']; //, 'accept', 'reject'
-  columnsToDisplayTeam: string[] =   ['name', 'active', 'disabled'];
+  columnsToDisplayProposals: string[] =   ['nav', 'proposer', 'name', 'createdDate','confirm','reject']; //, 'accept', 'reject'
+  columnsToLoadFromTeam: string[] =   ['name', 'active', 'disabled', 'createdDate'];
   columnsToDisplayStudent: string[] = ['id', 'firstName', 'lastName'];
   expandedElement: Student | null;
 
@@ -42,10 +42,23 @@ export class TeamsComponent implements AfterViewInit, OnDestroy {
   dialogRef: MatDialogRef<any>;
   selection = new SelectionModel<Student>(true, []);
   @Input()
+  idStringLoggedStudent;
+  indexLoggedUser: any[] = [];
+  @Input()
   activeTeam: Team = null;
   @Input()
   set notActiveTeams(t: Team[]) {
+    if (t==null)
+      return;
     this.dataSourceTeams.data = t;
+    console.log(t);
+    for (let i = 0; i < t.length; i++) {
+      for (let j = 0; j < t[i].students.length; j++) {
+        console.log(t[i].students[j].id, +this.idStringLoggedStudent, t[i].students[j].id == +this.idStringLoggedStudent);
+        if (t[i].students[j].id == +this.idStringLoggedStudent)
+          this.indexLoggedUser[i]=j;
+      }
+    }
   }
   get notActiveTeams(): Team[] {
     return this.dataSourceTeams.data;
@@ -68,11 +81,8 @@ export class TeamsComponent implements AfterViewInit, OnDestroy {
   loggedUserStudent: Student;
   @Input()
   set enrolledWithoutTeams(array: Student[]) {
-    console.log('init', array.length, array, localStorage.getItem('id'));
     this.loggedUserStudent = array.find(s => s.id == +localStorage.getItem('id'));
-    console.log('logged user', this.loggedUserStudent, array.indexOf(this.loggedUserStudent));
     array.splice(array.indexOf(this.loggedUserStudent), 1);
-    console.log('spliced', array.length, array,);
     this.dataSourceEnrolledNoTeams.data = [...array];
     // Should help making sure table data is loaded when sort is assigned
     setTimeout(() => {

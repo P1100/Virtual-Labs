@@ -115,7 +115,7 @@ public List<StudentDTO> getMembers(@NotNull Long teamId) {
     for (Team team : teams) {
       if (team.isActive()) {
         if (teams.size() > 1)
-          throw new InvalidDataException("Invalid data: Team proposals should be deleted once one is made active. Or invalid multiple active teams");
+          log.warning("Team proposals should be deleted once one is made active (or invalid multiple active teams)");
         continue;
       }
       /* Putting in transient data */
@@ -208,10 +208,10 @@ public List<StudentDTO> getMembers(@NotNull Long teamId) {
       token.setExpiryDate(Timestamp.valueOf(LocalDateTime.now().plusHours(hoursTimeout)));
       StringBuffer sb = new StringBuffer();
       sb.append("Hello ").append(memberId);
-      String urlConfirm = baseUrl + "/notification/team/confirm/";
-      sb.append("\n\nLink to accept token:\n" + urlConfirm + token.getId());
-      String urlReject = baseUrl + "/notification/team/reject/";
-      sb.append("\n\nLink to remove token:\n" + urlReject + token.getId());
+      String urlConfirm = baseUrl + "/notification/team/confirm/" + token.getId();
+      sb.append("\n\nLink to accept token:\n" + urlConfirm);
+      String urlReject = baseUrl + "/notification/team/reject/" + token.getId();
+      sb.append("\n\nLink to remove token:\n" + urlReject);
       System.out.println(sb);
       token.setUrlConfirm(urlConfirm);
       token.setUrlReject(urlReject);
@@ -267,9 +267,8 @@ public List<StudentDTO> getMembers(@NotNull Long teamId) {
       }
       tokenRepository.deleteAll(tokenList);
       team.setActive(true); // no need to save, will be flushed automatically at the end of transaction (since not a new entity)
-      return true;
-    } else
-      return false;
+    }
+    return true;
   }
 
   /**

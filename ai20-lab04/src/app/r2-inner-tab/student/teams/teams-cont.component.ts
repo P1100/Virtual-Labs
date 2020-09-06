@@ -12,7 +12,8 @@ import {Team} from '../../../models/team.model';
   template: `
     <app-teams [enrolledWithoutTeams]="enrolledWithoutTeams" (forceUploadData)="onForceUploadData($event)"
                [courseId]="courseId" [courseMin]="courseMin" [courseMax]="courseMax"
-               [activeTeam]="activeTeam" [notActiveTeams]="notActiveTeams" [hideAllGUItillActiveTeamIsChecked]="hideAllGUItillActiveTeamIsChecked">
+               [activeTeam]="activeTeam" [notActiveTeams]="notActiveTeams" [hideAllGUItillActiveTeamIsChecked]="hideAllGUItillActiveTeamIsChecked"
+    [idStringLoggedStudent]="idStringLoggedStudent">
     </app-teams>
   `,
   styleUrls: []
@@ -49,7 +50,7 @@ export class TeamsContComponent implements OnDestroy {
         this.enrolledWithoutTeams = Array.isArray(students) ? [...students] : [];
       }, error => this.alertsService.setAlert('danger', 'Couldn\'t get enrolled without team! ' + error)
     );
-    this.vlServiceService.getTeamsStudentCourse(+this.idStringLoggedStudent, this.courseId).subscribe(teams => {
+    this.vlServiceService.getTeamsUser(+this.idStringLoggedStudent, this.courseId).subscribe(teams => {
         let countActive = 0;
         this.activeTeam = null;
         this.notActiveTeams = [];
