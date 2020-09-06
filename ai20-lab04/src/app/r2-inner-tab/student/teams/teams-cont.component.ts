@@ -52,7 +52,6 @@ export class TeamsContComponent implements OnDestroy {
       }, error => this.alertsService.setAlert('danger', 'Couldn\'t get enrolled without team! ' + error)
     );
     this.vlServiceService.getTeamsUser(+this.idStringLoggedStudent, this.courseId).subscribe(teams => {
-      console.log('InsideContTeam', teams);
         let countActive = 0;
         this.activeTeam = null;
         this.notActiveTeams = [];

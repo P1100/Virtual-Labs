@@ -21,6 +21,10 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 import javax.sql.DataSource;
 
+//User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal(); user.getAuthorities();
+//                                httpServletRequest.isUserInRole("ADMIN");
+// !!!!!                          printWelcome(ModelMap model, Authentication authentication)
+//                                printWelcome(ModelMap model, Principal principal)
 @Configuration
 @EnableWebSecurity
 @EnableGlobalMethodSecurity(prePostEnabled = true, securedEnabled = true)

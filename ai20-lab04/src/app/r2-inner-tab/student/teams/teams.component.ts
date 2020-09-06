@@ -65,7 +65,6 @@ export class TeamsComponent implements AfterViewInit, OnDestroy {
     if (t==null)
       return;
     this.dataSourceTeams.data = t;
-    console.log('notActiveTeams update',t);
     for (let i = 0; i < t.length; i++) {
       for (let j = 0; j < t[i].students.length; j++) {
         if (t[i].students[j].id == +this.idStringLoggedStudent)

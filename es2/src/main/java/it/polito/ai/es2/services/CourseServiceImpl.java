@@ -38,7 +38,6 @@ import java.util.stream.Collectors;
 @Transactional
 @Log
 public class CourseServiceImpl implements CourseService {
-  private final static boolean adminRoleAddAll = true;
   @Autowired
   ModelMapper modelMapper;
   @Autowired
@@ -278,15 +277,7 @@ public class CourseServiceImpl implements CourseService {
                               {
                                 Optional<Student> optionalStudent_fromDb = studentRepository.findById(new_studentDTO.getId());
                                 Student newStudent = modelMapper.map(new_studentDTO, Student.class);
-//                                TODO: enable only if admin! Possibilities:
-//User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal(); user.getAuthorities();
-//                                httpServletRequest.isUserInRole("ADMIN");
-// !!!!!                          printWelcome(ModelMap model, Authentication authentication)
-//                                printWelcome(ModelMap model, Principal principal)
-                                if (optionalStudent_fromDb.isEmpty()) {
-                                  if (!adminRoleAddAll)
-                                    return null;
-                                }
+                                // return null if you want only to add, and not enroll if missing
                                 return studentRepository.save(newStudent);
                               })
                               .map(y -> y != null ? y.getId() : null).collect(Collectors.toList());
