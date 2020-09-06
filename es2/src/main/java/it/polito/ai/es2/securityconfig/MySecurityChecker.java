@@ -15,6 +15,9 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Example: @mySecurityChecker.isCourseOwner(#courseName,authentication.principal.username))
+ */
 @Service
 @Transactional
 @Log

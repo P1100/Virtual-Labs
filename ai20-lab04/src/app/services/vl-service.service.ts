@@ -22,7 +22,6 @@ export class VlServiceService {
   getTeamsStudentCourse(student_id: number, courseId: string): Observable<Team[]> {
     return this.http.get<HateoasModel>(`${this.baseUrlApi}/${student_id}/teams/${courseId}`, AppSettings.JSON_HTTP_OPTIONS)
       .pipe(
-        tap(res => console.log('--getTeamsStudentCourse:', res)),
         map(object => removeHATEOAS(object)),
         retry(AppSettings.RETRIES), catchError(formatErrors),
         tap(res => console.log('--getTeamsStudentCourse:', res))

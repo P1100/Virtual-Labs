@@ -5,6 +5,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -54,6 +55,15 @@ public class GlobalRuntimeExceptionHandler
 //    headers.setContentType(MediaType.APPLICATION_JSON);
 //    return handleExceptionInternal(ex, bodyOfResponse, headers, HttpStatus.INTERNAL_SERVER_ERROR, request); // 400
 //  }
+
+  @ExceptionHandler(value = {UsernameNotFoundException.class})
+  protected ResponseEntity<Object> loginFailed(RuntimeException ex, WebRequest request) {
+    String bodyOfResponse = "{\"message\":\"User not found in authentication!\", \"status\":\"401\", \"error\":\"UNAUTHORIZED\"}";
+    log.severe(ex + " \n " + request);
+    HttpHeaders headers = new HttpHeaders();
+    headers.setContentType(MediaType.APPLICATION_JSON);
+    return handleExceptionInternal(ex, bodyOfResponse, headers, HttpStatus.UNAUTHORIZED, request); // 400
+  }
 
   /**
    * DTO Validation errors (override of ResponseEntityExceptionHandler)

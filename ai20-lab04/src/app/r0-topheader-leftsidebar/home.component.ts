@@ -209,6 +209,7 @@ export class HomeComponent implements OnInit, OnDestroy {
   }
   login() {
     this.router.navigateByUrl('/home?doLogin=true');
+    this.openLoginDialogReactive();
   }
   logout() {
     this.authService.logout();

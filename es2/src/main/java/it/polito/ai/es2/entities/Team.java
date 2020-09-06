@@ -69,4 +69,19 @@ public class Team {
     students.remove(x);
     x.getTeams().add(this);
   }
+
+  @Override public String toString() {
+    return "Team{" +
+        "id=" + id +
+        ", name='" + name + '\'' +
+        ", active=" + active +
+        ", disabled=" + disabled +
+        ", maxVcpu=" + maxVcpu +
+        ", maxDisk=" + maxDisk +
+        ", maxRam=" + maxRam +
+        ", maxRunningVM=" + maxRunningVM +
+        ", maxTotVM=" + maxTotVM +
+        ", createdDate=" + createdDate +
+        '}';
+  }
 }

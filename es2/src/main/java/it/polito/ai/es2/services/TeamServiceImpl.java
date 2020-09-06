@@ -121,7 +121,11 @@ public List<StudentDTO> getMembers(@NotNull Long teamId) {
       /* Putting in transient data */
       for (Student student : team.getStudents()) {
         List<Token> tokenList = student.getTokens().stream().filter(t -> t.getTeam().equals(team)).collect(Collectors.toList());
-        if (tokenList.size() != 1)
+        if (tokenList.size() == 0) {
+          log.warning("no tokens associated with student in proposal");
+          continue;
+        }
+        if (tokenList.size() > 1)
           throw new InvalidDataException("Invalid data: Multiple tokens for same Team detected");
         Token tk = tokenList.get(0);
         student.setProposalAccepted(tk.isConfirmed());
@@ -140,6 +144,7 @@ public List<StudentDTO> getMembers(@NotNull Long teamId) {
    */
   @Override
   @PreAuthorize("hasRole('STUDENT')")
+  @Transactional
   public TeamDTO proposeTeam(@NotBlank String courseId, @NotBlank String team_name, @NotNull List<Long> memberIds, @NotNull Long hoursTimeout) {
     log.info("proposeTeam(" + courseId + ", " + team_name + ", " + memberIds + ", " + hoursTimeout + ")");
     if (courseId == null || team_name == null || memberIds == null)
@@ -183,7 +188,6 @@ public List<StudentDTO> getMembers(@NotNull Long teamId) {
     Team team = new Team();
     team.setName(team_name);
     team.setActive(false);
-    team.setCourse(course);
     for (Student student : new ArrayList<>(foundStudents)) {
       team.addStudent(student);
     }
@@ -194,15 +198,14 @@ public List<StudentDTO> getMembers(@NotNull Long teamId) {
     return return_teamDTO;
   }
 
-  private void notifyTeam(@NotNull Long hoursTimeout, @Valid Team savedTeam, @Valid List<Student> members) {
-    log.info("notifyTeam(" + modelMapper.map(savedTeam, TeamDTO.class) + ", " + members.stream().map(students -> modelMapper.map(students, StudentDTO.class)).collect(Collectors.toList()) + ")");
+  private void notifyTeam(@NotNull Long hoursTimeout, @Valid Team savedTeam2, @Valid List<Student> members) {
+    Team savedTeam = teamRepository.findById(savedTeam2.getId()).get();
+    log.info("notifyTeam(" + modelMapper.map(savedTeam2, TeamDTO.class) + ", " + members.stream().map(students -> modelMapper.map(students, StudentDTO.class)).collect(Collectors.toList()) + ")");
     for (Student student : members) {
       Long memberId = student.getId();
       Token token = new Token();
       token.setId((UUID.randomUUID().toString().toLowerCase()));
       token.setExpiryDate(Timestamp.valueOf(LocalDateTime.now().plusHours(hoursTimeout)));
-      token.addSetTeam(savedTeam);
-      token.addSetStudent(student);
       StringBuffer sb = new StringBuffer();
       sb.append("Hello ").append(memberId);
       String urlConfirm = baseUrl + "/notification/team/confirm/";
@@ -212,6 +215,8 @@ public List<StudentDTO> getMembers(@NotNull Long teamId) {
       System.out.println(sb);
       token.setUrlConfirm(urlConfirm);
       token.setUrlReject(urlReject);
+      token.addSetStudent(student);
+      token.addSetTeam(savedTeam);
       tokenRepository.save(token);
       String mymatricola = environment.getProperty("mymatricola");
       // TODO: uncommentare in fase di prod (attenzione!)

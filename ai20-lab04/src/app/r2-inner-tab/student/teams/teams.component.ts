@@ -68,8 +68,11 @@ export class TeamsComponent implements AfterViewInit, OnDestroy {
   loggedUserStudent: Student;
   @Input()
   set enrolledWithoutTeams(array: Student[]) {
+    console.log('init', array.length, array, localStorage.getItem('id'));
     this.loggedUserStudent = array.find(s => s.id == +localStorage.getItem('id'));
-    array.splice(array.indexOf(this.loggedUserStudent));
+    console.log('logged user', this.loggedUserStudent, array.indexOf(this.loggedUserStudent));
+    array.splice(array.indexOf(this.loggedUserStudent), 1);
+    console.log('spliced', array.length, array,);
     this.dataSourceEnrolledNoTeams.data = [...array];
     // Should help making sure table data is loaded when sort is assigned
     setTimeout(() => {

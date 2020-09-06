@@ -73,16 +73,24 @@ public class Student {
   @OneToOne(mappedBy = "student")
   private User user;
 
-  @OneToMany(mappedBy = "student", cascade = {CascadeType.MERGE, CascadeType.PERSIST})
+  @OneToMany(mappedBy = "student")
   private List<Token> tokens = new ArrayList<>();
-
-  @Override
-  public String toString() {
-    return "Student{} " + id + getLastName();
-  }
 
   public void addImage(Image image) {
     profilePhoto = image;
     image.setStudent(this);
+  }
+
+  @Override public String toString() {
+    return "Student{" +
+        "id=" + id +
+        ", firstName='" + firstName + '\'' +
+        ", lastName='" + lastName + '\'' +
+        ", email='" + email + '\'' +
+        ", teamName='" + teamName + '\'' +
+        ", proposalAccepted=" + proposalAccepted +
+        ", urlTokenConfirm='" + urlTokenConfirm + '\'' +
+        ", urlTokenReject='" + urlTokenReject + '\'' +
+        '}';
   }
 }

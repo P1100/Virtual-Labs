@@ -23,14 +23,14 @@ public class Token {
   private String urlReject;
   private boolean rejected = false;
 
-  @OneToOne(cascade = {CascadeType.MERGE, CascadeType.PERSIST}, optional = true)
+  @OneToOne(optional = true)
   @JoinColumn(nullable = true)
   private User user; // registration token
 
-  @ManyToOne(cascade = {CascadeType.MERGE, CascadeType.PERSIST})
+  @ManyToOne()
   @JoinColumn
   private Team team; // team token
-  @ManyToOne(cascade = {CascadeType.MERGE, CascadeType.PERSIST})
+  @ManyToOne()
   @JoinColumn
   private Student student;
 
@@ -53,5 +53,16 @@ public class Token {
       throw new RuntimeException("JPA-Token: overriding a OneToOne or ManyToOne field might be an error");
     team = t;
     team.getTokens().add(this);
+  }
+
+  @Override public String toString() {
+    return "Token{" +
+        "id='" + id + '\'' +
+        ", expiryDate=" + expiryDate +
+        ", confirmed=" + confirmed +
+        ", urlConfirm='" + urlConfirm + '\'' +
+        ", urlReject='" + urlReject + '\'' +
+        ", rejected=" + rejected +
+        '}';
   }
 }
