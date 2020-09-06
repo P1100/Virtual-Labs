@@ -10,6 +10,7 @@ import {SelectionModel} from '@angular/cdk/collections';
 import {TeamProposeComponent} from '../../../dialogs/team-propose/team-propose.component';
 import {Team} from '../../../models/team.model';
 import {MatPaginator} from '@angular/material/paginator';
+import {Router} from '@angular/router';
 
 export interface dialogProposalData {
   courseId: string,
@@ -47,14 +48,26 @@ export class TeamsComponent implements AfterViewInit, OnDestroy {
   @Input()
   activeTeam: Team = null;
   @Input()
+  set enrolledWithoutTeams(array: Student[]) {
+    this.loggedUserStudent = array.find(s => s.id == +localStorage.getItem('id'));
+    array.splice(array.indexOf(this.loggedUserStudent), 1);
+    this.dataSourceEnrolledNoTeams.data = [...array];
+    // Should help making sure table data is loaded when sort is assigned
+    setTimeout(() => {
+      this.dataSourceEnrolledNoTeams.sort = this.sort;
+    })
+  }
+  get enrolledWithoutTeams(): Student[] {
+    return this.dataSourceEnrolledNoTeams.data;
+  }
+  @Input()
   set notActiveTeams(t: Team[]) {
     if (t==null)
       return;
     this.dataSourceTeams.data = t;
-    console.log(t);
+    console.log('notActiveTeams update',t);
     for (let i = 0; i < t.length; i++) {
       for (let j = 0; j < t[i].students.length; j++) {
-        console.log(t[i].students[j].id, +this.idStringLoggedStudent, t[i].students[j].id == +this.idStringLoggedStudent);
         if (t[i].students[j].id == +this.idStringLoggedStudent)
           this.indexLoggedUser[i]=j;
       }
@@ -80,22 +93,12 @@ export class TeamsComponent implements AfterViewInit, OnDestroy {
   forceUploadData = new EventEmitter<any>();
   loggedUserStudent: Student;
   @Input()
-  set enrolledWithoutTeams(array: Student[]) {
-    this.loggedUserStudent = array.find(s => s.id == +localStorage.getItem('id'));
-    array.splice(array.indexOf(this.loggedUserStudent), 1);
-    this.dataSourceEnrolledNoTeams.data = [...array];
-    // Should help making sure table data is loaded when sort is assigned
-    setTimeout(() => {
-      this.dataSourceEnrolledNoTeams.sort = this.sort;
-    })
-  }
-  get enrolledWithoutTeams(): Student[] {
-    return this.dataSourceEnrolledNoTeams.data;
-  }
-  @Input()
   hideAllGUItillActiveTeamIsChecked: boolean;
+  @Output()
+  cleanupEvent = new EventEmitter();
 
-  constructor(private alertsService: AlertsService, private courseService: CourseService, public dialog: MatDialog,) {
+
+  constructor(private alertsService: AlertsService, private courseService: CourseService, public dialog: MatDialog, private router: Router) {
   }
   ngAfterViewInit() {
     this.dataSourceEnrolledNoTeams.paginator = this.paginator;
@@ -103,7 +106,6 @@ export class TeamsComponent implements AfterViewInit, OnDestroy {
   }
 
   openProposeTeamDialog() {
-    console.log('DIALOG', this.courseMin, this.courseMax);
     if (this.dialogRef?.getState() == MatDialogState.OPEN) {
       throw new Error('Error: Dialog stil open while opening a new one');
     }
@@ -157,5 +159,10 @@ export class TeamsComponent implements AfterViewInit, OnDestroy {
     return false;
   }
   removeDisabledTeams() {
+    this.cleanupEvent.emit();
+    setTimeout(() => {
+      this.router.navigateByUrl(this.router.url);
+      this.forceUploadData.emit();
+    }, 250)
   }
 }

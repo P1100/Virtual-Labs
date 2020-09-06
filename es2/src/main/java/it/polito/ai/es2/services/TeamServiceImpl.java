@@ -308,19 +308,32 @@ public List<StudentDTO> getMembers(@NotNull Long teamId) {
   @Override
   @PreAuthorize("hasRole('ADMIN') and  @mySecurityChecker.isTeamOwner(#teamId,authentication.principal.username)")
   public boolean evictTeam(@NotNull Long teamId) {
-    log.info("evictTeam(" + teamId + ")");
-    Optional<Team> optionalTeam = teamRepository.findById(teamId);
-    if (optionalTeam.isEmpty())
-      return false;
-    Team team_to_delete = optionalTeam.get();
-
-    for (Student student : team_to_delete.getStudents()) {
-      // usare "student.removeTeam()" rimuoverebbe studenti da team, il che creerebbe problemi in quanto modificherebbe il ciclo foreach enhanced in corso (java.util.ConcurrentModificationException)
-      student.getTeams().remove(team_to_delete);
-    }
-    // --> non serve rimuovere students e course da team, perchè tanto lo cancello
-    team_to_delete.getCourse().getTeams().remove(team_to_delete);
-    teamRepository.delete(team_to_delete);
+//    log.info("evictTeam(" + teamId + ")");
+//    Optional<Team> optionalTeam = teamRepository.findById(teamId);
+//    if (optionalTeam.isEmpty())
+//      return false;
+//    Team team_to_delete = optionalTeam.get();
+//
+//    for (Student student : team_to_delete.getStudents()) {
+//      // usare "student.removeTeam()" rimuoverebbe studenti da team, il che creerebbe problemi in quanto modificherebbe il ciclo foreach enhanced in corso (java.util.ConcurrentModificationException)
+//      student.getTeams().remove(team_to_delete);
+//    }
+//    // --> non serve rimuovere students e course da team, perchè tanto lo cancello
+//    team_to_delete.getCourse().getTeams().remove(team_to_delete);
+//    teamRepository.delete(team_to_delete);
     return true;
+  }
+
+  @Override
+  public void cleanupTeamsExpiredDisabled() {
+    List<Team> teams = teamRepository.findAllByActiveIsFalseAndDisabledIsTrue();
+    for (Team t : teams) {
+      ArrayList<Student> studentsCopy = new ArrayList<>(t.getStudents()); // necessary
+      for (Student s : studentsCopy) {
+        t.removeStudent(s);
+        // cascade remove for tokens
+      }
+      teamRepository.delete(t);
+    }
   }
 }

@@ -47,7 +47,7 @@ public class Team {
       inverseJoinColumns = @JoinColumn(name = "student_id"))
   List<Student> students = new ArrayList<>(); // Proposer is the first added!
 
-  @OneToMany(mappedBy = "team")
+  @OneToMany(mappedBy = "team", cascade = CascadeType.REMOVE)
   private List<Token> tokens = new ArrayList<>();
 
   @OneToMany(mappedBy = "team")
@@ -67,7 +67,12 @@ public class Team {
 
   public void removeStudent(Student x) {
     students.remove(x);
-    x.getTeams().add(this);
+    x.getTeams().remove(this);
+  }
+
+  public void removeToken(Token t) {
+    tokens.remove(t);
+    t.setTeam(null);
   }
 
   @Override public String toString() {

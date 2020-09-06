@@ -32,4 +32,6 @@ public interface TeamService {
 
   @PreAuthorize("hasRole('ADMIN') and  @mySecurityChecker.isTeamOwner(#teamId,authentication.principal.username)")
   boolean evictTeam(@NotNull Long teamId);
+
+  void cleanupTeamsExpiredDisabled();
 }

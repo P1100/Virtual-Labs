@@ -72,4 +72,9 @@ public class APITeams_RestController {
   public boolean evictTeam(@PathVariable Long teamId) {
     return teamService.evictTeam(teamId);
   }
+
+  @PostMapping("/cleanup")
+  public void cleanupTeams() {
+    teamService.cleanupTeamsExpiredDisabled();
+  }
 }

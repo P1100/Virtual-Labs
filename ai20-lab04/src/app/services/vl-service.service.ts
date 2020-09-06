@@ -19,6 +19,10 @@ export class VlServiceService {
     return this.http.post(`${this.baseUrlApi}/propose/${courseId}/${teamName}/${hoursTimeout}/${memberIds}`, null, AppSettings.JSON_HTTP_OPTIONS)
       .pipe(catchError(formatErrors));
   }
+  cleanUpTeams(): Observable<any> {
+    return this.http.post(`${this.baseUrlApi}/cleanup`, null, AppSettings.JSON_HTTP_OPTIONS)
+      .pipe(catchError(formatErrors));
+  }
   getTeamsUser(student_id: number, courseId: string): Observable<Team[]> {
     return this.http.get<HateoasModel>(`${this.baseUrlApi}/${student_id}/teams/${courseId}`, AppSettings.JSON_HTTP_OPTIONS)
       .pipe(

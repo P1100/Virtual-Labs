@@ -13,7 +13,8 @@ import {Team} from '../../../models/team.model';
     <app-teams [enrolledWithoutTeams]="enrolledWithoutTeams" (forceUploadData)="onForceUploadData($event)"
                [courseId]="courseId" [courseMin]="courseMin" [courseMax]="courseMax"
                [activeTeam]="activeTeam" [notActiveTeams]="notActiveTeams" [hideAllGUItillActiveTeamIsChecked]="hideAllGUItillActiveTeamIsChecked"
-    [idStringLoggedStudent]="idStringLoggedStudent">
+    [idStringLoggedStudent]="idStringLoggedStudent"
+    (cleanupEvent)="onCleanupEvent()">
     </app-teams>
   `,
   styleUrls: []
@@ -51,6 +52,7 @@ export class TeamsContComponent implements OnDestroy {
       }, error => this.alertsService.setAlert('danger', 'Couldn\'t get enrolled without team! ' + error)
     );
     this.vlServiceService.getTeamsUser(+this.idStringLoggedStudent, this.courseId).subscribe(teams => {
+      console.log('InsideContTeam', teams);
         let countActive = 0;
         this.activeTeam = null;
         this.notActiveTeams = [];
@@ -78,5 +80,8 @@ export class TeamsContComponent implements OnDestroy {
         throw new Error('Error! Invalid courses team constrains, please concat the administrator');
       }
     }, error => this.alertsService.setAlert('danger', 'Couldn\'t get course info! ' + error));
+  }
+  onCleanupEvent() {
+    this.vlServiceService.cleanUpTeams().subscribe();
   }
 }
