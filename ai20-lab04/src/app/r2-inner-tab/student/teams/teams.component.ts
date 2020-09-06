@@ -1,4 +1,4 @@
-import {AfterViewInit, Component, EventEmitter, Input, OnDestroy, OnInit, Output, ViewChild} from '@angular/core';
+import {AfterViewInit, Component, EventEmitter, Input, OnDestroy, Output, ViewChild} from '@angular/core';
 import {Student} from '../../../models/student.model';
 import {MatTableDataSource} from '@angular/material/table';
 import {MatSort} from '@angular/material/sort';
@@ -32,8 +32,8 @@ export interface dialogProposalData {
 })
 export class TeamsComponent implements AfterViewInit, OnDestroy {
   displayedColumnsTable1: string[] = ['select', 'id', 'firstName', 'lastName', 'email'];
-  columnsToDisplayProposals: string[] =   ['nav', 'proposer', 'name', 'createdDate','confirm','reject']; //, 'accept', 'reject'
-  columnsToLoadFromTeam: string[] =   ['name', 'active', 'disabled', 'createdDate'];
+  columnsToDisplayProposals: string[] = ['nav', 'proposer', 'name', 'createdDate', 'confirm', 'reject']; //, 'accept', 'reject'
+  columnsToLoadFromTeam: string[] = ['name', 'active', 'disabled', 'createdDate'];
   columnsToDisplayStudent: string[] = ['id', 'firstName', 'lastName'];
   expandedElement: Student | null;
 
@@ -56,20 +56,22 @@ export class TeamsComponent implements AfterViewInit, OnDestroy {
     // Should help making sure table data is loaded when sort is assigned
     setTimeout(() => {
       this.dataSourceEnrolledNoTeams.sort = this.sort;
-    })
+    });
   }
   get enrolledWithoutTeams(): Student[] {
     return this.dataSourceEnrolledNoTeams.data;
   }
   @Input()
   set notActiveTeams(t: Team[]) {
-    if (t==null)
+    if (t == null) {
       return;
+    }
     this.dataSourceTeams.data = t;
     for (let i = 0; i < t.length; i++) {
       for (let j = 0; j < t[i].students.length; j++) {
-        if (t[i].students[j].id == +this.idStringLoggedStudent)
-          this.indexLoggedUser[i]=j;
+        if (t[i].students[j].id == +this.idStringLoggedStudent) {
+          this.indexLoggedUser[i] = j;
+        }
       }
     }
   }
@@ -97,7 +99,6 @@ export class TeamsComponent implements AfterViewInit, OnDestroy {
   @Output()
   cleanupEvent = new EventEmitter();
 
-
   constructor(private alertsService: AlertsService, private courseService: CourseService, public dialog: MatDialog, private router: Router) {
   }
   ngAfterViewInit() {
@@ -113,12 +114,12 @@ export class TeamsComponent implements AfterViewInit, OnDestroy {
       this.alertsService.setAlert('warning', 'No students selected!');
       return;
     } /* -1 because logged in user is automatically added */
-    if (this.selection.selected.length < (this.courseMin-1)) {
-      this.alertsService.setAlert('warning', `Selected less than ${this.courseMin-1} students (course minimum)`);
+    if (this.selection.selected.length < (this.courseMin - 1)) {
+      this.alertsService.setAlert('warning', `Selected less than ${this.courseMin - 1} students (course minimum)`);
       return;
     }
-    if (this.selection.selected.length > (this.courseMax-1)) {
-      this.alertsService.setAlert('warning', `Selected more than ${this.courseMax-1} students, (course maximum)`);
+    if (this.selection.selected.length > (this.courseMax - 1)) {
+      this.alertsService.setAlert('warning', `Selected more than ${this.courseMax - 1} students, (course maximum)`);
       return;
     }
     const proposalData: dialogProposalData =
@@ -127,11 +128,11 @@ export class TeamsComponent implements AfterViewInit, OnDestroy {
       maxWidth: '400px', autoFocus: true, hasBackdrop: true, disableClose: true, closeOnNavigation: true, data: proposalData
     });
     this.dialogRef.afterClosed().subscribe((res: string) => {
-        this.dialogRef = null;
-        if (res != undefined) {
-          setTimeout(() => {
-            this.forceUploadData.emit(null);
-          }, 150)
+      this.dialogRef = null;
+      if (res != undefined) {
+        setTimeout(() => {
+          this.forceUploadData.emit(null);
+        }, 150);
         }
       }, () => this.alertsService.setAlert('danger', 'Team Proposal dialog error')
     );
@@ -156,10 +157,7 @@ export class TeamsComponent implements AfterViewInit, OnDestroy {
     this.dialogRef?.close();
   }
   checkboxDisableMinMax(row: Student) {
-    if (!this.selection.isSelected(row) && this.selection.selected.length >= (this.courseMax - 1)) {
-      return true;
-    }
-    return false;
+    return !this.selection.isSelected(row) && this.selection.selected.length >= (this.courseMax - 1);
   }
   removeDisabledTeams() {
     this.cleanupEvent.emit();

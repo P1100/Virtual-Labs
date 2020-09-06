@@ -6,9 +6,10 @@ export class Student {
               public lastName: string,
               public email: string,
               public teamName?: string, // current active team, for course of getEnrolledStudents
-              public proposalAccepted?:string,
-              public proposalRejected?:string,
-              public urlTokenConfirm?:string,
-              public urlTokenReject?:string
-  ) {}
+              public proposalAccepted?: string,
+              public proposalRejected?: string,
+              public urlTokenConfirm?: string,
+              public urlTokenReject?: string
+  ) {
+  }
 }

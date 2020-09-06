@@ -15,7 +15,7 @@
   </mat-toolbar>
 </p>
 
-<div name="CSV input">
+<div id="CSV input">
   <form enctype="multipart/form-data" method="POST">
     <div class="input-group mb-3">
       <div class="input-group-prepend">
@@ -52,7 +52,7 @@
     <button (click)="studentsRemove()" mat-button>Delete selected</button>
   </form>
 
-  <div name="tableWithPaginator" class="mat-elevation-z8">
+  <div id="tableWithPaginator" class="mat-elevation-z8">
     <table (matSortChange)="sortChange($event)" [dataSource]="dataSource" mat-table matSort>
       <!-- Select column-->
       <ng-container matColumnDef="select">

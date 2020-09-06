@@ -13,8 +13,8 @@ import {Team} from '../../../models/team.model';
     <app-teams [enrolledWithoutTeams]="enrolledWithoutTeams" (forceUploadData)="onForceUploadData($event)"
                [courseId]="courseId" [courseMin]="courseMin" [courseMax]="courseMax"
                [activeTeam]="activeTeam" [notActiveTeams]="notActiveTeams" [hideAllGUItillActiveTeamIsChecked]="hideAllGUItillActiveTeamIsChecked"
-    [idStringLoggedStudent]="idStringLoggedStudent"
-    (cleanupEvent)="onCleanupEvent()">
+               [idStringLoggedStudent]="idStringLoggedStudent"
+               (cleanupEvent)="onCleanupEvent()">
     </app-teams>
   `,
   styleUrls: []
@@ -81,7 +81,6 @@ export class TeamsContComponent implements OnDestroy {
     }, error => this.alertsService.setAlert('danger', 'Couldn\'t get course info! ' + error));
   }
   onCleanupEvent() {
-    console.log('CORUSE ID CONT', this.courseId);
     this.vlServiceService.cleanUpTeams(this.courseId).subscribe();
   }
 }

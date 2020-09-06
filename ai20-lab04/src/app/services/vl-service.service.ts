@@ -20,8 +20,7 @@ export class VlServiceService {
       .pipe(catchError(formatErrors));
   }
   cleanUpTeams(courseId: string): Observable<any> {
-    console.log('DELETE',courseId);
-    return this.http.delete(`${this.baseUrlApi}/cleanup/${courseId}`,AppSettings.JSON_HTTP_OPTIONS)
+    return this.http.delete(`${this.baseUrlApi}/cleanup/${courseId}`, AppSettings.JSON_HTTP_OPTIONS)
       .pipe(catchError(formatErrors));
   }
   getTeamsUser(student_id: number, courseId: string): Observable<Team[]> {

@@ -6,7 +6,6 @@ import {CourseService} from '../../services/course.service';
 import {Router} from '@angular/router';
 import {VlServiceService} from '../../services/vl-service.service';
 import {dialogProposalData} from '../../r2-inner-tab/student/teams/teams.component';
-import {Student} from '../../models/student.model';
 
 @Component({
   selector: 'app-team-propose',
