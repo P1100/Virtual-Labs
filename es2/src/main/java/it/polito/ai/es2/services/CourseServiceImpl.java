@@ -265,21 +265,21 @@ public class CourseServiceImpl implements CourseService {
       throw new CourseNotEnabledException(courseId);
 
     CsvToBean<StudentViewModel> csvToBean = new CsvToBeanBuilder<StudentViewModel>(reader)
-                                                .withType(StudentViewModel.class)
-                                                .withIgnoreLeadingWhiteSpace(true)
-                                                .build();
+        .withType(StudentViewModel.class)
+        .withIgnoreLeadingWhiteSpace(true)
+        .build();
     List<StudentViewModel> users = csvToBean.parse();
     log.info(String.valueOf(users));
     List<Long> list_ids = users.stream()
-                              .map(new_studentViewModel -> modelMapper.map(new_studentViewModel, StudentDTO.class))
-                              .map(new_studentDTO ->
-                              {
-                                Optional<Student> optionalStudent_fromDb = studentRepository.findById(new_studentDTO.getId());
-                                Student newStudent = modelMapper.map(new_studentDTO, Student.class);
-                                // return null if you want only to add, and not enroll if missing (y -> y != null)
-                                return studentRepository.save(newStudent);
-                              })
-                              .map(y -> y != null ? y.getId() : null).collect(Collectors.toList());
+        .map(new_studentViewModel -> modelMapper.map(new_studentViewModel, StudentDTO.class))
+        .map(new_studentDTO ->
+        {
+          Optional<Student> optionalStudent_fromDb = studentRepository.findById(new_studentDTO.getId());
+          Student newStudent = modelMapper.map(new_studentDTO, Student.class);
+          // return null if you want only to add, and not enroll if missing (y -> y != null)
+          return studentRepository.save(newStudent);
+        })
+        .map(y -> y != null ? y.getId() : null).collect(Collectors.toList());
     log.info(courseId + " - enrollStudentsCSV returned Valid Students: " + list_ids);
     return enrollStudents(list_ids, courseId);
   }

@@ -69,5 +69,4 @@ public class VM {
     imageVm = x;
     x.setVm(this);
   }
-
 }

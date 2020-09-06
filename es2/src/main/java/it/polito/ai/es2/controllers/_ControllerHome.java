@@ -27,11 +27,11 @@ public class _ControllerHome {
   public String getAPI() {
     String baseUrl = urlSettings.getBaseUrl();
     String json = "{" +
-                      "\"Courses\":\"" + baseUrl + "/api/courses\","
-                      + "\"Students\":\"" + baseUrl + "/api/students\","
-                      + "\"Teams\":\"" + baseUrl + "/api/teams\","
-                      + "\"Images\":\"" + baseUrl + "/api/images\""
-                      + "}";
+        "\"Courses\":\"" + baseUrl + "/api/courses\","
+        + "\"Students\":\"" + baseUrl + "/api/students\","
+        + "\"Teams\":\"" + baseUrl + "/api/teams\","
+        + "\"Images\":\"" + baseUrl + "/api/images\""
+        + "}";
     return json;
   }
 
@@ -44,10 +44,9 @@ public class _ControllerHome {
     if (principal == null)
       return "no principal";
     return "Principal got from HTTP HttpServletRequest:<br>" + principal.getName() +
-               "<br><br>SecurityContextHolder.getContext().getAuthentication() object:<br>" + SecurityContextHolder.getContext().getAuthentication()
-               + "<br><br>@AuthenticationPrincipal User:<br>" + spring_security_user
-               + "<br><br>UderDetails from userRepository.findTopByUsername(principal.getName())/db:<br>" + userRepository.findTopByUsername(principal.getName())
+        "<br><br>SecurityContextHolder.getContext().getAuthentication() object:<br>" + SecurityContextHolder.getContext().getAuthentication()
+        + "<br><br>@AuthenticationPrincipal User:<br>" + spring_security_user
+        + "<br><br>UderDetails from userRepository.findTopByUsername(principal.getName())/db:<br>" + userRepository.findTopByUsername(principal.getName())
         ;
   }
-
 }

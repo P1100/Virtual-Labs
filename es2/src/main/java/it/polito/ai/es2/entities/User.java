@@ -62,7 +62,6 @@ public class User {
     return authorities;
   }
 
-
   public List<String> convertStringsToRoles() {
     List<String> stringRoles = new ArrayList<>();
     for (Role role : roles) {
