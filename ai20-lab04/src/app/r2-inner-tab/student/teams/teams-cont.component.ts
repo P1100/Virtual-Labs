@@ -35,7 +35,6 @@ export class TeamsContComponent implements OnDestroy {
     this.idStringLoggedStudent = localStorage.getItem('id');
     this.subRouteParam = this.activatedRoute.paramMap.subscribe(() => {
         this.courseId = this.activatedRoute.parent.snapshot.paramMap.get('id');
-        console.log('COURSE ID', this.courseId);
         this.onForceUploadData(null);
       }
     );
@@ -46,30 +45,30 @@ export class TeamsContComponent implements OnDestroy {
     this.subCurrentCourse?.unsubscribe();
   }
   onForceUploadData($event: any) {
-    this.vlServiceService.getTeamsForStudentCourse(+this.idStringLoggedStudent, this.courseId).subscribe(teams => {
-      let countActive = 0;
-      this.activeTeam = null;
-      this.notActiveTeams = [];
-      for (let team of teams) {
-        if (team.active == true) {
-          this.activeTeam = team;
-          countActive++;
-        } else {
-          this.notActiveTeams.push(team);
+    this.subEnrolledWithTeams = this.courseService.getEnrolledWithoutTeam(this.courseId).subscribe((students: Student[]) => {
+        this.enrolledWithoutTeams = Array.isArray(students) ? [...students] : [];
+      }, error => this.alertsService.setAlert('danger', 'Couldn\'t get enrolled without team! ' + error)
+    );
+    this.vlServiceService.getTeamsStudentCourse(+this.idStringLoggedStudent, this.courseId).subscribe(teams => {
+        let countActive = 0;
+        this.activeTeam = null;
+        this.notActiveTeams = [];
+        for (let team of teams) {
+          if (team.active == true) {
+            this.activeTeam = team;
+            countActive++;
+          } else {
+            this.notActiveTeams.push(team);
+          }
         }
-      }
-      if (countActive > 1) {
-        this.activeTeam = undefined;
-        this.alertsService.setAlert('danger', 'Error! Multiple active teams for the student, please concat the administrator');
-        throw new Error('Corrupted Team data: ' + JSON.stringify(teams));
-      }
-      this.hideAllGUItillActiveTeamIsChecked = false;
-    }, error => this.alertsService.setAlert('danger', 'Couldn\'t get student teams! ' + error));
-    this.subEnrolledWithTeams = this.courseService.getEnrolledWithoutTeam(this.courseId)
-      .subscribe((students: Student[]) => {
-          this.enrolledWithoutTeams = Array.isArray(students) ? [...students] : [];
-        }, error => this.alertsService.setAlert('danger', 'Couldn\'t get enrolled without team! ' + error)
-      );
+        if (countActive > 1) {
+          this.activeTeam = undefined;
+          this.alertsService.setAlert('danger', 'Error! Multiple active teams for the student, please concat the administrator');
+          throw new Error('Corrupted Team data: ' + JSON.stringify(teams));
+        }
+        this.hideAllGUItillActiveTeamIsChecked = false;
+      }, error => this.alertsService.setAlert('danger', 'Couldn\'t get student teams! ' + error)
+    );
     this.subCurrentCourse = this.courseService.getCourse(this.courseId).subscribe(c => {
       this.courseMin = c[0].minSizeTeam;
       this.courseMax = c[0].maxSizeTeam;
