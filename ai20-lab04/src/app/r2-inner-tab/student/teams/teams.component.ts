@@ -14,7 +14,8 @@ import {Router} from '@angular/router';
 
 export interface dialogProposalData {
   courseId: string,
-  membersWithProposerFirst: Student[]
+  membersWithProposerFirst: Student[],
+  url: string
 }
 
 @Component({
@@ -120,14 +121,17 @@ export class TeamsComponent implements AfterViewInit, OnDestroy {
       this.alertsService.setAlert('warning', `Selected more than ${this.courseMax-1} students, (course maximum)`);
       return;
     }
-    const proposalData: dialogProposalData = {courseId: this.courseId, membersWithProposerFirst: [this.loggedUserStudent, ...this.selection.selected]};
+    const proposalData: dialogProposalData =
+      {courseId: this.courseId, membersWithProposerFirst: [this.loggedUserStudent, ...this.selection.selected], url: this.router.url};
     this.dialogRef = this.dialog.open(TeamProposeComponent, {
       maxWidth: '400px', autoFocus: true, hasBackdrop: true, disableClose: true, closeOnNavigation: true, data: proposalData
     });
     this.dialogRef.afterClosed().subscribe((res: string) => {
         this.dialogRef = null;
         if (res != undefined) {
-          this.forceUploadData.emit(null);
+          setTimeout(() => {
+            this.forceUploadData.emit(null);
+          }, 150)
         }
       }, () => this.alertsService.setAlert('danger', 'Team Proposal dialog error')
     );
@@ -162,6 +166,6 @@ export class TeamsComponent implements AfterViewInit, OnDestroy {
     setTimeout(() => {
       this.router.navigateByUrl(this.router.url);
       this.forceUploadData.emit();
-    }, 250)
+    }, 150)
   }
 }

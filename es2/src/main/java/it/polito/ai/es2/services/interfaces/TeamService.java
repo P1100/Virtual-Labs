@@ -9,16 +9,11 @@ import javax.validation.constraints.NotNull;
 import java.util.List;
 
 public interface TeamService {
+  @PreAuthorize("hasRole('PROFESSOR') or @mySecurityChecker.isTeamOwner(#teamId,authentication.principal.username)")
+  List<StudentDTO> getMembers(@NotNull Long teamId);
 
-  //  /**
-  //   * GET {@link it.polito.ai.es2.controllers.APITeams_RestController#getMembers(Long)}
-  //   */
-  @PreAuthorize("hasRole('PROFESSOR') or @mySecurityChecker.isTeamOwner(#teamId,authentication.principal.username)") List<StudentDTO> getMembers(@NotNull Long teamId);
-
-  //  /**
-  //   * GET {@link APITeams_RestController#getAllTeams()}
-  //   */
-  @PreAuthorize("hasRole('ADMIN')") List<TeamDTO> getAllTeams();
+  @PreAuthorize("hasRole('ADMIN')")
+  List<TeamDTO> getAllTeams();
 
   @PreAuthorize("hasRole('STUDENT') or hasRole('PROFESSOR')")
   List<TeamDTO> getTeamsForStudentInCourse(Long studentId, String courseId);
@@ -33,5 +28,5 @@ public interface TeamService {
   @PreAuthorize("hasRole('ADMIN') and  @mySecurityChecker.isTeamOwner(#teamId,authentication.principal.username)")
   boolean evictTeam(@NotNull Long teamId);
 
-  void cleanupTeamsExpiredDisabled();
+  void cleanupTeamsExpiredDisabled(@NotBlank String courseId);
 }

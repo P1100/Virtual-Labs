@@ -6,7 +6,7 @@ import org.springframework.core.env.Environment;
 
 import javax.annotation.PostConstruct;
 
-public class CommonURL {
+public abstract class CommonURL {
   @Value("${server.port}")
   private String port;
   @Value("${server.address}")

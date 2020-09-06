@@ -9,6 +9,7 @@ import org.springframework.hateoas.CollectionModel;
 import org.springframework.hateoas.Link;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.constraints.NotBlank;
 import java.util.List;
 
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
@@ -73,8 +74,8 @@ public class APITeams_RestController {
     return teamService.evictTeam(teamId);
   }
 
-  @PostMapping("/cleanup")
-  public void cleanupTeams() {
-    teamService.cleanupTeamsExpiredDisabled();
+  @DeleteMapping("/cleanup/{courseId}")
+  public void cleanupTeams(@NotBlank @PathVariable String courseId) {
+    teamService.cleanupTeamsExpiredDisabled(courseId);
   }
 }

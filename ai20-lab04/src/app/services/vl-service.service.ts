@@ -19,8 +19,9 @@ export class VlServiceService {
     return this.http.post(`${this.baseUrlApi}/propose/${courseId}/${teamName}/${hoursTimeout}/${memberIds}`, null, AppSettings.JSON_HTTP_OPTIONS)
       .pipe(catchError(formatErrors));
   }
-  cleanUpTeams(): Observable<any> {
-    return this.http.post(`${this.baseUrlApi}/cleanup`, null, AppSettings.JSON_HTTP_OPTIONS)
+  cleanUpTeams(courseId: string): Observable<any> {
+    console.log('DELETE',courseId);
+    return this.http.delete(`${this.baseUrlApi}/cleanup/${courseId}`,AppSettings.JSON_HTTP_OPTIONS)
       .pipe(catchError(formatErrors));
   }
   getTeamsUser(student_id: number, courseId: string): Observable<Team[]> {

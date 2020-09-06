@@ -14,5 +14,7 @@ public interface TeamRepository extends JpaRepository<Team, Long> {
 
   List<Team> findAllByActiveIsFalseAndDisabledIsTrue();
 
+  List<Team> findAllByActiveIsFalseAndDisabledIsTrueAndCourse_Id(String courseId);
+
   Team findFirstByNameAndActiveIsAndCourse_id(String name, boolean status, String courseId);
 }

@@ -18,6 +18,7 @@ export class TeamProposeComponent {
   showCheckboxNoValidateForTesting = AppSettings.devtest;
   nameTeam: string;
   hoursTimeoutTeam: number;
+  url: string;
 
   constructor(private courseService: CourseService, private dialogRef: MatDialogRef<TeamProposeComponent>,
               @Inject(MAT_DIALOG_DATA) public data: dialogProposalData, private router: Router, private alertsService: AlertsService,
@@ -32,7 +33,7 @@ export class TeamProposeComponent {
     this.vlServiceService.proposeTeam(this.data.courseId, this.nameTeam, this.hoursTimeoutTeam, memberIds).subscribe(
       x => {
         this.dialogRef.close('success');
-        this.router.navigateByUrl('/');
+        this.router.navigateByUrl(this.data.url);
         this.alertsService.setAlert('success', 'Proposal sent!');
       },
       e => {

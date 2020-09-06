@@ -37,6 +37,7 @@ export class TeamsContComponent implements OnDestroy {
     this.idStringLoggedStudent = localStorage.getItem('id');
     this.subRouteParam = this.activatedRoute.paramMap.subscribe(() => {
         this.courseId = this.activatedRoute.parent.snapshot.paramMap.get('id');
+      console.log('this.courseId ');
         this.onForceUploadData(null);
       }
     );
@@ -81,6 +82,7 @@ export class TeamsContComponent implements OnDestroy {
     }, error => this.alertsService.setAlert('danger', 'Couldn\'t get course info! ' + error));
   }
   onCleanupEvent() {
-    this.vlServiceService.cleanUpTeams().subscribe();
+    console.log('CORUSE ID CONT', this.courseId);
+    this.vlServiceService.cleanUpTeams(this.courseId).subscribe();
   }
 }

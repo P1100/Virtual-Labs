@@ -60,19 +60,19 @@ public class TeamServiceImpl extends CommonURL implements TeamService {
   @Autowired
   public TokenRepository tokenRepository;
 
-//  /**
+  //  /**
 //   * GET {@link it.polito.ai.es2.controllers.APITeams_RestController#getMembers(Long)}
 //   */
-@Override
-@PreAuthorize("hasRole('PROFESSOR') or @mySecurityChecker.isTeamOwner(#teamId,authentication.principal.username)")
-public List<StudentDTO> getMembers(@NotNull Long teamId) {
-  log.info("getMembers(" + teamId + ")");
-  if (teamId == null) throw new NullParameterException("teamId");
-  Optional<Team> team = teamRepository.findById(teamId);
-  if (team.isEmpty())
-    throw new TeamNotFoundException(teamId);
-  return team.get().getStudents().stream().filter(Objects::nonNull).map(y -> modelMapper.map(y, StudentDTO.class)).collect(Collectors.toList());
-}
+  @Override
+  @PreAuthorize("hasRole('PROFESSOR') or @mySecurityChecker.isTeamOwner(#teamId,authentication.principal.username)")
+  public List<StudentDTO> getMembers(@NotNull Long teamId) {
+    log.info("getMembers(" + teamId + ")");
+    if (teamId == null) throw new NullParameterException("teamId");
+    Optional<Team> team = teamRepository.findById(teamId);
+    if (team.isEmpty())
+      throw new TeamNotFoundException(teamId);
+    return team.get().getStudents().stream().filter(Objects::nonNull).map(y -> modelMapper.map(y, StudentDTO.class)).collect(Collectors.toList());
+  }
 
   //  /**
 //   * GET {@link APITeams_RestController#getAllTeams()}
@@ -325,8 +325,13 @@ public List<StudentDTO> getMembers(@NotNull Long teamId) {
   }
 
   @Override
-  public void cleanupTeamsExpiredDisabled() {
-    List<Team> teams = teamRepository.findAllByActiveIsFalseAndDisabledIsTrue();
+  public void cleanupTeamsExpiredDisabled(@NotBlank String courseId) {
+    List<Team> teams;
+    if (courseId == null)
+      teams = teamRepository.findAllByActiveIsFalseAndDisabledIsTrue();
+    else
+      teams = teamRepository.findAllByActiveIsFalseAndDisabledIsTrueAndCourse_Id(courseId);
+    System.out.println(teams);
     for (Team t : teams) {
       ArrayList<Student> studentsCopy = new ArrayList<>(t.getStudents()); // necessary
       for (Student s : studentsCopy) {
