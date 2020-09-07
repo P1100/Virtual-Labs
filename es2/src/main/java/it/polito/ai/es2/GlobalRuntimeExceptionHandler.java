@@ -73,19 +73,36 @@ public class GlobalRuntimeExceptionHandler
                                                                 HttpHeaders headers, HttpStatus status, WebRequest request) {
     Map<String, String> errors = new HashMap<>();
     StringBuilder sb = new StringBuilder();
-    sb.append("{\"message\":\"Validation errors in fields:");
+    sb.append("{\"message\":\"Validation errors in:");
     ex.getBindingResult().getAllErrors().forEach((error) -> {
-      String fieldName = ((FieldError) error).getField();
+      String objectOrFieldName;
+      if (error instanceof FieldError)
+        objectOrFieldName = ((FieldError) error).getField();
+      else
+        objectOrFieldName = error.getObjectName();
       String errorMessage = error.getDefaultMessage();
-      errors.put(fieldName, errorMessage);
-      sb.append(" ").append(fieldName);
+      errors.put(objectOrFieldName, errorMessage);
+      sb.append(" ").append(objectOrFieldName);
     });
     sb.append("\"");
     sb.append(", \"status\":\"422\", \"error\":\"Unprocessable Entity\"}");
-    log.warning("DTO Validation errors: ");
+    log.warning("DTO/DAO Validation errors: ");
     for (Map.Entry<String, String> entry : errors.entrySet()) {
       log.warning(entry.getKey() + entry.getValue());
     }
     return new ResponseEntity<>(sb.toString(), HttpStatus.UNPROCESSABLE_ENTITY); // 422
   }
+// /* Temp note (alternative) */
+//  @ResponseStatus(HttpStatus.BAD_REQUEST)
+//  @ExceptionHandler(MethodArgumentNotValidException.class)
+//  public Map<String, String> handleValidationExceptions(
+//      MethodArgumentNotValidException ex) {
+//    Map<String, String> errors = new HashMap<>();
+//    ex.getBindingResult().getAllErrors().forEach((error) -> {
+//      String fieldName = ((FieldError) error).getField();
+//      String errorMessage = error.getDefaultMessage();
+//      errors.put(fieldName, errorMessage);
+//    });
+//    return errors;
+//  }
 }
