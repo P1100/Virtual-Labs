@@ -6,7 +6,6 @@ import it.polito.ai.es2.securityconfig.jwt.JwtRequest;
 import it.polito.ai.es2.securityconfig.jwt.JwtResponse;
 import it.polito.ai.es2.securityconfig.jwt.JwtTokenUtil;
 import it.polito.ai.es2.services.interfaces.UserStudProfService;
-import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.ResponseEntity;
@@ -27,8 +26,6 @@ import java.util.Collections;
 public class APIUsers_RestController {
   @Autowired
   private JwtTokenUtil jwtTokenUtil;
-  @Autowired
-  private ModelMapper modelMapper;
   @Autowired
   private AuthenticationManager authenticationManager;
   @Qualifier("userDetailsServiceImpl")

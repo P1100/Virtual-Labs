@@ -11,6 +11,8 @@ import java.util.Optional;
 public interface CourseService {
   List<CourseDTO> getAllCourses();
 
+  List<CourseDTO> getEnrolledCourses(Long studentId);
+
   Optional<CourseDTO> getCourse(String name);
 
   void addCourse(CourseDTO course);
@@ -36,6 +38,4 @@ public interface CourseService {
   List<TeamDTO> getTeamsForCourse(String courseName);
 
   List<StudentDTO> getEnrolledWithTeam(String courseName);
-
-  List<StudentDTO> getEnrolledWithoutTeam(String courseName);
 }

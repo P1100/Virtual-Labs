@@ -23,6 +23,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.servlet.http.HttpServletRequest;
 import java.io.Reader;
 import java.util.ArrayList;
 import java.util.List;
@@ -54,6 +55,18 @@ public class CourseServiceImpl implements CourseService {
   public List<CourseDTO> getAllCourses() {
     log.info("getAllCourses");
     return courseRepository.findAll().stream().map(x -> modelMapper.map(x, CourseDTO.class)).collect(Collectors.toList());
+  }
+
+  /**
+   * GET {@link it.polito.ai.es2.controllers.APICourses_RestController#getAllCourses(HttpServletRequest)}<br>
+   * GET {@link it.polito.ai.es2.controllers.APIStudents_RestController#getEnrolledCourses(Long)}
+   */
+  @Override
+  @PreAuthorize("hasRole('PROFESSOR') or hasRole('STUDENT')")
+  public List<CourseDTO> getEnrolledCourses(Long studentId) {
+    log.info("getCourses(" + studentId + ")");
+    if (studentId == null) throw new NullParameterException("student id");
+    return studentRepository.getOne(studentId).getCourses().stream().map(x -> modelMapper.map(x, CourseDTO.class)).collect(Collectors.toList());
   }
 
   /**
@@ -307,17 +320,5 @@ public class CourseServiceImpl implements CourseService {
     if (courseId == null) throw new CourseNotFoundException("[null]");
     if (!courseRepository.existsById(courseId)) throw new CourseNotFoundException(courseId);
     return courseRepository.getStudentsInTeams(courseId).stream().map(x -> modelMapper.map(x, StudentDTO.class)).collect(Collectors.toList());
-  }
-
-  /**
-   * GET {@link it.polito.ai.es2.controllers.APICourses_RestController#getEnrolledWithoutTeam(String)}
-   */
-  @Override
-  @PreAuthorize("hasRole('STUDENT') or hasRole('PROFESSOR')")
-  public List<StudentDTO> getEnrolledWithoutTeam(String courseId) {
-    log.info("getAvailableStudents(" + courseId + ")");
-    if (courseId == null) throw new CourseNotFoundException("[null]");
-    if (!courseRepository.existsById(courseId)) throw new CourseNotFoundException(courseId);
-    return courseRepository.getStudentsNotInTeams(courseId).stream().map(x -> modelMapper.map(x, StudentDTO.class)).collect(Collectors.toList());
   }
 }

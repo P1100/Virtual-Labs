@@ -5,6 +5,7 @@ import it.polito.ai.es2.dtos.CourseDTO;
 import it.polito.ai.es2.dtos.StudentDTO;
 import it.polito.ai.es2.dtos.TeamDTO;
 import it.polito.ai.es2.services.interfaces.CourseService;
+import it.polito.ai.es2.services.interfaces.TeamService;
 import it.polito.ai.es2.services.interfaces.UserStudProfService;
 import lombok.extern.java.Log;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,6 +41,8 @@ public class APICourses_RestController {
   private UserStudProfService userStudProfService;
   @Autowired
   private ModelHelper modelHelper;
+  @Autowired
+  TeamService teamService;
 
   @GetMapping()
   public CollectionModel<CourseDTO> getAllCourses(HttpServletRequest request) {
@@ -47,7 +50,7 @@ public class APICourses_RestController {
     if (request.isUserInRole("PROFESSOR"))
       courses = courseService.getAllCourses().stream().map(modelHelper::enrich).collect(Collectors.toList());
     else if (request.isUserInRole("STUDENT"))
-      courses = userStudProfService.getEnrolledCourses(Long.valueOf(request.getUserPrincipal().getName()));
+      courses = courseService.getEnrolledCourses(Long.valueOf(request.getUserPrincipal().getName()));
     else {
       courses = new ArrayList<>();
       log.warning("500 - Auth Error: authenticated role for getCourses not recognized");
@@ -165,7 +168,7 @@ public class APICourses_RestController {
 
   @GetMapping("/{courseId}/students-without-team")
   public CollectionModel<StudentDTO> getEnrolledWithoutTeam(@PathVariable String courseId) {
-    List<StudentDTO> students = courseService.getEnrolledWithoutTeam(courseId);
+    List<StudentDTO> students = teamService.getEnrolledWithoutTeam(courseId);
     for (StudentDTO student : students) {
       modelHelper.enrich(student);
     }

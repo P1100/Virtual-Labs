@@ -3,6 +3,7 @@ package it.polito.ai.es2.controllers;
 import it.polito.ai.es2.controllers.hateoas.ModelHelper;
 import it.polito.ai.es2.dtos.CourseDTO;
 import it.polito.ai.es2.dtos.StudentDTO;
+import it.polito.ai.es2.services.interfaces.CourseService;
 import it.polito.ai.es2.services.interfaces.UserStudProfService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.hateoas.CollectionModel;
@@ -27,6 +28,8 @@ public class APIStudents_RestController {
   UserStudProfService userStudProfService;
   @Autowired
   private ModelHelper modelHelper;
+  @Autowired
+  private CourseService courseService;
 
   @GetMapping()
   public CollectionModel<StudentDTO> getAllStudents() {
@@ -49,7 +52,7 @@ public class APIStudents_RestController {
 
   @GetMapping("/{student_id}/courses")
   public CollectionModel<CourseDTO> getEnrolledCourses(@PathVariable Long student_id) {
-    List<CourseDTO> courses = userStudProfService.getEnrolledCourses(student_id);
+    List<CourseDTO> courses = courseService.getEnrolledCourses(student_id);
     for (CourseDTO courseDTO : courses) {
       modelHelper.enrich(courseDTO);
     }

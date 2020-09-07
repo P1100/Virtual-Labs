@@ -1,13 +1,11 @@
 package it.polito.ai.es2.services;
 
-import it.polito.ai.es2.dtos.CourseDTO;
 import it.polito.ai.es2.dtos.ProfessorDTO;
 import it.polito.ai.es2.dtos.StudentDTO;
 import it.polito.ai.es2.dtos.UserDTO;
 import it.polito.ai.es2.entities.*;
 import it.polito.ai.es2.repositories.*;
 import it.polito.ai.es2.services.exceptions.FailedAddException;
-import it.polito.ai.es2.services.exceptions.NullParameterException;
 import it.polito.ai.es2.services.exceptions.UserAlreadyEnabledException;
 import it.polito.ai.es2.services.exceptions.UsernameAlreadyUsedException;
 import it.polito.ai.es2.services.interfaces.UserStudProfService;
@@ -190,16 +188,5 @@ public class UserStudProfServiceImpl implements UserStudProfService {
   public Optional<StudentDTO> getStudent(Long studentId) {
     log.info("getStudent(" + studentId + ")");
     return studentRepository.findById(studentId).map(x -> modelMapper.map(x, StudentDTO.class));
-  }
-
-  /**
-   * GET {@link it.polito.ai.es2.controllers.APIStudents_RestController#getEnrolledCourses(Long)}
-   */
-  @Override
-  @PreAuthorize("hasRole('PROFESSOR') or (hasRole('STUDENT') and )")
-  public List<CourseDTO> getEnrolledCourses(Long studentId) {
-    log.info("getCourses(" + studentId + ")");
-    if (studentId == null) throw new NullParameterException("student id");
-    return studentRepository.getOne(studentId).getCourses().stream().map(x -> modelMapper.map(x, CourseDTO.class)).collect(Collectors.toList());
   }
 }

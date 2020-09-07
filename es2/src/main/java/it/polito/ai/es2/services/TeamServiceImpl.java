@@ -96,6 +96,18 @@ public class TeamServiceImpl extends CommonURL implements TeamService {
   }
 
   /**
+   * GET {@link it.polito.ai.es2.controllers.APICourses_RestController#getEnrolledWithoutTeam(String)}
+   */
+  @Override
+  @PreAuthorize("hasRole('STUDENT') or hasRole('PROFESSOR')")
+  public List<StudentDTO> getEnrolledWithoutTeam(String courseId) {
+    log.info("getAvailableStudents(" + courseId + ")");
+    if (courseId == null) throw new CourseNotFoundException("[null]");
+    if (!courseRepository.existsById(courseId)) throw new CourseNotFoundException(courseId);
+    return courseRepository.getStudentsNotInTeams(courseId).stream().map(x -> modelMapper.map(x, StudentDTO.class)).collect(Collectors.toList());
+  }
+
+  /**
    * GET {@link it.polito.ai.es2.controllers.APITeams_RestController#getTeamsForStudentCourse(Long, String)}
    */
   @Override
