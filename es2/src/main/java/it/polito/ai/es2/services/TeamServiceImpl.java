@@ -270,6 +270,11 @@ public class TeamServiceImpl extends CommonURL implements TeamService {
       throw new InvalidDataException("Critical invalid data error: token both confirmed and rejected");
     if (token.isConfirmed() || token.isRejected())
       return false;
+    if (LocalDateTime.now().isAfter(token.getExpiryDate().toLocalDateTime())) {
+      token.setRejected(true);
+      team.setDisabled(true);
+      return false;
+    }
     List<Token> tokenList = team.getTokens();
     if (tokenList.size() == 0)
       throw new InvalidDataException("Critical invalid data error: Team has no associated tokens");

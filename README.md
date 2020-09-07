@@ -30,7 +30,7 @@ This is a didactical learning project, made for the Internet Applications course
 ![](https://i.ibb.co/rGK9cL8/Virtual-Labs-ERmodel.jpg)
 
 ## Questions and Issues
-Feel free to ask any
+Feel free to ask or report any
 
 ## License
 
