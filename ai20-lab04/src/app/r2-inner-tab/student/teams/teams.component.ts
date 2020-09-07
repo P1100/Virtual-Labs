@@ -50,6 +50,10 @@ export class TeamsComponent implements AfterViewInit, OnDestroy {
   activeTeam: Team = null;
   @Input()
   set enrolledWithoutTeams(array: Student[]) {
+    if (array == null) {
+      this.dataSourceEnrolledNoTeams.data = [];
+      return;
+    }
     this.loggedUserStudent = array.find(s => s.id == +localStorage.getItem('id'));
     array.splice(array.indexOf(this.loggedUserStudent), 1);
     this.dataSourceEnrolledNoTeams.data = [...array];
@@ -64,6 +68,7 @@ export class TeamsComponent implements AfterViewInit, OnDestroy {
   @Input()
   set notActiveTeams(t: Team[]) {
     if (t == null) {
+      this.dataSourceTeams.data = [];
       return;
     }
     this.dataSourceTeams.data = t;

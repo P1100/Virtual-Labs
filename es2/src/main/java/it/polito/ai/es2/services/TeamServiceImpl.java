@@ -100,7 +100,7 @@ public class TeamServiceImpl extends CommonURL implements TeamService {
    */
   @Override
   @PreAuthorize("hasRole('STUDENT') or hasRole('PROFESSOR')")
-  public List<TeamDTO> getTeamsForStudentInCourse(Long studentId, String courseId) {
+  public List<TeamDTO> getTeamsForStudentAndCourse(Long studentId, String courseId) {
     log.info("getTeamsForStudent(" + studentId + ")");
     if (studentId == null || courseId == null) throw new NullParameterException(studentId + " " + courseId);
     Optional<Student> optionalStudent = studentRepository.findById(studentId);
@@ -139,6 +139,7 @@ public class TeamServiceImpl extends CommonURL implements TeamService {
           throw new InvalidDataException("Invalid data: Multiple tokens for same Team detected");
         Token tk = tokenList.get(0);
         sdto.setProposalAccepted(tk.isConfirmed());
+        sdto.setProposalRejected(tk.isRejected());
         sdto.setUrlTokenConfirm(tk.getUrlConfirm());
         sdto.setUrlTokenReject(tk.getUrlReject());
         sd.add(sdto);
