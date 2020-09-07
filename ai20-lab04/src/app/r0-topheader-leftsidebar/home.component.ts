@@ -124,6 +124,11 @@ export class HomeComponent implements OnInit, OnDestroy {
         if (this.idActiveCourse != oldCourseId && this.isLogged && this.idActiveCourse != null) {
           this.alertsService.closeAlert();
         }
+        if (this.idActiveCourse != oldCourseId) { // closing all panels
+          for (let i = 0; i < this.panelOpenState.length; i++) {
+            this.panelOpenState[i] = false;
+          }
+        }
       }
     );
   }
