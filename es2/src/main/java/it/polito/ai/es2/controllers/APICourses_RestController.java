@@ -5,6 +5,8 @@ import it.polito.ai.es2.dtos.CourseDTO;
 import it.polito.ai.es2.dtos.StudentDTO;
 import it.polito.ai.es2.dtos.TeamDTO;
 import it.polito.ai.es2.services.interfaces.CourseService;
+import it.polito.ai.es2.services.interfaces.UserStudProfService;
+import lombok.extern.java.Log;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.hateoas.CollectionModel;
 import org.springframework.http.HttpStatus;
@@ -12,12 +14,14 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.server.ResponseStatusException;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.Reader;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -28,17 +32,29 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
 @RestController
 @RequestMapping("/api/courses")
+@Log
 public class APICourses_RestController {
   @Autowired
   private CourseService courseService;
   @Autowired
+  private UserStudProfService userStudProfService;
+  @Autowired
   private ModelHelper modelHelper;
 
   @GetMapping()
-  public CollectionModel<CourseDTO> getAllCourses() {
-    List<CourseDTO> courses = courseService.getAllCourses().stream().map(modelHelper::enrich).collect(Collectors.toList());
+  public CollectionModel<CourseDTO> getAllCourses(HttpServletRequest request) {
+    List<CourseDTO> courses;
+    if (request.isUserInRole("PROFESSOR"))
+      courses = courseService.getAllCourses().stream().map(modelHelper::enrich).collect(Collectors.toList());
+    else if (request.isUserInRole("STUDENT"))
+      courses = userStudProfService.getEnrolledCourses(Long.valueOf(request.getUserPrincipal().getName()));
+    else {
+      courses = new ArrayList<>();
+      log.warning("500 - Auth Error: authenticated role for getCourses not recognized");
+    }
+
     return CollectionModel.of(courses,
-        linkTo(methodOn(APICourses_RestController.class).getAllCourses()).withSelfRel());
+        linkTo(methodOn(APICourses_RestController.class).getAllCourses(request)).withSelfRel());
   }
 
   //   {"name":"C33","min":1,"max":100,"enabled":true,"professor":"malnati"} - ContentType: application/json

@@ -23,8 +23,8 @@ import javax.sql.DataSource;
 
 //User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal(); user.getAuthorities();
 //                                httpServletRequest.isUserInRole("ADMIN");
-// !!!!!                          printWelcome(ModelMap model, Authentication authentication)
-//                                printWelcome(ModelMap model, Principal principal)
+// !!!!!                          void printWelcome(ModelMap model, Authentication authentication)
+//                                void printWelcome(ModelMap model, Principal principal)
 @Configuration
 @EnableWebSecurity
 @EnableGlobalMethodSecurity(prePostEnabled = true, securedEnabled = true)

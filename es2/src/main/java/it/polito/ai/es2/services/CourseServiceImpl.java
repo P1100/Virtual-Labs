@@ -47,10 +47,10 @@ public class CourseServiceImpl implements CourseService {
   StudentRepository studentRepository;
 
   /**
-   * GET {@link APICourses_RestController#getAllCourses()}
+   * GET {@link APICourses_RestController#getAllCourses(javax.servlet.http.HttpServletRequest)}
    */
   @Override
-  @PreAuthorize("isAuthenticated()") // overrides class roles
+  @PreAuthorize("hasRole('PROFESSOR')") // overrides class roles
   public List<CourseDTO> getAllCourses() {
     log.info("getAllCourses");
     return courseRepository.findAll().stream().map(x -> modelMapper.map(x, CourseDTO.class)).collect(Collectors.toList());
