@@ -1,5 +1,6 @@
 package it.polito.ai.es2.dtos;
 
+import it.polito.ai.es2.dtos.validators.MinMaxConstraint;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -12,6 +13,7 @@ import javax.validation.constraints.PositiveOrZero;
 @NoArgsConstructor
 @AllArgsConstructor
 @Data
+@MinMaxConstraint
 public class CourseDTO extends RepresentationModel<CourseDTO> {
   @NotBlank
   private String id; // acronym
