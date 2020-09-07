@@ -5,7 +5,7 @@ import it.polito.ai.es2.entities.User;
 import it.polito.ai.es2.securityconfig.jwt.JwtRequest;
 import it.polito.ai.es2.securityconfig.jwt.JwtResponse;
 import it.polito.ai.es2.securityconfig.jwt.JwtTokenUtil;
-import it.polito.ai.es2.services.interfaces.UserStudProfService;
+import it.polito.ai.es2.services.interfaces.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.ResponseEntity;
@@ -32,7 +32,7 @@ public class APIUsers_RestController {
   @Autowired
   private UserDetailsService userDetailsService;
   @Autowired
-  private UserStudProfService userStudProfService;
+  private UserService userService;
 
   // {"username":"admin","password":"a"}
   @RequestMapping(value = "/authenticate", method = RequestMethod.POST)
@@ -57,7 +57,7 @@ public class APIUsers_RestController {
     System.out.println(userDTO);
     userDTO.setRoles(Collections.singletonList("STUDENT"));
     userDTO.setTypeUser(User.TypeUser.STUDENT);
-    userStudProfService.addNewUser(userDTO);
+    userService.addNewUser(userDTO);
     return userDTO;
   }
 
@@ -66,7 +66,7 @@ public class APIUsers_RestController {
   public UserDTO registerProfessor(@Valid @RequestBody UserDTO userDTO) {
     userDTO.setRoles(Arrays.asList("PROFESSOR"));
     userDTO.setTypeUser(User.TypeUser.PROFESSOR);
-    userStudProfService.addNewUser(userDTO);
+    userService.addNewUser(userDTO);
     return userDTO;
   }
 }

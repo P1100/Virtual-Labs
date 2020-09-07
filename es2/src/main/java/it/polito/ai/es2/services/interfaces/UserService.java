@@ -8,7 +8,7 @@ import javax.validation.constraints.NotBlank;
 import java.util.List;
 import java.util.Optional;
 
-public interface UserStudProfService {
+public interface UserService {
   UserDTO addNewUser(@Valid UserDTO userDTO);
 
   boolean confirmUser(@NotBlank String token);

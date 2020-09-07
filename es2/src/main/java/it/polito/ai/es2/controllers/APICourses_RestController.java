@@ -6,7 +6,7 @@ import it.polito.ai.es2.dtos.StudentDTO;
 import it.polito.ai.es2.dtos.TeamDTO;
 import it.polito.ai.es2.services.interfaces.CourseService;
 import it.polito.ai.es2.services.interfaces.TeamService;
-import it.polito.ai.es2.services.interfaces.UserStudProfService;
+import it.polito.ai.es2.services.interfaces.UserService;
 import lombok.extern.java.Log;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.hateoas.CollectionModel;
@@ -38,7 +38,7 @@ public class APICourses_RestController {
   @Autowired
   private CourseService courseService;
   @Autowired
-  private UserStudProfService userStudProfService;
+  private UserService userService;
   @Autowired
   private ModelHelper modelHelper;
   @Autowired

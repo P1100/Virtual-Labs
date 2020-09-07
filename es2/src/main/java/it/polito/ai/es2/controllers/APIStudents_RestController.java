@@ -4,7 +4,7 @@ import it.polito.ai.es2.controllers.hateoas.ModelHelper;
 import it.polito.ai.es2.dtos.CourseDTO;
 import it.polito.ai.es2.dtos.StudentDTO;
 import it.polito.ai.es2.services.interfaces.CourseService;
-import it.polito.ai.es2.services.interfaces.UserStudProfService;
+import it.polito.ai.es2.services.interfaces.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.hateoas.CollectionModel;
 import org.springframework.hateoas.Link;
@@ -25,7 +25,7 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 @RequestMapping("/api/students")
 public class APIStudents_RestController {
   @Autowired
-  UserStudProfService userStudProfService;
+  UserService userService;
   @Autowired
   private ModelHelper modelHelper;
   @Autowired
@@ -33,7 +33,7 @@ public class APIStudents_RestController {
 
   @GetMapping()
   public CollectionModel<StudentDTO> getAllStudents() {
-    List<StudentDTO> allStudents = userStudProfService.getAllStudents();
+    List<StudentDTO> allStudents = userService.getAllStudents();
     for (StudentDTO studentDTO : allStudents) {
       modelHelper.enrich(studentDTO);
     }
@@ -44,7 +44,7 @@ public class APIStudents_RestController {
 
   @GetMapping("/{student_id}")
   public StudentDTO getStudent(@PathVariable Long student_id) {
-    Optional<StudentDTO> studentDTO = userStudProfService.getStudent(student_id);
+    Optional<StudentDTO> studentDTO = userService.getStudent(student_id);
     if (studentDTO.isEmpty())
       throw new ResponseStatusException(HttpStatus.NOT_FOUND, student_id.toString());
     return modelHelper.enrich(studentDTO.get());

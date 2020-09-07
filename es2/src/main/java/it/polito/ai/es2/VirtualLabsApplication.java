@@ -2,7 +2,7 @@ package it.polito.ai.es2;
 
 import it.polito.ai.es2.services.interfaces.CourseService;
 import it.polito.ai.es2.services.interfaces.TeamService;
-import it.polito.ai.es2.services.interfaces.UserStudProfService;
+import it.polito.ai.es2.services.interfaces.UserService;
 import lombok.extern.java.Log;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,7 +10,6 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
-import org.springframework.core.env.Environment;
 
 /**
  * Invalid Inputs: empty db, empty entities, course enabled, same name team, student not enrolled, 1 team per course x student,
@@ -25,13 +24,9 @@ public class VirtualLabsApplication {
   }
 
   @Autowired
-  Environment environment;
-  //  @Autowired
-//  private ApplicationContext applicationContext;
-  @Autowired
   private CourseService courseService;
   @Autowired
-  private UserStudProfService userStudProfService;
+  private UserService userService;
   @Autowired
   private TeamService teamService;
 
@@ -56,23 +51,23 @@ public class VirtualLabsApplication {
 //          courseService.addCourse(new CourseDTO("c6", "Test: Disabled Course", 1, 500, false, null));
 //          courseService.addCourse(new CourseDTO("c7", "Test: min3 max5", 3, 5, true, null));
 //
-//          userStudProfService.addStudent(new StudentDTO(1L, "Paolo", "Verdi", "s1@studenti.polito.it", null, null, false, false, null, null));
-//          userStudProfService.addStudent(new StudentDTO(2L, "Giuseppe", "Rossi", "s2@studenti.polito.it", null, null, false, false, null, null));
-//          userStudProfService.addStudent(new StudentDTO(3L, "Antonio", "Bianchi", "s3@studenti.polito.it", null, null, false, false, null, null));
-//          userStudProfService.addStudent(new StudentDTO(4L, "Angelo", "Verdi", "s4@studenti.polito.it", null, null, false, false, null, null));
-//          userStudProfService.addStudent(new StudentDTO(5L, "Domenico", "Gialli", "s5@studenti.polito.it", null, null, false, false, null, null));
-//          userStudProfService.addStudent(new StudentDTO(6L, "Bruno", "Ferri", "s6@studenti.polito.it", null, null, false, false, null, null));
-//          userStudProfService.addStudent(new StudentDTO(7L, "Paola", "Paleta", "s7@studenti.polito.it", null, null, false, false, null, null));
-//          userStudProfService.addStudent(new StudentDTO(8L, "Sergio", "Limari", "s8@studenti.polito.it", null, null, false, false, null, null));
-//          userStudProfService.addStudent(new StudentDTO(9L, "Luciano", "Benterri", "s9@studenti.polito.it", null, null, false, false, null, null));
-//          userStudProfService.addStudent(new StudentDTO(10L, "Francesco", "Cavinni", "s10@studenti.polito.it", null, null, false, false, null, null));
-//          userStudProfService.addStudent(new StudentDTO(11L, "Maria", "Pasolani", "s11@studenti.polito.it", null, null, false, false, null, null));
+//          userService.addStudent(new StudentDTO(1L, "Paolo", "Verdi", "s1@studenti.polito.it", null, null, false, false, null, null));
+//          userService.addStudent(new StudentDTO(2L, "Giuseppe", "Rossi", "s2@studenti.polito.it", null, null, false, false, null, null));
+//          userService.addStudent(new StudentDTO(3L, "Antonio", "Bianchi", "s3@studenti.polito.it", null, null, false, false, null, null));
+//          userService.addStudent(new StudentDTO(4L, "Angelo", "Verdi", "s4@studenti.polito.it", null, null, false, false, null, null));
+//          userService.addStudent(new StudentDTO(5L, "Domenico", "Gialli", "s5@studenti.polito.it", null, null, false, false, null, null));
+//          userService.addStudent(new StudentDTO(6L, "Bruno", "Ferri", "s6@studenti.polito.it", null, null, false, false, null, null));
+//          userService.addStudent(new StudentDTO(7L, "Paola", "Paleta", "s7@studenti.polito.it", null, null, false, false, null, null));
+//          userService.addStudent(new StudentDTO(8L, "Sergio", "Limari", "s8@studenti.polito.it", null, null, false, false, null, null));
+//          userService.addStudent(new StudentDTO(9L, "Luciano", "Benterri", "s9@studenti.polito.it", null, null, false, false, null, null));
+//          userService.addStudent(new StudentDTO(10L, "Francesco", "Cavinni", "s10@studenti.polito.it", null, null, false, false, null, null));
+//          userService.addStudent(new StudentDTO(11L, "Maria", "Pasolani", "s11@studenti.polito.it", null, null, false, false, null, null));
 //
-//          userStudProfService.addStudent(new StudentDTO(12L, "Valentina", "Gennari", "s12@studenti.polito.it", null, null, false, false, null, null));
-//          userStudProfService.addStudent(new StudentDTO(13L, "Francesca", "Tulini", "s13@studenti.polito.it", null, null, false, false, null, null));
-//          userStudProfService.addStudent(new StudentDTO(14L, "Elena", "Casellari", "s14@studenti.polito.it", null, null, false, false, null, null));
-//          userStudProfService.addStudent(new StudentDTO(15L, "Anna", "Rodieni", "s15@studenti.polito.it", null, null, false, false, null, null));
-//          userStudProfService.addStudent(new StudentDTO(100L, "Last", "One", "s16@studenti.polito.it", null, null, false, false, null, null));
+//          userService.addStudent(new StudentDTO(12L, "Valentina", "Gennari", "s12@studenti.polito.it", null, null, false, false, null, null));
+//          userService.addStudent(new StudentDTO(13L, "Francesca", "Tulini", "s13@studenti.polito.it", null, null, false, false, null, null));
+//          userService.addStudent(new StudentDTO(14L, "Elena", "Casellari", "s14@studenti.polito.it", null, null, false, false, null, null));
+//          userService.addStudent(new StudentDTO(15L, "Anna", "Rodieni", "s15@studenti.polito.it", null, null, false, false, null, null));
+//          userService.addStudent(new StudentDTO(100L, "Last", "One", "s16@studenti.polito.it", null, null, false, false, null, null));
 //
 //          courseService.enrollStudents(Collections.singletonList(2L), "c5");
 //          courseService.enrollStudents(Arrays.asList(1L, 2L, 3L, 4L), "c1");

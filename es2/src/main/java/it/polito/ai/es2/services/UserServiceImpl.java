@@ -8,7 +8,7 @@ import it.polito.ai.es2.repositories.*;
 import it.polito.ai.es2.services.exceptions.FailedAddException;
 import it.polito.ai.es2.services.exceptions.UserAlreadyEnabledException;
 import it.polito.ai.es2.services.exceptions.UsernameAlreadyUsedException;
-import it.polito.ai.es2.services.interfaces.UserStudProfService;
+import it.polito.ai.es2.services.interfaces.UserService;
 import lombok.extern.java.Log;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,7 +39,7 @@ import java.util.stream.Collectors;
 @Transactional
 @Log
 @Validated
-public class UserStudProfServiceImpl implements UserStudProfService {
+public class UserServiceImpl implements UserService {
   @Autowired
   ModelMapper modelMapper;
   @Autowired

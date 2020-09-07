@@ -1,6 +1,5 @@
 package it.polito.ai.es2.services;
 
-import it.polito.ai.es2.entities.Token;
 import it.polito.ai.es2.repositories.StudentRepository;
 import it.polito.ai.es2.repositories.TeamRepository;
 import it.polito.ai.es2.repositories.TokenRepository;
@@ -13,10 +12,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.validation.annotation.Validated;
 
 import javax.validation.constraints.NotBlank;
-import java.sql.Timestamp;
-import java.time.LocalDateTime;
-import java.util.List;
-import java.util.Optional;
 
 // TODO: add formatted email body
 @Service
@@ -31,20 +26,6 @@ public class NotificationServiceImpl implements NotificationService {
   StudentRepository studentRepository;
   @Autowired
   public TokenRepository tokenRepository;
-
-  @Override
-  public boolean cleanUpOldTokens() {
-    List<Token> tokenExpiredList = tokenRepository.findAllByExpiryDateBeforeOrderByExpiryDate(Timestamp.valueOf(LocalDateTime.now()));
-    if (tokenExpiredList.size() > 0) {
-      for (Token token : tokenExpiredList) {
-        Optional.ofNullable(token.getTeam()).ifPresent(x -> x.getTokens().remove(token));
-        Optional.ofNullable(token.getUser()).ifPresent(x -> x.setTokenSignup(null));
-      }
-      tokenRepository.deleteAll(tokenExpiredList);
-      return true;
-    } else
-      return false;
-  }
 
   @Override
   public void sendMessage(@NotBlank String emailAddress, String subject, String body) {

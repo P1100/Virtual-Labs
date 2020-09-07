@@ -2,7 +2,7 @@ package it.polito.ai.es2.controllers;
 
 import it.polito.ai.es2.services.interfaces.NotificationService;
 import it.polito.ai.es2.services.interfaces.TeamService;
-import it.polito.ai.es2.services.interfaces.UserStudProfService;
+import it.polito.ai.es2.services.interfaces.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.annotation.Validated;
@@ -21,11 +21,11 @@ public class Notification_Controller {
   @Autowired
   TeamService teamService;
   @Autowired
-  UserStudProfService userStudProfService;
+  UserService userService;
 
   @GetMapping("/user/confirm/{token}")
   public String confirmUser(@PathVariable @NotBlank String token) {
-    boolean confirm = userStudProfService.confirmUser(token);
+    boolean confirm = userService.confirmUser(token);
     if (confirm) {
       return "token_confirmed";
     } else

@@ -16,6 +16,8 @@ public abstract class CommonURL {
   public String baseUrl = "";
   @Autowired
   Environment environment;
+  //  @Autowired
+//  private ApplicationContext applicationContext;
 
   @PostConstruct
   public void init() {

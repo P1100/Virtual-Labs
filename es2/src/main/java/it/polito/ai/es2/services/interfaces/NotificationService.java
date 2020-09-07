@@ -10,7 +10,5 @@ import javax.validation.constraints.NotBlank;
  * 3-Check Your UserName and Password.
  */
 public interface NotificationService {
-  boolean cleanUpOldTokens();
-
   void sendMessage(@NotBlank String emailAddress, String subject, String body);
 }
