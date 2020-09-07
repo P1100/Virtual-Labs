@@ -62,7 +62,7 @@ public class CourseServiceImpl implements CourseService {
    * GET {@link it.polito.ai.es2.controllers.APIStudents_RestController#getEnrolledCourses(Long)}
    */
   @Override
-  @PreAuthorize("hasRole('PROFESSOR') or hasRole('STUDENT')")
+  @PreAuthorize("hasRole('PROFESSOR') or (hasRole('STUDENT') and (#studentId+'') == authentication.principal.username)")
   public List<CourseDTO> getEnrolledCourses(Long studentId) {
     log.info("getCourses(" + studentId + ")");
     if (studentId == null) throw new NullParameterException("student id");

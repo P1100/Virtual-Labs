@@ -99,7 +99,7 @@ public class TeamServiceImpl extends CommonURL implements TeamService {
    * GET {@link it.polito.ai.es2.controllers.APICourses_RestController#getEnrolledWithoutTeam(String)}
    */
   @Override
-  @PreAuthorize("hasRole('STUDENT') or hasRole('PROFESSOR')")
+  @PreAuthorize("hasRole('PROFESSOR') or (hasRole('STUDENT') and @mySecurityChecker.isStudentEnrolled(#courseId,authentication.principal.username))")
   public List<StudentDTO> getEnrolledWithoutTeam(String courseId) {
     log.info("getAvailableStudents(" + courseId + ")");
     if (courseId == null) throw new CourseNotFoundException("[null]");
@@ -108,11 +108,11 @@ public class TeamServiceImpl extends CommonURL implements TeamService {
   }
 
   /**
-   * GET {@link it.polito.ai.es2.controllers.APITeams_RestController#getTeamsForStudentCourse(Long, String)}
+   * GET {@link it.polito.ai.es2.controllers.APITeams_RestController#getTeamsUser(Long, String)}
    */
   @Override
-  @PreAuthorize("hasRole('STUDENT') or hasRole('PROFESSOR')")
-  public List<TeamDTO> getTeamsForStudentAndCourse(Long studentId, String courseId) {
+  @PreAuthorize("hasRole('PROFESSOR') or (hasRole('STUDENT') and (#studentId+'') == authentication.principal.username and @mySecurityChecker.isStudentEnrolled(#courseId,authentication.principal.username))")
+  public List<TeamDTO> getTeamsUser(Long studentId, String courseId) {
     log.info("getTeamsForStudent(" + studentId + ")");
     if (studentId == null || courseId == null) throw new NullParameterException(studentId + " " + courseId);
     Optional<Student> optionalStudent = studentRepository.findById(studentId);

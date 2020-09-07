@@ -20,7 +20,7 @@ import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 import javax.sql.DataSource;
-
+//  and @mySecurityChecker.isCourseOwner(#studentId,authentication.principal.username)))
 //User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal(); user.getAuthorities();
 //                                httpServletRequest.isUserInRole("ADMIN");
 // !!!!!                          void printWelcome(ModelMap model, Authentication authentication)

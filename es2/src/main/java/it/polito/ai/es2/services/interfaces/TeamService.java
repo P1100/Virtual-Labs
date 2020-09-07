@@ -18,7 +18,7 @@ public interface TeamService {
   List<StudentDTO> getEnrolledWithoutTeam(String courseName);
 
   @PreAuthorize("hasRole('STUDENT') or hasRole('PROFESSOR')")
-  List<TeamDTO> getTeamsForStudentAndCourse(Long studentId, String courseId);
+  List<TeamDTO> getTeamsUser(Long studentId, String courseId);
 
   @PreAuthorize("hasRole('STUDENT')")
   TeamDTO proposeTeam(@NotBlank String courseId, @NotBlank String team_name, @NotNull List<Long> memberIds, @NotNull Long hoursTimeout);

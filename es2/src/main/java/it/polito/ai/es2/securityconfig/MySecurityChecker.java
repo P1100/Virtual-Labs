@@ -29,6 +29,17 @@ public class MySecurityChecker {
   @Autowired
   TeamRepository teamRepository;
 
+  public boolean isStudentEnrolled(String courseId, String principal_username) {
+    Long studentId = Long.valueOf(principal_username);
+    if (courseId.isBlank() || principal_username.isBlank())
+      return false;
+    Student student = studentRepository.findById(studentId).orElse(null);
+    if (student == null) {
+      return false;
+    }
+    return student.getCourses().stream().map(Course::getId).anyMatch(s -> s.equals(courseId));
+  }
+
   public boolean isCourseOwner(String course, String principal_username) {
     if (course.isBlank() || principal_username.isBlank())
       return false;

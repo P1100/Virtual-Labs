@@ -16,7 +16,7 @@ import javax.validation.constraints.NotBlank;
 // TODO: add formatted email body
 @Service
 @Validated
-@PreAuthorize("permitAll()")
+@PreAuthorize("isAuthenticated()")
 public class NotificationServiceImpl implements NotificationService {
   @Autowired
   public JavaMailSender emailSender;
