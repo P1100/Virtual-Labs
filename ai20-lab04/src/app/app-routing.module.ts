@@ -1,7 +1,7 @@
 import {NgModule} from '@angular/core';
 import {RouterModule, Routes} from '@angular/router';
 import {WelcomeEmptyComponent} from './r0-topheader-leftsidebar/welcome-empty.component';
-import {VmsContComponent} from './r2-inner-tab/vms/vms-cont.component';
+import {VmsContComponent} from './r2-inner-tab/student/vms/vms-cont.component';
 import {StudentsContComponent} from './r2-inner-tab/professor/students/students-cont.component';
 import {PageNotFoundComponent} from './r0-topheader-leftsidebar/page-not-found.component';
 import {AssignmentsContComponent} from './r2-inner-tab/assignments/assignments-cont.component';

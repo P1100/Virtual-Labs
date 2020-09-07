@@ -19,7 +19,7 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
 @Constraint(validatedBy = MinMaxConstraintValidator.class)
 public @interface MinMaxConstraint {
 
-    String message() default "Constrains violated";
+    String message() default "Constrains min max size of teams";
 
     Class<?>[] groups() default {};
 

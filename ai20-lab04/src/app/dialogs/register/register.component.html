@@ -8,7 +8,7 @@
     <mat-form-field class="form-group">
       <mat-label>Username</mat-label>
       <input matInput #username="ngModel" name="username" [(ngModel)]="user.username" required type="number" pattern="[0-9]{1,9}" autocomplete="on" (keyup)="user.id = username.value">
-      <mat-hint>Your university serial number</mat-hint>
+      <mat-hint>your university serial number</mat-hint>
       <mat-error *ngIf="username.invalid && !username.pristine">Must be a 6 digits number</mat-error>
     </mat-form-field>
     <mat-form-field class="form-group">

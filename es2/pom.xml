@@ -119,6 +119,12 @@
             <artifactId>h2</artifactId>
             <scope>runtime</scope>
         </dependency>
+<!--        For mock  multipart file -->
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-test</artifactId>
+            <version>5.2.8.RELEASE</version>
+        </dependency>
     </dependencies>
 
     <build>

@@ -6,10 +6,7 @@ import it.polito.ai.es2.entities.Course;
 import it.polito.ai.es2.entities.Student;
 import it.polito.ai.es2.entities.Team;
 import it.polito.ai.es2.entities.Token;
-import it.polito.ai.es2.repositories.CourseRepository;
-import it.polito.ai.es2.repositories.StudentRepository;
-import it.polito.ai.es2.repositories.TeamRepository;
-import it.polito.ai.es2.repositories.TokenRepository;
+import it.polito.ai.es2.repositories.*;
 import it.polito.ai.es2.services.exceptions.*;
 import it.polito.ai.es2.services.interfaces.NotificationService;
 import it.polito.ai.es2.services.interfaces.TeamService;
@@ -55,8 +52,6 @@ public class TeamServiceImpl extends CommonURL implements TeamService {
 //  ImageRepository imageRepository;
 //  @Autowired
 //  ImplementationRepository implementationRepository;
-//  @Autowired
-//  VMRepository vmRepository;
   @Autowired
   public TokenRepository tokenRepository;
 
@@ -132,7 +127,7 @@ public class TeamServiceImpl extends CommonURL implements TeamService {
         log.warning("Team proposals should be deleted once one is made active (or invalid multiple active teams)");
       }
       if (team.isActive() && team.isDisabled()) {
-        throw new InvalidDataException("Tema both active an disabled");
+        throw new InvalidDataException("Team both active an disabled");
       }
       /* Putting in transient data */
       for (Student student : team.getStudents()) {
@@ -296,6 +291,7 @@ public class TeamServiceImpl extends CommonURL implements TeamService {
       if (team.getStudents().stream().flatMap(x -> x.getTeams().stream().filter(y -> y.getCourse().getId().equals(team.getCourse().getId()))
           .filter(Team::isActive)).count() > 0)
         throw new StudentsInMultipleActiveTeamsException();
+      team.setActive(true); // no need to save, will be flushed automatically at the end of transaction (since not a new entity)
       /* Disable all others team proposals, for each students, in the same course */
       team.getStudents().stream().flatMap(x -> x.getTeams().stream().filter(y -> y.getCourse().getId().equals(team.getCourse().getId()))
           .filter(z -> !z.isActive())).forEach(t -> t.setDisabled(true));
@@ -303,7 +299,6 @@ public class TeamServiceImpl extends CommonURL implements TeamService {
         tok.getStudent().getTokens().remove(tok);
       }
       tokenRepository.deleteAll(tokenList);
-      team.setActive(true); // no need to save, will be flushed automatically at the end of transaction (since not a new entity)
     }
     return true;
   }

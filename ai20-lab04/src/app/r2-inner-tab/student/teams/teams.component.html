@@ -92,7 +92,7 @@
         </ng-container>
         <ng-container matColumnDef="reject">
           <th *matHeaderCellDef mat-header-cell>reject</th>
-          <td *matCellDef="let element; let k = dataIndex" mat-cell>{{k}}{{indexLoggedUser[k]}}{{element.id}}
+          <td *matCellDef="let element; let k = dataIndex" mat-cell>
             <a *ngIf="loggedUserStudent?.id != dataSourceTeams?.data[k]?.students[0]?.id" mat-stroked-button [href]="element?.students[indexLoggedUser[k]]?.urlTokenReject" target="_blank">Link</a>
           </td>
         </ng-container>

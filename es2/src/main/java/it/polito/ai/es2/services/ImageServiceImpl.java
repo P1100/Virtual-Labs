@@ -74,7 +74,7 @@ public class ImageServiceImpl implements ImageService {
       throw new ImageException("IOException file");
     }
     Image savedImage = imageRepository.save(img);
-    imageRepository.flush(); // NECESSARY! Otherwise auto generated fields will remain null
+    imageRepository.flush(); // NECESSARY! Otherwise auto generated fields will remain null (not the id, the auto generated timestamps)
     ImageDTO map = modelMapper.map(savedImage, ImageDTO.class);
     return map;
   }

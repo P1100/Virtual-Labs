@@ -3,6 +3,7 @@ package it.polito.ai.es2.dtos;
 import lombok.Data;
 import org.springframework.hateoas.RepresentationModel;
 
+import javax.persistence.Transient;
 import javax.validation.constraints.PositiveOrZero;
 
 @Data
@@ -15,4 +16,8 @@ public class VmDTO extends RepresentationModel<VmDTO> {
   @PositiveOrZero
   private int ram;
   private boolean active;
+  @Transient
+  private Long teamId;
+  @Transient
+  private Long studentCreatorId;
 }

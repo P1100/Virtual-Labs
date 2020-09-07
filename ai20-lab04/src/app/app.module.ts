@@ -22,7 +22,7 @@ import {PageNotFoundComponent} from './r0-topheader-leftsidebar/page-not-found.c
 import {MatButtonModule} from '@angular/material/button';
 import {TeamsComponent} from './r2-inner-tab/student/teams/teams.component';
 import {LayoutModule} from '@angular/cdk/layout';
-import {VmsContComponent} from './r2-inner-tab/vms/vms-cont.component';
+import {VmsContComponent} from './r2-inner-tab/student/vms/vms-cont.component';
 import {HTTP_INTERCEPTORS, HttpClientModule} from '@angular/common/http';
 import {MatSelectModule} from '@angular/material/select';
 import {MatIconModule} from '@angular/material/icon';
@@ -48,6 +48,8 @@ import {UnauthorizedComponent} from './r0-topheader-leftsidebar/unauthorized.com
 import {UnauthorizedTabComponent} from './r0-topheader-leftsidebar/unauthorized-tab.component';
 import {TeamsContComponent} from './r2-inner-tab/student/teams/teams-cont.component';
 import {TeamProposeComponent} from './dialogs/team-propose/team-propose.component';
+import {VmsComponent} from './r2-inner-tab/student/vms/vms.component';
+import {VmCreateComponent} from './dialogs/vm-create/vm-create.component';
 
 @NgModule({
   imports: [
@@ -104,7 +106,9 @@ import {TeamProposeComponent} from './dialogs/team-propose/team-propose.componen
     UnauthorizedComponent,
     UnauthorizedTabComponent,
     TeamsContComponent,
-    TeamProposeComponent
+    TeamProposeComponent,
+    VmsComponent,
+    VmCreateComponent
   ],
   providers: [HttpClientModule, {provide: MAT_DIALOG_DEFAULT_OPTIONS, useValue: {hasBackdrop: false}},
     {provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true}],

@@ -12,7 +12,6 @@ public class MinMaxConstraintValidator implements ConstraintValidator<MinMaxCons
     @Override
     public void initialize(MinMaxConstraint constraintAnnotation) {
     }
-
     @Override
     public boolean isValid(Object obj, ConstraintValidatorContext context) {
         if (!(obj instanceof CourseDTO)) {

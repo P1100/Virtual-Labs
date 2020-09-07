@@ -22,20 +22,20 @@ public class VM {
   private boolean active = false;
 // --> vmModel saved in course
 
-  @ManyToOne(optional = false, cascade = CascadeType.MERGE)
+  @ManyToOne(optional = false)
   @JoinColumn(nullable = false)
   private Team team; // --> course
 
   // TODO: check on add, students must be in same team
-  @ManyToOne(cascade = CascadeType.MERGE)
+  @ManyToOne()
   @JoinColumn
   private Student creator;
 
-  @ManyToMany(cascade = CascadeType.MERGE)
+  @ManyToMany()
   @JoinTable
   private List<Student> sharedOwners = new ArrayList<>();
 
-  @OneToOne(cascade = CascadeType.MERGE)
+  @OneToOne()
   @JoinColumn
   private Image imageVm;
 

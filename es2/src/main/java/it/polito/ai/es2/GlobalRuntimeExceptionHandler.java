@@ -79,7 +79,7 @@ public class GlobalRuntimeExceptionHandler
       if (error instanceof FieldError)
         objectOrFieldName = ((FieldError) error).getField();
       else
-        objectOrFieldName = error.getObjectName();
+        objectOrFieldName = error.getDefaultMessage();
       String errorMessage = error.getDefaultMessage();
       errors.put(objectOrFieldName, errorMessage);
       sb.append(" ").append(objectOrFieldName);
