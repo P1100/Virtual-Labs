@@ -71,7 +71,7 @@ const routes: Routes = [
                   },
                   {
                     path: '**',
-                    component: UnauthorizedComponent
+                    component: UnauthorizedTabComponent
                   }
                 ]
               }
