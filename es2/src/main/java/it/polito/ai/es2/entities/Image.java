@@ -31,9 +31,10 @@ public class Image {
   private Timestamp createDate; // LocalDateTime
   @UpdateTimestamp
   private Timestamp modifyDate;
+  private String directLink;
   @Lob
   @Basic(fetch = FetchType.LAZY)
-  private byte[] picByte;
+  private byte[] picBytes;
 
   @OneToOne(mappedBy = "profilePhoto")
   private Student student;

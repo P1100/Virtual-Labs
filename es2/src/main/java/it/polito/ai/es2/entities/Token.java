@@ -3,7 +3,6 @@ package it.polito.ai.es2.entities;
 import lombok.*;
 
 import javax.persistence.*;
-import javax.validation.constraints.FutureOrPresent;
 import java.sql.Timestamp;
 
 @Getter
@@ -15,7 +14,7 @@ import java.sql.Timestamp;
 public class Token {
   @Id
   private String id;
-  @FutureOrPresent
+//  @FutureOrPresent
   private Timestamp expiryDate;
   /* Only for team */
   private boolean confirmed = false;
@@ -23,7 +22,7 @@ public class Token {
   private String urlReject;
   private boolean rejected = false;
 
-  @OneToOne(optional = true)
+  @OneToOne(cascade = {CascadeType.MERGE, CascadeType.PERSIST}, optional = true)
   @JoinColumn(nullable = true)
   private User user; // registration token
 

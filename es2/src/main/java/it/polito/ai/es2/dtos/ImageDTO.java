@@ -19,6 +19,7 @@ public class ImageDTO extends RepresentationModel<ImageDTO> {
   private int revisionCycle;   // number of iteration for Implementation
   private Timestamp createDate; // LocalDateTime
   private Timestamp modifyDate;
+  private String directLink;
   @Transient
   private String imageStringBase64;
 }

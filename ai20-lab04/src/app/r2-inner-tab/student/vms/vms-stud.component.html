@@ -18,7 +18,7 @@
   <ng-container matColumnDef="imageVm">
     <th *matHeaderCellDef mat-header-cell>direct link image</th>
     <td *matCellDef="let element" mat-cell>
-      <a mat-stroked-button href="" target="_blank">Link {{element.id}}</a>
+      <a mat-stroked-button href="{{element.imageVm.directLink}}" target="_blank">Open</a>
     </td>
   </ng-container>
   <ng-container matColumnDef="on">

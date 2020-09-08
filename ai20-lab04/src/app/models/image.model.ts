@@ -5,7 +5,8 @@ export class Image {
               public revisionCycle: number,
               public createDate: Date,
               public modifyDate: Date,
-              public imageStringBase64: string) {
+              public imageStringBase64: string,
+              public directLink?: string) {
   }
 
 }

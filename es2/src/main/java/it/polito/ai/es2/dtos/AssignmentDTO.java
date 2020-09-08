@@ -3,7 +3,6 @@ package it.polito.ai.es2.dtos;
 import lombok.Data;
 import org.springframework.hateoas.RepresentationModel;
 
-import javax.validation.constraints.FutureOrPresent;
 import javax.validation.constraints.PastOrPresent;
 import java.sql.Timestamp;
 
@@ -13,6 +12,6 @@ public class AssignmentDTO extends RepresentationModel<AssignmentDTO> {
   private String name;
   @PastOrPresent
   private Timestamp releaseDate;
-  @FutureOrPresent
+//  @FutureOrPresent
   private Timestamp expireDate;
 }

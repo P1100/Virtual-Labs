@@ -133,6 +133,7 @@ export class TeamsComponent implements AfterViewInit, OnDestroy {
       maxWidth: '400px', autoFocus: true, hasBackdrop: true, disableClose: true, closeOnNavigation: true, data: proposalData
     });
     this.dialogRef.afterClosed().subscribe((res: string) => {
+      this.selection.clear();
       this.dialogRef = null;
       if (res != undefined) {
         setTimeout(() => {

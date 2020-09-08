@@ -9,4 +9,6 @@ public interface ImageService {
   ImageDTO uploadImage(@NotNull MultipartFile file);
 
   ImageDTO getImage(@NotNull Long imageId);
+
+  byte[] getBytesImage(@NotNull Long imageId);
 }

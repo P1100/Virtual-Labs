@@ -35,7 +35,7 @@ import java.util.zip.Inflater;
 @Log
 @Validated
 @PreAuthorize("permitAll()")
-public class ImageServiceImpl implements ImageService {
+public class ImageServiceImpl extends CommonURL implements ImageService {
   @Autowired
   ModelMapper modelMapper;
   @Autowired
@@ -68,12 +68,13 @@ public class ImageServiceImpl implements ImageService {
     img.setName(file.getOriginalFilename());
     img.setType(file.getContentType());
     try {
-      img.setPicByte(compressBytes(file.getBytes()));
+      img.setPicBytes(compressBytes(file.getBytes()));
     } catch (IOException e) {
       e.printStackTrace();
       throw new ImageException("IOException file");
     }
     Image savedImage = imageRepository.save(img);
+    img.setDirectLink(baseUrl + "/api/images/direct/" + savedImage.getId());
     imageRepository.flush(); // NECESSARY! Otherwise auto generated fields will remain null (not the id, the auto generated timestamps)
     ImageDTO map = modelMapper.map(savedImage, ImageDTO.class);
     return map;
@@ -91,9 +92,17 @@ public class ImageServiceImpl implements ImageService {
       throw new ImageNotFoundException(imageId.toString());
     Image retrievedImage = imageOptional.get();
     ImageDTO imageDTO = modelMapper.map(retrievedImage, ImageDTO.class);
-    byte[] bytes = decompressBytes(retrievedImage.getPicByte());
+    byte[] bytes = decompressBytes(retrievedImage.getPicBytes());
     imageDTO.setImageStringBase64(Base64.getEncoder().encodeToString(bytes));
     return imageDTO;
+  }
+
+  @Override public byte[] getBytesImage(@NotNull Long imageId) {
+    Optional<Image> imageOptional = imageRepository.findById(imageId);
+    if (imageOptional.isEmpty())
+      return new byte[0];
+    byte[] picBytes = imageOptional.get().getPicBytes();
+    return decompressBytes(picBytes);
   }
 
   // Compress the image bytes before storing it in the database

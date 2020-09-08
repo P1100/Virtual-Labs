@@ -45,7 +45,7 @@ public class VirtualLabsApplication {
 //          System.out.println("***************** Command Line Runner DB INITIALIZATION (check order of fields!) **********************");
 //          courseService.addCourse(new CourseDTO("c1", "Internet Applications", 1, 500, true, null));
 //          courseService.addCourse(new CourseDTO("c2", "Mobile Development", 1, 500, true, null));
-//          courseService.addCourse(new CourseDTO("c3", "System and device programming", 1, 500, true, null));
+//          courseService.addCourse(new CourseDTO("c3", "System programming", 1, 500, true, null));
 //          courseService.addCourse(new CourseDTO("c4", "Software Engineering I", 1, 500, true, null));
 //          courseService.addCourse(new CourseDTO("c5", "Software Engineering II", 1, 500, true, null));
 //          courseService.addCourse(new CourseDTO("c6", "Test: Disabled Course", 1, 500, false, null));

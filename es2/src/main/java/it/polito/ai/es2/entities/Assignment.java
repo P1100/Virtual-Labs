@@ -3,7 +3,6 @@ package it.polito.ai.es2.entities;
 import lombok.Data;
 
 import javax.persistence.*;
-import javax.validation.constraints.FutureOrPresent;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.PastOrPresent;
 import java.sql.Timestamp;
@@ -19,7 +18,7 @@ public class Assignment {
   private String name;
   @PastOrPresent
   private Timestamp releaseDate;
-  @FutureOrPresent
+//  @FutureOrPresent
   private Timestamp expireDate;
 
   @OneToOne(optional = false)
