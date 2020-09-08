@@ -12,6 +12,7 @@ import it.polito.ai.es2.repositories.TeamRepository;
 import it.polito.ai.es2.repositories.VMRepository;
 import it.polito.ai.es2.services.exceptions.StudentNotFoundException;
 import it.polito.ai.es2.services.exceptions.TeamNotFoundException;
+import it.polito.ai.es2.services.exceptions.VmNotFoundException;
 import it.polito.ai.es2.services.interfaces.ImageService;
 import it.polito.ai.es2.services.interfaces.VLService;
 import lombok.extern.java.Log;
@@ -132,5 +133,12 @@ public class VLServiceImpl implements VLService {
     List<VmDTO> vmDTOS = modelMapper.map(t.getVms(), new TypeToken<List<VmDTO>>() {
     }.getType());
     return vmDTOS;
+  }
+  @Override public void changeStatusVm(@NotNull Long vmId, boolean newStatus) {
+    vmRepository.findById(vmId).map(vm -> {
+      vm.setActive(newStatus);
+      return true;
+    }).orElseThrow(() -> new VmNotFoundException(vmId));
+    return;
   }
 }

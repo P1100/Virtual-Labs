@@ -8,8 +8,10 @@ import javax.validation.constraints.NotNull;
 import java.util.List;
 
 public interface VLService {
-  @PreAuthorize("hasRole('STUDENT')") // TODO: security checks
+  @PreAuthorize("hasRole('STUDENT')")
   void createVm(@Valid VmDTO vmDTO);
 
   List<VmDTO> getTeamVm(@NotNull Long teamId);
+
+  void changeStatusVm(@NotNull Long vmId, boolean newStatus);
 }

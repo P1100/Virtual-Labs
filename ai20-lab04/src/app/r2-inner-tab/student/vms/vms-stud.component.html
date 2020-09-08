@@ -24,7 +24,7 @@
   <ng-container matColumnDef="on">
     <th *matHeaderCellDef mat-header-cell>activate</th>
     <td *matCellDef="let element" mat-cell>
-      <button mat-stroked-button [color]="element.active == true ? 'primary' : ''">
+      <button mat-stroked-button [color]="element.active == true ? 'primary' : ''" (click)="changeStatusVm.emit({id: element.id, status: true})">
         <mat-icon>power</mat-icon>
       </button>
     </td>
@@ -32,7 +32,7 @@
   <ng-container matColumnDef="off">
     <th *matHeaderCellDef mat-header-cell>deactivate</th>
     <td *matCellDef="let element" mat-cell>
-      <button mat-stroked-button [color]="element.active == false ? 'primary' : ''">
+      <button mat-stroked-button [color]="element.active == false ? 'primary' : ''" (click)="changeStatusVm.emit({id: element.id, status: false})">
         <mat-icon>power_off</mat-icon>
       </button>
     </td>

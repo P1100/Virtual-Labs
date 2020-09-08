@@ -47,4 +47,11 @@ export class VlServiceService {
         tap(res => console.log('--getTeamVm:', res))
       );
   }
+  changeStatusVm(vmId: number, status: boolean): Observable<any> {
+    if (status) {
+      return this.http.put(`${this.baseUrlApi}/vms/vm/${vmId}/enable`, null, AppSettings.JSON_HTTP_OPTIONS).pipe(catchError(formatErrors));
+    } else {
+      return this.http.put(`${this.baseUrlApi}/vms/vm/${vmId}/disable`, null, AppSettings.JSON_HTTP_OPTIONS).pipe(catchError(formatErrors));
+    }
+  }
 }

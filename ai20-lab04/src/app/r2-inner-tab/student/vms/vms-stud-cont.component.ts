@@ -14,6 +14,7 @@ import {Vm} from '../../../models/vm.model';
     <app-vms-stud (forceUploadData)="onForceUploadData($event)"
                   [activeTeam]="activeTeam" [vms]="vms"
                   [idStringLoggedStudent]="idStringLoggedStudent"
+                  (changeStatusVm)="changeStatusVm($event)"
     >
     </app-vms-stud>
   `,
@@ -64,5 +65,11 @@ export class VmsStudContComponent implements OnDestroy {
       },
       error => this.alertsService.setAlert('danger', 'Couldn\'t get virtual machines! ' + error)
     );
+  }
+  changeStatusVm(event: any) { // {id: element.id, status: true}
+     this.vlServiceService.changeStatusVm(event.id, event.status).subscribe(value => {
+       this.vms.filter(v => v.id == event.id)[0].active = event.status;
+       },
+       error => this.alertsService.setAlert('danger', 'Couldn\'t change vm status. ' + error));
   }
 }

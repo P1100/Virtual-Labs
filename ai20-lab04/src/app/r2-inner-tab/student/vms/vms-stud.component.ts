@@ -30,6 +30,8 @@ export class VmsStudComponent implements OnDestroy {
   activeTeam: Team = null;
   @Output()
   forceUploadData = new EventEmitter<any>();
+  @Output()
+  changeStatusVm = new EventEmitter<any>();
 
   constructor(private alertsService: AlertsService, private courseService: CourseService, public dialog: MatDialog, private router: Router) {
   }
