@@ -10,7 +10,7 @@ import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.PositiveOrZero;
 import java.sql.Timestamp;
-
+// TODO: add direct link
 @Getter
 @Setter
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)

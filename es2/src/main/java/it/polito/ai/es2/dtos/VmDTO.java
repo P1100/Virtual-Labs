@@ -5,6 +5,7 @@ import org.springframework.hateoas.RepresentationModel;
 
 import javax.persistence.Transient;
 import javax.validation.constraints.PositiveOrZero;
+import java.util.List;
 
 @Data
 public class VmDTO extends RepresentationModel<VmDTO> {
@@ -17,7 +18,13 @@ public class VmDTO extends RepresentationModel<VmDTO> {
   private int ram;
   private boolean active;
   @Transient
-  private Long teamId;
+  private Long teamId; // needed for vm creation
   @Transient
-  private Long studentCreatorId;
+  private Long studentCreatorId; // needed for vm creation
+  @Transient
+  private StudentDTO creator;
+  @Transient
+  private List<StudentDTO> sharedOwners;
+  @Transient
+  private ImageDTO imageVm;
 }

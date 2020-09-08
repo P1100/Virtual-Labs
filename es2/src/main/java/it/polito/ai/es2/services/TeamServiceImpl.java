@@ -6,7 +6,10 @@ import it.polito.ai.es2.entities.Course;
 import it.polito.ai.es2.entities.Student;
 import it.polito.ai.es2.entities.Team;
 import it.polito.ai.es2.entities.Token;
-import it.polito.ai.es2.repositories.*;
+import it.polito.ai.es2.repositories.CourseRepository;
+import it.polito.ai.es2.repositories.StudentRepository;
+import it.polito.ai.es2.repositories.TeamRepository;
+import it.polito.ai.es2.repositories.TokenRepository;
 import it.polito.ai.es2.services.exceptions.*;
 import it.polito.ai.es2.services.interfaces.NotificationService;
 import it.polito.ai.es2.services.interfaces.TeamService;
@@ -138,7 +141,7 @@ public class TeamServiceImpl extends CommonURL implements TeamService {
         }
         List<Token> tokenList = student.getTokens().stream().filter(t -> t.getTeam().equals(team)).collect(Collectors.toList());
         if (tokenList.size() == 0) {
-          log.warning("No tokens associated with student in inactive proposal");
+          log.warning("No tokens associated with student in inactive team. " + student.getId() + " - Team: " + team.getId() + team.getName() + " - TokensSize: " + student.getTokens().size());
           sd.add(sdto);
           continue;
         }

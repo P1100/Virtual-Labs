@@ -12,7 +12,7 @@ import {Vm} from '../../../models/vm.model';
   selector: 'app-vms-stud-cont',
   template: `
     <app-vms-stud (forceUploadData)="onForceUploadData($event)"
-                  [activeTeam]="activeTeam"
+                  [activeTeam]="activeTeam" [vms]="vms"
                   [idStringLoggedStudent]="idStringLoggedStudent"
     >
     </app-vms-stud>
@@ -56,9 +56,10 @@ export class VmsStudContComponent implements OnDestroy {
         } else if (countActive < 1) {
           throw new Error('No active team for this course. ');
         }
+        console.log('ACTIVE', this.activeTeam);
         return this.vlServiceService.getTeamVm(this.activeTeam.id);
       })).subscribe((vmsTeam: Vm[]) => {
-        console.log('INSIDE2');
+        console.log('INSIDE2', vmsTeam);
         this.vms = vmsTeam;
       },
       error => this.alertsService.setAlert('danger', 'Couldn\'t get virtual machines! ' + error)

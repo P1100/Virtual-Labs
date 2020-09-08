@@ -14,7 +14,7 @@ import {VmCreateComponent} from '../../../dialogs/vm-create/vm-create.component'
   styleUrls: ['./vms-stud.component.css']
 })
 export class VmsStudComponent implements OnDestroy {
-  columnsToDisplayVm: string[] = ['studentCreatorId', 'status', 'link', 'on', 'off', 'delete', 'edit'];
+  columnsToDisplayVm: string[] = ['creator', 'active', 'imageVm', 'on', 'off', 'delete', 'edit'];
   dataSourceVms = new MatTableDataSource<Vm>();
   dialogRef: MatDialogRef<any>;
   @Input()
@@ -42,7 +42,7 @@ export class VmsStudComponent implements OnDestroy {
       this.alertsService.setAlert('danger', 'Error: no active team for this course');
       return;
     }
-    const proposalData: Vm = new Vm(0, 0, 0, false, +this.idStringLoggedStudent, +this.activeTeam.id);
+    const proposalData: Vm = {vcpu: 0, disk:0, ram:0, active:false, studentCreatorId: +this.idStringLoggedStudent, teamId:+this.activeTeam.id};
     this.dialogRef = this.dialog.open(VmCreateComponent, {
       maxWidth: '400px', autoFocus: true, hasBackdrop: true, disableClose: true, closeOnNavigation: true, data: proposalData
     });

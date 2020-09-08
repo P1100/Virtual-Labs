@@ -5,50 +5,50 @@
   </button>
 </h2>
 <table mat-table [dataSource]="dataSourceVms" class="mat-elevation-z8">
-  <ng-container matColumnDef="studentCreatorId">
+  <ng-container matColumnDef="creator">
     <th *matHeaderCellDef mat-header-cell>creator</th>
-    <td *matCellDef="let element" mat-cell>
+    <td *matCellDef="let element" mat-cell>{{element.creator.firstName}} {{element.creator.lastName}}
     </td>
   </ng-container>
-  <ng-container matColumnDef="status">
-    <th *matHeaderCellDef mat-header-cell>status</th>
-    <td *matCellDef="let element" mat-cell>
+  <ng-container matColumnDef="active">
+    <th *matHeaderCellDef mat-header-cell>isActive</th>
+    <td *matCellDef="let element" mat-cell>{{element.active}}
     </td>
   </ng-container>
-  <ng-container matColumnDef="link">
-    <th *matHeaderCellDef mat-header-cell>image</th>
+  <ng-container matColumnDef="imageVm">
+    <th *matHeaderCellDef mat-header-cell>direct link image</th>
     <td *matCellDef="let element" mat-cell>
-      <a mat-stroked-button href="" target="_blank">Link</a>
+      <a mat-stroked-button href="" target="_blank">Link {{element.id}}</a>
     </td>
   </ng-container>
   <ng-container matColumnDef="on">
-    <th *matHeaderCellDef mat-header-cell>on</th>
+    <th *matHeaderCellDef mat-header-cell>activate</th>
     <td *matCellDef="let element" mat-cell>
-      <button mat-mini-fab color="primary">
+      <button mat-stroked-button [color]="element.active == true ? 'primary' : ''">
         <mat-icon>power</mat-icon>
       </button>
     </td>
   </ng-container>
   <ng-container matColumnDef="off">
-    <th *matHeaderCellDef mat-header-cell>off</th>
+    <th *matHeaderCellDef mat-header-cell>deactivate</th>
     <td *matCellDef="let element" mat-cell>
-      <button mat-mini-fab color="primary">
+      <button mat-stroked-button [color]="element.active == false ? 'primary' : ''">
         <mat-icon>power_off</mat-icon>
       </button>
     </td>
   </ng-container>
   <ng-container matColumnDef="delete">
-    <th *matHeaderCellDef mat-header-cell>delete</th>
+    <th *matHeaderCellDef mat-header-cell>delete vm</th>
     <td *matCellDef="let element" mat-cell>
-      <button mat-mini-fab color="warn">
+      <button mat-stroked-button color="warn">
         <mat-icon>delete_outline</mat-icon>
       </button>
     </td>
   </ng-container>
   <ng-container matColumnDef="edit">
-    <th *matHeaderCellDef mat-header-cell>edit</th>
+    <th *matHeaderCellDef mat-header-cell>edit resources</th>
     <td *matCellDef="let element" mat-cell>
-      <button mat-mini-fab color="link">
+      <button mat-stroked-button>
         <mat-icon>edit</mat-icon>
       </button>
     </td>

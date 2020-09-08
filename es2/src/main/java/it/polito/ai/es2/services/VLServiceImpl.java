@@ -15,6 +15,8 @@ import it.polito.ai.es2.services.exceptions.TeamNotFoundException;
 import it.polito.ai.es2.services.interfaces.ImageService;
 import it.polito.ai.es2.services.interfaces.VLService;
 import lombok.extern.java.Log;
+import org.modelmapper.ModelMapper;
+import org.modelmapper.TypeToken;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -24,10 +26,12 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -35,6 +39,8 @@ import java.util.Optional;
 @Validated
 @Log
 public class VLServiceImpl implements VLService {
+  @Autowired
+  ModelMapper modelMapper;
   @Autowired
   VMRepository vmRepository;
   @Autowired
@@ -57,14 +63,14 @@ public class VLServiceImpl implements VLService {
     vm.setRam(vmDTO.getRam());
 
     ImageDTO imageDTO = null;
-    final Path path = Paths.get("src/main/resources/vm.jpeg");
+    Path path = Paths.get("src/main/resources/vm.jpeg");
     String name = "vm.jpeg";
     String originalFileName = "vm.jpeg";
     String contentType = "image/jpeg";
     byte[] content = null;
     try {
       content = Files.readAllBytes(path);
-    } catch (final IOException e) {
+    } catch (IOException e) {
     }
     MultipartFile multipartFile = new MockMultipartFile(name, originalFileName, contentType, content);
     imageDTO = imageService.uploadImage(multipartFile);
@@ -80,5 +86,16 @@ public class VLServiceImpl implements VLService {
     vm.addSetCreator(studentOptional.get());
     vm.addSetTeam(teamOptional.get());
     vmRepository.save(vm);
+  }
+
+  @Override
+  public List<VmDTO> getTeamVm(@NotNull Long teamId) {
+    Optional<Team> teamOptional = teamRepository.findById(teamId);
+    if (teamOptional.isEmpty())
+      throw new TeamNotFoundException(teamId);
+    Team t = teamOptional.get();
+    List<VmDTO> vmDTOS = modelMapper.map(t.getVms(), new TypeToken<List<VmDTO>>() {
+    }.getType());
+    return vmDTOS;
   }
 }
