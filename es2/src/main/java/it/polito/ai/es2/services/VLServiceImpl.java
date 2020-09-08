@@ -12,6 +12,7 @@ import it.polito.ai.es2.repositories.TeamRepository;
 import it.polito.ai.es2.repositories.VMRepository;
 import it.polito.ai.es2.services.exceptions.StudentNotFoundException;
 import it.polito.ai.es2.services.exceptions.TeamNotFoundException;
+import it.polito.ai.es2.services.exceptions.VmException;
 import it.polito.ai.es2.services.exceptions.VmNotFoundException;
 import it.polito.ai.es2.services.interfaces.ImageService;
 import it.polito.ai.es2.services.interfaces.VLService;
@@ -73,6 +74,44 @@ public class VLServiceImpl implements VLService {
     vm.setDisk(vmDTO.getDisk());
     vm.setRam(vmDTO.getRam());
 
+    Optional<Student> studentOptional = studentRepository.findById(vmDTO.getStudentCreatorId());
+    if (studentOptional.isEmpty())
+      throw new StudentNotFoundException(vmDTO.getStudentCreatorId().toString());
+    Optional<Team> teamOptional = teamRepository.findById(vmDTO.getTeamId());
+    if (teamOptional.isEmpty())
+      throw new TeamNotFoundException(vmDTO.getTeamId());
+    vm.addSetCreator(studentOptional.get());
+    vm.addSetTeam(teamOptional.get());
+
+    Team t = teamOptional.get();
+    int maxVcpu = 0;
+    int maxDisk = 0;
+    int maxRam = 0;
+    int maxRunningVM = 0;
+    int maxTotVM = 0;
+    for (VM v : t.getVms()) {
+      maxVcpu += v.getVcpu();
+      maxRam += v.getRam();
+      maxDisk += v.getDisk();
+      maxRunningVM += v.isActive() ? 1 : 0;
+      maxTotVM += 1;
+    }
+    if (maxVcpu > t.getMaxVcpu()) {
+      throw new VmException(maxVcpu + " is bigger than team max vcpu " + t.getMaxVcpu() + " \n");
+    }
+    if (maxDisk > t.getMaxDisk()) {
+      throw new VmException(maxDisk + " is bigger than team max disk " + t.getMaxDisk() + " \n");
+    }
+    if (maxRam > t.getMaxRam()) {
+      throw new VmException(maxRam + " is bigger than team max ram " + t.getMaxRam() + " \n");
+    }
+    if (maxRunningVM > t.getMaxRunningVM()) {
+      throw new VmException(maxRunningVM + " is bigger than team max running vm " + t.getMaxRunningVM() + " \n");
+    }
+    if (maxTotVM > t.getMaxTotVM()) {
+      throw new VmException(maxTotVM + " is bigger than team max tot vm " + t.getMaxTotVM() + " \n");
+    }
+
     ImageDTO imageDTO = null;
     Path path = Paths.get("src/main/resources/vm.jpeg");
     String name = "vm.jpeg";
@@ -85,7 +124,6 @@ public class VLServiceImpl implements VLService {
       os.write(content);
       os.close();
 //      Files.write(new File(FILEPATH).toPath(), content);
-
       BufferedImage image = ImageIO.read(new File(FILEPATH));
       Font font = new Font("Arial", Font.BOLD, 18);
       Graphics g = image.getGraphics();
@@ -99,7 +137,6 @@ public class VLServiceImpl implements VLService {
       int positionX = (image.getWidth() - metrics.stringWidth(text));
       int positionY = (image.getHeight() - metrics.getHeight()) + metrics.getAscent();
       g.drawString(attributedText.getIterator(), positionX, positionY);
-
 //      BufferedImage originalImage = ImageIO.read(new File("c:\\image\\mypic.jpg"));
       ByteArrayOutputStream baos = new ByteArrayOutputStream();
       ImageIO.write(image, "jpg", baos);
@@ -110,17 +147,13 @@ public class VLServiceImpl implements VLService {
     }
     MultipartFile multipartFile = new MockMultipartFile(name, originalFileName, contentType, content);
     imageDTO = imageService.uploadImage(multipartFile);
-
-    if (imageDTO == null || imageDTO.getId() == null) throw new RuntimeException("Critical server error: upload failed silently)");
+    if (imageDTO == null || imageDTO.getId() == null)
+      throw new RuntimeException("Critical server error: upload failed silently)");
     Image image = imageRepository.findById(imageDTO.getId()).orElse(null);
-    if (image == null) throw new RuntimeException("Critical server error: image was not saved)");
+    if (image == null)
+      throw new RuntimeException("Critical server error: image was not saved)");
     vm.addSetImage(image);
-    Optional<Student> studentOptional = studentRepository.findById(vmDTO.getStudentCreatorId());
-    if (studentOptional.isEmpty()) throw new StudentNotFoundException(vmDTO.getStudentCreatorId().toString());
-    Optional<Team> teamOptional = teamRepository.findById(vmDTO.getTeamId());
-    if (teamOptional.isEmpty()) throw new TeamNotFoundException(vmDTO.getTeamId());
-    vm.addSetCreator(studentOptional.get());
-    vm.addSetTeam(teamOptional.get());
+
     vmRepository.save(vm);
   }
 

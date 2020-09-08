@@ -34,7 +34,7 @@ export class VlServiceService {
   }
   createVm(vm: Vm): Observable<any> {
     return this.http.post(`${this.baseUrlApi}/vms`, JSON.stringify(vm), AppSettings.JSON_HTTP_OPTIONS)
-      .pipe(catchError(formatErrors));
+      .pipe(tap(x => console.log('INSIDE CREATE VM', x)),catchError(formatErrors));
 
   }
   getTeamVm(teamId: number): Observable<Vm[]> {

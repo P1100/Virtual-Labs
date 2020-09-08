@@ -13,12 +13,12 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
 @Documented
 @Target({TYPE, ANNOTATION_TYPE}) //, FIELD, METHOD
 @Retention(RUNTIME)
-@Constraint(validatedBy = MinMaxConstraintValidator.class)
-public @interface MinMaxConstraint {
+@Constraint(validatedBy = TeamVmConstrainsValidator.class)
+public @interface TeamVmConstrains {
 
-    String message() default "Constrains min max size of teams";
+  String message() default "VM Constrains violated";
 
-    Class<?>[] groups() default {};
+  Class<?>[] groups() default {};
 
-    Class<? extends Payload>[] payload() default {};
+  Class<? extends Payload>[] payload() default {};
 }

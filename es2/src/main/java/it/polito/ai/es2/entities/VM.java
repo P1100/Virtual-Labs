@@ -1,5 +1,6 @@
 package it.polito.ai.es2.entities;
 
+import it.polito.ai.es2.dtos.validators.TeamVmConstrains;
 import lombok.Data;
 
 import javax.persistence.*;
@@ -9,6 +10,7 @@ import java.util.List;
 
 @Data
 @Entity
+@TeamVmConstrains
 public class VM {
   @Id
   @GeneratedValue
