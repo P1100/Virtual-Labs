@@ -37,4 +37,12 @@ export class VlServiceService {
       .pipe(catchError(formatErrors));
 
   }
+  getTeamVm(teamId: number): Observable<Vm[]> {
+    return this.http.get<HateoasModel>(`${this.baseUrlApi}/vms/${teamId}`, AppSettings.JSON_HTTP_OPTIONS)
+      .pipe(
+        map(object => removeHATEOAS(object)),
+        retry(AppSettings.RETRIES), catchError(formatErrors),
+        tap(res => console.log('--getTeamVm:', res))
+      );
+  }
 }

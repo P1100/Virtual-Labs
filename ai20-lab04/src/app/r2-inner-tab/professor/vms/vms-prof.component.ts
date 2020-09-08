@@ -61,7 +61,7 @@ export class VmsProfComponent implements OnDestroy {
       this.alertsService.setAlert('danger', 'Error: no active team for this course');
       return;
     }
-    const proposalData: Vm = new Vm(0, 0, 0, +this.idStringLoggedStudent, +this.activeTeam.id);
+    const proposalData: Vm = new Vm(0, 0, 0, false, +this.idStringLoggedStudent, +this.activeTeam.id);
     this.dialogRef = this.dialog.open(VmCreateComponent, {
       maxWidth: '400px', autoFocus: true, hasBackdrop: true, disableClose: true, closeOnNavigation: true, data: proposalData
     });

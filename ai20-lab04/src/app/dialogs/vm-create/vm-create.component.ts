@@ -12,7 +12,7 @@ import {VlServiceService} from '../../services/vl-service.service';
   styles: []
 })
 export class VmCreateComponent {
-  vm: Vm = new Vm(null, null, null);
+  vm: Vm = new Vm(null, null, null, false);
   checkboxNoValidate = false;
   showCheckboxNoValidateForTesting = AppSettings.devtest;
 

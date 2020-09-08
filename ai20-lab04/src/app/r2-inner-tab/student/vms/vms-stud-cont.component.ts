@@ -3,16 +3,16 @@ import {ActivatedRoute} from '@angular/router';
 import {AlertsService} from '../../../services/alerts.service';
 import {CourseService} from '../../../services/course.service';
 import {Team} from '../../../models/team.model';
-import {Student} from '../../../models/student.model';
 import {Subscription} from 'rxjs';
 import {VlServiceService} from '../../../services/vl-service.service';
+import {mergeMap} from 'rxjs/operators';
+import {Vm} from '../../../models/vm.model';
 
 @Component({
   selector: 'app-vms-stud-cont',
   template: `
     <app-vms-stud (forceUploadData)="onForceUploadData($event)"
-                  [courseId]="courseId"
-                  [activeTeam]="activeTeam" [hideAllGUItillActiveTeamIsChecked]="hideAllGUItillActiveTeamIsChecked"
+                  [activeTeam]="activeTeam"
                   [idStringLoggedStudent]="idStringLoggedStudent"
     >
     </app-vms-stud>
@@ -20,14 +20,11 @@ import {VlServiceService} from '../../../services/vl-service.service';
   styleUrls: []
 })
 export class VmsStudContComponent implements OnDestroy {
-  enrolledWithoutTeams: Student[] = []; // always includes logged user
   courseId = '0';
-  subEnrolledWithTeams: Subscription = null;
   subRouteParam: Subscription = null;
-  subCurrentCourse: Subscription;
   idStringLoggedStudent: string;
   activeTeam: Team = null;
-  hideAllGUItillActiveTeamIsChecked = true; // to avoid loading flicker
+  vms: Vm[];
 
   constructor(private courseService: CourseService, private activatedRoute: ActivatedRoute, private alertsService: AlertsService,
               private vlServiceService: VlServiceService) {
@@ -40,11 +37,10 @@ export class VmsStudContComponent implements OnDestroy {
   }
   ngOnDestroy(): void {
     this.subRouteParam?.unsubscribe();
-    this.subEnrolledWithTeams?.unsubscribe();
-    this.subCurrentCourse?.unsubscribe();
   }
   onForceUploadData($event: any) {
-    this.vlServiceService.getTeamsUser(+this.idStringLoggedStudent, this.courseId).subscribe(teams => {
+    this.vlServiceService.getTeamsUser(+this.idStringLoggedStudent, this.courseId).pipe(
+      mergeMap(teams => {
         let countActive = 0;
         this.activeTeam = null;
         for (let team of teams) {
@@ -55,11 +51,17 @@ export class VmsStudContComponent implements OnDestroy {
         }
         if (countActive > 1) {
           this.activeTeam = undefined;
-          this.alertsService.setAlert('danger', 'Error! Multiple active teams for the student, please concat the administrator');
-          throw new Error('Corrupted Team data: ' + JSON.stringify(teams));
+          throw new Error('Error! Multiple active teams for the student, please concat the administrator');
+          console.log('Corrupted Team data: ' + JSON.stringify(teams));
+        } else if (countActive < 1) {
+          throw new Error('No active team for this course. ');
         }
-        this.hideAllGUItillActiveTeamIsChecked = false;
-      }, error => this.alertsService.setAlert('danger', 'Couldn\'t get student teams! ' + error)
+        return this.vlServiceService.getTeamVm(this.activeTeam.id);
+      })).subscribe((vmsTeam: Vm[]) => {
+        console.log('INSIDE2');
+        this.vms = vmsTeam;
+      },
+      error => this.alertsService.setAlert('danger', 'Couldn\'t get virtual machines! ' + error)
     );
   }
 }

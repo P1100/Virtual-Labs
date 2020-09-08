@@ -1,0 +1,59 @@
+<h2 style="margin-left: 25px; margin-right: 5px">VM List
+  <button mat-raised-button color="primary" (click)="openCreateVmDialog()" style=" float: right;">
+    <mat-icon>playlist_add</mat-icon>
+    Create new VM
+  </button>
+</h2>
+<table mat-table [dataSource]="dataSourceVms" class="mat-elevation-z8">
+  <ng-container matColumnDef="studentCreatorId">
+    <th *matHeaderCellDef mat-header-cell>creator</th>
+    <td *matCellDef="let element" mat-cell>
+    </td>
+  </ng-container>
+  <ng-container matColumnDef="status">
+    <th *matHeaderCellDef mat-header-cell>status</th>
+    <td *matCellDef="let element" mat-cell>
+    </td>
+  </ng-container>
+  <ng-container matColumnDef="link">
+    <th *matHeaderCellDef mat-header-cell>image</th>
+    <td *matCellDef="let element" mat-cell>
+      <a mat-stroked-button href="" target="_blank">Link</a>
+    </td>
+  </ng-container>
+  <ng-container matColumnDef="on">
+    <th *matHeaderCellDef mat-header-cell>on</th>
+    <td *matCellDef="let element" mat-cell>
+      <button mat-mini-fab color="primary">
+        <mat-icon>power</mat-icon>
+      </button>
+    </td>
+  </ng-container>
+  <ng-container matColumnDef="off">
+    <th *matHeaderCellDef mat-header-cell>off</th>
+    <td *matCellDef="let element" mat-cell>
+      <button mat-mini-fab color="primary">
+        <mat-icon>power_off</mat-icon>
+      </button>
+    </td>
+  </ng-container>
+  <ng-container matColumnDef="delete">
+    <th *matHeaderCellDef mat-header-cell>delete</th>
+    <td *matCellDef="let element" mat-cell>
+      <button mat-mini-fab color="warn">
+        <mat-icon>delete_outline</mat-icon>
+      </button>
+    </td>
+  </ng-container>
+  <ng-container matColumnDef="edit">
+    <th *matHeaderCellDef mat-header-cell>edit</th>
+    <td *matCellDef="let element" mat-cell>
+      <button mat-mini-fab color="link">
+        <mat-icon>edit</mat-icon>
+      </button>
+    </td>
+  </ng-container>
+  <tr mat-header-row *matHeaderRowDef="columnsToDisplayVm"></tr>
+  <tr mat-row *matRowDef="let element; columns: columnsToDisplayVm">
+  </tr>
+</table>
