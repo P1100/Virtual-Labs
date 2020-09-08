@@ -10,6 +10,6 @@ public class TeamAlreayCreatedException extends RuntimeException {
   }
 
   public TeamAlreayCreatedException(String s, String c) {
-    super("Team " + s + " already created in course " + c + "".trim());
+    super(("Team " + s + " already created in course " + c + "").trim());
   }
 }

@@ -8,18 +8,18 @@ import {Subscription} from 'rxjs';
 import {VlServiceService} from '../../../services/vl-service.service';
 
 @Component({
-  selector: 'app-vms-cont',
+  selector: 'app-vms-prof-cont',
   template: `
-    <app-vms (forceUploadData)="onForceUploadData($event)"
-             [courseId]="courseId"
-             [activeTeam]="activeTeam" [hideAllGUItillActiveTeamIsChecked]="hideAllGUItillActiveTeamIsChecked"
-             [idStringLoggedStudent]="idStringLoggedStudent"
+    <app-vms-prof (forceUploadData)="onForceUploadData($event)"
+                  [courseId]="courseId"
+                  [activeTeam]="activeTeam" [hideAllGUItillActiveTeamIsChecked]="hideAllGUItillActiveTeamIsChecked"
+                  [idStringLoggedStudent]="idStringLoggedStudent"
     >
-    </app-vms>
+    </app-vms-prof>
   `,
   styleUrls: []
 })
-export class VmsContComponent implements OnDestroy {
+export class VmsProfContComponent implements OnDestroy {
   enrolledWithoutTeams: Student[] = []; // always includes logged user
   courseId = '0';
   subEnrolledWithTeams: Subscription = null;

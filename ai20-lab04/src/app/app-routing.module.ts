@@ -1,7 +1,7 @@
 import {NgModule} from '@angular/core';
 import {RouterModule, Routes} from '@angular/router';
 import {WelcomeEmptyComponent} from './r0-topheader-leftsidebar/welcome-empty.component';
-import {VmsContComponent} from './r2-inner-tab/student/vms/vms-cont.component';
+import {VmsStudContComponent} from './r2-inner-tab/student/vms/vms-stud-cont.component';
 import {StudentsContComponent} from './r2-inner-tab/professor/students/students-cont.component';
 import {PageNotFoundComponent} from './r0-topheader-leftsidebar/page-not-found.component';
 import {AssignmentsContComponent} from './r2-inner-tab/assignments/assignments-cont.component';
@@ -13,6 +13,7 @@ import {AuthStudentGuard} from './services/auth-student.guard';
 import {AuthProfessorGuard} from './services/auth-professor.guard';
 import {UnauthorizedTabComponent} from './r0-topheader-leftsidebar/unauthorized-tab.component';
 import {TeamsContComponent} from './r2-inner-tab/student/teams/teams-cont.component';
+import {VmsProfContComponent} from './r2-inner-tab/professor/vms/vms-prof-cont.component';
 
 const routes: Routes = [
   {
@@ -58,7 +59,7 @@ const routes: Routes = [
                   },
                   {
                     path: 'vms',
-                    component: VmsContComponent
+                    component: VmsProfContComponent
                   },
                   {
                     path: 'teams',
@@ -104,7 +105,7 @@ const routes: Routes = [
                   },
                   {
                     path: 'vms',
-                    component: VmsContComponent
+                    component: VmsStudContComponent
                   },
                   {
                     path: 'teams',

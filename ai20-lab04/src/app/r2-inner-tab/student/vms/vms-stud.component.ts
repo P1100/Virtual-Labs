@@ -11,9 +11,9 @@ import {Vm} from '../../../models/vm.model';
 import {VmCreateComponent} from '../../../dialogs/vm-create/vm-create.component';
 
 @Component({
-  selector: 'app-vms',
-  templateUrl: './vms.component.html',
-  styleUrls: ['./vms.component.css'],
+  selector: 'app-vms-stud',
+  templateUrl: './vms-stud.component.html',
+  styleUrls: ['./vms-stud.component.css'],
   animations: [
     trigger('detailExpand', [
       state('collapsed', style({height: '0px', minHeight: '0'})),
@@ -22,7 +22,7 @@ import {VmCreateComponent} from '../../../dialogs/vm-create/vm-create.component'
     ]),
   ],
 })
-export class VmsComponent implements OnDestroy {
+export class VmsStudComponent implements OnDestroy {
   displayedColumnsTable1: string[] = ['select', 'id', 'firstName', 'lastName', 'email'];
   columnsToDisplayProposals: string[] = ['nav', 'proposer', 'name', 'createdDate', 'confirm', 'reject']; //, 'accept', 'reject'
   columnsToLoadFromTeam: string[] = ['name', 'active', 'disabled', 'createdDate'];

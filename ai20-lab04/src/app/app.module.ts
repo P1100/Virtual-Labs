@@ -22,7 +22,7 @@ import {PageNotFoundComponent} from './r0-topheader-leftsidebar/page-not-found.c
 import {MatButtonModule} from '@angular/material/button';
 import {TeamsComponent} from './r2-inner-tab/student/teams/teams.component';
 import {LayoutModule} from '@angular/cdk/layout';
-import {VmsContComponent} from './r2-inner-tab/student/vms/vms-cont.component';
+import {VmsStudContComponent} from './r2-inner-tab/student/vms/vms-stud-cont.component';
 import {HTTP_INTERCEPTORS, HttpClientModule} from '@angular/common/http';
 import {MatSelectModule} from '@angular/material/select';
 import {MatIconModule} from '@angular/material/icon';
@@ -48,8 +48,10 @@ import {UnauthorizedComponent} from './r0-topheader-leftsidebar/unauthorized.com
 import {UnauthorizedTabComponent} from './r0-topheader-leftsidebar/unauthorized-tab.component';
 import {TeamsContComponent} from './r2-inner-tab/student/teams/teams-cont.component';
 import {TeamProposeComponent} from './dialogs/team-propose/team-propose.component';
-import {VmsComponent} from './r2-inner-tab/student/vms/vms.component';
+import {VmsStudComponent} from './r2-inner-tab/student/vms/vms-stud.component';
 import {VmCreateComponent} from './dialogs/vm-create/vm-create.component';
+import {VmsProfComponent} from './r2-inner-tab/professor/vms/vms-prof.component';
+import {VmsProfContComponent} from './r2-inner-tab/professor/vms/vms-prof-cont.component';
 
 @NgModule({
   imports: [
@@ -83,14 +85,14 @@ import {VmCreateComponent} from './dialogs/vm-create/vm-create.component';
     NgbModule, //ng bootstrap
     MatGridListModule,
     LayoutModule,
-    MatRadioModule,
+    MatRadioModule
   ],
   declarations: [
     AppComponent,
     StudentsComponent,
     StudentsContComponent,
     PageNotFoundComponent,
-    VmsContComponent,
+    VmsStudContComponent,
     TeamsComponent,
     AssignmentsContComponent,
     HomeComponent,
@@ -107,8 +109,10 @@ import {VmCreateComponent} from './dialogs/vm-create/vm-create.component';
     UnauthorizedTabComponent,
     TeamsContComponent,
     TeamProposeComponent,
-    VmsComponent,
-    VmCreateComponent
+    VmCreateComponent,
+    VmsStudComponent,
+    VmsProfComponent,
+    VmsProfContComponent
   ],
   providers: [HttpClientModule, {provide: MAT_DIALOG_DEFAULT_OPTIONS, useValue: {hasBackdrop: false}},
     {provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true}],

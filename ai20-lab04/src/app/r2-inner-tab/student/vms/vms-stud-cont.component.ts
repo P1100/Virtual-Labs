@@ -1,35 +1,32 @@
 import {Component, OnDestroy} from '@angular/core';
-import {Student} from '../../../models/student.model';
-import {Subscription} from 'rxjs';
 import {ActivatedRoute} from '@angular/router';
 import {AlertsService} from '../../../services/alerts.service';
 import {CourseService} from '../../../services/course.service';
-import {VlServiceService} from '../../../services/vl-service.service';
 import {Team} from '../../../models/team.model';
+import {Student} from '../../../models/student.model';
+import {Subscription} from 'rxjs';
+import {VlServiceService} from '../../../services/vl-service.service';
 
 @Component({
-  selector: 'app-teams-cont',
+  selector: 'app-vms-stud-cont',
   template: `
-    <app-teams [enrolledWithoutTeams]="enrolledWithoutTeams" (forceUploadData)="onForceUploadData($event)"
-               [courseId]="courseId" [courseMin]="courseMin" [courseMax]="courseMax"
-               [activeTeam]="activeTeam" [notActiveTeams]="notActiveTeams" [hideAllGUItillActiveTeamIsChecked]="hideAllGUItillActiveTeamIsChecked"
-               [idStringLoggedStudent]="idStringLoggedStudent"
-               (cleanupEvent)="onCleanupEvent()">
-    </app-teams>
+    <app-vms-stud (forceUploadData)="onForceUploadData($event)"
+                  [courseId]="courseId"
+                  [activeTeam]="activeTeam" [hideAllGUItillActiveTeamIsChecked]="hideAllGUItillActiveTeamIsChecked"
+                  [idStringLoggedStudent]="idStringLoggedStudent"
+    >
+    </app-vms-stud>
   `,
   styleUrls: []
 })
-export class TeamsContComponent implements OnDestroy {
+export class VmsStudContComponent implements OnDestroy {
   enrolledWithoutTeams: Student[] = []; // always includes logged user
   courseId = '0';
   subEnrolledWithTeams: Subscription = null;
   subRouteParam: Subscription = null;
   subCurrentCourse: Subscription;
-  courseMin: number;
-  courseMax: number;
   idStringLoggedStudent: string;
   activeTeam: Team = null;
-  notActiveTeams: Team[];
   hideAllGUItillActiveTeamIsChecked = true; // to avoid loading flicker
 
   constructor(private courseService: CourseService, private activatedRoute: ActivatedRoute, private alertsService: AlertsService,
@@ -47,20 +44,13 @@ export class TeamsContComponent implements OnDestroy {
     this.subCurrentCourse?.unsubscribe();
   }
   onForceUploadData($event: any) {
-    this.subEnrolledWithTeams = this.courseService.getEnrolledWithoutTeam(this.courseId).subscribe((students: Student[]) => {
-        this.enrolledWithoutTeams = Array.isArray(students) ? [...students] : [];
-      }, error => this.alertsService.setAlert('danger', 'Couldn\'t get enrolled without a team! ' + error)
-    );
     this.vlServiceService.getTeamsUser(+this.idStringLoggedStudent, this.courseId).subscribe(teams => {
         let countActive = 0;
         this.activeTeam = null;
-        this.notActiveTeams = [];
         for (let team of teams) {
           if (team.active == true) {
             this.activeTeam = team;
             countActive++;
-          } else {
-            this.notActiveTeams.push(team);
           }
         }
         if (countActive > 1) {
@@ -69,18 +59,7 @@ export class TeamsContComponent implements OnDestroy {
           throw new Error('Corrupted Team data: ' + JSON.stringify(teams));
         }
         this.hideAllGUItillActiveTeamIsChecked = false;
-      }, error => this.alertsService.setAlert('danger', 'Couldn\'t get teams! ' + error)
+      }, error => this.alertsService.setAlert('danger', 'Couldn\'t get student teams! ' + error)
     );
-    this.subCurrentCourse = this.courseService.getCourse(this.courseId).subscribe(c => {
-      this.courseMin = c[0].minSizeTeam;
-      this.courseMax = c[0].maxSizeTeam;
-      if (this.courseMin >= this.courseMax) {
-        this.alertsService.setAlert('danger', 'Error! Invalid courses team constrains, please concat the administrator');
-        throw new Error('Error! Invalid courses team constrains, please concat the administrator');
-      }
-    }, error => this.alertsService.setAlert('danger', 'Couldn\'t get course info! ' + error));
-  }
-  onCleanupEvent() {
-    this.vlServiceService.cleanUpTeams(this.courseId).subscribe();
   }
 }
