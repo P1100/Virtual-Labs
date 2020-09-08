@@ -25,12 +25,19 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.imageio.ImageIO;
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
-import java.io.IOException;
+import java.awt.*;
+import java.awt.font.TextAttribute;
+import java.awt.image.BufferedImage;
+import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.text.AttributedString;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Optional;
 
@@ -51,6 +58,9 @@ public class VLServiceImpl implements VLService {
   TeamRepository teamRepository;
   @Autowired
   StudentRepository studentRepository;
+  // Path of a file
+  static String FILEPATH = "src/main/resources/test";
+  static File file = new File(FILEPATH);
 
   @Override
   @PreAuthorize("hasRole('STUDENT')") // TODO: security checks
@@ -70,6 +80,31 @@ public class VLServiceImpl implements VLService {
     byte[] content = null;
     try {
       content = Files.readAllBytes(path);
+      OutputStream os = new FileOutputStream(file);
+      os.write(content);
+      os.close();
+//      Files.write(new File(FILEPATH).toPath(), content);
+
+      BufferedImage image = ImageIO.read(new File(FILEPATH));
+      Font font = new Font("Arial", Font.BOLD, 18);
+      Graphics g = image.getGraphics();
+      g.setFont(font);
+      g.setColor(Color.GREEN);
+      String text = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
+      AttributedString attributedText = new AttributedString(text);
+      attributedText.addAttribute(TextAttribute.FONT, font);
+      attributedText.addAttribute(TextAttribute.FOREGROUND, Color.GREEN);
+      FontMetrics metrics = g.getFontMetrics(font);
+      int positionX = (image.getWidth() - metrics.stringWidth(text));
+      int positionY = (image.getHeight() - metrics.getHeight()) + metrics.getAscent();
+      g.drawString(attributedText.getIterator(), positionX, positionY);
+
+//      BufferedImage originalImage = ImageIO.read(new File("c:\\image\\mypic.jpg"));
+      ByteArrayOutputStream baos = new ByteArrayOutputStream();
+      ImageIO.write(image, "jpg", baos);
+      baos.flush();
+      content = baos.toByteArray();
+      baos.close();
     } catch (IOException e) {
     }
     MultipartFile multipartFile = new MockMultipartFile(name, originalFileName, contentType, content);
