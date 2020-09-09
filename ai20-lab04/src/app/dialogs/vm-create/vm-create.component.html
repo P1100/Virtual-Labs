@@ -3,17 +3,17 @@
   <div>
     <mat-form-field class="form-group">
       <mat-label>Vcpu</mat-label>
-      <input matInput #vcpu="ngModel" name="vcpu" [(ngModel)]="vm.vcpu" required type="number" pattern="[1-9][0-9]{0,9}" autocomplete="on" (keyup)="vm.id = vcpu.value">
+      <input matInput #vcpu="ngModel" name="vcpu" [(ngModel)]="vm.vcpu" required type="number" pattern="[1-9][0-9]{0,9}" autocomplete="on">
       <mat-error *ngIf="vcpu.invalid && !vcpu.pristine">Must be a positive number, and not zero</mat-error>
     </mat-form-field>
     <mat-form-field class="form-group">
       <mat-label>RAM</mat-label>
-      <input matInput #ram="ngModel" name="ram" [(ngModel)]="vm.ram" required type="number" pattern="[1-9][0-9]{0,9}" autocomplete="on" (keyup)="vm.id = ram.value">
+      <input matInput #ram="ngModel" name="ram" [(ngModel)]="vm.ram" required type="number" pattern="[1-9][0-9]{0,9}" autocomplete="on">
       <mat-error *ngIf="ram.invalid && !ram.pristine">Must be a positive number, and not zero</mat-error>
     </mat-form-field>
     <mat-form-field class="form-group">
       <mat-label>Disk</mat-label>
-      <input matInput #disk="ngModel" name="disk" [(ngModel)]="vm.disk" required type="number" pattern="[1-9][0-9]{0,9}" autocomplete="on" (keyup)="vm.id = disk.value">
+      <input matInput #disk="ngModel" name="disk" [(ngModel)]="vm.disk" required type="number" pattern="[1-9][0-9]{0,9}" autocomplete="on">
       <mat-error *ngIf="disk.invalid && !disk.pristine">Must be a positive number, and not zero</mat-error>
     </mat-form-field>
   </div>

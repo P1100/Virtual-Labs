@@ -1,0 +1,26 @@
+<h1 mat-dialog-title class="text-center mb-3">Create new Virtual Machine</h1>
+<form #cf="ngForm" (ngSubmit)="!(this.vcpu.value<1 || this.ram.value<1 || this.disk.value<1) && onSubmit()" class="text-center border border-light p-3" [noValidate]="false">
+  <div>
+    <mat-form-field class="form-group">
+      <mat-label>Vcpu</mat-label>
+      <input matInput #vcpu="ngModel" name="vcpu" [(ngModel)]="vm.vcpu" required type="number" [min]="0" [max]="limits.maxVcpu-limits.countVcpu" autocomplete="on">
+      <mat-hint>({{limits.countVcpu}}/{{limits.maxVcpu}} in use)</mat-hint>
+    </mat-form-field>
+    <mat-form-field class="form-group">
+      <mat-label>RAM</mat-label>
+      <input matInput #ram="ngModel" name="ram" [(ngModel)]="vm.ram" required type="number" [min]="0" [max]="limits.maxRam-limits.countRam" autocomplete="on">
+      <mat-hint>({{limits.countRam}}/{{limits.maxRam}} in use)</mat-hint>
+    </mat-form-field>
+    <mat-form-field class="form-group">
+      <mat-label>Disk</mat-label>
+      <input matInput #disk="ngModel" name="disk" [(ngModel)]="vm.disk" required type="number" [min]="0" [max]="limits.maxDisk-limits.countDisk" autocomplete="on">
+      <mat-hint>({{limits.countDisk}}/{{limits.maxDisk}} in use)</mat-hint>
+    </mat-form-field>
+  </div>
+  <br>
+  <mat-error *ngIf="this.vcpu.value<1 || this.ram.value<1 || this.disk.value<1">Invalid value: must be at least 1</mat-error>
+  <div mat-dialog-actions>
+    <button mat-raised-button color="primary" mat-button [disabled]="(!cf.valid) || (this.vcpu.value<1 || this.ram.value<1 || this.disk.value<1)">Edit</button>
+    <button type="button" mat-button (click)="onCancelClick()">Cancel</button>
+  </div>
+</form>

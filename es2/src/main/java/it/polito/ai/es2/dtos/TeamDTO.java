@@ -20,8 +20,8 @@ public class TeamDTO extends RepresentationModel<TeamDTO> {
   private int maxVcpu,
       maxDisk,
       maxRam,
-      maxRunningVM,
-      maxTotVM; // sum of enabled and disabled
+      maxRunningVm,
+      maxTotVm; // sum of enabled and disabled
   @PositiveOrZero
   private long hoursTimeout;
   private Timestamp createdDate;

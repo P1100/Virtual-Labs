@@ -7,8 +7,8 @@ export class Team {
               public maxVcpu: number,
               public maxDisk: number,
               public maxRam: number,
-              public maxRunningVM: number,
-              public maxTotVM: number, // sum of enabled and disabled)
+              public maxRunningVm: number,
+              public maxTotVm: number, // sum of enabled and disabled)
               public disabled: boolean,
               private createdDate: any,
               /* Proposals DTO Transient data */

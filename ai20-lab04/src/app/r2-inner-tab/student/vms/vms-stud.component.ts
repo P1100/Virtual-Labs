@@ -8,7 +8,12 @@ import {Router} from '@angular/router';
 import {Vm} from '../../../models/vm.model';
 import {VmCreateComponent} from '../../../dialogs/vm-create/vm-create.component';
 import {VmEditComponent} from '../../../dialogs/vm-edit/vm-edit.component';
+import {vmConstrains} from './vms-stud-cont.component';
 
+export interface vmEditDialogData {
+  vm: Vm,
+  limits: vmConstrains
+}
 @Component({
   selector: 'app-vms-stud',
   templateUrl: './vms-stud.component.html',
@@ -35,6 +40,8 @@ export class VmsStudComponent implements OnDestroy {
   changeStatusVm = new EventEmitter<any>();
   @Output()
   deleteVm = new EventEmitter<any>();
+  @Input()
+  vmLimits: vmConstrains = null;
 
   constructor(private alertsService: AlertsService, private courseService: CourseService, public dialog: MatDialog, private router: Router) {
   }
@@ -69,17 +76,19 @@ export class VmsStudComponent implements OnDestroy {
       this.alertsService.setAlert('danger', 'Error: no active team for this course');
       return;
     }
-    const proposalData: Vm = {vcpu: 1, disk:1, ram:1, active:false, studentCreatorId: +this.idStringLoggedStudent, teamId:+this.activeTeam.id};
+    let proposalData: vmEditDialogData = {} as vmEditDialogData;
+    proposalData.vm = {vcpu: 1, disk: 1, ram: 1, active: false, studentCreatorId: +this.idStringLoggedStudent, teamId: +this.activeTeam.id};
+    proposalData.limits = this.vmLimits;
     this.dialogRef = this.dialog.open(VmEditComponent, {
       maxWidth: '400px', autoFocus: true, hasBackdrop: true, disableClose: true, closeOnNavigation: true, data: proposalData
     });
     this.dialogRef.afterClosed().subscribe((res: string) => {
-        this.dialogRef = null;
-        if (res != undefined) {
-          setTimeout(() => {
-            this.forceRefreshData.emit(null);
-          }, 150);
-        }
+      this.dialogRef = null;
+      if (res != undefined) {
+        setTimeout(() => {
+          this.forceRefreshData.emit(null);
+        }, 150);
+      }
       }, () => this.alertsService.setAlert('danger', 'VM edit dialog error')
     );
   }

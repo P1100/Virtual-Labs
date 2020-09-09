@@ -34,7 +34,7 @@ public class Team {
   private boolean active = false; // false for proposals
   private boolean disabled = false;
   @PositiveOrZero
-  private int maxVcpu, maxDisk, maxRam, maxRunningVM, maxTotVM; // sum of enabled and disabled
+  private int maxVcpu, maxDisk, maxRam, maxRunningVm, maxTotVm; // sum of enabled and disabled
   @CreationTimestamp
   private Timestamp createdDate;
 
@@ -84,8 +84,8 @@ public class Team {
         ", maxVcpu=" + maxVcpu +
         ", maxDisk=" + maxDisk +
         ", maxRam=" + maxRam +
-        ", maxRunningVM=" + maxRunningVM +
-        ", maxTotVM=" + maxTotVM +
+        ", maxRunningVM=" + maxRunningVm +
+        ", maxTotVM=" + maxTotVm +
         ", createdDate=" + createdDate +
         '}';
   }

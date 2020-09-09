@@ -8,11 +8,23 @@ import {VlServiceService} from '../../../services/vl-service.service';
 import {mergeMap} from 'rxjs/operators';
 import {Vm} from '../../../models/vm.model';
 
+export interface vmConstrains {
+  countVcpu: number,
+  countRam: number,
+  countDisk: number,
+  countTotVm: number,
+  countRunningVm: number,
+  maxVcpu: number,
+  maxRam: number,
+  maxDisk: number,
+  maxTotVm: number,
+  maxRunningVm: number
+}
 @Component({
   selector: 'app-vms-stud-cont',
   template: `
     <app-vms-stud (forceRefreshData)="onForceRefreshData($event)"
-                  [activeTeam]="activeTeam" [vms]="vms"
+                  [activeTeam]="activeTeam" [vms]="vms" [vmLimits]="vmLimits"
                   [idStringLoggedStudent]="idStringLoggedStudent"
                   (changeStatusVm)="changeStatusVm($event)"
                   (deleteVm)="deleteVm($event)"
@@ -26,12 +38,8 @@ export class VmsStudContComponent implements OnDestroy {
   subRouteParam: Subscription = null;
   idStringLoggedStudent: string;
   activeTeam: Team = null;
-  vms: Vm[];
-  private countVcpu: number;
-  private countRam: number;
-  private countDisk: number;
-  private countTotVm: number;
-  private countRunningVm: number;
+  vms: Vm[] = [];
+  vmLimits: vmConstrains = {} as vmConstrains;
 
   constructor(private courseService: CourseService, private activatedRoute: ActivatedRoute, private alertsService: AlertsService,
               private vlServiceService: VlServiceService) {
@@ -66,17 +74,23 @@ export class VmsStudContComponent implements OnDestroy {
         return this.vlServiceService.getTeamVms(this.activeTeam.id);
       })).subscribe((vmsTeam: Vm[]) => {
         this.vms = vmsTeam;
-        this.countVcpu = vmsTeam.reduce((previousValue, currentValue, currentIndex, array) => {
+        this.vmLimits.countVcpu = vmsTeam.reduce((previousValue, currentValue, currentIndex, array) => {
           return previousValue + currentValue.vcpu;
         }, 0);
-        this.countRam = vmsTeam.reduce((previousValue, currentValue, currentIndex, array) => {
+        this.vmLimits.countRam = vmsTeam.reduce((previousValue, currentValue, currentIndex, array) => {
           return previousValue + currentValue.vcpu;
         }, 0);
-        this.countDisk = vmsTeam.reduce((previousValue, currentValue, currentIndex, array) => {
+        this.vmLimits.countDisk = vmsTeam.reduce((previousValue, currentValue, currentIndex, array) => {
           return previousValue + currentValue.vcpu;
         }, 0);
-        this.countTotVm = vmsTeam.length;
-        this.countRunningVm = vmsTeam.filter(v => v.active).length;
+        this.vmLimits.countTotVm = vmsTeam.length;
+        this.vmLimits.countRunningVm = vmsTeam.filter(v => v.active).length;
+        this.vmLimits.maxVcpu = this.activeTeam.maxVcpu;
+        this.vmLimits.maxRam = this.activeTeam.maxRam;
+        this.vmLimits.maxDisk = this.activeTeam.maxDisk;
+        this.vmLimits.maxRunningVm = this.activeTeam.maxRunningVm;
+        this.vmLimits.maxTotVm = this.activeTeam.maxTotVm;
+
       },
       error => this.alertsService.setAlert('danger', 'Couldn\'t get virtual machines! ' + error)
     );
