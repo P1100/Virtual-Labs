@@ -6,7 +6,6 @@ import it.polito.ai.es2.dtos.TeamDTO;
 import it.polito.ai.es2.services.interfaces.TeamService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.hateoas.CollectionModel;
-import org.springframework.hateoas.Link;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.constraints.NotBlank;
@@ -30,18 +29,6 @@ public class APITeams_RestController {
       modelHelper.enrich(member);
     }
     return members;
-  }
-
-  @GetMapping({"", "/"})
-  public CollectionModel<TeamDTO> getAllTeams() {
-    List<TeamDTO> allTeams = teamService.getAllTeams();
-    for (TeamDTO teamDTO : allTeams) {
-      modelHelper.enrich(teamDTO);
-    }
-    Link link = linkTo(methodOn(APITeams_RestController.class)
-        .getAllTeams()).withSelfRel();
-    CollectionModel<TeamDTO> result = CollectionModel.of(allTeams, link);
-    return result;
   }
 
 //  @GetMapping("/{teamId}")

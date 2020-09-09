@@ -1,10 +1,5 @@
-<h2 style="margin-left: 25px; margin-right: 5px">VM List
-  <button mat-raised-button color="primary" (click)="openCreateVmDialog()" style=" float: right;">
-    <mat-icon>playlist_add</mat-icon>
-    Create new VM
-  </button>
-</h2>
-<table mat-table [dataSource]="dataSourceTeams" multiTemplateDataRows class="mat-elevation-z8">
+<h2 style="margin-left: 25px; margin-right: 5px">Teams and Virtual Machines</h2>
+<table mat-table matSort [dataSource]="dataSourceTeams" multiTemplateDataRows class="mat-elevation-z8">
   <ng-container matColumnDef="nav">
     <th *matHeaderCellDef mat-header-cell>
     </th>
@@ -13,58 +8,62 @@
       <mat-icon *ngIf="!(expandedElement && element == expandedElement)">expand_more</mat-icon>
     </td>
   </ng-container>
-  <ng-container matColumnDef="proposer">
-    <th *matHeaderCellDef mat-header-cell>proposer</th>
+  <ng-container matColumnDef="teamName">
+    <th *matHeaderCellDef mat-header-cell>Team name</th>
     <td *matCellDef="let element" mat-cell>
-      {{element?.students[0]?.firstName + ' ' + element?.students[0]?.lastName}}
+      {{element.name}}
     </td>
   </ng-container>
-  <ng-container matColumnDef="confirm">
-    <th *matHeaderCellDef mat-header-cell>confirm</th>
+  <ng-container matColumnDef="creator">
+    <th *matHeaderCellDef mat-header-cell>Creator</th>
     <td *matCellDef="let element; let k = dataIndex" mat-cell>
-      <a *ngIf="+idStringLoggedStudent != dataSourceTeams.data[k]?.students[0]?.id" mat-stroked-button href="{{element?.students[indexLoggedUser[k]]?.urlTokenConfirm}}" target="_blank">Link</a>
+      {{element.students[0].firstName + ' ' + element.students[0].lastName}}
     </td>
   </ng-container>
-  <ng-container matColumnDef="reject">
-    <th *matHeaderCellDef mat-header-cell>reject</th>
-    <td *matCellDef="let element; let k = dataIndex" mat-cell>{{k}}{{indexLoggedUser[k]}}{{element.id}}
-      <a *ngIf="+idStringLoggedStudent != dataSourceTeams?.data[k]?.students[0]?.id" mat-stroked-button [href]="element?.students[indexLoggedUser[k]]?.urlTokenReject" target="_blank">Link</a>
+  <ng-container matColumnDef="createdDate">
+    <th *matHeaderCellDef mat-header-cell mat-sort-header>Created Date</th>
+    <td *matCellDef="let element; let k = dataIndex" mat-cell>
+      {{element.createdDate | date:'medium'}}
     </td>
   </ng-container>
-  <ng-container matColumnDef="{{column}}" *ngFor="let column of columnsToLoadFromTeam">
-    <th mat-header-cell *matHeaderCellDef> {{column}} </th>
-    <td mat-cell *matCellDef="let element"> {{column == 'createdDate' ? (element[column] | date:'medium') : element[column]}}</td>
+  <ng-container matColumnDef="editResources">
+    <th *matHeaderCellDef mat-header-cell>Edit VM Resources</th>
+    <td *matCellDef="let element; let k = dataIndex" mat-cell>
+      <button mat-stroked-button (click)="openEditTeamDialog(this.element)">
+        <mat-icon>edit</mat-icon>
+      </button>
+    </td>
   </ng-container>
   <!-- Expanded Content Column - The detail row is made up of this one column that spans across all columns -->
   <ng-container matColumnDef="expandedDetail" id="innerExpandedTable">
-    <td mat-cell *matCellDef="let element" [attr.colspan]="columnsToDisplayStudent.length">
+    <td mat-cell *matCellDef="let element" [attr.colspan]="columnsToDisplayVm.length">
       <div class="example-element-detail" [@detailExpand]="element == expandedElement ? 'expanded' : 'collapsed'">
-        <table mat-table matSort [dataSource]="element.students">
-          <ng-container matColumnDef="id">
-            <th mat-header-cell mat-sort-header *matHeaderCellDef>Id</th>
-            <td mat-cell *matCellDef="let element">{{element.id}}</td>
+        <table mat-table matSort [dataSource]="element.vms">
+          <ng-container matColumnDef="creator">
+            <th *matHeaderCellDef mat-header-cell>creator</th>
+            <td *matCellDef="let element" mat-cell>{{element.creator.firstName}} {{element.creator.lastName}}
+            </td>
           </ng-container>
-          <ng-container matColumnDef="firstName">
-            <th mat-header-cell mat-sort-header *matHeaderCellDef>firstName</th>
-            <td mat-cell *matCellDef="let element"> {{element.firstName}} </td>
+          <ng-container matColumnDef="active">
+            <th *matHeaderCellDef mat-header-cell>isActive</th>
+            <td *matCellDef="let element" mat-cell>{{element.active}}
+            </td>
           </ng-container>
-          <ng-container matColumnDef="lastName">
-            <th mat-header-cell mat-sort-header *matHeaderCellDef>lastName</th>
-            <td mat-cell *matCellDef="let element"> {{element.lastName}} </td>
+          <ng-container matColumnDef="imageVm">
+            <th *matHeaderCellDef mat-header-cell>direct link image</th>
+            <td *matCellDef="let element" mat-cell>
+              <a mat-stroked-button href="{{element.imageVm.directLink}}" target="_blank">Open</a>
+            </td>
           </ng-container>
-          <ng-container matColumnDef="email">
-            <th mat-header-cell mat-sort-header *matHeaderCellDef>email</th>
-            <td mat-cell *matCellDef="let element"> {{element.email}} </td>
-          </ng-container>
-          <tr mat-header-row *matHeaderRowDef="columnsToDisplayStudent; sticky: true"></tr>
-          <tr mat-row *matRowDef="let row; columns: columnsToDisplayStudent;"></tr>
+          <tr mat-header-row *matHeaderRowDef="columnsToDisplayVm; sticky: true"></tr>
+          <tr mat-row *matRowDef="let row; columns: columnsToDisplayVm;"></tr>
         </table>
       </div>
     </td>
   </ng-container>
 
-  <tr mat-header-row *matHeaderRowDef="columnsToDisplayProposals"></tr>
-  <tr mat-row *matRowDef="let element; columns: columnsToDisplayProposals"
+  <tr mat-header-row *matHeaderRowDef="displayedColumnsTeams"></tr>
+  <tr mat-row *matRowDef="let element; columns: displayedColumnsTeams"
       [class]="element.disabled ? 'disabled' : 'example-element-row'" [class.example-expanded-row]="expandedElement === element"
       (click)="expandedElement = (expandedElement === element) ? null : element">
   </tr>

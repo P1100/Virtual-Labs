@@ -15,6 +15,8 @@ public interface TeamService {
   @PreAuthorize("hasRole('ADMIN')")
   List<TeamDTO> getAllTeams();
 
+  @PreAuthorize("hasRole('PROFESSOR')") List<TeamDTO> getAllActiveTeamsForCourse(@NotNull String courseId);
+
   List<StudentDTO> getEnrolledWithoutTeam(String courseName);
 
   @PreAuthorize("hasRole('STUDENT') or hasRole('PROFESSOR')")

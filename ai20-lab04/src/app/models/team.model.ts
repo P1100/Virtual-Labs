@@ -12,6 +12,7 @@ export class Team {
               public disabled: boolean,
               private createdDate: any,
               /* Proposals DTO Transient data */
-              public students?: Student[]) {
+              public students?: Student[],
+              public vms?: Team[]) {
   }
 }

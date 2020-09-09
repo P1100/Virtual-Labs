@@ -32,7 +32,7 @@ export interface dialogProposalData {
 })
 export class TeamsComponent implements AfterViewInit, OnDestroy {
   displayedColumnsTable1: string[] = ['select', 'id', 'firstName', 'lastName', 'email'];
-  columnsToDisplayProposals: string[] = ['nav', 'proposer', 'name', 'createdDate', 'confirm', 'reject']; //, 'accept', 'reject'
+  columnsToDisplayTable2: string[] = ['nav', 'proposer', 'name', 'createdDate', 'confirm', 'reject']; //, 'accept', 'reject'
   columnsToLoadFromTeam: string[] = ['name', 'active', 'disabled', 'createdDate'];
   columnsToDisplayStudent: string[] = ['id', 'firstName', 'lastName'];
   expandedElement: Student | null;

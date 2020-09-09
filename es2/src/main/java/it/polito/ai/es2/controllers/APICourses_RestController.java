@@ -155,6 +155,11 @@ public class APICourses_RestController {
     return CollectionModel.of(teams,
         linkTo(methodOn(APICourses_RestController.class).getTeamsForCourse(courseId)).withSelfRel());
   }
+  @GetMapping("/{courseId}/teams/active")
+  public List<TeamDTO> getAllActiveTeamsForCourse(@PathVariable String courseId) {
+    List<TeamDTO> teams = teamService.getAllActiveTeamsForCourse(courseId);
+    return teams;
+  }
 
   @GetMapping("/{courseId}/students-with-team")
   public CollectionModel<StudentDTO> getEnrolledWithTeam(@PathVariable String courseId) {

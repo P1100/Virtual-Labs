@@ -15,6 +15,7 @@ import it.polito.ai.es2.services.interfaces.NotificationService;
 import it.polito.ai.es2.services.interfaces.TeamService;
 import lombok.extern.java.Log;
 import org.modelmapper.ModelMapper;
+import org.modelmapper.TypeToken;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
@@ -91,6 +92,13 @@ public class TeamServiceImpl extends CommonURL implements TeamService {
     log.info("getTeam(" + teamId + ")");
     if (teamId == null) throw new NullParameterException("null team parameter");
     return teamRepository.findById(teamId).map(x -> modelMapper.map(x, TeamDTO.class));
+  }
+
+  @PreAuthorize("hasRole('PROFESSOR')")
+  @Override public List<TeamDTO> getAllActiveTeamsForCourse(@NotNull String courseId) {
+    log.info("getAllActiveTeams(" + courseId + ")");
+    List<Team> teams = teamRepository.findAllByActiveIsTrueAndDisabledIsFalseAndCourse_Id(courseId);
+    return modelMapper.map(teams, new TypeToken<List<TeamDTO>>() {}.getType());
   }
 
   /**

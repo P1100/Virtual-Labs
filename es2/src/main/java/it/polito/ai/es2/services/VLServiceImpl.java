@@ -144,8 +144,7 @@ public class VLServiceImpl implements VLService {
     if (teamOptional.isEmpty())
       throw new TeamNotFoundException(teamId);
     Team t = teamOptional.get();
-    List<VmDTO> vmDTOS = modelMapper.map(t.getVms(), new TypeToken<List<VmDTO>>() {
-    }.getType());
+    List<VmDTO> vmDTOS = modelMapper.map(t.getVms(), new TypeToken<List<VmDTO>>() {}.getType());
     return vmDTOS;
   }
 

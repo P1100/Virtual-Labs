@@ -27,4 +27,6 @@ public class TeamDTO extends RepresentationModel<TeamDTO> {
   private Timestamp createdDate;
   @Transient
   private List<StudentDTO> students; // first student is the proposer
+  @Transient
+  private List<VmDTO> vms; // first student is the proposer
 }

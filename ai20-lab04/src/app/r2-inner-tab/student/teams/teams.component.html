@@ -130,8 +130,8 @@
           </td>
         </ng-container>
 
-        <tr mat-header-row *matHeaderRowDef="columnsToDisplayProposals"></tr>
-        <tr mat-row *matRowDef="let element; columns: columnsToDisplayProposals"
+        <tr mat-header-row *matHeaderRowDef="columnsToDisplayTable2"></tr>
+        <tr mat-row *matRowDef="let element; columns: columnsToDisplayTable2"
             [class]="element.disabled ? 'disabled' : 'example-element-row'"
             [class.example-expanded-row]="expandedElement === element"
             (click)="expandedElement = (expandedElement === element) ? null : element">

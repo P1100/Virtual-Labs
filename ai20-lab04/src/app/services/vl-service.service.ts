@@ -60,4 +60,12 @@ export class VlServiceService {
   deleteVm(vmId: number) {
     return this.http.delete(`${this.baseUrlApi}/vms/vm/${vmId}`, AppSettings.JSON_HTTP_OPTIONS).pipe(catchError(formatErrors));
   }
+  getActiveTeamForCourse(courseId: string) {
+    return this.http.get<HateoasModel>(`${this.baseUrlApi}/courses/${courseId}/teams/active`, AppSettings.JSON_HTTP_OPTIONS)
+      .pipe(
+        map(object => removeHATEOAS(object)),
+        retry(AppSettings.RETRIES), catchError(formatErrors),
+        tap(res => console.log('--getActiveTeamForCourse:', res))
+      );
+  }
 }

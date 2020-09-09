@@ -1,14 +1,12 @@
-import {CourseService} from '../../../services/course.service';
-import {Router} from '@angular/router';
 import {animate, state, style, transition, trigger} from '@angular/animations';
-import {Student} from '../../../models/student.model';
 import {MatDialog, MatDialogRef, MatDialogState} from '@angular/material/dialog';
 import {MatTableDataSource} from '@angular/material/table';
-import {Component, EventEmitter, Input, OnDestroy, Output} from '@angular/core';
-import {VmCreateComponent} from '../../../dialogs/vm-create/vm-create.component';
-import {AlertsService} from '../../../services/alerts.service';
+import {AfterViewInit, Component, EventEmitter, Input, OnDestroy, Output, ViewChild} from '@angular/core';
 import {Team} from '../../../models/team.model';
 import {Vm} from '../../../models/vm.model';
+import {MatSort} from '@angular/material/sort';
+import {VmCreateComponent} from '../../../dialogs/vm-create/vm-create.component';
+import {AlertsService} from '../../../services/alerts.service';
 
 @Component({
   selector: 'app-vms-prof',
@@ -22,21 +20,35 @@ import {Vm} from '../../../models/vm.model';
     ]),
   ],
 })
-export class VmsProfComponent implements OnDestroy {
-  displayedColumnsTable1: string[] = ['select', 'id', 'firstName', 'lastName', 'email'];
-  columnsToDisplayProposals: string[] = ['nav', 'proposer', 'name', 'createdDate', 'confirm', 'reject']; //, 'accept', 'reject'
-  columnsToLoadFromTeam: string[] = ['name', 'active', 'disabled', 'createdDate'];
-  columnsToDisplayStudent: string[] = ['id', 'firstName', 'lastName'];
-  expandedElement: Student | null;
-
-  dataSourceEnrolledNoTeams = new MatTableDataSource<Student>();
+export class VmsProfComponent implements OnDestroy, AfterViewInit {
+  displayedColumnsTeams: string[] = ['teamName', 'creator', 'createdDate', 'editResources'];
+//   columnsToDisplayTable2: string[] = ['nav', 'proposer', 'name', 'createdDate', 'confirm', 'reject']; //, 'accept', 'reject'
+  columnsToDisplayVm: string[] = ['creator', 'active', 'imageVm'];
+//   columnsToDisplayStudent: string[] = ['id', 'firstName', 'lastName'];
+  expandedElement: Vm | null;
+//
+//   dataSourceEnrolledNoTeams = new MatTableDataSource<Student>();
   dataSourceTeams = new MatTableDataSource<Team>();
   dialogRef: MatDialogRef<any>;
   @Input()
   idStringLoggedStudent;
-  indexLoggedUser: any[] = [];
+//   indexLoggedUser: any[] = [];
+  @ViewChild(MatSort, {static: true}) sort: MatSort;
   @Input()
-  activeTeam: Team = null;
+  set teams(array: Team[]) {
+    if (array == null) {
+      this.dataSourceTeams.data = [];
+      return;
+    }
+    this.dataSourceTeams.data = [...array];
+    // Should help making sure table data is loaded when sort is assigned
+    setTimeout(() => {
+      this.dataSourceTeams.sort = this.sort;
+    });
+  }
+  get teams(): Team[] {
+    return this.dataSourceTeams.data;
+  }
   innerCourseId: string;
   @Input()
   set courseId(id: string) {
@@ -47,27 +59,25 @@ export class VmsProfComponent implements OnDestroy {
   }
   @Output()
   forceRefreshData = new EventEmitter<any>();
-  @Input()
-  hideAllGUItillActiveTeamIsChecked: boolean;
 
-  constructor(private alertsService: AlertsService, private courseService: CourseService, public dialog: MatDialog, private router: Router) {
+  ngAfterViewInit() {
+    this.dataSourceTeams.sort = this.sort;
   }
 
-  openCreateVmDialog() {
+  constructor(private alertsService: AlertsService, public dialog: MatDialog) {
+  }
+
+  openEditTeamDialog(team: Team) {
     if (this.dialogRef?.getState() == MatDialogState.OPEN) {
       throw new Error('Error: Dialog stil open while opening a new one');
     }
-    if (this.activeTeam?.id == null) {
-      this.alertsService.setAlert('danger', 'Error: no active team for this course');
-      return;
-    }
-    const proposalData: Vm = new Vm(0, 0, 0, false, +this.idStringLoggedStudent, +this.activeTeam.id);
+    // const proposalData: Vm = new Vm(0, 0, 0, false, +this.idStringLoggedStudent, +this.activeTeam.id);
     this.dialogRef = this.dialog.open(VmCreateComponent, {
-      maxWidth: '400px', autoFocus: true, hasBackdrop: true, disableClose: true, closeOnNavigation: true, data: proposalData
+      maxWidth: '400px', autoFocus: true, hasBackdrop: true, disableClose: true, closeOnNavigation: true, data: []
     });
     this.dialogRef.afterClosed().subscribe((res: string) => {
-        this.dialogRef = null;
-        if (res != undefined) {
+      this.dialogRef = null;
+      if (res != undefined) {
           setTimeout(() => {
             this.forceRefreshData.emit(null);
           }, 150);
