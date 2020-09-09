@@ -15,6 +15,7 @@ import {Vm} from '../../../models/vm.model';
                   [activeTeam]="activeTeam" [vms]="vms"
                   [idStringLoggedStudent]="idStringLoggedStudent"
                   (changeStatusVm)="changeStatusVm($event)"
+                  (deleteVm)="deleteVm($event)"
     >
     </app-vms-stud>
   `,
@@ -71,5 +72,11 @@ export class VmsStudContComponent implements OnDestroy {
        this.vms.filter(v => v.id == event.id)[0].active = event.status;
        },
        error => this.alertsService.setAlert('danger', 'Couldn\'t change vm status. ' + error));
+  }
+  deleteVm(vmId: number) {
+    this.vlServiceService.deleteVm(vmId).subscribe(value => {
+        this.vms = this.vms.filter(v => v.id != vmId);
+        },
+      error => this.alertsService.setAlert('danger', 'Couldn\'t delete vm. ' + error));
   }
 }

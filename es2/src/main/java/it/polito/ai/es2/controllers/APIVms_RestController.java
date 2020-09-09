@@ -40,4 +40,9 @@ public class APIVms_RestController {
   public void disableVm(@PathVariable @NotNull Long vmId) {
     vlService.changeStatusVm(vmId, false);
   }
+
+  @DeleteMapping("/vm/{vmId}")
+  public void deleteVm(@PathVariable @NotNull Long vmId) {
+    vlService.deleteVm(vmId);
+  }
 }

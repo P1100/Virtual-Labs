@@ -37,7 +37,7 @@ public class VM {
   @JoinTable
   private List<Student> sharedOwners = new ArrayList<>();
 
-  @OneToOne()
+  @OneToOne(cascade = CascadeType.ALL)
   @JoinColumn
   private Image imageVm;
 

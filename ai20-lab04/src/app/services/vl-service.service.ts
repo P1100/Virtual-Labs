@@ -54,4 +54,7 @@ export class VlServiceService {
       return this.http.put(`${this.baseUrlApi}/vms/vm/${vmId}/disable`, null, AppSettings.JSON_HTTP_OPTIONS).pipe(catchError(formatErrors));
     }
   }
+  deleteVm(vmId: number) {
+    return this.http.delete(`${this.baseUrlApi}/vms/vm/${vmId}`, AppSettings.JSON_HTTP_OPTIONS).pipe(catchError(formatErrors));
+  }
 }

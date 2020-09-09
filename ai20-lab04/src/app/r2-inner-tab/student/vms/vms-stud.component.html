@@ -40,7 +40,7 @@
   <ng-container matColumnDef="delete">
     <th *matHeaderCellDef mat-header-cell>delete vm</th>
     <td *matCellDef="let element" mat-cell>
-      <button mat-stroked-button color="warn">
+      <button mat-stroked-button color="warn" (click)="deleteVm.emit(element.id)">
         <mat-icon>delete_outline</mat-icon>
       </button>
     </td>

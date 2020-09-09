@@ -14,4 +14,6 @@ public interface VLService {
   List<VmDTO> getTeamVm(@NotNull Long teamId);
 
   void changeStatusVm(@NotNull Long vmId, boolean newStatus);
+
+  void deleteVm(Long vmId);
 }

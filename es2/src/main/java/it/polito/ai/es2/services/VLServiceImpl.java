@@ -167,11 +167,25 @@ public class VLServiceImpl implements VLService {
     }.getType());
     return vmDTOS;
   }
+
   @Override public void changeStatusVm(@NotNull Long vmId, boolean newStatus) {
     vmRepository.findById(vmId).map(vm -> {
       vm.setActive(newStatus);
       return true;
     }).orElseThrow(() -> new VmNotFoundException(vmId));
     return;
+  }
+
+  @Override public void deleteVm(Long vmId) {
+    VM vm = vmRepository.findById(vmId).orElseThrow(() -> new VmNotFoundException(vmId));
+    for (Student sharedOwner : vm.getSharedOwners()) {
+      sharedOwner.getVmsCreated().remove(vm);
+      sharedOwner.getVmsOwned().remove(vm);
+    }
+    vm.getCreator().getVmsOwned().remove(vm);
+    vm.getCreator().getVmsCreated().remove(vm);
+    vm.getTeam().getVms().remove(vm);
+    // image handled by remove cascade
+    vmRepository.deleteById(vm.getId());
   }
 }
