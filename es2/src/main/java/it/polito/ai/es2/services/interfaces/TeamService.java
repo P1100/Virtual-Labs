@@ -4,6 +4,7 @@ import it.polito.ai.es2.dtos.StudentDTO;
 import it.polito.ai.es2.dtos.TeamDTO;
 import org.springframework.security.access.prepost.PreAuthorize;
 
+import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import java.util.List;
@@ -12,8 +13,7 @@ public interface TeamService {
   @PreAuthorize("hasRole('PROFESSOR') or @mySecurityChecker.isTeamOwner(#teamId,authentication.principal.username)")
   List<StudentDTO> getMembers(@NotNull Long teamId);
 
-  @PreAuthorize("hasRole('ADMIN')")
-  List<TeamDTO> getAllTeams();
+  @PreAuthorize("hasRole('PROFESSOR')") void updateTeamConstrains(@Valid TeamDTO teamDTO);
 
   @PreAuthorize("hasRole('PROFESSOR')") List<TeamDTO> getAllActiveTeamsForCourse(@NotNull String courseId);
 

@@ -90,7 +90,6 @@ export class VmsStudContComponent implements OnDestroy {
         this.vmLimits.maxDisk = this.activeTeam.maxDisk;
         this.vmLimits.maxRunningVm = this.activeTeam.maxRunningVm;
         this.vmLimits.maxTotVm = this.activeTeam.maxTotVm;
-        console.log('vmLimits ', this.vmLimits);
 
       },
       error => this.alertsService.setAlert('danger', 'Couldn\'t get virtual machines! ' + error)

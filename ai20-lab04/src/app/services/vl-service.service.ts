@@ -68,4 +68,7 @@ export class VlServiceService {
         tap(res => console.log('--getActiveTeamForCourse:', res))
       );
   }
+  editTeam(team: Team): Observable<any> {
+    return this.http.put(`${this.baseUrlApi}/teams`, JSON.stringify(team), AppSettings.JSON_HTTP_OPTIONS);
+  }
 }

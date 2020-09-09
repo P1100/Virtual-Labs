@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.hateoas.CollectionModel;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;
 import java.util.List;
 
@@ -54,6 +55,11 @@ public class APITeams_RestController {
   @PostMapping("/propose/{courseId}/{teamName}/{hoursTimeout}/{memberIds}")
   public TeamDTO proposeTeam(@PathVariable String courseId, @PathVariable String teamName, @PathVariable List<Long> memberIds, @PathVariable Long hoursTimeout) {
     return teamService.proposeTeam(courseId, teamName, memberIds, hoursTimeout);
+  }
+
+  @PutMapping()
+  public void updateTeam(@Valid @RequestBody TeamDTO teamDTO) {
+    teamService.updateTeamConstrains(teamDTO);
   }
 
   @PostMapping("/evict/{teamId}")

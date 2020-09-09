@@ -7,7 +7,7 @@ import {AlertsService} from '../../services/alerts.service';
 import {VlServiceService} from '../../services/vl-service.service';
 import {Team} from '../../models/team.model';
 import {interval, Observable, Subscription} from 'rxjs';
-import {switchMap} from 'rxjs/operators';
+import {startWith, switchMap} from 'rxjs/operators';
 
 export interface vmsValuesInUse {
   maxVcpuUsed: number,
@@ -32,7 +32,7 @@ export class TeamEditComponent implements OnDestroy {
     const source: Observable<any> = interval(3000);
     const subscribe = source.subscribe(val => console.log(val));
     this.team = data;
-    this.realTimeUpdateSub = source.pipe(switchMap(value => {
+    this.realTimeUpdateSub = source.pipe(startWith('startImmediately'), switchMap(() => {
       return this.vlServiceService.getTeamVms(this.team.id);
     }))
       .subscribe((vmsTeam: Vm[]) => {
@@ -57,17 +57,17 @@ export class TeamEditComponent implements OnDestroy {
     this.dialogRef.close(); // same value as when you press ESC (undefined)
   }
   onSubmit() {
-    // this.vlServiceService.editVm(this.vm).subscribe(
-    //   () => {
-    //     this.dialogRef.close(0);
-    //     this.router.navigateByUrl(this.router.url);
-    //     this.alertsService.setAlert('success', 'Vm edited!');
-    //   },
-    //   e => {
-    //     this.dialogRef.close();
-    //     this.alertsService.setAlert('danger', 'Couldn\'t edit vm. ' + e);
-    //   }
-    // );
+    this.vlServiceService.editTeam(this.team).subscribe(
+      () => {
+        this.dialogRef.close(0);
+        this.router.navigateByUrl(this.router.url);
+        this.alertsService.setAlert('success', 'Vm edited!');
+      },
+      e => {
+        this.dialogRef.close();
+        this.alertsService.setAlert('danger', 'Couldn\'t edit vm. ' + e);
+      }
+    );
   }
   ngOnDestroy(): void {
     this.realTimeUpdateSub.unsubscribe();

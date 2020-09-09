@@ -76,12 +76,12 @@ public class TeamServiceImpl extends CommonURL implements TeamService {
   //  /**
 //   * GET {@link APITeams_RestController#getAllTeams()}
 //   */
-  @Override
-  @PreAuthorize("hasRole('ADMIN')")
-  public List<TeamDTO> getAllTeams() {
-    log.info("getAllTeams()");
-    return teamRepository.findAll().stream().map(x -> modelMapper.map(x, TeamDTO.class)).collect(Collectors.toList());
-  }
+//  @Override
+//  @PreAuthorize("hasRole('ADMIN')")
+//  public List<TeamDTO> getAllTeams() {
+//    log.info("getAllTeams()");
+//    return teamRepository.findAll().stream().map(x -> modelMapper.map(x, TeamDTO.class)).collect(Collectors.toList());
+//  }
 
   //  /**
 //   * GET {@link it.polito.ai.es2.controllers.APITeams_RestController#getTeam(Long)}
@@ -92,6 +92,19 @@ public class TeamServiceImpl extends CommonURL implements TeamService {
     log.info("getTeam(" + teamId + ")");
     if (teamId == null) throw new NullParameterException("null team parameter");
     return teamRepository.findById(teamId).map(x -> modelMapper.map(x, TeamDTO.class));
+  }
+
+  @PreAuthorize("hasRole('PROFESSOR')")
+  @Override public void updateTeamConstrains(@Valid TeamDTO teamDTO) {
+    Team team = teamRepository.findById(teamDTO.getId()).orElse(null);
+    if (team == null)
+      throw new TeamNotFoundException(teamDTO.getId());
+    team.setMaxDisk(teamDTO.getMaxDisk());
+    team.setMaxRam(teamDTO.getMaxRam());
+    team.setMaxVcpu(teamDTO.getMaxVcpu());
+    team.setMaxTotVm(teamDTO.getMaxTotVm());
+    team.setMaxRunningVm(teamDTO.getMaxRunningVm());
+    team.setName(teamDTO.getName());
   }
 
   @PreAuthorize("hasRole('PROFESSOR')")
