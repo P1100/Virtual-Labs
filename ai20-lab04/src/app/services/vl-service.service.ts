@@ -32,16 +32,9 @@ export class VlServiceService {
         tap(res => console.log('--getTeamsUser:', res))
       );
   }
-  createVm(vm: Vm): Observable<any> {
-    return this.http.post(`${this.baseUrlApi}/vms`, JSON.stringify(vm), AppSettings.JSON_HTTP_OPTIONS)
-      .pipe(tap(x => console.log('INSIDE CREATE VM', x)),catchError(formatErrors));
-
-  }
   getTeamVms(teamId: number): Observable<Vm[]> {
-    console.log('getTeamVms: ', teamId);
     return this.http.get<HateoasModel>(`${this.baseUrlApi}/vms/${teamId}`, AppSettings.JSON_HTTP_OPTIONS)
       .pipe(
-        tap(x => console.log('getTeamVms-tap: ', x)),
         map(object => removeHATEOAS(object)),
         retry(AppSettings.RETRIES), catchError(formatErrors),
         tap(res => console.log('--getTeamVms:', res))
@@ -53,6 +46,16 @@ export class VlServiceService {
     } else {
       return this.http.put(`${this.baseUrlApi}/vms/vm/${vmId}/disable`, null, AppSettings.JSON_HTTP_OPTIONS).pipe(catchError(formatErrors));
     }
+  }
+  createVm(vm: Vm): Observable<any> {
+    return this.http.post(`${this.baseUrlApi}/vms`, JSON.stringify(vm), AppSettings.JSON_HTTP_OPTIONS)
+      .pipe(tap(x => console.log('--createVm:', x)), catchError(formatErrors));
+
+  }
+  editVm(vm: Vm): Observable<any> {
+    return this.http.put(`${this.baseUrlApi}/vms`, JSON.stringify(vm), AppSettings.JSON_HTTP_OPTIONS)
+      .pipe(tap(x => console.log('--editVm:', x)), catchError(formatErrors));
+
   }
   deleteVm(vmId: number) {
     return this.http.delete(`${this.baseUrlApi}/vms/vm/${vmId}`, AppSettings.JSON_HTTP_OPTIONS).pipe(catchError(formatErrors));

@@ -1,5 +1,6 @@
 package it.polito.ai.es2.securityconfig;
 
+import it.polito.ai.es2.dtos.VmDTO;
 import it.polito.ai.es2.entities.*;
 import it.polito.ai.es2.repositories.CourseRepository;
 import it.polito.ai.es2.repositories.StudentRepository;
@@ -28,15 +29,31 @@ public class MySecurityChecker {
   @Autowired
   VMRepository vmRepository;
 
-  public boolean isVmOwner(Long teamId, String principal_username) {
+  public boolean isVmOwner(Long vmId, String principal_username) {
     Long studentId = Long.valueOf(principal_username);
-    if (teamId == null || principal_username.isBlank())
+    if (vmId == null || principal_username.isBlank())
       return false;
     Student student = studentRepository.findById(studentId).orElse(null);
     if (student == null) {
       return false;
     }
-    VM savedVm = vmRepository.findById(teamId).orElse(null);
+    VM savedVm = vmRepository.findById(vmId).orElse(null);
+    if (savedVm == null)
+      return false;
+    // Changes to SharedOwners are not saved, without neither transactional nor save
+    List<Student> owners = new ArrayList<>(savedVm.getSharedOwners());
+    owners.add(savedVm.getCreator());
+    return owners.stream().anyMatch(owner -> studentId.equals(owner.getId()));
+  }
+  public boolean isVmOwner(VmDTO vmDTO, String principal_username) {
+    Long studentId = Long.valueOf(principal_username);
+    if (vmDTO == null || principal_username.isBlank())
+      return false;
+    Student student = studentRepository.findById(studentId).orElse(null);
+    if (student == null) {
+      return false;
+    }
+    VM savedVm = vmRepository.findById(vmDTO.getId()).orElse(null);
     if (savedVm == null)
       return false;
     // Changes to SharedOwners are not saved, without neither transactional nor save

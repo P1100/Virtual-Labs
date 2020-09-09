@@ -68,7 +68,7 @@ export class VmsStudComponent implements OnDestroy {
       }, () => this.alertsService.setAlert('danger', 'VM creation dialog error')
     );
   }
-  openEditVmDialog() {
+  openEditVmDialog(vm: Vm) {
     if (this.dialogRef?.getState() == MatDialogState.OPEN) {
       throw new Error('Error: Dialog stil open while opening a new one');
     }
@@ -77,7 +77,9 @@ export class VmsStudComponent implements OnDestroy {
       return;
     }
     let proposalData: vmEditDialogData = {} as vmEditDialogData;
-    proposalData.vm = {vcpu: 1, disk: 1, ram: 1, active: false, studentCreatorId: +this.idStringLoggedStudent, teamId: +this.activeTeam.id};
+    proposalData.vm = {...vm};
+    proposalData.vm.studentCreatorId = +this.idStringLoggedStudent;
+    proposalData.vm.teamId = +this.activeTeam.id;
     proposalData.limits = this.vmLimits;
     this.dialogRef = this.dialog.open(VmEditComponent, {
       maxWidth: '400px', autoFocus: true, hasBackdrop: true, disableClose: true, closeOnNavigation: true, data: proposalData

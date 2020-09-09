@@ -38,11 +38,11 @@ public class TeamVmConstrainsValidator implements ConstraintValidator<TeamVmCons
     if (countRam > t.getMaxRam()) {
       sb.append(countRam + " is bigger than team max ram " + t.getMaxRam() + " \n");
     }
-    if (countRunningVM > t.getMaxRunningVM()) {
-      sb.append("Max running VM limit reached: " + countRunningVM + "/" + t.getMaxRunningVM() + " \n");
+    if (countRunningVM > t.getMaxRunningVm()) {
+      sb.append("Max running VM limit reached: " + countRunningVM + "/" + t.getMaxRunningVm() + " \n");
     }
-    if (countTotVM > t.getMaxTotVM()) {
-      sb.append("Max VM limit reached: " + countTotVM + "/" + t.getMaxTotVM() + " \n");
+    if (countTotVM > t.getMaxTotVm()) {
+      sb.append("Max VM limit reached: " + countTotVM + "/" + t.getMaxTotVm() + " \n");
     }
     if (sb.length() > 0) {
       context.disableDefaultConstraintViolation();

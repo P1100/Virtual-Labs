@@ -78,10 +78,10 @@ export class VmsStudContComponent implements OnDestroy {
           return previousValue + currentValue.vcpu;
         }, 0);
         this.vmLimits.countRam = vmsTeam.reduce((previousValue, currentValue, currentIndex, array) => {
-          return previousValue + currentValue.vcpu;
+          return previousValue + currentValue.ram;
         }, 0);
         this.vmLimits.countDisk = vmsTeam.reduce((previousValue, currentValue, currentIndex, array) => {
-          return previousValue + currentValue.vcpu;
+          return previousValue + currentValue.disk;
         }, 0);
         this.vmLimits.countTotVm = vmsTeam.length;
         this.vmLimits.countRunningVm = vmsTeam.filter(v => v.active).length;
@@ -90,6 +90,7 @@ export class VmsStudContComponent implements OnDestroy {
         this.vmLimits.maxDisk = this.activeTeam.maxDisk;
         this.vmLimits.maxRunningVm = this.activeTeam.maxRunningVm;
         this.vmLimits.maxTotVm = this.activeTeam.maxTotVm;
+        console.log('vmLimits ', this.vmLimits);
 
       },
       error => this.alertsService.setAlert('danger', 'Couldn\'t get virtual machines! ' + error)

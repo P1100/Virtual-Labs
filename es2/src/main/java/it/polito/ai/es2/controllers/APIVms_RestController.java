@@ -21,6 +21,10 @@ public class APIVms_RestController {
   public void createVm(@Valid @RequestBody VmDTO vm) {
     vlService.createVm(vm);
   }
+  @PutMapping
+  public void editVm(@Valid @RequestBody VmDTO vm) {
+    vlService.editVm(vm);
+  }
 
   @GetMapping
   public void getAllVm(@Valid @RequestBody VmDTO vm) {

@@ -48,7 +48,7 @@
   <ng-container matColumnDef="edit">
     <th *matHeaderCellDef mat-header-cell>edit resources</th>
     <td *matCellDef="let element" mat-cell>
-      <button mat-stroked-button [disabled]="element.active" (click)="openEditVmDialog()">
+      <button mat-stroked-button [disabled]="element.active" (click)="openEditVmDialog(this.element)">
         <mat-icon>edit</mat-icon>
       </button>
     </td>

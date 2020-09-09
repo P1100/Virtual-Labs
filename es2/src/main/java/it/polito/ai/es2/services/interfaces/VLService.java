@@ -15,5 +15,7 @@ public interface VLService {
 
   void changeStatusVm(@NotNull Long vmId, boolean newStatus);
 
+  @PreAuthorize("hasRole('STUDENT') and @mySecurityChecker.isVmOwner(#vmId,authentication.principal.username)") void editVm(@Valid VmDTO vmDTO);
+
   void deleteVm(@NotNull Long vmId);
 }

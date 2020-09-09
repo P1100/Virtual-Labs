@@ -87,7 +87,7 @@ public class VLServiceImpl implements VLService {
       throw new TeamNotFoundException(vmDTO.getTeamId());
     vm.addSetCreator(studentOptional.get());
     vm.addSetTeam(teamOptional.get());
-    
+
     Set<ConstraintViolation<VM>> constraintViolations = validator.validate(vm);
     if (!constraintViolations.isEmpty()) {
       throw new ConstraintViolationException(constraintViolations);
@@ -162,7 +162,14 @@ public class VLServiceImpl implements VLService {
     }).orElseThrow(() -> new VmNotFoundException(vmId));
     return;
   }
-
+  @PreAuthorize("hasRole('STUDENT') and @mySecurityChecker.isVmOwner(#vmDTO,authentication.principal.username)")
+  @Override public void editVm(@Valid VmDTO vmDTO) {
+    VM vm = vmRepository.findById(vmDTO.getId()).orElseThrow(() -> new VmNotFoundException(vmDTO.getId()));
+    vm.setVcpu(vmDTO.getVcpu());
+    vm.setRam(vmDTO.getRam());
+    vm.setDisk(vmDTO.getDisk());
+    vmRepository.save(vm);
+  }
   @PreAuthorize("hasRole('STUDENT') and @mySecurityChecker.isVmOwner(#vmId,authentication.principal.username)")
   @Override public void deleteVm(@NotNull Long vmId) {
     VM vm = vmRepository.findById(vmId).orElseThrow(() -> new VmNotFoundException(vmId));

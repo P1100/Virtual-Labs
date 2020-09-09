@@ -15,28 +15,33 @@ import {vmConstrains} from '../../r2-inner-tab/student/vms/vms-stud-cont.compone
 export class VmEditComponent {
   vm: Vm = {vcpu: null, disk: null, ram: null, active: false};
   limits: vmConstrains;
+  startingVcpuVm: number;
+  startingRamVm: number;
+  startingDiskVm: number;
 
   constructor(private dialogRef: MatDialogRef<VmEditComponent>, private router: Router, @Inject(MAT_DIALOG_DATA) public data: vmEditDialogData,
               private alertsService: AlertsService, private vlServiceService: VlServiceService) {
     this.vm = {...data.vm};
     this.limits = {...data.limits};
-    console.log('EDIT DIALOG:', this.data, this.vm, this.limits);
+    this.startingVcpuVm = this.vm.vcpu;
+    this.startingRamVm = this.vm.ram;
+    this.startingDiskVm = this.vm.disk;
+    console.log('DISK', this.vm.disk);
   }
 
   onCancelClick(): void {
     this.dialogRef.close(); // same value as when you press ESC (undefined)
   }
   onSubmit() {
-    console.log('submit');
-    this.vlServiceService.createVm(this.vm).subscribe(
+    this.vlServiceService.editVm(this.vm).subscribe(
       () => {
         this.dialogRef.close(0);
         this.router.navigateByUrl(this.router.url);
-        this.alertsService.setAlert('success', 'Vm created!');
+        this.alertsService.setAlert('success', 'Vm edited!');
       },
       e => {
         this.dialogRef.close();
-        this.alertsService.setAlert('danger', 'Couldn\'t create vm. ' + e);
+        this.alertsService.setAlert('danger', 'Couldn\'t edit vm. ' + e);
       }
     );
   }
