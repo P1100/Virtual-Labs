@@ -76,6 +76,7 @@ export class VmsStudContComponent implements OnDestroy {
   deleteVm(vmId: number) {
     this.vlServiceService.deleteVm(vmId).subscribe(value => {
         this.vms = this.vms.filter(v => v.id != vmId);
+        this.alertsService.setAlert('info', 'Vm deleted!');
         },
       error => this.alertsService.setAlert('danger', 'Couldn\'t delete vm. ' + error));
   }

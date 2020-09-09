@@ -65,7 +65,7 @@ public class VLServiceImpl implements VLService {
   static File file = new File(FILEPATH);
 
   @Override
-  @PreAuthorize("hasRole('STUDENT')") // TODO: security checks
+  @PreAuthorize("hasRole('STUDENT')")
   public void createVm(@Valid VmDTO vmDTO) {
     log.info("createVm(" + vmDTO + ", " + vmDTO.getTeamId() + ", " + vmDTO.getStudentCreatorId() + ")");
     VM vm = new VM();
@@ -157,8 +157,8 @@ public class VLServiceImpl implements VLService {
     vmRepository.save(vm);
   }
 
-  @Override
-  public List<VmDTO> getTeamVm(@NotNull Long teamId) {
+  @PreAuthorize("hasRole('STUDENT')")
+  @Override public List<VmDTO> getTeamVms(@NotNull Long teamId) {
     Optional<Team> teamOptional = teamRepository.findById(teamId);
     if (teamOptional.isEmpty())
       throw new TeamNotFoundException(teamId);
@@ -168,6 +168,7 @@ public class VLServiceImpl implements VLService {
     return vmDTOS;
   }
 
+  @PreAuthorize("hasRole('STUDENT') and @mySecurityChecker.isVmOwner(#vmId,authentication.principal.username)")
   @Override public void changeStatusVm(@NotNull Long vmId, boolean newStatus) {
     vmRepository.findById(vmId).map(vm -> {
       vm.setActive(newStatus);
@@ -176,7 +177,8 @@ public class VLServiceImpl implements VLService {
     return;
   }
 
-  @Override public void deleteVm(Long vmId) {
+  @PreAuthorize("hasRole('STUDENT') and @mySecurityChecker.isVmOwner(#vmId,authentication.principal.username)")
+  @Override public void deleteVm(@NotNull Long vmId) {
     VM vm = vmRepository.findById(vmId).orElseThrow(() -> new VmNotFoundException(vmId));
     for (Student sharedOwner : vm.getSharedOwners()) {
       sharedOwner.getVmsCreated().remove(vm);

@@ -1,16 +1,13 @@
 package it.polito.ai.es2.securityconfig;
 
-import it.polito.ai.es2.entities.Course;
-import it.polito.ai.es2.entities.Professor;
-import it.polito.ai.es2.entities.Student;
-import it.polito.ai.es2.entities.Team;
+import it.polito.ai.es2.entities.*;
 import it.polito.ai.es2.repositories.CourseRepository;
 import it.polito.ai.es2.repositories.StudentRepository;
 import it.polito.ai.es2.repositories.TeamRepository;
+import it.polito.ai.es2.repositories.VMRepository;
 import lombok.extern.java.Log;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -19,7 +16,7 @@ import java.util.List;
  * Example: @mySecurityChecker.isCourseOwner(#courseName,authentication.principal.username))
  */
 @Service
-@Transactional
+//@Transactional // DONT! I dont need detached entities saved in this class (read only)
 @Log
 public class MySecurityChecker {
   @Autowired
@@ -28,6 +25,25 @@ public class MySecurityChecker {
   CourseRepository courseRepository;
   @Autowired
   TeamRepository teamRepository;
+  @Autowired
+  VMRepository vmRepository;
+
+  public boolean isVmOwner(Long teamId, String principal_username) {
+    Long studentId = Long.valueOf(principal_username);
+    if (teamId == null || principal_username.isBlank())
+      return false;
+    Student student = studentRepository.findById(studentId).orElse(null);
+    if (student == null) {
+      return false;
+    }
+    VM savedVm = vmRepository.findById(teamId).orElse(null);
+    if (savedVm == null)
+      return false;
+    // Changes to SharedOwners are not saved, without neither transactional nor save
+    List<Student> owners = new ArrayList<>(savedVm.getSharedOwners());
+    owners.add(savedVm.getCreator());
+    return owners.stream().anyMatch(owner -> studentId.equals(owner.getId()));
+  }
 
   public boolean isStudentEnrolled(String courseId, String principal_username) {
     Long studentId = Long.valueOf(principal_username);

@@ -27,8 +27,8 @@ public class APIVms_RestController {
   }
 
   @GetMapping("/{teamId}")
-  public List<VmDTO> getTeamVm(@PathVariable @NotNull Long teamId) {
-    return vlService.getTeamVm(teamId);
+  public List<VmDTO> getTeamVms(@PathVariable @NotNull Long teamId) {
+    return vlService.getTeamVms(teamId);
   }
 
   @PutMapping("/vm/{vmId}/enable")

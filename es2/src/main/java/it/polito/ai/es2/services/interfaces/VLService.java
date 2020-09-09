@@ -11,9 +11,9 @@ public interface VLService {
   @PreAuthorize("hasRole('STUDENT')")
   void createVm(@Valid VmDTO vmDTO);
 
-  List<VmDTO> getTeamVm(@NotNull Long teamId);
+  List<VmDTO> getTeamVms(@NotNull Long teamId);
 
   void changeStatusVm(@NotNull Long vmId, boolean newStatus);
 
-  void deleteVm(Long vmId);
+  void deleteVm(@NotNull Long vmId);
 }
