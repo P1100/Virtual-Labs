@@ -5,8 +5,8 @@ import {AfterViewInit, Component, EventEmitter, Input, OnDestroy, Output, ViewCh
 import {Team} from '../../../models/team.model';
 import {Vm} from '../../../models/vm.model';
 import {MatSort} from '@angular/material/sort';
-import {VmCreateComponent} from '../../../dialogs/vm-create/vm-create.component';
 import {AlertsService} from '../../../services/alerts.service';
+import {TeamEditComponent} from '../../../dialogs/team-edit/team-edit.component';
 
 @Component({
   selector: 'app-vms-prof',
@@ -22,17 +22,12 @@ import {AlertsService} from '../../../services/alerts.service';
 })
 export class VmsProfComponent implements OnDestroy, AfterViewInit {
   displayedColumnsTeams: string[] = ['teamName', 'creator', 'createdDate', 'editResources'];
-//   columnsToDisplayTable2: string[] = ['nav', 'proposer', 'name', 'createdDate', 'confirm', 'reject']; //, 'accept', 'reject'
   columnsToDisplayVm: string[] = ['creator', 'active', 'imageVm'];
-//   columnsToDisplayStudent: string[] = ['id', 'firstName', 'lastName'];
   expandedElement: Vm | null;
-//
-//   dataSourceEnrolledNoTeams = new MatTableDataSource<Student>();
   dataSourceTeams = new MatTableDataSource<Team>();
   dialogRef: MatDialogRef<any>;
   @Input()
   idStringLoggedStudent;
-//   indexLoggedUser: any[] = [];
   @ViewChild(MatSort, {static: true}) sort: MatSort;
   @Input()
   set teams(array: Team[]) {
@@ -41,7 +36,6 @@ export class VmsProfComponent implements OnDestroy, AfterViewInit {
       return;
     }
     this.dataSourceTeams.data = [...array];
-    // Should help making sure table data is loaded when sort is assigned
     setTimeout(() => {
       this.dataSourceTeams.sort = this.sort;
     });
@@ -71,17 +65,11 @@ export class VmsProfComponent implements OnDestroy, AfterViewInit {
     if (this.dialogRef?.getState() == MatDialogState.OPEN) {
       throw new Error('Error: Dialog stil open while opening a new one');
     }
-    // const proposalData: Vm = new Vm(0, 0, 0, false, +this.idStringLoggedStudent, +this.activeTeam.id);
-    this.dialogRef = this.dialog.open(VmCreateComponent, {
-      maxWidth: '400px', autoFocus: true, hasBackdrop: true, disableClose: true, closeOnNavigation: true, data: []
+    this.dialogRef = this.dialog.open(TeamEditComponent, {
+      maxWidth: '400px', autoFocus: true, hasBackdrop: true, disableClose: true, closeOnNavigation: true, data: team
     });
     this.dialogRef.afterClosed().subscribe((res: string) => {
-      this.dialogRef = null;
-      if (res != undefined) {
-          setTimeout(() => {
-            this.forceRefreshData.emit(null);
-          }, 150);
-        }
+        this.dialogRef = null;
       }, () => this.alertsService.setAlert('danger', 'VM creation dialog error')
     );
   }

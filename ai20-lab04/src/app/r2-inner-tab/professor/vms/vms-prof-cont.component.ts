@@ -9,8 +9,7 @@ import {VlServiceService} from '../../../services/vl-service.service';
 @Component({
   selector: 'app-vms-prof-cont',
   template: `
-    <app-vms-prof (forceRefreshData)="onForceRefreshData($event)"
-                  [courseId]="courseId" [idStringLoggedStudent]="idStringLoggedStudent"
+    <app-vms-prof [courseId]="courseId" [idStringLoggedStudent]="idStringLoggedStudent"
                   [teams]="teams"
     >
     </app-vms-prof>
@@ -18,14 +17,9 @@ import {VlServiceService} from '../../../services/vl-service.service';
   styleUrls: []
 })
 export class VmsProfContComponent implements OnDestroy {
-  // enrolledWithoutTeams: Student[] = []; // always includes logged user
   courseId = '0';
-  // subEnrolledWithTeams: Subscription = null;
   subRouteParam: Subscription = null;
-  // subCurrentCourse: Subscription;
   idStringLoggedStudent: string;
-  // activeTeam: Team = null;
-  // hideAllGUItillActiveTeamIsChecked = true; // to avoid loading flicker
   teams: Team[];
 
   constructor(private courseService: CourseService, private activatedRoute: ActivatedRoute, private alertsService: AlertsService,
@@ -33,20 +27,15 @@ export class VmsProfContComponent implements OnDestroy {
     this.idStringLoggedStudent = localStorage.getItem('id');
     this.subRouteParam = this.activatedRoute.paramMap.subscribe(() => {
         this.courseId = this.activatedRoute.parent.snapshot.paramMap.get('id');
-        this.onForceRefreshData(null);
+        this.vlServiceService.getActiveTeamForCourse(this.courseId).subscribe(teams => {
+            this.teams = teams;
+          },
+          error => this.alertsService.setAlert('danger', 'Couldn\'t get course teams! ' + error)
+        );
       }
     );
   }
   ngOnDestroy(): void {
     this.subRouteParam?.unsubscribe();
-    // this.subEnrolledWithTeams?.unsubscribe();
-    // this.subCurrentCourse?.unsubscribe();
-  }
-  onForceRefreshData($event: any) {
-    this.vlServiceService.getActiveTeamForCourse(this.courseId).subscribe(teams => {
-        this.teams = teams;
-      },
-      error => this.alertsService.setAlert('danger', 'Couldn\'t get course teams! ' + error)
-    );
   }
 }

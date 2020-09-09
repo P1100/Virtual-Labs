@@ -138,7 +138,7 @@ public class VLServiceImpl implements VLService {
     vmRepository.save(vm);
   }
 
-  @PreAuthorize("hasRole('STUDENT')")
+  @PreAuthorize("hasRole('STUDENT') or hasRole('PROFESSOR')")
   @Override public List<VmDTO> getTeamVms(@NotNull Long teamId) {
     Optional<Team> teamOptional = teamRepository.findById(teamId);
     if (teamOptional.isEmpty())

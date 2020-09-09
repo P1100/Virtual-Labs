@@ -1,4 +1,5 @@
 import {Student} from './student.model';
+import {Vm} from './vm.model';
 
 export class Team {
   constructor(public id: number,
@@ -13,6 +14,6 @@ export class Team {
               private createdDate: any,
               /* Proposals DTO Transient data */
               public students?: Student[],
-              public vms?: Team[]) {
+              public vms?: Vm[]) {
   }
 }
