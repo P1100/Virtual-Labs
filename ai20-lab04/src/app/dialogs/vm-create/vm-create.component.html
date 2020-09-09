@@ -19,7 +19,7 @@
   </div>
   <br>
   <div mat-dialog-actions>
-    <button mat-raised-button color="primary" mat-button [disabled]="(!cf.valid || cf.pristine) && !checkboxNoValidate">Create</button>
+    <button mat-raised-button color="primary" mat-button [disabled]="(!cf.valid) && !checkboxNoValidate">Create</button>
     <button type="button" mat-button (click)="onCancelClick()">Cancel</button>
     <mat-checkbox style="margin: 2px" name="noval" [(ngModel)]="checkboxNoValidate" *ngIf="showCheckboxNoValidateForTesting">Form No Validate</mat-checkbox>
   </div>

@@ -97,7 +97,7 @@ export class TeamsComponent implements AfterViewInit, OnDestroy {
   @Input()
   courseMax: number;
   @Output()
-  forceUploadData = new EventEmitter<any>();
+  forceRefreshData = new EventEmitter<any>();
   loggedUserStudent: Student;
   @Input()
   hideAllGUItillActiveTeamIsChecked: boolean;
@@ -137,7 +137,7 @@ export class TeamsComponent implements AfterViewInit, OnDestroy {
       this.dialogRef = null;
       if (res != undefined) {
         setTimeout(() => {
-          this.forceUploadData.emit(null);
+          this.forceRefreshData.emit(null);
         }, 150);
         }
       }, () => this.alertsService.setAlert('danger', 'Team Proposal dialog error')
@@ -169,7 +169,7 @@ export class TeamsComponent implements AfterViewInit, OnDestroy {
     this.cleanupEvent.emit();
     setTimeout(() => {
       this.router.navigateByUrl(this.router.url);
-      this.forceUploadData.emit();
+      this.forceRefreshData.emit();
     }, 150)
   }
 }

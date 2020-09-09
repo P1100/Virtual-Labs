@@ -12,7 +12,6 @@ import it.polito.ai.es2.repositories.TeamRepository;
 import it.polito.ai.es2.repositories.VMRepository;
 import it.polito.ai.es2.services.exceptions.StudentNotFoundException;
 import it.polito.ai.es2.services.exceptions.TeamNotFoundException;
-import it.polito.ai.es2.services.exceptions.VmException;
 import it.polito.ai.es2.services.exceptions.VmNotFoundException;
 import it.polito.ai.es2.services.interfaces.ImageService;
 import it.polito.ai.es2.services.interfaces.VLService;
@@ -28,7 +27,10 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.imageio.ImageIO;
+import javax.validation.ConstraintViolation;
+import javax.validation.ConstraintViolationException;
 import javax.validation.Valid;
+import javax.validation.Validator;
 import javax.validation.constraints.NotNull;
 import java.awt.*;
 import java.awt.font.TextAttribute;
@@ -40,8 +42,10 @@ import java.nio.file.Paths;
 import java.text.AttributedString;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 @Service
 @Transactional
@@ -60,8 +64,9 @@ public class VLServiceImpl implements VLService {
   TeamRepository teamRepository;
   @Autowired
   StudentRepository studentRepository;
-  // Path of a file
-  static String FILEPATH = "src/main/resources/test";
+  @Autowired
+  Validator validator;
+  static String FILEPATH = "src/main/resources/test"; // Path of temp file
   static File file = new File(FILEPATH);
 
   @Override
@@ -82,34 +87,10 @@ public class VLServiceImpl implements VLService {
       throw new TeamNotFoundException(vmDTO.getTeamId());
     vm.addSetCreator(studentOptional.get());
     vm.addSetTeam(teamOptional.get());
-
-    Team t = teamOptional.get();
-    int maxVcpu = 0;
-    int maxDisk = 0;
-    int maxRam = 0;
-    int maxRunningVM = 0;
-    int maxTotVM = 0;
-    for (VM v : t.getVms()) {
-      maxVcpu += v.getVcpu();
-      maxRam += v.getRam();
-      maxDisk += v.getDisk();
-      maxRunningVM += v.isActive() ? 1 : 0;
-      maxTotVM += 1;
-    }
-    if (maxVcpu > t.getMaxVcpu()) {
-      throw new VmException(maxVcpu + " is bigger than team max vcpu " + t.getMaxVcpu() + " \n");
-    }
-    if (maxDisk > t.getMaxDisk()) {
-      throw new VmException(maxDisk + " is bigger than team max disk " + t.getMaxDisk() + " \n");
-    }
-    if (maxRam > t.getMaxRam()) {
-      throw new VmException(maxRam + " is bigger than team max ram " + t.getMaxRam() + " \n");
-    }
-    if (maxRunningVM > t.getMaxRunningVM()) {
-      throw new VmException(maxRunningVM + " is bigger than team max running vm " + t.getMaxRunningVM() + " \n");
-    }
-    if (maxTotVM > t.getMaxTotVM()) {
-      throw new VmException(maxTotVM + " is bigger than team max tot vm " + t.getMaxTotVM() + " \n");
+    
+    Set<ConstraintViolation<VM>> constraintViolations = validator.validate(vm);
+    if (!constraintViolations.isEmpty()) {
+      throw new ConstraintViolationException(constraintViolations);
     }
 
     ImageDTO imageDTO = null;
@@ -172,6 +153,11 @@ public class VLServiceImpl implements VLService {
   @Override public void changeStatusVm(@NotNull Long vmId, boolean newStatus) {
     vmRepository.findById(vmId).map(vm -> {
       vm.setActive(newStatus);
+      Set<ConstraintViolation<VM>> constraintViolations = validator.validate(vm);
+      if (!constraintViolations.isEmpty()) {
+        Set<String> messages = new HashSet<>(constraintViolations.size());
+        throw new ConstraintViolationException(constraintViolations);
+      }
       return true;
     }).orElseThrow(() -> new VmNotFoundException(vmId));
     return;

@@ -10,7 +10,7 @@ import {VlServiceService} from '../../../services/vl-service.service';
 @Component({
   selector: 'app-vms-prof-cont',
   template: `
-    <app-vms-prof (forceUploadData)="onForceUploadData($event)"
+    <app-vms-prof (forceRefreshData)="onForceRefreshData($event)"
                   [courseId]="courseId"
                   [activeTeam]="activeTeam" [hideAllGUItillActiveTeamIsChecked]="hideAllGUItillActiveTeamIsChecked"
                   [idStringLoggedStudent]="idStringLoggedStudent"
@@ -34,7 +34,7 @@ export class VmsProfContComponent implements OnDestroy {
     this.idStringLoggedStudent = localStorage.getItem('id');
     this.subRouteParam = this.activatedRoute.paramMap.subscribe(() => {
         this.courseId = this.activatedRoute.parent.snapshot.paramMap.get('id');
-        this.onForceUploadData(null);
+        this.onForceRefreshData(null);
       }
     );
   }
@@ -43,7 +43,7 @@ export class VmsProfContComponent implements OnDestroy {
     this.subEnrolledWithTeams?.unsubscribe();
     this.subCurrentCourse?.unsubscribe();
   }
-  onForceUploadData($event: any) {
+  onForceRefreshData($event: any) {
     this.vlServiceService.getTeamsUser(+this.idStringLoggedStudent, this.courseId).subscribe(teams => {
         let countActive = 0;
         this.activeTeam = null;

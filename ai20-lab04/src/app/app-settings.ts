@@ -32,7 +32,7 @@ export class AppSettings {
   ];
 }
 
-/* HATEOAS api DESIGN: all http returned objects are converted to array (empty, full, or singleton), to uniform handling. TODO: look for alternatives, like @Projection */
+/* HATEOAS api DESIGN: all http returned objects are converted to array (empty, full, or singleton), to uniform handling. Alternatives: @Projection */
 export function removeHATEOAS(container: HateoasModel): any[] {
   if (container == null) {
     return [];
@@ -87,12 +87,11 @@ export function removeHATEOAS(container: HateoasModel): any[] {
 export function getSafeDeepCopyToArray(ss: any): any[] {
   return Array.isArray(ss) ? [...ss] : (ss != null ? [{...ss}] : []);
 }
-// TODO: test responseErrorString format
 export function formatErrors(error: any) {
-  let responseErrorString = error?.error?.message; // (`${(error?.error?.error == null ? (typeof (error?.error) == 'string' ? error?.error : Object.keys(error?.error)) : error?.error?.error + ' - ' + error?.error?.message)}`);
+  let responseErrorString = error?.error?.message;
   if (AppSettings.devtest) {
     responseErrorString = responseErrorString + ` [${error?.error?.status} ${error?.error?.error}]`;
-    console.error('FOMART:', error, responseErrorString);
+    console.error('FOMART: ', error, responseErrorString);
   }
   return throwError(responseErrorString);
 }

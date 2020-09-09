@@ -10,7 +10,7 @@ import {Team} from '../../../models/team.model';
 @Component({
   selector: 'app-teams-cont',
   template: `
-    <app-teams [enrolledWithoutTeams]="enrolledWithoutTeams" (forceUploadData)="onForceUploadData($event)"
+    <app-teams [enrolledWithoutTeams]="enrolledWithoutTeams" (forceRefreshData)="onForceRefreshData($event)"
                [courseId]="courseId" [courseMin]="courseMin" [courseMax]="courseMax"
                [activeTeam]="activeTeam" [notActiveTeams]="notActiveTeams" [hideAllGUItillActiveTeamIsChecked]="hideAllGUItillActiveTeamIsChecked"
                [idStringLoggedStudent]="idStringLoggedStudent"
@@ -37,7 +37,7 @@ export class TeamsContComponent implements OnDestroy {
     this.idStringLoggedStudent = localStorage.getItem('id');
     this.subRouteParam = this.activatedRoute.paramMap.subscribe(() => {
         this.courseId = this.activatedRoute.parent.snapshot.paramMap.get('id');
-        this.onForceUploadData(null);
+        this.onForceRefreshData(null);
       }
     );
   }
@@ -46,7 +46,7 @@ export class TeamsContComponent implements OnDestroy {
     this.subEnrolledWithTeams?.unsubscribe();
     this.subCurrentCourse?.unsubscribe();
   }
-  onForceUploadData($event: any) {
+  onForceRefreshData($event: any) {
     this.subEnrolledWithTeams = this.courseService.getEnrolledWithoutTeam(this.courseId).subscribe((students: Student[]) => {
         this.enrolledWithoutTeams = Array.isArray(students) ? [...students] : [];
       }, error => this.alertsService.setAlert('danger', 'Couldn\'t get enrolled without a team! ' + error)

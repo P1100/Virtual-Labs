@@ -52,6 +52,7 @@ import {VmsStudComponent} from './r2-inner-tab/student/vms/vms-stud.component';
 import {VmCreateComponent} from './dialogs/vm-create/vm-create.component';
 import {VmsProfComponent} from './r2-inner-tab/professor/vms/vms-prof.component';
 import {VmsProfContComponent} from './r2-inner-tab/professor/vms/vms-prof-cont.component';
+import { VmEditComponent } from './dialogs/vm-edit/vm-edit.component';
 
 @NgModule({
   imports: [
@@ -112,7 +113,8 @@ import {VmsProfContComponent} from './r2-inner-tab/professor/vms/vms-prof-cont.c
     VmCreateComponent,
     VmsStudComponent,
     VmsProfComponent,
-    VmsProfContComponent
+    VmsProfContComponent,
+    VmEditComponent
   ],
   providers: [HttpClientModule, {provide: MAT_DIALOG_DEFAULT_OPTIONS, useValue: {hasBackdrop: false}},
     {provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true}],

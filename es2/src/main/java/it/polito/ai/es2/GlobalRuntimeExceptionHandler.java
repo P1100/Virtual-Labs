@@ -39,7 +39,7 @@ public class GlobalRuntimeExceptionHandler
 
   @ExceptionHandler(value = {ConstraintViolationException.class})
   protected ResponseEntity<Object> constraintError(RuntimeException ex, WebRequest request) {
-    String bodyOfResponse = "{\"message\":\"Constraint Violation Error\", \"status\":\"400\", \"error\":\"BAD REQUEST\"}";
+    String bodyOfResponse = "{\"message\":\"Constraint Violation Error " + ex.getMessage().replace('\n', ' ') + "\", \"status\":\"400\", \"error\":\"BAD REQUEST\"}";
     log.severe(ex + " \n " + request);
     HttpHeaders headers = new HttpHeaders();
     headers.setContentType(MediaType.APPLICATION_JSON);

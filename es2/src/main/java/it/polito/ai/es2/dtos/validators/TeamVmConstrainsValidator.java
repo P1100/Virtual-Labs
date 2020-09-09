@@ -16,33 +16,33 @@ public class TeamVmConstrainsValidator implements ConstraintValidator<TeamVmCons
     Team t = vm.getTeam();
     if (t == null)
       return true;
-    int maxVcpu = 0;
-    int maxDisk = 0;
-    int maxRam = 0;
-    int maxRunningVM = 0;
-    int maxTotVM = 0;
+    int countVcput = 0;
+    int countDisk = 0;
+    int countRam = 0;
+    int countRunningVM = 0;
+    int countTotVM = 0;
     for (VM v : vm.getTeam().getVms()) {
-      maxVcpu += v.getVcpu();
-      maxRam += v.getRam();
-      maxDisk += v.getDisk();
-      maxRunningVM += v.isActive() ? 1 : 0;
-      maxTotVM += 1;
+      countVcput += v.getVcpu();
+      countRam += v.getRam();
+      countDisk += v.getDisk();
+      countRunningVM += v.isActive() ? 1 : 0;
+      countTotVM += 1;
     }
     StringBuilder sb = new StringBuilder();
-    if (maxVcpu > t.getMaxVcpu()) {
-      sb.append(maxVcpu + " is bigger than team max vcpu " + t.getMaxVcpu() + " \n");
+    if (countVcput > t.getMaxVcpu()) {
+      sb.append(countVcput + " is bigger than team max vcpu " + t.getMaxVcpu() + " \n");
     }
-    if (maxDisk > t.getMaxDisk()) {
-      sb.append(maxDisk + " is bigger than team max disk " + t.getMaxDisk() + " \n");
+    if (countDisk > t.getMaxDisk()) {
+      sb.append(countDisk + " is bigger than team max disk " + t.getMaxDisk() + " \n");
     }
-    if (maxRam > t.getMaxRam()) {
-      sb.append(maxRam + " is bigger than team max ram " + t.getMaxRam() + " \n");
+    if (countRam > t.getMaxRam()) {
+      sb.append(countRam + " is bigger than team max ram " + t.getMaxRam() + " \n");
     }
-    if (maxRunningVM > t.getMaxRunningVM()) {
-      sb.append(maxRunningVM + " is bigger than team max running vm " + t.getMaxRunningVM() + " \n");
+    if (countRunningVM > t.getMaxRunningVM()) {
+      sb.append("Max running VM limit reached: " + countRunningVM + "/" + t.getMaxRunningVM() + " \n");
     }
-    if (maxTotVM > t.getMaxTotVM()) {
-      sb.append(maxTotVM + " is bigger than team max tot vm " + t.getMaxTotVM() + " \n");
+    if (countTotVM > t.getMaxTotVM()) {
+      sb.append("Max VM limit reached: " + countTotVM + "/" + t.getMaxTotVM() + " \n");
     }
     if (sb.length() > 0) {
       context.disableDefaultConstraintViolation();

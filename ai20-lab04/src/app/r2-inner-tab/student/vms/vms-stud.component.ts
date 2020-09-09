@@ -7,6 +7,7 @@ import {CourseService} from '../../../services/course.service';
 import {Router} from '@angular/router';
 import {Vm} from '../../../models/vm.model';
 import {VmCreateComponent} from '../../../dialogs/vm-create/vm-create.component';
+import {VmEditComponent} from '../../../dialogs/vm-edit/vm-edit.component';
 
 @Component({
   selector: 'app-vms-stud',
@@ -29,7 +30,7 @@ export class VmsStudComponent implements OnDestroy {
   @Input()
   activeTeam: Team = null;
   @Output()
-  forceUploadData = new EventEmitter<any>();
+  forceRefreshData = new EventEmitter<any>();
   @Output()
   changeStatusVm = new EventEmitter<any>();
   @Output()
@@ -54,10 +55,32 @@ export class VmsStudComponent implements OnDestroy {
         this.dialogRef = null;
         if (res != undefined) {
           setTimeout(() => {
-            this.forceUploadData.emit(null);
+            this.forceRefreshData.emit(null);
           }, 150);
         }
       }, () => this.alertsService.setAlert('danger', 'VM creation dialog error')
+    );
+  }
+  openEditVmDialog() {
+    if (this.dialogRef?.getState() == MatDialogState.OPEN) {
+      throw new Error('Error: Dialog stil open while opening a new one');
+    }
+    if (this.activeTeam?.id == null) {
+      this.alertsService.setAlert('danger', 'Error: no active team for this course');
+      return;
+    }
+    const proposalData: Vm = {vcpu: 1, disk:1, ram:1, active:false, studentCreatorId: +this.idStringLoggedStudent, teamId:+this.activeTeam.id};
+    this.dialogRef = this.dialog.open(VmEditComponent, {
+      maxWidth: '400px', autoFocus: true, hasBackdrop: true, disableClose: true, closeOnNavigation: true, data: proposalData
+    });
+    this.dialogRef.afterClosed().subscribe((res: string) => {
+        this.dialogRef = null;
+        if (res != undefined) {
+          setTimeout(() => {
+            this.forceRefreshData.emit(null);
+          }, 150);
+        }
+      }, () => this.alertsService.setAlert('danger', 'VM edit dialog error')
     );
   }
   ngOnDestroy(): void {

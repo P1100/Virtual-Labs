@@ -46,7 +46,7 @@ export class VmsProfComponent implements OnDestroy {
     return this.innerCourseId;
   }
   @Output()
-  forceUploadData = new EventEmitter<any>();
+  forceRefreshData = new EventEmitter<any>();
   @Input()
   hideAllGUItillActiveTeamIsChecked: boolean;
 
@@ -69,7 +69,7 @@ export class VmsProfComponent implements OnDestroy {
         this.dialogRef = null;
         if (res != undefined) {
           setTimeout(() => {
-            this.forceUploadData.emit(null);
+            this.forceRefreshData.emit(null);
           }, 150);
         }
       }, () => this.alertsService.setAlert('danger', 'VM creation dialog error')

@@ -11,7 +11,7 @@ import {Vm} from '../../../models/vm.model';
 @Component({
   selector: 'app-vms-stud-cont',
   template: `
-    <app-vms-stud (forceUploadData)="onForceUploadData($event)"
+    <app-vms-stud (forceRefreshData)="onForceRefreshData($event)"
                   [activeTeam]="activeTeam" [vms]="vms"
                   [idStringLoggedStudent]="idStringLoggedStudent"
                   (changeStatusVm)="changeStatusVm($event)"
@@ -27,20 +27,25 @@ export class VmsStudContComponent implements OnDestroy {
   idStringLoggedStudent: string;
   activeTeam: Team = null;
   vms: Vm[];
+  private countVcpu: number;
+  private countRam: number;
+  private countDisk: number;
+  private countTotVm: number;
+  private countRunningVm: number;
 
   constructor(private courseService: CourseService, private activatedRoute: ActivatedRoute, private alertsService: AlertsService,
               private vlServiceService: VlServiceService) {
     this.idStringLoggedStudent = localStorage.getItem('id');
     this.subRouteParam = this.activatedRoute.paramMap.subscribe(() => {
         this.courseId = this.activatedRoute.parent.snapshot.paramMap.get('id');
-        this.onForceUploadData(null);
+        this.onForceRefreshData(null);
       }
     );
   }
   ngOnDestroy(): void {
     this.subRouteParam?.unsubscribe();
   }
-  onForceUploadData($event: any) {
+  onForceRefreshData(event: any) {
     this.vlServiceService.getTeamsUser(+this.idStringLoggedStudent, this.courseId).pipe(
       mergeMap(teams => {
         let countActive = 0;
@@ -58,11 +63,20 @@ export class VmsStudContComponent implements OnDestroy {
         } else if (countActive < 1) {
           throw new Error('No active team for this course. ');
         }
-        console.log('ACTIVE', this.activeTeam);
-        return this.vlServiceService.getTeamVm(this.activeTeam.id);
+        return this.vlServiceService.getTeamVms(this.activeTeam.id);
       })).subscribe((vmsTeam: Vm[]) => {
-        console.log('INSIDE2', vmsTeam);
         this.vms = vmsTeam;
+        this.countVcpu = vmsTeam.reduce((previousValue, currentValue, currentIndex, array) => {
+          return previousValue + currentValue.vcpu;
+        }, 0);
+        this.countRam = vmsTeam.reduce((previousValue, currentValue, currentIndex, array) => {
+          return previousValue + currentValue.vcpu;
+        }, 0);
+        this.countDisk = vmsTeam.reduce((previousValue, currentValue, currentIndex, array) => {
+          return previousValue + currentValue.vcpu;
+        }, 0);
+        this.countTotVm = vmsTeam.length;
+        this.countRunningVm = vmsTeam.filter(v => v.active).length;
       },
       error => this.alertsService.setAlert('danger', 'Couldn\'t get virtual machines! ' + error)
     );
