@@ -7,6 +7,7 @@ import {HateoasModel} from '../models/hateoas.model';
 import {Team} from '../models/team.model';
 import {Vm} from '../models/vm.model';
 import {Assignment} from '../models/assignment.model';
+import {Implementation} from '../models/implementation.model';
 
 @Injectable({
   providedIn: 'root'
@@ -73,7 +74,6 @@ export class VlServiceService {
     return this.http.put(`${this.baseUrlApi}/teams`, JSON.stringify(team), AppSettings.JSON_HTTP_OPTIONS);
   }
   getAssignments(courseId: string): Observable<Assignment[]> {
-    console.log('INSIDE ASSING GET');
     return this.http.get<HateoasModel>(`${this.baseUrlApi}/assignments/${courseId}`, AppSettings.JSON_HTTP_OPTIONS)
       .pipe(
         map(object => removeHATEOAS(object)),
@@ -81,5 +81,8 @@ export class VlServiceService {
         tap(res => console.log('--getAssignments:', res))
       );
 
+  }
+  updateImplementation(impl: Implementation) {
+    return this.http.put(`${this.baseUrlApi}/assignments/implementation`, JSON.stringify(impl), AppSettings.JSON_HTTP_OPTIONS);
   }
 }

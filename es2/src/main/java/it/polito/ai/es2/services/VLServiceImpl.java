@@ -2,9 +2,10 @@ package it.polito.ai.es2.services;
 
 import it.polito.ai.es2.dtos.AssignmentDTO;
 import it.polito.ai.es2.dtos.ImageDTO;
+import it.polito.ai.es2.dtos.ImplementationDTO;
 import it.polito.ai.es2.dtos.VmDTO;
-import it.polito.ai.es2.entities.*;
 import it.polito.ai.es2.entities.Image;
+import it.polito.ai.es2.entities.*;
 import it.polito.ai.es2.repositories.*;
 import it.polito.ai.es2.services.exceptions.StudentNotFoundException;
 import it.polito.ai.es2.services.exceptions.TeamNotFoundException;
@@ -191,6 +192,17 @@ public class VLServiceImpl implements VLService {
   @PreAuthorize("hasRole('PROFESSOR')")
   @Override public List<AssignmentDTO> getAllAssignments(@NotNull String courseId) {
     List<Assignment> assignments = assignmentRepository.findAllByCourse_Id(courseId);
-    return modelMapper.map(assignments, new TypeToken<List<AssignmentDTO>>() {}.getType());
+    return modelMapper.map(assignments, new TypeToken<List<AssignmentDTO>>() {
+    }.getType());
+  }
+
+  @Override public void updateImplementation(ImplementationDTO dto) {
+    Implementation implementation = implementationRepository.findById(dto.getId()).orElse(null);
+    if (implementation == null)
+      return;
+    implementation.setCurrentCorrection(dto.getCurrentCorrection());
+    implementation.setGrade(dto.getGrade());
+    implementation.setPermanent(dto.getPermanent());
+    implementationRepository.save(implementation);
   }
 }

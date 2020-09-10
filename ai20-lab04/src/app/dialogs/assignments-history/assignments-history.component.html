@@ -16,8 +16,8 @@
   <br>
   <mat-form-field class="example-form-field">
     <mat-label>Correction</mat-label>
-    <textarea matInput [(ngModel)]="value"></textarea>
-    <button mat-button *ngIf="value" matSuffix mat-icon-button  (click)="value=''">
+    <textarea matInput [(ngModel)]="correction"></textarea>
+    <button mat-button *ngIf="correction" matSuffix mat-icon-button >
       <mat-icon>close</mat-icon>
     </button>
   </mat-form-field>
@@ -26,11 +26,11 @@
   <br>
   <mat-form-field class="form-group">
     <mat-label>Final grade</mat-label>
-    <input matInput #mdisk="ngModel" name="mdisk" [(ngModel)]="grade" type="number">
+    <input matInput [(ngModel)]="implementation.grade" type="number">
   </mat-form-field>
 
 </div>
 <div mat-dialog-actions>
-  <button mat-raised-button color="primary" mat-button (click)="submit()" [disabled]="isDefinitive==true && grade==null">Submit correction</button>
+  <button mat-raised-button color="primary" mat-button (click)="submit()" [disabled]="isDefinitive==true && implementation.grade==null">Submit correction</button>
   <button type="button" mat-button (click)="dialogRef.close()" >Cancel</button>
 </div>

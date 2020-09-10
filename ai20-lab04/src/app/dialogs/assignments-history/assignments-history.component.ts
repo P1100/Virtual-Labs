@@ -6,6 +6,7 @@ import {Router} from '@angular/router';
 import {AlertsService} from '../../services/alerts.service';
 import {Course} from '../../models/course.model';
 import {Implementation} from '../../models/implementation.model';
+import {VlServiceService} from '../../services/vl-service.service';
 
 @Component({
   selector: 'app-assignments-history',
@@ -14,14 +15,25 @@ import {Implementation} from '../../models/implementation.model';
 })
 export class AssignmentsHistoryComponent {
   displayedColumnsTable = ['createDate', 'link'];
-  private implementation: Implementation;
-  value: any;
+  implementation: Implementation;
+  correction: string;
   isDefinitive = false;
-  grade = null;
-  constructor(private dialogRef: MatDialogRef<AssignmentsHistoryComponent>,
-              @Inject(MAT_DIALOG_DATA) public data: Implementation, private router: Router, private alertsService: AlertsService) {
+  constructor(private dialogRef: MatDialogRef<AssignmentsHistoryComponent>,@Inject(MAT_DIALOG_DATA) public data: Implementation,
+              private router: Router, private alertsService: AlertsService, private vlServiceService: VlServiceService) {
     this.implementation = data;
     console.log(data);
   }
-  submit() {}
+  submit() {
+    let impl: Implementation = {...this.implementation};
+    delete impl.imageSubmissions;
+    delete impl.creator;
+    if(this.isDefinitive) {
+      impl.definitiveStatus = new Date();
+      impl.permanent = true;
+      // grade with ngModel
+    } else {
+      impl.currentCorrection = this.correction;
+    }
+    this.vlServiceService.updateImplementation(impl).subscribe(value => {});
+  }
 }
