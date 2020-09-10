@@ -22,7 +22,8 @@ public class Implementation {
   @Length(max = 3)
   private String grade;
   @PastOrPresent
-  private Timestamp readStatus, definitiveStatus; // cant use 'read' as column name, mariadb error
+  private Timestamp readStatus, definitiveStatus; // cant use 'read' as column name, reserved word: mariadb error
+  private String currentCorrection;
 
   @ManyToOne(optional = false, cascade = CascadeType.MERGE)
   @JoinColumn(nullable = false)

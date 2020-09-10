@@ -10,7 +10,7 @@ export class AppSettings {
   public static devtest: boolean = environment.dev; // to show logs, tests, and other components
 
   // HTTP Settings (services)
-  public static RETRIES = 0;
+  public static RETRIES = 1;
   public static JSON_HTTP_OPTIONS: object = {
     headers: new HttpHeaders({
       'Content-Type': 'application/json;charset=utf-8',

@@ -29,7 +29,6 @@ import {MatIconModule} from '@angular/material/icon';
 import {MatListModule} from '@angular/material/list';
 import {MatSidenavModule} from '@angular/material/sidenav';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
-import {AssignmentsContComponent} from './r2-inner-tab/assignments/assignments-cont.component';
 import {BrowserModule} from '@angular/platform-browser';
 import {TestingComponent} from './r2-inner-tab/testing/testing.component';
 import {WelcomeEmptyComponent} from './r0-topheader-leftsidebar/welcome-empty.component';
@@ -54,6 +53,10 @@ import {VmsProfComponent} from './r2-inner-tab/professor/vms/vms-prof.component'
 import {VmsProfContComponent} from './r2-inner-tab/professor/vms/vms-prof-cont.component';
 import {VmEditComponent} from './dialogs/vm-edit/vm-edit.component';
 import {TeamEditComponent} from './dialogs/team-edit/team-edit.component';
+import {AssignmentStudComponent} from './r2-inner-tab/student/assignment-stud/assignment-stud.component';
+import {AssignmentProfComponent} from './r2-inner-tab/professor/assignment-prof/assignment-prof.component';
+import {AssignmentStudContComponent} from './r2-inner-tab/student/assignment-stud/assignment-stud-cont.component';
+import {AssignmentProfContComponent} from './r2-inner-tab/professor/assignment-prof/assignment-prof-cont.component';
 
 @NgModule({
   imports: [
@@ -96,7 +99,6 @@ import {TeamEditComponent} from './dialogs/team-edit/team-edit.component';
     PageNotFoundComponent,
     VmsStudContComponent,
     TeamsComponent,
-    AssignmentsContComponent,
     HomeComponent,
     TabsNavComponent,
     LoginComponent,
@@ -116,7 +118,11 @@ import {TeamEditComponent} from './dialogs/team-edit/team-edit.component';
     VmsProfComponent,
     VmsProfContComponent,
     VmEditComponent,
-    TeamEditComponent
+    TeamEditComponent,
+    AssignmentProfComponent,
+    AssignmentProfContComponent,
+    AssignmentStudComponent,
+    AssignmentStudContComponent
   ],
   providers: [HttpClientModule, {provide: MAT_DIALOG_DEFAULT_OPTIONS, useValue: {hasBackdrop: false}},
     {provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true}],

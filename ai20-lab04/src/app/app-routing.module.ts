@@ -4,7 +4,6 @@ import {WelcomeEmptyComponent} from './r0-topheader-leftsidebar/welcome-empty.co
 import {VmsStudContComponent} from './r2-inner-tab/student/vms/vms-stud-cont.component';
 import {StudentsContComponent} from './r2-inner-tab/professor/students/students-cont.component';
 import {PageNotFoundComponent} from './r0-topheader-leftsidebar/page-not-found.component';
-import {AssignmentsContComponent} from './r2-inner-tab/assignments/assignments-cont.component';
 import {TabsNavComponent} from './r1-tabs-menu/tabs-nav.component';
 import {HomeComponent} from './r0-topheader-leftsidebar/home.component';
 import {TestingComponent} from './r2-inner-tab/testing/testing.component';
@@ -14,6 +13,8 @@ import {AuthProfessorGuard} from './services/auth-professor.guard';
 import {UnauthorizedTabComponent} from './r0-topheader-leftsidebar/unauthorized-tab.component';
 import {TeamsContComponent} from './r2-inner-tab/student/teams/teams-cont.component';
 import {VmsProfContComponent} from './r2-inner-tab/professor/vms/vms-prof-cont.component';
+import {AssignmentStudContComponent} from './r2-inner-tab/student/assignment-stud/assignment-stud-cont.component';
+import {AssignmentProfContComponent} from './r2-inner-tab/professor/assignment-prof/assignment-prof-cont.component';
 
 const routes: Routes = [
   {
@@ -67,7 +68,7 @@ const routes: Routes = [
                   },
                   {
                     path: 'assignments',
-                    component: AssignmentsContComponent
+                    component: AssignmentProfContComponent
                   },
                   {
                     path: '**',
@@ -113,7 +114,7 @@ const routes: Routes = [
                   },
                   {
                     path: 'assignments',
-                    component: AssignmentsContComponent
+                    component: AssignmentStudContComponent
                   },
                   {
                     path: '**',

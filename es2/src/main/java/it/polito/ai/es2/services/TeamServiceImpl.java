@@ -50,12 +50,6 @@ public class TeamServiceImpl extends CommonURL implements TeamService {
   TeamRepository teamRepository;
   @Autowired
   NotificationService notificationService;
-  //  @Autowired
-//  AssignmentRepository assignmentRepository;
-//  @Autowired
-//  ImageRepository imageRepository;
-//  @Autowired
-//  ImplementationRepository implementationRepository;
   @Autowired
   public TokenRepository tokenRepository;
 

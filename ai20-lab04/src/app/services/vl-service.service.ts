@@ -71,4 +71,14 @@ export class VlServiceService {
   editTeam(team: Team): Observable<any> {
     return this.http.put(`${this.baseUrlApi}/teams`, JSON.stringify(team), AppSettings.JSON_HTTP_OPTIONS);
   }
+  getAssignments(courseId: string): Observable<any> {
+    console.log('INSIDE ASSING GET');
+    return this.http.get<HateoasModel>(`${this.baseUrlApi}/assignments/${courseId}`, AppSettings.JSON_HTTP_OPTIONS)
+      .pipe(
+        map(object => removeHATEOAS(object)),
+        retry(AppSettings.RETRIES), catchError(formatErrors),
+        tap(res => console.log('--getAssignments:', res))
+      );
+
+  }
 }

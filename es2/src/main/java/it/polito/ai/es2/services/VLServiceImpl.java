@@ -1,15 +1,11 @@
 package it.polito.ai.es2.services;
 
+import it.polito.ai.es2.dtos.AssignmentDTO;
 import it.polito.ai.es2.dtos.ImageDTO;
 import it.polito.ai.es2.dtos.VmDTO;
+import it.polito.ai.es2.entities.*;
 import it.polito.ai.es2.entities.Image;
-import it.polito.ai.es2.entities.Student;
-import it.polito.ai.es2.entities.Team;
-import it.polito.ai.es2.entities.VM;
-import it.polito.ai.es2.repositories.ImageRepository;
-import it.polito.ai.es2.repositories.StudentRepository;
-import it.polito.ai.es2.repositories.TeamRepository;
-import it.polito.ai.es2.repositories.VMRepository;
+import it.polito.ai.es2.repositories.*;
 import it.polito.ai.es2.services.exceptions.StudentNotFoundException;
 import it.polito.ai.es2.services.exceptions.TeamNotFoundException;
 import it.polito.ai.es2.services.exceptions.VmNotFoundException;
@@ -65,6 +61,10 @@ public class VLServiceImpl implements VLService {
   @Autowired
   StudentRepository studentRepository;
   @Autowired
+  AssignmentRepository assignmentRepository;
+  @Autowired
+  ImplementationRepository implementationRepository;
+  @Autowired
   Validator validator;
   static String FILEPATH = "src/main/resources/test"; // Path of temp file
   static File file = new File(FILEPATH);
@@ -99,6 +99,20 @@ public class VLServiceImpl implements VLService {
     String originalFileName = "vm.jpeg";
     String contentType = "image/jpeg";
     byte[] content = null;
+    content = addTimestampImage(path, content);
+    MultipartFile multipartFile = new MockMultipartFile(name, originalFileName, contentType, content);
+    imageDTO = imageService.uploadImage(multipartFile);
+    if (imageDTO == null || imageDTO.getId() == null)
+      throw new RuntimeException("Critical server error: upload failed silently)");
+    Image image = imageRepository.findById(imageDTO.getId()).orElse(null);
+    if (image == null)
+      throw new RuntimeException("Critical server error: image was not saved)");
+    vm.addSetImage(image);
+
+    vmRepository.save(vm);
+  }
+
+  private byte[] addTimestampImage(Path path, byte[] content) {
     try {
       content = Files.readAllBytes(path);
       OutputStream os = new FileOutputStream(file);
@@ -126,16 +140,7 @@ public class VLServiceImpl implements VLService {
       baos.close();
     } catch (IOException e) {
     }
-    MultipartFile multipartFile = new MockMultipartFile(name, originalFileName, contentType, content);
-    imageDTO = imageService.uploadImage(multipartFile);
-    if (imageDTO == null || imageDTO.getId() == null)
-      throw new RuntimeException("Critical server error: upload failed silently)");
-    Image image = imageRepository.findById(imageDTO.getId()).orElse(null);
-    if (image == null)
-      throw new RuntimeException("Critical server error: image was not saved)");
-    vm.addSetImage(image);
-
-    vmRepository.save(vm);
+    return content;
   }
 
   @PreAuthorize("hasRole('STUDENT') or hasRole('PROFESSOR')")
@@ -181,5 +186,11 @@ public class VLServiceImpl implements VLService {
     vm.getTeam().getVms().remove(vm);
     // image handled by remove cascade
     vmRepository.deleteById(vm.getId());
+  }
+
+  @PreAuthorize("hasRole('PROFESSOR')")
+  @Override public List<AssignmentDTO> getAllAssignments(@NotNull String courseId) {
+    List<Assignment> assignments = assignmentRepository.findAllByCourse_Id(courseId);
+    return modelMapper.map(assignments, new TypeToken<List<AssignmentDTO>>() {}.getType());
   }
 }

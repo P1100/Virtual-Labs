@@ -14,6 +14,7 @@
 
     <span class="fill-remaining-space-header"></span>
 
+    <button mat-button type="button" style="color: chartreuse">Init Assignments</button>
     <button *ngIf="!isLogged" mat-button type="button" (click)="openRegisterDialog()">Register</button>
     <span *ngIf="isLogged" style="font-size: medium; color: ghostwhite">Welcome {{loggedUserName}} </span>
     <button *ngIf="!this.isLogged" mat-button type="button" (click)="login()">Login</button>
