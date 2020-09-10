@@ -9,7 +9,7 @@ import {Assignment} from '../../../models/assignment.model';
 @Component({
   selector: 'app-assignment-prof-cont',
   template: `
-    <app-assignment-prof
+    <app-assignment-prof [assignments]="assignments"
     >
     </app-assignment-prof>
   `,
@@ -20,7 +20,7 @@ export class AssignmentProfContComponent implements OnDestroy {
   subRouteParam: Subscription = null;
   idStringLoggedStudent: string;
   assignments: Assignment[];
-  private assignmentsSub: Subscription;
+  assignmentsSub: Subscription;
 
   constructor(private courseService: CourseService, private activatedRoute: ActivatedRoute, private alertsService: AlertsService,
               private vlServiceService: VlServiceService) {

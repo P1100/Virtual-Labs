@@ -1,6 +1,7 @@
 package it.polito.ai.es2.entities;
 
 import lombok.Data;
+import org.hibernate.annotations.UpdateTimestamp;
 import org.hibernate.validator.constraints.Length;
 
 import javax.persistence.*;
@@ -23,6 +24,8 @@ public class Implementation {
   private String grade;
   @PastOrPresent
   private Timestamp readStatus, definitiveStatus; // cant use 'read' as column name, reserved word: mariadb error
+  @UpdateTimestamp
+  private Timestamp lastStatus;
   private String currentCorrection;
 
   @ManyToOne(optional = false, cascade = CascadeType.MERGE)

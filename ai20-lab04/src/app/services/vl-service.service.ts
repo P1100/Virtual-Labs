@@ -6,6 +6,7 @@ import {catchError, map, retry, tap} from 'rxjs/operators';
 import {HateoasModel} from '../models/hateoas.model';
 import {Team} from '../models/team.model';
 import {Vm} from '../models/vm.model';
+import {Assignment} from '../models/assignment.model';
 
 @Injectable({
   providedIn: 'root'
@@ -71,7 +72,7 @@ export class VlServiceService {
   editTeam(team: Team): Observable<any> {
     return this.http.put(`${this.baseUrlApi}/teams`, JSON.stringify(team), AppSettings.JSON_HTTP_OPTIONS);
   }
-  getAssignments(courseId: string): Observable<any> {
+  getAssignments(courseId: string): Observable<Assignment[]> {
     console.log('INSIDE ASSING GET');
     return this.http.get<HateoasModel>(`${this.baseUrlApi}/assignments/${courseId}`, AppSettings.JSON_HTTP_OPTIONS)
       .pipe(

@@ -57,6 +57,7 @@ import {AssignmentStudComponent} from './r2-inner-tab/student/assignment-stud/as
 import {AssignmentProfComponent} from './r2-inner-tab/professor/assignment-prof/assignment-prof.component';
 import {AssignmentStudContComponent} from './r2-inner-tab/student/assignment-stud/assignment-stud-cont.component';
 import {AssignmentProfContComponent} from './r2-inner-tab/professor/assignment-prof/assignment-prof-cont.component';
+import {FilterNullPipe} from './r2-inner-tab/professor/assignment-prof/filter-null-pipe';
 
 @NgModule({
   imports: [
@@ -122,7 +123,8 @@ import {AssignmentProfContComponent} from './r2-inner-tab/professor/assignment-p
     AssignmentProfComponent,
     AssignmentProfContComponent,
     AssignmentStudComponent,
-    AssignmentStudContComponent
+    AssignmentStudContComponent,
+    FilterNullPipe
   ],
   providers: [HttpClientModule, {provide: MAT_DIALOG_DEFAULT_OPTIONS, useValue: {hasBackdrop: false}},
     {provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true}],

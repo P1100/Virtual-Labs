@@ -19,5 +19,4 @@ public class AssignmentDTO {
   private ImageDTO content;
   @Transient
   private List<ImplementationDTO> implementations;
-
 }

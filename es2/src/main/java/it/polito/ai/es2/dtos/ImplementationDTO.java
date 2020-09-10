@@ -18,6 +18,7 @@ public class ImplementationDTO {
   private String grade;
   @PastOrPresent
   private Timestamp readStatus, definitiveStatus;
+  private Timestamp lastStatus;
   private String currentCorrection;
   @Transient
   private List<ImageDTO> imageSubmissions;
