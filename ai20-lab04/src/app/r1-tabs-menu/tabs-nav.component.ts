@@ -9,7 +9,6 @@ import {AppSettings} from '../app-settings';
   styleUrls: ['./tabs-nav.component.css']
 })
 export class TabsNavComponent implements OnDestroy {
-  // TODO: questo valore deve essere impostato dalla logica di auth
   prefix = ['professor', 'student'];
   navLinks = [];
   activeCourse = null;

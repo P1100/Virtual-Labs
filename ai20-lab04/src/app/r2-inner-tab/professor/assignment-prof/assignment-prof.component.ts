@@ -7,6 +7,7 @@ import {TeamProposeComponent} from '../../../dialogs/team-propose/team-propose.c
 import {Assignment} from '../../../models/assignment.model';
 import {Implementation} from '../../../models/implementation.model';
 import {animate, state, style, transition, trigger} from '@angular/animations';
+import {AssignmentsHistoryComponent} from '../../../dialogs/assignments-history/assignments-history.component';
 
 @Component({
   selector: 'app-assignment-prof',
@@ -50,8 +51,8 @@ export class AssignmentProfComponent {
     if (this.dialogRef?.getState() == MatDialogState.OPEN) {
       throw new Error('Error: Dialog stil open while opening a new one');
     }
-    this.dialogRef = this.dialog.open(TeamProposeComponent, {
-      maxWidth: '400px', autoFocus: true, hasBackdrop: true, disableClose: true, closeOnNavigation: true, data: Implementation
+    this.dialogRef = this.dialog.open(AssignmentsHistoryComponent, {
+      maxWidth: '800px', autoFocus: false, hasBackdrop: true, disableClose: false, closeOnNavigation: true, data: impl
     });
     this.dialogRef.afterClosed().subscribe((res: string) => {
         this.dialogRef = null;

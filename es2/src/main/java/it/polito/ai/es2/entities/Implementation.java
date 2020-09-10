@@ -3,6 +3,7 @@ package it.polito.ai.es2.entities;
 import lombok.Data;
 import org.hibernate.annotations.UpdateTimestamp;
 import org.hibernate.validator.constraints.Length;
+import org.hibernate.validator.constraints.UniqueElements;
 
 import javax.persistence.*;
 import javax.validation.constraints.PastOrPresent;
@@ -30,6 +31,7 @@ public class Implementation {
 
   @ManyToOne(optional = false, cascade = CascadeType.MERGE)
   @JoinColumn(nullable = false)
+  @UniqueElements
   private Student student;
 
   @ManyToOne(optional = false, cascade = CascadeType.MERGE)
