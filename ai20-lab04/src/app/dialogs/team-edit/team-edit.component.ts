@@ -36,7 +36,6 @@ export class TeamEditComponent implements OnDestroy {
       return this.vlServiceService.getTeamVms(this.team.id);
     }))
       .subscribe((vmsTeam: Vm[]) => {
-          console.log('IN', vmsTeam);
           this.vmsStatistics.maxVcpuUsed = vmsTeam.reduce((previousValue, currentValue, currentIndex, array) => {
             return currentValue.vcpu > previousValue ? currentValue.vcpu : previousValue;
           }, 0);

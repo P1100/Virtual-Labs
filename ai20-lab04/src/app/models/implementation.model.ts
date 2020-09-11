@@ -12,6 +12,6 @@ export class Implementation {
     public lastStatus: Date,
     public currentCorrection?: string,
     public student?: Student,
-    public imageSubmissions?: Image) {
+    public imageSubmissions?: Image[]) {
   }
 }

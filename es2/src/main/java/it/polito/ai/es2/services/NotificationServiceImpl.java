@@ -13,7 +13,6 @@ import org.springframework.validation.annotation.Validated;
 
 import javax.validation.constraints.NotBlank;
 
-// TODO: add formatted email body
 @Service
 @Validated
 @PreAuthorize("isAuthenticated()")

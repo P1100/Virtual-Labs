@@ -7,6 +7,9 @@ import {AlertsService} from '../../services/alerts.service';
 import {Course} from '../../models/course.model';
 import {Implementation} from '../../models/implementation.model';
 import {VlServiceService} from '../../services/vl-service.service';
+import {MatTableDataSource} from '@angular/material/table';
+import {Team} from '../../models/team.model';
+import {Image} from '../../models/image.model';
 
 @Component({
   selector: 'app-assignments-history',
@@ -14,6 +17,7 @@ import {VlServiceService} from '../../services/vl-service.service';
   styleUrls: ['./assignments-history.component.css']
 })
 export class AssignmentsHistoryComponent {
+  dataSource = new MatTableDataSource<Image>();
   displayedColumnsTable = ['createDate', 'link'];
   implementation: Implementation;
   correction: string;
@@ -21,7 +25,7 @@ export class AssignmentsHistoryComponent {
   constructor(public dialogRef: MatDialogRef<AssignmentsHistoryComponent>,@Inject(MAT_DIALOG_DATA) public data: Implementation,
               private router: Router, private alertsService: AlertsService, private vlServiceService: VlServiceService) {
     this.implementation = data;
-    console.log(data);
+    this.dataSource.data = this.implementation.imageSubmissions;
   }
   submit() {
     let impl: Implementation = {...this.implementation};

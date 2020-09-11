@@ -138,7 +138,6 @@ public class UserServiceImpl implements UserService {
     return true;
   }
 
-  // TODO: make private, remove from command line runner
   @Override
   public StudentDTO addStudent(@Valid StudentDTO studentDTO) {
     log.info("addStudent(" + studentDTO + ")");

@@ -264,7 +264,7 @@ public class TeamServiceImpl extends CommonURL implements TeamService {
       }
       tokenRepository.save(token);
       String mymatricola = environment.getProperty("mymatricola");
-      // TODO: uncommentare in fase di prod (attenzione!)
+      // TODO: uncomment in prod?
       System.out.println("[s" + mymatricola + "@studenti.polito.it] s" + memberId + "@studenti.polito.it - Conferma iscrizione al team " + savedTeam.getName());
 //        sendMessage("s" + mymatricola + "@studenti.polito.it", "[Student:" + memberId + "] Conferma iscrizione al team " + savedTeam.getName(), sb.toString());
     }

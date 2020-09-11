@@ -28,7 +28,6 @@ public class VM {
   @JoinColumn(nullable = false)
   private Team team; // --> course
 
-  // TODO: check on add, students must be in same team
   @ManyToOne()
   @JoinColumn
   private Student creator;
