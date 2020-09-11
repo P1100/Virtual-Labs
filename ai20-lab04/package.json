@@ -2,7 +2,7 @@
   "firstName": "virtuallabs-frontend",
   "version": "0.9.0-SNAPSHOT",
   "scripts": {
-    "start": "npm run serve",
+    "start": "npm run serve-prod",
     "startAll-windows": "start npm run jsonserver & start npm run serve",
     "startAll-linux": "npm run jsonserver & npm run serve",
     "ng": "ng",
