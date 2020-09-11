@@ -1,13 +1,11 @@
-FROM mariadb:latest
 #FROM openjdk:8-jre-alpine
-
-EXPOSE 3307
-#EXPOSE 8080
+FROM adoptopenjdk/openjdk11:jre-11.0.8_10-alpine
+EXPOSE 8080
 
 ARG JAR_FILE=target/*.jar
-
 COPY ${JAR_FILE} app.jar
-#COPY target/docker1.jar app.jar
+#ARG JAR_FILE=target/my-application.jar
+#ADD ${JAR_FILE} app.jar
 
 RUN addgroup -S app && adduser -S app -G app
 USER app
@@ -23,7 +21,7 @@ ENTRYPOINT ["java","-jar","/app.jar"]
 #
 #ENV dbuser=postgres
 #ENV dbpass=password
-#ENV jdbcurl=jdbc:postgresql://pmadatabaseaws.cngquqqjuc8v.us-west-1.rds.amazonaws.com:5432/postgres
+#ENV jdbcurl=jdbc:
 #
 #WORKDIR /usr/local/bin
 #
