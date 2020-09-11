@@ -21,19 +21,7 @@ This is a didactical learning project, made for the Internet Applications course
 - [Docker](https://docs.docker.com/install/)
 - IDE: IDEA, Webstorm
 
-## Pre Requisites
-### Updating NPM on Windows
-To update npm on windows, install newer nodejs. Or:
-- `npm install npm@latest -g` 
-- `npm list -g` 
-- `npm update` 
-### Udating NPM on Ubuntu 18 LTS (https://www.digitalocean.com/community/tutorials/how-to-install-node-js-on-ubuntu-18-04)
-- `cd ~` 
-- `curl -sL https://deb.nodesource.com/setup_10.x -o nodesource_setup.sh` 
-- `sudo bash nodesource_setup.sh` 
-- `sudo apt install nodejs` 
-
-## Instructions
+## How to build, deploy and run
 - First clone the repo: `git clone https://github.com/P1100/VirtualLabs.git` 
 - Do the steps below, and then open the app at the url https://localhost:4200/ (accept the certificate, it is a mock)
 
@@ -50,9 +38,20 @@ To update npm on windows, install newer nodejs. Or:
 `docker exec -it [container-id] sh`
 
 ### Client:
-- First update your node and npm installations to last version (important!)
-- Then start the frontend using `npm start` in its folder (after doing `npm install`)
+- First update all your node and npm installations to last versions (important! Check below)
+- Then install the frontend using `npm install` in its folder, and run it with `npm start`
 
+##### Updating NPM on Windows
+To update npm on windows, install newer nodejs. Or:
+- `npm install npm@latest -g` 
+- `npm list -g` 
+- `npm update` 
+##### Udating NPM on Ubuntu 18 LTS
+First update your ubuntu, everything. Then:
+- `cd ~` 
+- `curl -sL https://deb.nodesource.com/setup_10.x -o nodesource_setup.sh` 
+- `sudo bash nodesource_setup.sh` 
+- `sudo apt install nodejs` 
 
 ## ER Model
 ![](https://i.ibb.co/g4CgcfQ/ERModel.jpg)
