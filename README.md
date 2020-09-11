@@ -21,21 +21,8 @@ This is a didactical learning project, made for the Internet Applications course
 - [Docker](https://docs.docker.com/install/)
 - IDE: IDEA, Webstorm
 
-## Instructions
-First clone the repo: `git clone https://github.com/P1100/VirtualLabs.git`
-
-### DB:
--  User the following command in the terminal:
-`docker run -d -v /home/myes2mariadb:/var/lib/mysql -p 3306:3306 --name virtuallabs -e MYSQL_ROOT_PASSWORD=root -d mariadb`
-### Server: 
-- Build and run from IDEA, then while running do maven package (tested on Windows10 with docker toolbox, and on ubuntu)
-`docker build -t vl-server .`
-`docker run --net=host --name vl-app-server-container  -p 8080:8080 vl-server`
-### Client:
-- First update your node and npm installations to last version (important!)
-- Then start the frontend using `npm start` in its folder (after doing `npm install`)
-
-#### Updating NPM on Windows
+## Pre Requisites
+### Updating NPM on Windows
 To update npm on windows, install newer nodejs. Or:
 - `npm install npm@latest -g` 
 - `npm list -g` 
@@ -45,6 +32,27 @@ To update npm on windows, install newer nodejs. Or:
 - `curl -sL https://deb.nodesource.com/setup_10.x -o nodesource_setup.sh` 
 - `sudo bash nodesource_setup.sh` 
 - `sudo apt install nodejs` 
+
+## Instructions
+- First clone the repo: `git clone https://github.com/P1100/VirtualLabs.git` 
+- Do the steps below, and then open the app at the url https://localhost:4200/ (accept the certificate, it is a mock)
+
+### DB:
+-  User the following command in the terminal:
+`docker run -d -v /home/myes2mariadb:/var/lib/mysql -p 3306:3306 --name virtuallabs -e MYSQL_ROOT_PASSWORD=root -d mariadb`
+
+### Server: 
+- Build and run from IDEA, then while running do maven package (tested on Windows10 with docker toolbox, and on ubuntu)
+`docker build -t vl-server .`
+`docker run -it --net=host --name vl-app-server-container  -p 8080:8080 vl-server` 
+- To attach: 
+`docker attach <container_id>`
+`docker exec -it [container-id] sh`
+
+### Client:
+- First update your node and npm installations to last version (important!)
+- Then start the frontend using `npm start` in its folder (after doing `npm install`)
+
 
 ## ER Model
 ![](https://i.ibb.co/g4CgcfQ/ERModel.jpg)
