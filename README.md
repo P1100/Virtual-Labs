@@ -28,7 +28,7 @@ This is a didactical learning project, made for the Internet Applications course
 - Start the frontend using `npm start` in its folder (after doing `npm install`)
 
 ## ER Model
-![](https://i.ibb.co/rGK9cL8/Virtual-Labs-ERmodel.jpg)
+![](https://i.ibb.co/g4CgcfQ/ERModel.jpg)
 
 ## Questions and Issues
 Feel free to ask or report any
