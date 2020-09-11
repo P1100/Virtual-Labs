@@ -22,10 +22,29 @@ This is a didactical learning project, made for the Internet Applications course
 - IDE: IDEA, Webstorm
 
 ## Instructions
+First clone the repo: `git clone https://github.com/P1100/VirtualLabs.git`
 
-- Create the containers and initialize the databases (follow the scripts in the `database` folder)
-  - Start the backend: this is a spring boot app
-- Start the frontend using `npm start` in its folder (after doing `npm install`)
+### DB:
+-  User the following command in the terminal:
+`docker run -d -v /home/myes2mariadb:/var/lib/mysql -p 3306:3306 --name virtuallabs -e MYSQL_ROOT_PASSWORD=root -d mariadb`
+### Server: 
+- Build and run from IDEA, then while running do maven package (tested on Windows10 with docker toolbox, and on ubuntu)
+`docker build -t vl-server .`
+`docker run --net=host --name vl-app-server-container  -p 8080:8080 vl-server`
+### Client:
+- First update your node and npm installations to last version (important!)
+- Then start the frontend using `npm start` in its folder (after doing `npm install`)
+
+#### Updating NPM on Windows
+To update npm on windows, install newer nodejs. Or:
+- `npm install npm@latest -g` 
+- `npm list -g` 
+- `npm update` 
+### Udating NPM on Ubuntu 18 LTS (https://www.digitalocean.com/community/tutorials/how-to-install-node-js-on-ubuntu-18-04)
+- `cd ~` 
+- `curl -sL https://deb.nodesource.com/setup_10.x -o nodesource_setup.sh` 
+- `sudo bash nodesource_setup.sh` 
+- `sudo apt install nodejs` 
 
 ## ER Model
 ![](https://i.ibb.co/g4CgcfQ/ERModel.jpg)

@@ -12,7 +12,7 @@ git push origin :refs/tags/`tagname`
 ### Old
 `docker run -d --mount source=es2vol,target=/es2app -p 3306:3306 --name es2 -e MYSQL_ROOT_PASSWORD=root -d mariadb`
 ### Current
-`docker run -d -v /home/myes2mariadb:/var/lib/mysql -p 3306:3306 --name es2 -e MYSQL_ROOT_PASSWORD=root -d mariadb`
+`docker run -d -v /home/myes2mariadb:/var/lib/mysql -p 3306:3306 --name virtuallabs -e MYSQL_ROOT_PASSWORD=root -d mariadb`
 #### Docker Toolbox Windows -> problema, toolbox non scrive dati su volume directory (dont use rm! Kills container when stopped)
 `docker run -d --rm -v "/c/Users/dockertbx:/var/mariadb" -p 3306:3306 --name es2 -e MYSQL_ROOT_PASSWORD=root -d mariadb`
 `docker run -d --rm -v "//c/Users/dockertbx:/var/mariadb" -p 3306:3306 --name es2 -e MYSQL_ROOT_PASSWORD=root -d mariadb`
