@@ -30,6 +30,29 @@ This is a didactical learning project, made for the Internet Applications course
 ### DB:
 -  User the following command in the terminal:   
  `docker run -d -v /home/myes2mariadb:/var/lib/mysql -p 3306:3306 --name virtuallabs -e MYSQL_ROOT_PASSWORD=root -d mariadb`
+#### DB Data Init
+```
+docker run -d -v /home/myes2mariadb:/var/lib/mysql -p 3306:3306 --name virtuallabs -e MYSQL_ROOT_PASSWORD=root -d mariadb
+docker ps -a
+cp ./src/main/resources/dumbMariaDb.sql dbdata.sql
+docker cp ./src/main/resources/dumbMariaDb.sql 1a00bbb17c48:/dbdata.sql
+**RUN SERVER JAR NOW**  (to init db schema)  
+docker exec -i e881856b55ba mysql -uroot -proot virtuallabs < dbdata.sql
+```  
+##### DB Debug
+```
+docker exec -it e881856b55ba mysql -uroot -proot virtuallabs
+use virtuallabs;
+show tables;
+SELECT * FROM course;
+DROP DATABASE virtuallabs;
+```
+##### DB Pre-Loaded Users and Passwords
+- 111111 111111
+- 222222 222222
+- 333333 333333
+- 999999 999999
+
 
 ### Server: 
 - Import project in IDEA, then set up JDK to 11 in project structure
