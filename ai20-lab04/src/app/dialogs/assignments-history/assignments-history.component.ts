@@ -18,7 +18,7 @@ export class AssignmentsHistoryComponent {
   implementation: Implementation;
   correction: string;
   isDefinitive = false;
-  constructor(private dialogRef: MatDialogRef<AssignmentsHistoryComponent>,@Inject(MAT_DIALOG_DATA) public data: Implementation,
+  constructor(public dialogRef: MatDialogRef<AssignmentsHistoryComponent>,@Inject(MAT_DIALOG_DATA) public data: Implementation,
               private router: Router, private alertsService: AlertsService, private vlServiceService: VlServiceService) {
     this.implementation = data;
     console.log(data);
@@ -26,7 +26,7 @@ export class AssignmentsHistoryComponent {
   submit() {
     let impl: Implementation = {...this.implementation};
     delete impl.imageSubmissions;
-    delete impl.creator;
+    delete impl.student;
     if(this.isDefinitive) {
       impl.definitiveStatus = new Date();
       impl.permanent = true;
@@ -35,5 +35,6 @@ export class AssignmentsHistoryComponent {
       impl.currentCorrection = this.correction;
     }
     this.vlServiceService.updateImplementation(impl).subscribe(value => {});
+    this.dialogRef.close();
   }
 }

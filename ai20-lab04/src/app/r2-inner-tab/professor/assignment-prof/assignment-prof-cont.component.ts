@@ -18,7 +18,6 @@ import {Assignment} from '../../../models/assignment.model';
 export class AssignmentProfContComponent implements OnDestroy {
   courseId = '0';
   subRouteParam: Subscription = null;
-  idStringLoggedStudent: string;
   assignments: Assignment[];
   assignmentsSub: Subscription;
 

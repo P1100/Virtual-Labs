@@ -1,1 +1,78 @@
-<p>assignment-stud works!</p>
+<div class="custom-file form-group">
+  <input type="file" class="custom-file-input" id="importFile" (change)="onFileChanged($event)">
+  <label class="custom-file-label" for="importFile" #labelImageFile style="text-align: left">Select submission to upload</label>
+</div>
+<br>
+<br>
+<table mat-table matSort [dataSource]="dataSourceAssignments" multiTemplateDataRows class="mat-elevation-z8">
+  <ng-container matColumnDef="nav">
+    <th *matHeaderCellDef mat-header-cell>
+    </th>
+    <td *matCellDef="let element" mat-cell>
+      <mat-icon *ngIf="expandedElement && element == expandedElement">expand_less</mat-icon>
+      <mat-icon *ngIf="!(expandedElement && element == expandedElement)">expand_more</mat-icon>
+    </td>
+  </ng-container>
+  <ng-container matColumnDef="name">
+    <th *matHeaderCellDef mat-header-cell>name</th>
+    <td *matCellDef="let element; let k = dataIndex" mat-cell>
+      {{element.name}}
+    </td>
+  </ng-container>
+  <ng-container matColumnDef="releaseDate">
+    <th *matHeaderCellDef mat-header-cell mat-sort-header="">releaseDate</th>
+    <td *matCellDef="let element; let k = dataIndex" mat-cell>
+      {{element.releaseDate | date:'short'}}
+    </td>
+  </ng-container>
+  <ng-container matColumnDef="link">
+    <th *matHeaderCellDef mat-header-cell mat-sort-header="">Link</th>
+    <td *matCellDef="let element; let k = dataIndex" mat-cell>
+      <a mat-stroked-button href="{{element.content.directLink}}" target="_blank">Link</a>
+    </td>
+  </ng-container>
+  <ng-container matColumnDef="expandedDetail" id="innerExpandedTable">
+    <td mat-cell *matCellDef="let element" [attr.colspan]="columnsToDisplayImplementation.length">
+      <div class="example-element-detail" [@detailExpand]="element == expandedElement ? 'expanded' : 'collapsed'">
+        <table mat-table matSort [dataSource]="element.implementations | filterStudent: idLoggedStudent">
+          <ng-container matColumnDef="firstName">
+            <th mat-header-cell *matHeaderCellDef>firstName</th>
+            <td mat-cell *matCellDef="let element"> {{element.student.firstName}} </td>
+          </ng-container>
+          <ng-container matColumnDef="lastName">
+            <th mat-header-cell *matHeaderCellDef>lastName</th>
+            <td mat-cell *matCellDef="let element"> {{element.student.lastName}} </td>
+          </ng-container>
+          <ng-container matColumnDef="id">
+            <th mat-header-cell *matHeaderCellDef>Id</th>
+            <td mat-cell *matCellDef="let element">{{element.id}}</td>
+          </ng-container>
+          <ng-container matColumnDef="status">
+            <th mat-header-cell *matHeaderCellDef>Status</th>
+            <td mat-cell *matCellDef="let element">{{element.status}}</td>
+          </ng-container>
+          <ng-container matColumnDef="timestamp">
+            <th mat-header-cell *matHeaderCellDef>Timestamp</th>
+            <td mat-cell *matCellDef="let element">{{element.lastStatus | date:'short'}}</td>
+          </ng-container>
+          <ng-container matColumnDef="submit">
+            <th *matHeaderCellDef mat-header-cell mat-sort-header=""></th>
+            <td *matCellDef="let element; let k = dataIndex" mat-cell>
+              <button mat-button mat-stroked-button (click)="onSubmit(element)" [disabled]="element.status != 'READ' && element.status != 'REVIEWED'">Submit</button>
+            </td>
+          </ng-container>
+          <tr mat-header-row *matHeaderRowDef="columnsToDisplayImplementation; sticky: true"></tr>
+          <tr mat-row *matRowDef="let row; columns: columnsToDisplayImplementation;"></tr>
+        </table>
+      </div>
+    </td>
+  </ng-container>
+
+  <tr mat-header-row *matHeaderRowDef="columnsToDisplay"></tr>
+  <tr mat-row *matRowDef="let element; columns: columnsToDisplay"
+      [class]="element.disabled ? 'disabled' : 'example-element-row'"
+      [class.example-expanded-row]="expandedElement === element"
+      (click)="expandedElement = (expandedElement === element) ? null : element">
+  </tr>
+  <tr mat-row *matRowDef="let row; columns: ['expandedDetail']" class="example-detail-row"></tr>
+</table>

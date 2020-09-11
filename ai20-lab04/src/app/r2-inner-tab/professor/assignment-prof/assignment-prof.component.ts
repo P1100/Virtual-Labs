@@ -22,7 +22,7 @@ import {AssignmentsHistoryComponent} from '../../../dialogs/assignments-history/
   ],
 })
 export class AssignmentProfComponent {
-  columnsToDisplay: string[] = ['nav', 'name', 'releaseDate'];
+  columnsToDisplay: string[] = ['nav', 'name', 'releaseDate', 'link'];
   columnsToDisplayImplementation: string[] = ['firstName', 'lastName', 'id', 'status', 'timestamp'];
   expandedElement: Implementation | null;
   // statusArray = ['NULL', 'READ', 'SUBMITTED', 'REVIEWED', 'DEFINITIVE'];
@@ -58,8 +58,5 @@ export class AssignmentProfComponent {
         this.dialogRef = null;
       }, () => this.alertsService.setAlert('danger', 'Implementations history dialog error')
     );
-  }
-  logTest(Status: any) {
-    console.log(Status);
   }
 }

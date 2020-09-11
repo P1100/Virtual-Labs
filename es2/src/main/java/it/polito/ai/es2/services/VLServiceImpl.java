@@ -7,6 +7,7 @@ import it.polito.ai.es2.dtos.VmDTO;
 import it.polito.ai.es2.entities.Image;
 import it.polito.ai.es2.entities.*;
 import it.polito.ai.es2.repositories.*;
+import it.polito.ai.es2.services.exceptions.NullParameterException;
 import it.polito.ai.es2.services.exceptions.StudentNotFoundException;
 import it.polito.ai.es2.services.exceptions.TeamNotFoundException;
 import it.polito.ai.es2.services.exceptions.VmNotFoundException;
@@ -189,13 +190,14 @@ public class VLServiceImpl implements VLService {
     vmRepository.deleteById(vm.getId());
   }
 
-  @PreAuthorize("hasRole('PROFESSOR')")
+  @PreAuthorize("hasRole('PROFESSOR') or hasRole('STUDENT')")
   @Override public List<AssignmentDTO> getAllAssignments(@NotNull String courseId) {
     List<Assignment> assignments = assignmentRepository.findAllByCourse_Id(courseId);
     return modelMapper.map(assignments, new TypeToken<List<AssignmentDTO>>() {
     }.getType());
   }
 
+  @PreAuthorize("hasRole('PROFESSOR') or hasRole('STUDENT')")
   @Override public void updateImplementation(ImplementationDTO dto) {
     Implementation implementation = implementationRepository.findById(dto.getId()).orElse(null);
     if (implementation == null)
@@ -204,5 +206,18 @@ public class VLServiceImpl implements VLService {
     implementation.setGrade(dto.getGrade());
     implementation.setPermanent(dto.getPermanent());
     implementationRepository.save(implementation);
+  }
+
+  @PreAuthorize("hasRole('STUDENT')")
+  @Override public void uploadSubmission(@NotNull Long implId, @NotNull Long imageId) {
+    Implementation implementation = implementationRepository.findById(implId).orElse(null);
+    Image image = imageRepository.findById(imageId).orElse(null);
+    if (implementation == null || image == null)
+      throw new NullParameterException();
+    implementation.setStatus(Implementation.Status.SUBMITTED);
+    implementation.getImageSubmissions().add(image);
+    image.setSubmission(implementation);
+    implementationRepository.save(implementation);
+    imageRepository.save(image);
   }
 }

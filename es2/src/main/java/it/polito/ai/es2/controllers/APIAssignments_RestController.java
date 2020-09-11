@@ -32,4 +32,9 @@ public class APIAssignments_RestController {
   public void updateImplementation(@RequestBody @Valid ImplementationDTO implementationDTO) {
     vlService.updateImplementation(implementationDTO);
   }
+
+  @PostMapping("/implementation/{implId}/{imageId}")
+  public void uploadSubmission(@PathVariable @NotNull Long implId, @PathVariable @NotNull Long imageId) {
+    vlService.uploadSubmission(implId, imageId);
+  }
 }

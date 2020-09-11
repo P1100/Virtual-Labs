@@ -11,7 +11,7 @@ export class Implementation {
     public definitiveStatus: Date,
     public lastStatus: Date,
     public currentCorrection?: string,
-    public creator?: Student,
+    public student?: Student,
     public imageSubmissions?: Image) {
   }
 }

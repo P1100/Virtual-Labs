@@ -23,4 +23,6 @@ public interface VLService {
   @PreAuthorize("hasRole('PROFESSOR')") List<AssignmentDTO> getAllAssignments(@NotNull String courseId);
 
   void updateImplementation(ImplementationDTO implementationDTO);
+
+  @PreAuthorize("hasRole('STUDENT')") void uploadSubmission(@NotNull Long implId, @NotNull Long imageId);
 }

@@ -85,4 +85,7 @@ export class VlServiceService {
   updateImplementation(impl: Implementation) {
     return this.http.put(`${this.baseUrlApi}/assignments/implementation`, JSON.stringify(impl), AppSettings.JSON_HTTP_OPTIONS);
   }
+  uploadSubmission(implId: number, imageId: number) {
+    return this.http.post(`${this.baseUrlApi}/assignments/implementation/${implId}/${imageId}`, null, AppSettings.JSON_HTTP_OPTIONS);
+  }
 }
