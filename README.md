@@ -21,33 +21,37 @@ This is a didactical learning project, made for the Internet Applications course
 - [Docker](https://docs.docker.com/install/)
 - IDE: IDEA, Webstorm
 
-## How to build, deploy and run
-- First clone the repo: `git clone https://github.com/P1100/VirtualLabs.git` 
+## How to build, deploy and run [production!]
+- First clone the repo:  
+`git clone https://github.com/P1100/VirtualLabs.git` 
 - Do the steps below, and then open the app at the url https://localhost:4200/ (accept the certificate, it is a mock)
+  -   [tested on Windows10 + docker toolbox, and ubuntu 18.x] 
 
 ### DB:
--  User the following command in the terminal:
-`docker run -d -v /home/myes2mariadb:/var/lib/mysql -p 3306:3306 --name virtuallabs -e MYSQL_ROOT_PASSWORD=root -d mariadb`
+-  User the following command in the terminal:   
+ `docker run -d -v /home/myes2mariadb:/var/lib/mysql -p 3306:3306 --name virtuallabs -e MYSQL_ROOT_PASSWORD=root -d mariadb`
 
 ### Server: 
-- Build and run from IDEA, then while running do maven package (tested on Windows10 with docker toolbox, and on ubuntu)
-`docker build -t vl-server .`
-`docker run -it --net=host --name vl-app-server-container  -p 8080:8080 vl-server` 
-- To attach: 
-`docker attach <container_id>`
-`docker exec -it [container-id] sh`
+- Import project in IDEA, then set up JDK to 11 in project structure
+- Make sure profile is set to prod, in application properties
+- Build and run main class from IDEA, then while it is running do maven package  
+`docker build -t vl-server .`  
+`docker run -it --net=host --name vl-app-server-container  -p 8080:8080 vl-server`   
+- To attach:  
+`docker attach <container_id>`  
+`docker exec -it [container-id] sh`  
 
 ### Client:
 - First update all your node and npm installations to last versions (important! Check below)
 - Then install the frontend using `npm install` in its folder, and run it with `npm start`
 
 ##### Updating NPM on Windows
-To update npm on windows, install newer nodejs. Or:
+To update npm on windows, install newer nodejs. Or:  
 - `npm install npm@latest -g` 
 - `npm list -g` 
 - `npm update` 
 ##### Udating NPM on Ubuntu 18 LTS
-First update your ubuntu, everything. Then:
+First update your ubuntu, everything. Then:  
 - `cd ~` 
 - `curl -sL https://deb.nodesource.com/setup_10.x -o nodesource_setup.sh` 
 - `sudo bash nodesource_setup.sh` 
