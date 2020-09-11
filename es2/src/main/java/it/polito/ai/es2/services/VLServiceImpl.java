@@ -7,10 +7,7 @@ import it.polito.ai.es2.dtos.VmDTO;
 import it.polito.ai.es2.entities.Image;
 import it.polito.ai.es2.entities.*;
 import it.polito.ai.es2.repositories.*;
-import it.polito.ai.es2.services.exceptions.NullParameterException;
-import it.polito.ai.es2.services.exceptions.StudentNotFoundException;
-import it.polito.ai.es2.services.exceptions.TeamNotFoundException;
-import it.polito.ai.es2.services.exceptions.VmNotFoundException;
+import it.polito.ai.es2.services.exceptions.*;
 import it.polito.ai.es2.services.interfaces.ImageService;
 import it.polito.ai.es2.services.interfaces.VLService;
 import lombok.extern.java.Log;
@@ -151,7 +148,8 @@ public class VLServiceImpl implements VLService {
     if (teamOptional.isEmpty())
       throw new TeamNotFoundException(teamId);
     Team t = teamOptional.get();
-    List<VmDTO> vmDTOS = modelMapper.map(t.getVms(), new TypeToken<List<VmDTO>>() {}.getType());
+    List<VmDTO> vmDTOS = modelMapper.map(t.getVms(), new TypeToken<List<VmDTO>>() {
+    }.getType());
     return vmDTOS;
   }
 
@@ -168,6 +166,7 @@ public class VLServiceImpl implements VLService {
     }).orElseThrow(() -> new VmNotFoundException(vmId));
     return;
   }
+
   @PreAuthorize("hasRole('STUDENT') and @mySecurityChecker.isVmOwner(#vmDTO,authentication.principal.username)")
   @Override public void editVm(@Valid VmDTO vmDTO) {
     VM vm = vmRepository.findById(vmDTO.getId()).orElseThrow(() -> new VmNotFoundException(vmDTO.getId()));
@@ -176,6 +175,7 @@ public class VLServiceImpl implements VLService {
     vm.setDisk(vmDTO.getDisk());
     vmRepository.save(vm);
   }
+
   @PreAuthorize("hasRole('STUDENT') and @mySecurityChecker.isVmOwner(#vmId,authentication.principal.username)")
   @Override public void deleteVm(@NotNull Long vmId) {
     VM vm = vmRepository.findById(vmId).orElseThrow(() -> new VmNotFoundException(vmId));
@@ -202,6 +202,7 @@ public class VLServiceImpl implements VLService {
     Implementation implementation = implementationRepository.findById(dto.getId()).orElse(null);
     if (implementation == null)
       return;
+    implementation.setStatus(dto.getStatus());
     implementation.setCurrentCorrection(dto.getCurrentCorrection());
     implementation.setGrade(dto.getGrade());
     implementation.setPermanent(dto.getPermanent());
@@ -219,5 +220,24 @@ public class VLServiceImpl implements VLService {
     image.setSubmission(implementation);
     implementationRepository.save(implementation);
     imageRepository.save(image);
+  }
+
+  @PreAuthorize("hasRole('STUDENT')")
+  @Override public void setStatusSubmissionToRead(Long assignmentId, Long studentId) {
+    Assignment assignment = assignmentRepository.findById(assignmentId).orElse(null);
+    if (assignment == null)
+      throw new InvalidDataException("not found assignment");
+    List<Implementation> implementations = assignment.getImplementations();
+    Implementation studImp = null;
+    for (Implementation i : implementations) {
+      if (i.getStudent() != null && i.getStudent().getId().equals(studentId)) {
+        studImp = i;
+        break;
+      }
+    }
+    if (studImp != null && studImp.getStatus() == Implementation.Status.NULL) {
+      studImp.setStatus(Implementation.Status.READ);
+      implementationRepository.save(studImp);
+    }
   }
 }

@@ -1,14 +1,10 @@
-import {Component, Inject, OnInit} from '@angular/core';
-import {CourseService} from '../../services/course.service';
+import {Component, Inject} from '@angular/core';
 import {MAT_DIALOG_DATA, MatDialogRef} from '@angular/material/dialog';
-import {dialogCourseData} from '../../r0-topheader-leftsidebar/home.component';
 import {Router} from '@angular/router';
 import {AlertsService} from '../../services/alerts.service';
-import {Course} from '../../models/course.model';
 import {Implementation} from '../../models/implementation.model';
 import {VlServiceService} from '../../services/vl-service.service';
 import {MatTableDataSource} from '@angular/material/table';
-import {Team} from '../../models/team.model';
 import {Image} from '../../models/image.model';
 
 @Component({
@@ -36,6 +32,7 @@ export class AssignmentsHistoryComponent {
       impl.permanent = true;
       // grade with ngModel
     } else {
+      impl.status = 'REVIEWED';
       impl.currentCorrection = this.correction;
     }
     this.vlServiceService.updateImplementation(impl).subscribe(value => {});

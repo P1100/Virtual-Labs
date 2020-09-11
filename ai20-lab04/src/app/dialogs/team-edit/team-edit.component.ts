@@ -30,7 +30,6 @@ export class TeamEditComponent implements OnDestroy {
   constructor(private dialogRef: MatDialogRef<VmEditComponent>, private router: Router, @Inject(MAT_DIALOG_DATA) public data: Team,
               private alertsService: AlertsService, private vlServiceService: VlServiceService) {
     const source: Observable<any> = interval(3000);
-    const subscribe = source.subscribe(val => console.log(val));
     this.team = data;
     this.realTimeUpdateSub = source.pipe(startWith('startImmediately'), switchMap(() => {
       return this.vlServiceService.getTeamVms(this.team.id);

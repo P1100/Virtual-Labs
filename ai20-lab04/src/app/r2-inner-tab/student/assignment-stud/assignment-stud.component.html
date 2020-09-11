@@ -28,7 +28,7 @@
   <ng-container matColumnDef="link">
     <th *matHeaderCellDef mat-header-cell mat-sort-header="">Link</th>
     <td *matCellDef="let element; let k = dataIndex" mat-cell>
-      <a mat-stroked-button href="{{element.content.directLink}}" target="_blank">Link</a>
+      <a mat-stroked-button href="{{element.content.directLink}}" target="_blank" (click)="setStatusToRead(element.id)">Link</a>
     </td>
   </ng-container>
   <ng-container matColumnDef="expandedDetail" id="innerExpandedTable">

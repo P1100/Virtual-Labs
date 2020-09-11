@@ -187,9 +187,10 @@ export class HomeComponent implements OnInit, OnDestroy {
     );
   }
   openLoginDialogReactive(): void {
-    // if (this.dialogRef?.getState() == MatDialogState.OPEN) {
-    //   throw new Error('Dialog stil open while opening a new one');
-    // }
+    if (this.dialogRef?.getState() == MatDialogState.OPEN) {
+      // throw new Error('Dialog stil open while opening a new one');
+      this.dialogRef.close();
+    }
     this.dialogRef = this.dialog.open(LoginComponent, {
       maxWidth: '400px', autoFocus: true, hasBackdrop: true, disableClose: true, closeOnNavigation: false
     });

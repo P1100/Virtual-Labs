@@ -25,4 +25,7 @@ public interface VLService {
   void updateImplementation(ImplementationDTO implementationDTO);
 
   @PreAuthorize("hasRole('STUDENT')") void uploadSubmission(@NotNull Long implId, @NotNull Long imageId);
+
+  @PreAuthorize("hasRole('STUDENT')")
+  void setStatusSubmissionToRead(Long assignmentId, Long studentId);
 }

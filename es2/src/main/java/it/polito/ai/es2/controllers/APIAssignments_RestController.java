@@ -37,4 +37,9 @@ public class APIAssignments_RestController {
   public void uploadSubmission(@PathVariable @NotNull Long implId, @PathVariable @NotNull Long imageId) {
     vlService.uploadSubmission(implId, imageId);
   }
+
+  @PutMapping("/implementation/read/{assignmentId}/{studentId}")
+  public void setStatusSubmissionToRead(@PathVariable @NotNull Long assignmentId, @PathVariable @NotNull Long studentId) {
+    vlService.setStatusSubmissionToRead(assignmentId, studentId);
+  }
 }

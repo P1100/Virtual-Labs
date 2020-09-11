@@ -99,4 +99,14 @@ export class AssignmentStudComponent {
     });
   }
 
+  setStatusToRead(assignmentId: number) {
+    this.vlServiceService.setStatusSubmissionToRead(assignmentId, this.idLoggedStudent).subscribe(
+      () => {
+        this.alertsService.setAlert('success', 'Status updated!');
+      },
+      e => {
+        this.alertsService.setAlert('danger', 'Couldn\'t update status ' + e);
+      }
+    );
+  }
 }
