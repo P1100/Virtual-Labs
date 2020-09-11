@@ -26,7 +26,6 @@ export class VmEditComponent {
     this.startingVcpuVm = this.vm.vcpu;
     this.startingRamVm = this.vm.ram;
     this.startingDiskVm = this.vm.disk;
-    console.log('DISK', this.vm.disk);
   }
 
   onCancelClick(): void {
