@@ -29,7 +29,7 @@ This is a didactical learning project, made for the Internet Applications course
 ![](https://i.ibb.co/zx12tjV/Image-133.jpg)
 ![](https://i.ibb.co/BqVyfjR/Image-129.jpg)
 ![](https://i.ibb.co/9wnGKNv/Image-130.jpg)
-## How to build, deploy and run [production!]
+## How to build, deploy and run
 - First clone the repo:  
 `git clone https://github.com/P1100/VirtualLabs.git` 
 - Do the steps below
@@ -38,7 +38,7 @@ This is a didactical learning project, made for the Internet Applications course
 ### DB:
 -  User the following command in the terminal:   
  `docker run -d -v /home/myes2mariadb:/var/lib/mysql -p 3306:3306 --name virtuallabs -e MYSQL_ROOT_PASSWORD=root -d mariadb`
-#### DB Data Init
+#### DB Data Init (optional)
 ```
 docker run -d -v /home/myes2mariadb:/var/lib/mysql -p 3306:3306 --name virtuallabs -e MYSQL_ROOT_PASSWORD=root -d mariadb
 docker ps -a
