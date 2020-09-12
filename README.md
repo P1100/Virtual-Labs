@@ -21,11 +21,19 @@ This is a didactical learning project, made for the Internet Applications course
 - [Docker](https://docs.docker.com/install/)
 - IDE: IDEA, Webstorm
 
+## ER Model
+![](https://i.ibb.co/g4CgcfQ/ERModel.jpg)
+
+## Screenshots
+![](https://i.ibb.co/5jZNyXX/Image-131.jpg)
+![](https://i.ibb.co/zx12tjV/Image-133.jpg)
+![](https://i.ibb.co/BqVyfjR/Image-129.jpg)
+![](https://i.ibb.co/9wnGKNv/Image-130.jpg)
 ## How to build, deploy and run [production!]
 - First clone the repo:  
 `git clone https://github.com/P1100/VirtualLabs.git` 
-- Do the steps below, and then open the app at the url https://localhost:4200/ (accept the certificate, it is a mock)
-  -   [tested on Windows10 + docker toolbox, and ubuntu 18.x] 
+- Do the steps below
+- Open the app at https://localhost:4200/ (accept the certificate, it's a mock)
 
 ### DB:
 -  User the following command in the terminal:   
@@ -39,21 +47,6 @@ docker cp ./src/main/resources/dumbMariaDb.sql 1a00bbb17c48:/dbdata.sql
 **RUN SERVER JAR NOW**  (to init db schema)  
 docker exec -i e881856b55ba mysql -uroot -proot virtuallabs < dbdata.sql
 ```  
-##### DB Debug
-```
-docker exec -it e881856b55ba mysql -uroot -proot virtuallabs
-use virtuallabs;
-show tables;
-SELECT * FROM course;
-DROP DATABASE virtuallabs;
-```
-##### DB Pre-Loaded Users and Passwords
-- 111111 111111
-- 222222 222222
-- 333333 333333
-- 999999 999999
-
-
 ### Server: 
 - Import project in IDEA, then set up JDK to 11 in project structure
 - Make sure profile is set to prod, in application properties
@@ -63,25 +56,35 @@ DROP DATABASE virtuallabs;
 - To attach:  
 `docker attach <container_id>`  
 `docker exec -it [container-id] sh`  
-
 ### Client:
 - First update all your node and npm installations to last versions (important! Check below)
 - Then install the frontend using `npm install` in its folder, and run it with `npm start`
 
-##### Updating NPM on Windows
+## Other info
+#### DB Debug
+```
+docker exec -it e881856b55ba mysql -uroot -proot virtuallabs
+use virtuallabs;
+show tables;
+SELECT * FROM course;
+DROP DATABASE virtuallabs;
+```
+#### DB Pre-Loaded Users and Passwords
+- 111111 111111
+- 222222 222222
+- 333333 333333
+- 999999 999999
+#### Updating NPM on Windows
 To update npm on windows, install newer nodejs. Or:  
 - `npm install npm@latest -g` 
 - `npm list -g` 
 - `npm update` 
-##### Udating NPM on Ubuntu 18 LTS
+#### Udating NPM on Ubuntu 18 LTS
 First update your ubuntu, everything. Then:  
 - `cd ~` 
 - `curl -sL https://deb.nodesource.com/setup_10.x -o nodesource_setup.sh` 
 - `sudo bash nodesource_setup.sh` 
 - `sudo apt install nodejs` 
-
-## ER Model
-![](https://i.ibb.co/g4CgcfQ/ERModel.jpg)
 
 ## Questions and Issues
 Feel free to ask or report any
