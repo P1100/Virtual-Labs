@@ -28,10 +28,10 @@ public class Token {
 
   @ManyToOne()
   @JoinColumn
-  private Team team; // team token
+  private Team team; // team token (optional, value could be retrieved from one of the students)
   @ManyToOne()
   @JoinColumn
-  private Student student;
+  private Student student; // Necessary: for every team, each student is assigned one different token
 
   public void addSetUser(User savedUser) {
     if (user != null)

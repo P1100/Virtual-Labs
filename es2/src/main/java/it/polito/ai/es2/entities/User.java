@@ -19,16 +19,10 @@ import java.util.List;
 // "User" is a reserved word in some SQL implementations, so we escape the table name [SQL quoted identifiers]
 @Table(name = "\"user\"")
 public class User {
-  /**
-   * Used only internally by the back end
-   */
-  public enum TypeUser {STUDENT, PROFESSOR}
+  public enum TypeUser {STUDENT, PROFESSOR} // Used internally by the back end
 
-  /**
-   * Username must be equal to student/professor id !!!
-   */
   @Id
-  private String username;
+  private String username; // username is equal to student/professor id (String-->Long), in this implementation
   @NotBlank
   private String password;
 
