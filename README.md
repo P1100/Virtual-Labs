@@ -48,17 +48,17 @@ docker cp ./src/main/resources/dumbMariaDb.sql 1a00bbb17c48:/dbdata.sql
 docker exec -i e881856b55ba mysql -uroot -proot virtuallabs < dbdata.sql
 ```  
 ### Server: 
-- Import project in IDEA, then set up JDK to 11 in project structure
-- Make sure profile is set to prod, in application properties
-- Build and run main class from IDEA, then while it is running do maven package  
+- Import project in IDEA, then set up JDK to 11 in project structure (and/or other places, look at pom.xml).
+- Make sure profile is set to prod, in application properties.
+- Build and run main class from IDEA, then while it is running do maven package. Afterwards, in the terminal:   
 `docker build -t vl-server .`  
 `docker run -it --net=host --name vl-app-server-container  -p 8080:8080 vl-server`   
 - To attach:  
-`docker attach <container_id>`  
+`docker attach <container_id>`
 `docker exec -it [container-id] sh`  
 ### Client:
 - First update all your node and npm installations to last versions (important! Check below)
-- Then install the frontend using `npm install` in its folder, and run it with `npm start`
+- Then install the frontend using `npm install`, in its folder. Run with `npm start`
 
 ## Other info
 #### DB Debug
@@ -69,7 +69,7 @@ show tables;
 SELECT * FROM course;
 DROP DATABASE virtuallabs;
 ```
-#### DB Pre-Loaded Users and Passwords
+#### DB Pre-Loaded Users and Passwords [ficticious, for quick testing]
 - 111111 111111
 - 222222 222222
 - 333333 333333
