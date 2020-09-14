@@ -132,7 +132,7 @@ export class HomeComponent implements OnInit, OnDestroy {
       }
     );
   }
-  private updateToolbarCourseName() {
+  private updateToolbarCourseName() { // Also called on setupAuthUpdateLogic
     if (this.idActiveCourse != null) {
       for (const course of this.courses) {
         if (course.id == this.idActiveCourse) { // dont use === here

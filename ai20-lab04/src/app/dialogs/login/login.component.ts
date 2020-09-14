@@ -1,4 +1,4 @@
-import {Component, OnDestroy} from '@angular/core';
+import {Component} from '@angular/core';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {Subscription} from 'rxjs';
 import {MatDialogRef} from '@angular/material/dialog';
@@ -14,7 +14,7 @@ import {AlertsService} from '../../services/alerts.service';
   styleUrls: []
 })
 
-export class LoginComponent implements OnDestroy {
+export class LoginComponent {
   user = new User(null, null, null, null, null, null, []);
   form: FormGroup;
   subscriptionLogin: Subscription;
@@ -38,9 +38,6 @@ export class LoginComponent implements OnDestroy {
       this.user.password = form?.password;
     });
   }
-  ngOnDestroy(): void {
-    // this.router.navigateByUrl('/home');
-  }
   onCancelClick(): void {
     this.subscriptionLogin?.unsubscribe();
     this.dialogRef.close();
@@ -50,7 +47,10 @@ export class LoginComponent implements OnDestroy {
       return;
     }
     if (this.form.value?.serial && this.form.value?.password) {
-      this.subscriptionLogin = this.authService.login(this.form.value.serial, this.form.value.password)
+      // let username = (this.form.value.serial as string);
+      // username = username.substr(1, username.indexOf('@')-1);
+      const username = this.form.value.serial;
+      this.subscriptionLogin = this.authService.login(username, this.form.value.password)
         .subscribe(
           x => {
             this.dialogRef.close('success');
