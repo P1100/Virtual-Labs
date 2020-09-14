@@ -77,8 +77,6 @@ DROP DATABASE virtuallabs;
 #### Updating NPM on Windows
 To update npm on windows, install newer nodejs. Or:  
 - `npm install npm@latest -g` 
-- `npm list -g` 
-- `npm update` 
 #### Udating NPM on Ubuntu 18 LTS
 First update your ubuntu, everything. Then:  
 - `cd ~` 
