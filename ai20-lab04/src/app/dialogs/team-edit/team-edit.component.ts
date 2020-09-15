@@ -10,9 +10,9 @@ import {interval, Observable, Subscription} from 'rxjs';
 import {startWith, switchMap} from 'rxjs/operators';
 
 export interface vmsValuesInUse {
-  maxVcpuUsed: number,
-  maxRamUsed: number,
-  maxDiskUsed: number,
+  vcpuUsed: number,
+  ramUsed: number,
+  diskUsed: number,
   TotVmUsed: number,
   RunningVmUsed: number
 }
@@ -35,14 +35,14 @@ export class TeamEditComponent implements OnDestroy {
       return this.vlServiceService.getTeamVms(this.team.id);
     }))
       .subscribe((vmsTeam: Vm[]) => {
-          this.vmsStatistics.maxVcpuUsed = vmsTeam.reduce((previousValue, currentValue, currentIndex, array) => {
-            return currentValue.vcpu > previousValue ? currentValue.vcpu : previousValue;
+          this.vmsStatistics.vcpuUsed = vmsTeam.reduce((previousValue, currentValue, currentIndex, array) => {
+            return currentValue.vcpu + previousValue;
           }, 0);
-          this.vmsStatistics.maxRamUsed = vmsTeam.reduce((previousValue, currentValue, currentIndex, array) => {
-            return currentValue.ram > previousValue ? currentValue.ram : previousValue;
+          this.vmsStatistics.ramUsed = vmsTeam.reduce((previousValue, currentValue, currentIndex, array) => {
+            return currentValue.ram + previousValue;
           }, 0);
-          this.vmsStatistics.maxDiskUsed = vmsTeam.reduce((previousValue, currentValue, currentIndex, array) => {
-            return currentValue.disk > previousValue ? currentValue.disk : previousValue;
+          this.vmsStatistics.diskUsed = vmsTeam.reduce((previousValue, currentValue, currentIndex, array) => {
+            return currentValue.disk + previousValue;
           }, 0);
           this.vmsStatistics.TotVmUsed = vmsTeam.length;
           this.vmsStatistics.RunningVmUsed = vmsTeam.filter(v => v.active).length;

@@ -3,18 +3,18 @@
   <div>
     <mat-form-field class="form-group">
       <mat-label>maxVcpu</mat-label>
-      <input matInput #mvcpu="ngModel" name="mvcpu" [(ngModel)]="team.maxVcpu" required type="number" [min]="vmsStatistics.maxVcpuUsed" [max]="999999">
-      <mat-hint>{{vmsStatistics.maxVcpuUsed}} in use</mat-hint>
+      <input matInput #mvcpu="ngModel" name="mvcpu" [(ngModel)]="team.maxVcpu" required type="number" [min]="vmsStatistics.vcpuUsed" [max]="999999">
+      <mat-hint>{{vmsStatistics.vcpuUsed}} in use</mat-hint>
     </mat-form-field>
     <mat-form-field class="form-group">
       <mat-label>maxDisk</mat-label>
-      <input matInput #mdisk="ngModel" name="mdisk" [(ngModel)]="team.maxDisk" required type="number" [min]="vmsStatistics.maxDiskUsed" [max]="999999">
-      <mat-hint>{{vmsStatistics.maxDiskUsed}} in use</mat-hint>
+      <input matInput #mdisk="ngModel" name="mdisk" [(ngModel)]="team.maxDisk" required type="number" [min]="vmsStatistics.diskUsed" [max]="999999">
+      <mat-hint>{{vmsStatistics.diskUsed}} in use</mat-hint>
     </mat-form-field>
     <mat-form-field class="form-group">
       <mat-label>maxRam</mat-label>
-      <input matInput #mram="ngModel" name="mram" [(ngModel)]="team.maxRam" required type="number" [min]="vmsStatistics.maxRamUsed" [max]="999999">
-      <mat-hint>{{vmsStatistics.maxRamUsed}} in use</mat-hint>
+      <input matInput #mram="ngModel" name="mram" [(ngModel)]="team.maxRam" required type="number" [min]="vmsStatistics.ramUsed" [max]="999999">
+      <mat-hint>{{vmsStatistics.ramUsed}} in use</mat-hint>
     </mat-form-field>
     <mat-form-field class="form-group">
       <mat-label>maxRunningVm</mat-label>
