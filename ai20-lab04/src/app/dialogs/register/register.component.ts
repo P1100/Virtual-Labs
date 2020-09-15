@@ -16,7 +16,7 @@ import {Image} from '../../models/image.model';
   styles: ['mat-form-field {width: 100%} mat-radio-button {margin-right: 12px}']
 })
 export class RegisterComponent {
-  user = new User(null, null, null, null, null, 'd000000@polito.it', []);
+  user = new User(null, null, null, null, null, '', []);
   checkboxNoValidate = false;
   showCheckboxNoValidateForTesting = AppSettings.devtest;
   isStudentRadio = 'student';
