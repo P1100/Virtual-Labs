@@ -168,6 +168,9 @@ export class HomeComponent implements OnInit, OnDestroy {
       data: {courseName: this.nameActiveCourse, courseId: this.idActiveCourse}
     });
     this.dialogRef.afterClosed().subscribe((res: string) => {
+        if (res != undefined) {
+          this.obsUpdateCourses.subscribe(x => this.courses = x);
+        }
       }, error => this.alertsService.setAlert('danger', 'Edit Course Dialog Error!')
     );
   }
