@@ -1,5 +1,5 @@
 import {Component} from '@angular/core';
-import {FormBuilder, FormGroup, Validators} from '@angular/forms';
+import {FormBuilder, FormGroup, ValidationErrors, Validators} from '@angular/forms';
 import {Subscription} from 'rxjs';
 import {MatDialogRef} from '@angular/material/dialog';
 import {AuthService} from '../../services/auth.service';
@@ -30,6 +30,7 @@ export class LoginComponent {
         serial: ['111111', [Validators.required]],
         password: ['111111', [Validators.required]],
       }
+      // , {validators: fakeNameValidator}
     ) as FormGroup;
     this.form.valueChanges.pipe(
       filter(() => this.form.valid)
@@ -64,4 +65,10 @@ export class LoginComponent {
         );
     }
   }
+}
+
+function fakeNameValidator(control: FormGroup): ValidationErrors | null {
+  const password = control.get('password');
+  const serial = control.get('serial');
+  return password && serial && password.value === serial.value ? {fakeName: true} : null;
 }
