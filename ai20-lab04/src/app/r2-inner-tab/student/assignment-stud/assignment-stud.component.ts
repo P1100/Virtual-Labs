@@ -93,7 +93,7 @@ export class AssignmentStudComponent {
           this.alertsService.setAlert('success', 'File submitted!');
         },
         e => {
-          this.alertsService.setAlert('danger', 'Couldn\'t register user! ' + e);
+          this.alertsService.setAlert('danger', 'Couldn\'t upload submission! ' + e);
         }
       );
     });
