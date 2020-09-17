@@ -13,7 +13,7 @@ import {Router} from '@angular/router';
     /*text-indent: -9999px;*/
     z-index:-1;">
       <button mat-flat-button color="primary" (click)="goHome()" class="alert-primary">HOME</button>
-      <p style="text-align: center; color: midnightblue; font-weight: bold; font-size: xx-large">Not Found</p>
+      <p style="text-align: center; color: midnightblue; font-weight: bold; font-size: xx-large; text-shadow: 2px 2px red;">Not Found</p>
     </div>
   `,
   styles: []
