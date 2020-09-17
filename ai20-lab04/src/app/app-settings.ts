@@ -7,7 +7,7 @@ import {environment} from '../environments/environment';
 export class AppSettings {
   // Back end URL
   public static baseUrl = 'http://localhost:8080';
-  public static devtest: boolean = environment.dev; // to show logs, tests, and other components
+  public static devtest: boolean = false; //environment.dev; // to show logs, tests, and other components
 
   // HTTP Settings (services)
   public static RETRIES = 1;

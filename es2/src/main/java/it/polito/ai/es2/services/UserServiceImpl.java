@@ -110,7 +110,7 @@ public class UserServiceImpl implements UserService {
     sb.append("\n\nLink to confirm registration:\n" + baseUrl + "/notification/user/confirm/" + token.getId());
     String mymatricola = environment.getProperty("mymatricola");
     System.out.println(sb);
-    notificationService.sendMessage("s" + mymatricola + "@studenti.polito.it", "[Student:" + userDTO.getUsername() + "] Virtual Labs email verification", sb.toString());
+    notificationService.sendMessage("s" + mymatricola + "@studenti.polito.it", "[User:" + userDTO.getUsername() + "] Virtual Labs email verification", sb.toString());
     return modelMapper.map(savedUser, UserDTO.class);
   }
 
