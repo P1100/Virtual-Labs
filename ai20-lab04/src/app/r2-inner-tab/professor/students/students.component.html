@@ -45,7 +45,6 @@
         </mat-option>
       </mat-autocomplete>
     </mat-form-field>
-    <!--    tolto $event da parametro studentsAdd, perché prende il dato da aggiornare da saveOption. -->
     <button (click)="studentsAdd(); input.value=''" mat-button matSuffix matTooltip="Add selected student">
       <mat-icon id="person_add_icon">person_add</mat-icon>
     </button>
@@ -54,7 +53,6 @@
 
   <div id="tableWithPaginator" class="mat-elevation-z8">
     <table (matSortChange)="sortChange($event)" [dataSource]="dataSource" mat-table matSort>
-      <!-- Select column-->
       <ng-container matColumnDef="select">
         <th *matHeaderCellDef mat-header-cell>
           <mat-checkbox (change)="checkboxSetAllPage($event.checked)"
