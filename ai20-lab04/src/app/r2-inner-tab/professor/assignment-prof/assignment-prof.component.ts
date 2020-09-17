@@ -3,7 +3,6 @@ import {MatSort} from '@angular/material/sort';
 import {MatTableDataSource} from '@angular/material/table';
 import {MatDialog, MatDialogRef, MatDialogState} from '@angular/material/dialog';
 import {AlertsService} from '../../../services/alerts.service';
-import {TeamProposeComponent} from '../../../dialogs/team-propose/team-propose.component';
 import {Assignment} from '../../../models/assignment.model';
 import {Implementation} from '../../../models/implementation.model';
 import {animate, state, style, transition, trigger} from '@angular/animations';
@@ -23,7 +22,7 @@ import {AssignmentsHistoryComponent} from '../../../dialogs/assignments-history/
 })
 export class AssignmentProfComponent {
   columnsToDisplay: string[] = ['nav', 'name', 'releaseDate', 'link'];
-  columnsToDisplayImplementation: string[] = ['firstName', 'lastName', 'id', 'status', 'timestamp'];
+  columnsToDisplayImplementation: string[] = ['firstName', 'lastName', 'id', 'status', 'timestamp', 'grade'];
   expandedElement: Implementation | null;
   // statusArray = ['NULL', 'READ', 'SUBMITTED', 'REVIEWED', 'DEFINITIVE'];
   @ViewChild(MatSort, {static: true}) sort: MatSort;

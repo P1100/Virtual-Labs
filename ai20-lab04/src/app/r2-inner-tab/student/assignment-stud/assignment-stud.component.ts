@@ -24,7 +24,7 @@ import {VlServiceService} from '../../../services/vl-service.service';
 })
 export class AssignmentStudComponent {
   columnsToDisplay: string[] = ['nav', 'name', 'releaseDate', 'link'];
-  columnsToDisplayImplementation: string[] = ['firstName', 'lastName', 'id', 'status', 'timestamp', 'submit'];
+  columnsToDisplayImplementation: string[] = ['firstName', 'lastName', 'id', 'status', 'timestamp', 'grade', 'submit'];
   expandedElement: Implementation | null;
   // statusArray = ['NULL', 'READ', 'SUBMITTED', 'REVIEWED', 'DEFINITIVE'];
   @ViewChild(MatSort, {static: true}) sort: MatSort;

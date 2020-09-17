@@ -48,3 +48,7 @@ tr.example-element-row:not(.example-expanded-row):active {
   opacity: 0.5;
   background: #ccc;
 }
+
+div table tr:hover {
+  background-color: cadetblue;
+}

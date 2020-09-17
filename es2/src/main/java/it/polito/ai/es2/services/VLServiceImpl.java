@@ -215,6 +215,10 @@ public class VLServiceImpl implements VLService {
     Image image = imageRepository.findById(imageId).orElse(null);
     if (implementation == null || image == null)
       throw new NullParameterException();
+    implementation.setPermanent(false);
+    implementation.setGrade(null);
+    implementation.setCurrentCorrection(null
+    );
     implementation.setStatus(Implementation.Status.SUBMITTED);
     implementation.getImageSubmissions().add(image);
     image.setSubmission(implementation);

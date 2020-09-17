@@ -28,6 +28,7 @@ export class AssignmentsHistoryComponent {
     delete impl.imageSubmissions;
     delete impl.student;
     if(this.isDefinitive) {
+      impl.status = 'DEFINITIVE';
       impl.definitiveStatus = new Date();
       impl.permanent = true;
       // grade with ngModel
