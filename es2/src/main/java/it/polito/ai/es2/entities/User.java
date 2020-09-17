@@ -56,6 +56,13 @@ public class User {
     return authorities;
   }
 
+  public void setRoles(List<Role> roles) {
+    this.roles = roles;
+    for (Role role : roles) {
+      role.getUsers().add(this);
+    }
+  }
+
   public List<String> convertStringsToRoles() {
     List<String> stringRoles = new ArrayList<>();
     for (Role role : roles) {
@@ -76,5 +83,16 @@ public class User {
       throw new RuntimeException("JPA-User: overriding a OneToOne or ManyToOne field might be an error");
     professor = x;
     x.setUser(this);
+  }
+
+  @Override public String toString() {
+    return "User{" +
+        "username='" + username + '\'' +
+        ", password='" + password + '\'' +
+        ", enabled=" + enabled +
+        ", accountNonExpired=" + accountNonExpired +
+        ", credentialsNonExpired=" + credentialsNonExpired +
+        ", accountNonLocked=" + accountNonLocked +
+        '}';
   }
 }

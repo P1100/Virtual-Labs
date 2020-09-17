@@ -28,5 +28,12 @@ public class Role {
     name = role;
     description = "";
   }
+
+  @Override public String toString() {
+    return "Role{" +
+        "name='" + name + '\'' +
+        ", description='" + description + '\'' +
+        '}';
+  }
 }
 
