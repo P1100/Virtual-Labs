@@ -8,6 +8,7 @@ import it.polito.ai.es2.repositories.*;
 import it.polito.ai.es2.services.exceptions.FailedAddException;
 import it.polito.ai.es2.services.exceptions.UserAlreadyEnabledException;
 import it.polito.ai.es2.services.exceptions.UsernameAlreadyUsedException;
+import it.polito.ai.es2.services.interfaces.NotificationService;
 import it.polito.ai.es2.services.interfaces.UserService;
 import lombok.extern.java.Log;
 import org.modelmapper.ModelMapper;
@@ -56,6 +57,8 @@ public class UserServiceImpl implements UserService {
   ImageRepository imageRepository;
   @Autowired
   public TokenRepository tokenRepository;
+  @Autowired
+  NotificationService notificationService;
   @Value("${server.port}")
   private String port;
   @Value("${server.address}")
@@ -107,8 +110,7 @@ public class UserServiceImpl implements UserService {
     sb.append("\n\nLink to confirm registration:\n" + baseUrl + "/notification/user/confirm/" + token.getId());
     String mymatricola = environment.getProperty("mymatricola");
     System.out.println(sb);
-    // TODO: uncomment when needed
-//    notificationService.sendMessage("s" + mymatricola + "@studenti.polito.it", "[Student:" + userDTO.getUsername() + "] Virtual Labs email verification", sb.toString());
+    notificationService.sendMessage("s" + mymatricola + "@studenti.polito.it", "[Student:" + userDTO.getUsername() + "] Virtual Labs email verification", sb.toString());
     return modelMapper.map(savedUser, UserDTO.class);
   }
 

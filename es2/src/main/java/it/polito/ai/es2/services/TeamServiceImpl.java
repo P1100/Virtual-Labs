@@ -266,7 +266,7 @@ public class TeamServiceImpl extends CommonURL implements TeamService {
       String mymatricola = environment.getProperty("mymatricola");
       // TODO: uncomment in prod?
       System.out.println("[s" + mymatricola + "@studenti.polito.it] s" + memberId + "@studenti.polito.it - Conferma iscrizione al team " + savedTeam.getName());
-//        sendMessage("s" + mymatricola + "@studenti.polito.it", "[Student:" + memberId + "] Conferma iscrizione al team " + savedTeam.getName(), sb.toString());
+      notificationService.sendMessage("s" + mymatricola + "@studenti.polito.it", "[Student:" + memberId + "] Conferma iscrizione al team " + savedTeam.getName(), sb.toString());
     }
   }
 
