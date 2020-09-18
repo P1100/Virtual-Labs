@@ -217,8 +217,7 @@ public class VLServiceImpl implements VLService {
       throw new NullParameterException();
     implementation.setPermanent(false);
     implementation.setGrade(null);
-    implementation.setCurrentCorrection(null
-    );
+    implementation.setCurrentCorrection(null);
     implementation.setStatus(Implementation.Status.SUBMITTED);
     implementation.getImageSubmissions().add(image);
     image.setSubmission(implementation);

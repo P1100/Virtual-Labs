@@ -49,6 +49,6 @@ tr.example-element-row:not(.example-expanded-row):active {
   background: #ccc;
 }
 
-div table tr:hover {
+div table tr.mat-row:hover {
   background-color: cadetblue;
 }
