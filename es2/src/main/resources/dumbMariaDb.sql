@@ -1,15 +1,10 @@
+CREATE DATABASE IF NOT EXISTS virtuallabs;
+# RUN SERVER TO INIT TABLES
 use virtuallabs;
 SET foreign_key_checks = 0;
-INSERT INTO virtuallabs.hibernate_sequence (next_val)
-VALUES (31);
-INSERT INTO virtuallabs.hibernate_sequence (next_val)
-VALUES (31);
-INSERT INTO virtuallabs.hibernate_sequence (next_val)
-VALUES (31);
-INSERT INTO virtuallabs.hibernate_sequence (next_val)
-VALUES (31);
-INSERT INTO virtuallabs.hibernate_sequence (next_val)
-VALUES (31);
+# INSERT INTO virtuallabs.hibernate_sequence (next_val) VALUES (300);
+UPDATE virtuallabs.hibernate_sequence
+SET next_val = 300;
 
 INSERT INTO virtuallabs.course (id, enabled, full_name, max_size_team, min_size_team, vm_model_path)
 VALUES ('intapp', true, 'Internet Applications', 7, 3, null);
