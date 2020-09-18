@@ -72,6 +72,23 @@
     </td>
   </ng-container>
 
+  <ng-container matColumnDef="expandedDetail2">
+    <td mat-cell *matCellDef="let element" [attr.colspan]="columnsToDisplay.length">
+      <div class="example-element-detail" [@detailExpand]="element == expandedElement ? 'expanded' : 'collapsed'">
+        <div class="example-element-detail">
+          <table mat-table matSort [dataSource]="element.implementations | filterStudent: idLoggedStudent">
+            <ng-container matColumnDef="correction">
+              <th mat-header-cell *matHeaderCellDef>correction</th>
+              <td mat-cell *matCellDef="let element"> {{element.currentCorrection}} </td>
+            </ng-container>
+            <tr mat-header-row *matHeaderRowDef="['correction']; sticky: true"></tr>
+            <tr mat-row *matRowDef="let row; columns: ['correction'];"></tr>
+          </table>
+        </div>
+      </div>
+    </td>
+  </ng-container>
+
   <tr mat-header-row *matHeaderRowDef="columnsToDisplay"></tr>
   <tr mat-row *matRowDef="let element; columns: columnsToDisplay"
       [class]="element.disabled ? 'disabled' : 'example-element-row'"
@@ -79,4 +96,5 @@
       (click)="expandedElement = (expandedElement === element) ? null : element">
   </tr>
   <tr mat-row *matRowDef="let row; columns: ['expandedDetail']" class="example-detail-row"></tr>
+  <tr mat-row *matRowDef="let row; columns: ['expandedDetail2']" class="example-detail-row"></tr>
 </table>
