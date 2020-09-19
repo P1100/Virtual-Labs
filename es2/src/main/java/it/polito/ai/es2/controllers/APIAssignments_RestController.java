@@ -19,7 +19,7 @@ public class APIAssignments_RestController {
   @Autowired
   private VLService vlService;
 
-  @PostMapping("/{courseId}") // Role professor, idProf da auth, image preload
+  @PostMapping("/{courseId}") // TODO: implement
   public void createAssignment(@PathVariable @NotBlank String courseId, @PathVariable @NotNull Long imageId) {
   }
 
@@ -38,7 +38,7 @@ public class APIAssignments_RestController {
     vlService.uploadSubmission(implId, imageId);
   }
 
-  @PutMapping("/implementation/read/{assignmentId}/{studentId}")
+  @PutMapping("/implementation/status-read/{assignmentId}/{studentId}")
   public void setStatusSubmissionToRead(@PathVariable @NotNull Long assignmentId, @PathVariable @NotNull Long studentId) {
     vlService.setStatusSubmissionToRead(assignmentId, studentId);
   }

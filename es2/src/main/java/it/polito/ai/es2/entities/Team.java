@@ -11,17 +11,6 @@ import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Gruppo
- * Il gruppo corrisponde ad un gruppo di studenti, ha un nome, un identificativo ed è associato ad
- * uno e uno solo ​modello ​di macchina virtuale e a uno e uno solo corso. Non ci possono essere due
- * gruppi con lo stesso nome all’interno dello stesso corso.
- * Per ciascun gruppo il docente imposta un limite di risorse utilizzabili in termini di numero di vcpu,
- * spazio disco e ram, numero di istanze attive contemporaneamente e numero massimo di istanze
- * disponibili (cioè somma di quelle attive e spente).
- * <p>
- * IMPORTANT! Didn't use group, instead of team, because 'group' is a reserved MySQL word
- */
 @Data
 @EqualsAndHashCode(of = {"course", "id", "name"})
 @Entity

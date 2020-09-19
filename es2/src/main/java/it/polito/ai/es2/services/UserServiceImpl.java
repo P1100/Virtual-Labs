@@ -31,11 +31,6 @@ import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
-/**
- * Descrizione classe<p>Politica di sovrascrittura adottata: in quasi tutti i metodi add, se un id era già presente nel database non sovrascrivo i dati
- * già esistenti (tranne nel caso di proposeTeam, che poichè ha un id autogenerato, si è deciso di aggiornare il team vecchio usando
- * sempre la proposeTeam).
- */
 @Service
 @Transactional
 @Log
@@ -110,7 +105,7 @@ public class UserServiceImpl implements UserService {
     sb.append("\n\nLink to confirm registration:\n" + baseUrl + "/notification/user/confirm/" + token.getId());
     String mymatricola = environment.getProperty("mymatricola");
     System.out.println(sb);
-    notificationService.sendMessage("s" + mymatricola + "@studenti.polito.it", "[User:" + userDTO.getUsername() + "] Virtual Labs email verification", sb.toString());
+//    notificationService.sendMessage("s" + mymatricola + "@studenti.polito.it", "[User:" + userDTO.getUsername() + "] Virtual Labs email verification", sb.toString());
     return modelMapper.map(savedUser, UserDTO.class);
   }
 

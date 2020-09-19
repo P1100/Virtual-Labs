@@ -32,14 +32,6 @@ public class APITeams_RestController {
     return members;
   }
 
-//  @GetMapping("/{teamId}")
-//  public TeamDTO getTeam(@PathVariable Long teamId) {
-//    Optional<TeamDTO> teamDTO = teamService.getTeam(teamId);
-//    if (teamDTO.isEmpty())
-//      throw new ResponseStatusException(HttpStatus.CONFLICT, teamId.toString());
-//    return modelHelper.enrich(teamDTO.get());
-//  }
-
   @GetMapping("/{student_id}/teams/{courseId}")
   public CollectionModel<TeamDTO> getTeamsUser(@PathVariable Long student_id, @PathVariable String courseId) {
     List<TeamDTO> teams = teamService.getTeamsUser(student_id, courseId);

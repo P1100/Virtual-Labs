@@ -30,11 +30,6 @@ import java.time.LocalDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
 
-/**
- * Descrizione classe<p>Politica di sovrascrittura adottata: in quasi tutti i metodi add, se un id era già presente nel database non sovrascrivo i dati
- * già esistenti (tranne nel caso di proposeTeam, che poichè ha un id autogenerato, si è deciso di aggiornare il team vecchio usando
- * sempre la proposeTeam).
- */
 @Service
 @Transactional
 @Log
@@ -264,9 +259,8 @@ public class TeamServiceImpl extends CommonURL implements TeamService {
       }
       tokenRepository.save(token);
       String mymatricola = environment.getProperty("mymatricola");
-      // TODO: uncomment in prod?
       System.out.println("[s" + mymatricola + "@studenti.polito.it] s" + memberId + "@studenti.polito.it - Conferma iscrizione al team " + savedTeam.getName());
-      notificationService.sendMessage("s" + mymatricola + "@studenti.polito.it", "[Student:" + memberId + "] Conferma iscrizione al team " + savedTeam.getName(), sb.toString());
+//      notificationService.sendMessage("s" + mymatricola + "@studenti.polito.it", "[Student:" + memberId + "] Conferma iscrizione al team " + savedTeam.getName(), sb.toString());
     }
   }
 

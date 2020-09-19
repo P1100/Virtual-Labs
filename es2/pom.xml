@@ -6,23 +6,23 @@
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <version>2.3.3.RELEASE</version>
+        <version>2.3.4.RELEASE</version>
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
     <groupId>it.polito.ai</groupId>
     <artifactId>virtual-labs-back-end</artifactId>
-    <version>0.9.0-SNAPSHOT</version>
+    <version>1.0.0-RELEASE</version>
     <packaging>jar</packaging>
     <name>VirtualLabs</name>
-    <description>AI 2020 - VirtualLabs</description>
+    <description>AI 2020 - VirtualLabs Server</description>
 
-    <!-- Versione va specificata in project structure (configurazione progetto di idea), e/o qui se non si usa IDEA per portabilità-->
-    <!-- File -> Project structure -> Project -> Project SDK -> 11. File -> Project structure -> Project -> Project language level -> 11.-->
-    <!-- File -> Project structure -> Project -> Modules -> -> Sources &ndash;&gt; 11.  In project -> ctrl + alt + s -> Build, Execution, Deployment -> Compiler -> Java Compiler -> Project bytecode version -> 11-->
+    <!-- Version set in: -->
+    <!-- File -> Project structure -> Project -> Project SDK -> 11.     File -> Project structure -> Project -> Project language level -> 11.-->
+    <!-- File -> Project structure -> Project -> Modules -> -> Sources 11.      In project -> ctrl + alt + s -> Build, Execution, Deployment -> Compiler -> Java Compiler -> Project bytecode version -> 11-->
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-                <java.version>1.11</java.version>
+        <java.version>1.11</java.version>
     </properties>
 
     <dependencies>
@@ -84,12 +84,10 @@
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-hateoas</artifactId>
-            <version>2.3.3.RELEASE</version>
         </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-mail</artifactId>
-            <version>2.3.3.RELEASE</version>
         </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -121,7 +119,7 @@
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-test</artifactId>
-            <version>5.2.8.RELEASE</version>
+            <version>5.2.9.RELEASE</version>
         </dependency>
     </dependencies>
 

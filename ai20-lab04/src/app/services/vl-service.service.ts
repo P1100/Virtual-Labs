@@ -89,6 +89,6 @@ export class VlServiceService {
     return this.http.post(`${this.baseUrlApi}/assignments/implementation/${implId}/${imageId}`, null, AppSettings.JSON_HTTP_OPTIONS);
   }
   setStatusSubmissionToRead(assignmentId: number, idLoggedStudent: number) {
-    return this.http.put(`${this.baseUrlApi}/assignments/implementation/read/${assignmentId}/${idLoggedStudent}`, null, AppSettings.JSON_HTTP_OPTIONS);
+    return this.http.put(`${this.baseUrlApi}/assignments/implementation/status-read/${assignmentId}/${idLoggedStudent}`, null, AppSettings.JSON_HTTP_OPTIONS);
   }
 }

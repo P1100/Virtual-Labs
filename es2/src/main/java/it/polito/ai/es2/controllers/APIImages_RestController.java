@@ -30,7 +30,6 @@ public class APIImages_RestController {
   @PostMapping()
   public ImageDTO uploadImage(@RequestParam("imageFile") @NotNull MultipartFile file) {
     return imageService.uploadImage(file);
-//    return ResponseEntity.status(HttpStatus.OK).body("{\"Response\": \"Upload successful!\"}");
   }
 
   @GetMapping(path = {"/{imageId}"})

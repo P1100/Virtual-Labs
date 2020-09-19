@@ -14,13 +14,10 @@ import {DomSanitizer} from '@angular/platform-browser';
   // styles: ['./testing.component.css']
 })
 export class TestingComponent {
-  getCourses: FormGroup;
   student: Student;
   arrs: Student[];
   course: Course;
   arrc: Course[];
-  @ViewChild('heroForm')
-  heroForm: NgForm; // ElementRef;
 
   constructor(private studentService: StudentService, private courseService: CourseService, private imageService: ImageService,
               private sanitizer: DomSanitizer) {

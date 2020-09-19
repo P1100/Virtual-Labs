@@ -1,4 +1,3 @@
-/* Also used for professor */
 export class Student {
 
   constructor(public id: number,

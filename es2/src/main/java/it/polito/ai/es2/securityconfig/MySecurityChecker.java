@@ -17,7 +17,7 @@ import java.util.List;
  * Example: @mySecurityChecker.isCourseOwner(#courseName,authentication.principal.username))
  */
 @Service
-//@Transactional // DONT! I dont need detached entities saved in this class (read only)
+//@Transactional --> I dont need to save detached entities in this class (read only)
 @Log
 public class MySecurityChecker {
   @Autowired

@@ -13,14 +13,6 @@ import javax.validation.constraints.PositiveOrZero;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Utente: Studente<p>
- * Lo studente dell’università è caratterizzato dall’email @studenti.polito.it, dal nome, cognome,
- * matricola e foto.
- * <p>Lo studente, può essere associato massimo ad uno e un solo gruppo (per singolo corso),
- * può creare/cancellare/eseguire/arrestare/spegnere istanze di macchine virtuali di quel gruppo.
- * <p>Lo studente può essere iscritto a zero, uno o più corsi.
- */
 @Getter
 @Setter
 @EqualsAndHashCode(exclude = "profilePhoto")

@@ -2,7 +2,6 @@ package it.polito.ai.es2.services.interfaces;
 
 import it.polito.ai.es2.dtos.StudentDTO;
 import it.polito.ai.es2.dtos.TeamDTO;
-import org.springframework.security.access.prepost.PreAuthorize;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;
@@ -10,26 +9,22 @@ import javax.validation.constraints.NotNull;
 import java.util.List;
 
 public interface TeamService {
-  @PreAuthorize("hasRole('PROFESSOR') or @mySecurityChecker.isTeamOwner(#teamId,authentication.principal.username)")
   List<StudentDTO> getMembers(@NotNull Long teamId);
 
-  @PreAuthorize("hasRole('PROFESSOR')") void updateTeamConstrains(@Valid TeamDTO teamDTO);
+  void updateTeamConstrains(@Valid TeamDTO teamDTO);
 
-  @PreAuthorize("hasRole('PROFESSOR')") List<TeamDTO> getAllActiveTeamsForCourse(@NotNull String courseId);
+  List<TeamDTO> getAllActiveTeamsForCourse(@NotNull String courseId);
 
   List<StudentDTO> getEnrolledWithoutTeam(String courseName);
 
-  @PreAuthorize("hasRole('STUDENT') or hasRole('PROFESSOR')")
   List<TeamDTO> getTeamsUser(Long studentId, String courseId);
 
-  @PreAuthorize("hasRole('STUDENT')")
   TeamDTO proposeTeam(@NotBlank String courseId, @NotBlank String team_name, @NotNull List<Long> memberIds, @NotNull Long hoursTimeout);
 
   boolean confirmTeam(@NotBlank String token);
 
   boolean rejectTeam(@NotBlank String idtoken);
 
-  @PreAuthorize("hasRole('ADMIN') and  @mySecurityChecker.isTeamOwner(#teamId,authentication.principal.username)")
   boolean evictTeam(@NotNull Long teamId);
 
   void cleanupTeamsExpiredDisabled(@NotBlank String courseId);

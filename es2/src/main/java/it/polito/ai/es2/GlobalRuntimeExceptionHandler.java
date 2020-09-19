@@ -21,7 +21,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * Format HTTP response body (error: {):
+ * Format HTTP response body (error: {:
  * error: "Conflict"
  * message: "Course c1 cardinalities violated. New cardinalities incompatible with existing teams"
  * path: "/api/courses"

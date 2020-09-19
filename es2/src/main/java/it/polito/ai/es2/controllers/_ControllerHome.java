@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import java.security.Principal;
 
 @Controller
-@PreAuthorize("permitAll()") // doesnt override httpsecurity settings!
+@PreAuthorize("permitAll()")
 public class _ControllerHome {
   @Autowired
   ModelHelper urlSettings;

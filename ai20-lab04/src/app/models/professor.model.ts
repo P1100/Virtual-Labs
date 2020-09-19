@@ -1,4 +1,4 @@
-/* Also used for professor */
+/* Unused atm */
 export class Professor {
   id: number;
   firstName: string;

@@ -11,15 +11,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-/**
- * Corso
- * Il corso universitario è caratterizzato da un nome, un acronimo, e ad esso sono associati gli
- * studenti iscritti a quel corso. Il corso può essere attivo o spento (se è spento non si possono
- * utilizzare le corrispondenti macchine virtuali). Su ogni corso è impostata la dimensione minima e
- * massima di studenti che possono comporre un gruppo, per quel corso
- * <p>
- * Id is the course acronym. If course disabled, you cant use the VM associated
- */
 @Getter
 @Setter
 @Entity

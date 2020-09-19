@@ -11,11 +11,6 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 
-/**
- * Invalid Inputs: empty db, empty entities, course enabled, same name team, student not enrolled, 1 team per course x student,
- * Other errors: runtime errors, null values, conversion and arithmetic errors, sub methods errors, SYNCH ENTITIES MISSING
- * Multi data input error (and other controller input mismatch)
- */
 @SpringBootApplication
 @Log
 public class VirtualLabsApplication {

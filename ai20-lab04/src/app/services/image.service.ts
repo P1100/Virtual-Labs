@@ -23,7 +23,6 @@ export class ImageService {
       );
   }
   getImage(idImage: number): Observable<Image> {
-    // Make a call to Sprinf Boot to get the Image Bytes.
     return this.http.get<Image>(`${this.baseUrlApi}/${idImage}`)
       .pipe(
         retry(AppSettings.RETRIES), catchError(formatErrors),
