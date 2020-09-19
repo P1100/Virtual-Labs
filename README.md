@@ -12,8 +12,8 @@ This is a didactical learning project, made for the 2020 Internet Applications c
 
 ## Technologies
 - [Angular: **10.1.2**](https://github.com/angular/angular)
-- [Java 11 LTS](https://docs.oracle.com/en/java/javase/11/index.html)
-- [Spring Boot: 2.3.4.RELEASE](https://github.com/spring-projects/spring-boot/releases/tag/v2.3.3.RELEASE)
+- [Java **11** LTS](https://docs.oracle.com/en/java/javase/11/index.html)
+- [Spring Boot: **2.3.4.RELEASE**](https://github.com/spring-projects/spring-boot/releases/tag/v2.3.3.RELEASE)
   -  [Spring Data JPA](http://projects.spring.io/spring-data-jpa/)
     -    [Hibernate](http://docs.spring.io/spring/docs/current/spring-framework-reference/html/orm.html#orm-hibernate)
   -  [Spring Security](http://projects.spring.io/spring-security/)
@@ -29,11 +29,11 @@ This is a didactical learning project, made for the 2020 Internet Applications c
 ![](https://i.ibb.co/zx12tjV/Image-133.jpg)
 ![](https://i.ibb.co/BqVyfjR/Image-129.jpg)
 ![](https://i.ibb.co/9wnGKNv/Image-130.jpg)
-## How to build, deploy and run
+## How to build, deploy and run [prod, ubuntu]
 - First clone the repo:  
 `git clone https://github.com/P1100/VirtualLabs.git` 
 - Do the steps below
-- Open the app at https://localhost:4200/ (accept the certificate, it's a mock)
+- Open the app at http://localhost:4200/
 
 ### DB:
 -  User the following command in the terminal:   
@@ -42,8 +42,8 @@ This is a didactical learning project, made for the 2020 Internet Applications c
 ```
 docker run -d -v /home/myes2mariadb:/var/lib/mysql -p 3306:3306 --name virtuallabs -e MYSQL_ROOT_PASSWORD=root -d mariadb
 docker ps -a
-cp ./src/main/resources/dumbMariaDb.sql dbdata.sql
-docker cp ./src/main/resources/dumbMariaDb.sql 1a00bbb17c48:/dbdata.sql
+cp ./src/main/resources/dumpMariaDb.sql dbdata.sql
+docker cp ./src/main/resources/dumpMariaDb.sql 1a00bbb17c48:/dbdata.sql
 **RUN SERVER JAR NOW**  (to init db schema)  
 docker exec -i e881856b55ba mysql -uroot -proot virtuallabs < dbdata.sql
 ```  
