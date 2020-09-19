@@ -62,6 +62,7 @@ export class StudentsComponent implements AfterViewInit, OnChanges {
 
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['enrolled'] != null || changes['students'] != null) {
+      this.selectedStudentToAdd = null;
       // Update table sort, checkbox logic
       if (changes['enrolled'] != null) {
         this.sortData();

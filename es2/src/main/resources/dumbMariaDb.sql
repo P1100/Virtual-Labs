@@ -485,7 +485,7 @@ VALUES (8, '2020-12-08 16:06:49', 'Assignment x', '2020-11-05 20:06:49', 107, 'm
 
 INSERT INTO virtuallabs.implementation (id, current_correction, definitive_status, grade, last_status, permanent, read_status, status, assignment_id,
                                         student_id)
-VALUES (1, 'redo this and that', null, null, '2020-09-11 17:17:29', false, null, 2, 1, 111111);
+VALUES (1, 'redo this and that', null, null, '2020-09-11 17:17:29', false, null, 3, 1, 111111);
 INSERT INTO virtuallabs.implementation (id, current_correction, definitive_status, grade, last_status, permanent, read_status, status, assignment_id,
                                         student_id)
 VALUES (2, null, null, null, null, false, null, 0, 2, 111111);
