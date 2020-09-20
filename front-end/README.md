@@ -1,10 +1,5 @@
 # AI 2020 VirtualLabs Project - Front end
 
-## Notable Features:
-- Nested routing
-- Update to angular 10, and last version of Spring Boot
-- Checkbox gmail style
-
 ## Dependencies
 - moment js
 - `ng add @ng-bootstrap/ng-bootstrap`
@@ -17,21 +12,20 @@
 - `npm start`
  - Production with SSL: `npm serve-prod-ssl`
 
-## Update
-### NPM on Windows
+## Update dependencies
+#### NPM on Windows
 To update npm on windows, install newer nodejs. Or:
 - `npm install npm@latest -g` 
 - `npm list -g` 
 - `npm update` 
-### NPM on Ubuntu 18 LTS (https://www.digitalocean.com/community/tutorials/how-to-install-node-js-on-ubuntu-18-04)
+#### NPM on Ubuntu 18 LTS (https://www.digitalocean.com/community/tutorials/how-to-install-node-js-on-ubuntu-18-04)
 - `cd ~` 
 - `curl -sL https://deb.nodesource.com/setup_10.x -o nodesource_setup.sh` 
 - `sudo bash nodesource_setup.sh` 
 - `sudo apt install nodejs` 
-### Angular Project
+## Update Angular Front-end App
 - `ng update --all=true --allow-dirty --force`
 - Or: `ng update @angular/cli @angular/core`
-
 
 ## Custom settings
 * In node_modules/json-server-auth/dist/constants.js, changed from '1h' to 
