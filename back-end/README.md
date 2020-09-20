@@ -47,3 +47,9 @@ INSERT INTO virtuallabs.role (name, description) VALUES ('ROLE_ADMIN', 'Administ
 INSERT INTO virtuallabs.role (name, description) VALUES ('ROLE_PROFESSOR', 'Course Professor');
 INSERT INTO virtuallabs.role (name, description) VALUES ('ROLE_STUDENT', 'The Student');
 
+## Maven Goals
+mvn versions:use-latest-versions 
+mvn versions:display-dependency-updates 
+mvn dependency:list 
+mvn dependency:tree
+mvn help:effective-pom -Dverbose
