@@ -71,8 +71,7 @@ export class StudentsComponent implements AfterViewInit, OnChanges {
         this.showCheckboxDeselectAll = false;
         this.showCheckboxDeselectAll = false;
       }
-      // Update async autocomplete
-      delete this.filteredOptions$;
+      // Resetting and updating autocomplete and related async pipe
       this.autocompleteControl.reset(null);
       this.filteredOptions$ = this.autocompleteControl.valueChanges
         .pipe(
