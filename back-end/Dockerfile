@@ -12,6 +12,7 @@ USER app
 
 ENTRYPOINT ["java","-jar","/app.jar"]
 
+############## TEMP NOTES FOR FUTURE DEVELOPMENTS #####################
 # PROD
 #FROM ubuntu-jdk
 #

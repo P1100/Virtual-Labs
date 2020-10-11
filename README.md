@@ -40,8 +40,8 @@ This is a didactical learning project, made for the 2020 Internet Applications c
  `docker run -d -v /home/myes2mariadb:/var/lib/mysql -p 3306:3306 --name virtuallabs -e MYSQL_ROOT_PASSWORD=root -d mariadb`
 #### DB Data Init (optional)
 ```
-docker run -d -v /home/myes2mariadb:/var/lib/mysql -p 3306:3306 --name virtuallabs -e MYSQL_ROOT_PASSWORD=root -d mariadb
 docker ps -a
+**TAKE NOTE OF COINTAINER ID. EXAMPLE: e881856b55ba**  
 cp ./src/main/resources/dumpMariaDb.sql dbdata.sql
 docker cp ./src/main/resources/dumpMariaDb.sql 1a00bbb17c48:/dbdata.sql
 **RUN SERVER JAR NOW**  (to init db schema)  

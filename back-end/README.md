@@ -1,32 +1,27 @@
 # AI 2020 VirtualLabs Project - Back end
 
-## Git tags
+## Git tags push
 git push origin :refs/tags/`tagname`
+
 ## Update Maven Dependencies
 - IDEA Maven Run Configuration:<br>
 `mvn versions:display-dependency-updates`
 `mvn versions:use-latest-versions`
 - Also update Maven indexed repositories on IDEA
 
+### Others Maven Goals
+mvn dependency:list 
+mvn dependency:tree
+mvn help:effective-pom -Dverbose
+
 ## Docker
-### Old
-`docker run -d --mount source=es2vol,target=/es2app -p 3306:3306 --name es2 -e MYSQL_ROOT_PASSWORD=root -d mariadb`
-### Current
 `docker run -d -v /home/myes2mariadb:/var/lib/mysql -p 3306:3306 --name virtuallabs -e MYSQL_ROOT_PASSWORD=root -d mariadb`
-#### Docker Toolbox Windows -> problema, toolbox non scrive dati su volume directory (dont use rm! Kills container when stopped)
-`docker run -d --rm -v "/c/Users/dockertbx:/var/mariadb" -p 3306:3306 --name es2 -e MYSQL_ROOT_PASSWORD=root -d mariadb`
-`docker run -d --rm -v "//c/Users/dockertbx:/var/mariadb" -p 3306:3306 --name es2 -e MYSQL_ROOT_PASSWORD=root -d mariadb`
-##### Toolbox: Se errore Protocol Error cant create dir (last used)
-`docker run -d -v "//v/dockertbx:/var/mariadb" -p 3306:3306 --name es2 -e MYSQL_ROOT_PASSWORD=root -d mariadb`
 
 ## SQL
 ### How to manually delete DB rows
 mysql> SET foreign_key_checks = 0;
 mysql> DROP table ...;
 mysql> SET foreign_key_checks = 1;
-GET http://localhost:8080/users/add/user/pass/
-### DB Creation
-`CREATE DATABASE teams;`
 ### DB Rebuild
 DROP SCHEMA virtuallabs;
 CREATE DATABASE virtuallabs;
@@ -46,10 +41,3 @@ CREATE DATABASE virtuallabs;
 INSERT INTO virtuallabs.role (name, description) VALUES ('ROLE_ADMIN', 'Administrator');
 INSERT INTO virtuallabs.role (name, description) VALUES ('ROLE_PROFESSOR', 'Course Professor');
 INSERT INTO virtuallabs.role (name, description) VALUES ('ROLE_STUDENT', 'The Student');
-
-## Maven Goals
-mvn versions:use-latest-versions 
-mvn versions:display-dependency-updates 
-mvn dependency:list 
-mvn dependency:tree
-mvn help:effective-pom -Dverbose

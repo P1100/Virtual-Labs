@@ -47,3 +47,26 @@ To update npm on windows, install newer nodejs. Or:
 * In karma.conf.js  (default)
 `logLevel: config.LOG_INFO,`  
 `reporters: ['progress', 'kjhtml'],`
+
+
+## First Time Creation
+```
+npm init -y 
+npm install -g typescript 
+node -v 
+npm install -g typescript 
+tsc -v 
+npm install -g @angular/cli@latest 
+ng v 
+ng new front-end
+npm install @angular/material @angular/cdk @angular/animations 
+ng build –prod 
+npm ls @angular/material
+```
+## Uninstall
+```
+npm uninstall -g @angular/cli 
+npm uninstall --save-dev angular-cli 
+npm cache clean –force 
+npm cache verify	
+```
