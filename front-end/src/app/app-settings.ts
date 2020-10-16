@@ -85,7 +85,7 @@ export function removeHATEOAS(container: HateoasModel): any[] {
 
 // Uniform all data received from services, converting any (mostly objects) to arrays
 export function getSafeDeepCopyToArray(ss: any): any[] {
-  return Array.isArray(ss) ? [...ss] : (ss != null ? [{...ss}] : []);
+  return JSON.parse(JSON.stringify(ss));
 }
 export function formatErrors(error: any) {
   let responseErrorString = error?.error?.message;
