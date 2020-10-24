@@ -15,7 +15,7 @@ mvn dependency:tree
 mvn help:effective-pom -Dverbose
 
 ## Docker
-`docker run -d -v /home/myes2mariadb:/var/lib/mysql -p 3306:3306 --name virtuallabs -e MYSQL_ROOT_PASSWORD=root -d mariadb`
+`docker run -d -v /home/myes2mariadb:/var/lib/mysql -p 3306:3306 --name virtuallabs -e MYSQL_ROOT_PASSWORD=root mariadb`
 
 ## SQL
 ### How to manually delete DB rows
