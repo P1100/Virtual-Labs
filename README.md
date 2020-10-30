@@ -11,7 +11,7 @@
 This is a didactical learning project, made for the 2020 Internet Applications course ("Applicazioni internet"). It is a web app for handling university courses, teams, students and all their assignments/laboratories. Is it kept up to date
 
 ## Technologies
-- [Angular: **10.1.2**](https://github.com/angular/angular)
+- [Angular: **10.1.5**](https://github.com/angular/angular)
 - [Java **11** LTS](https://docs.oracle.com/en/java/javase/11/index.html)
 - [Spring Boot: **2.3.4.RELEASE**](https://github.com/spring-projects/spring-boot/releases/tag/v2.3.3.RELEASE)
   -  [Spring Data JPA](http://projects.spring.io/spring-data-jpa/)
