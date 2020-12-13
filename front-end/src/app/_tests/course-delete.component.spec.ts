@@ -1,4 +1,4 @@
-import {async, ComponentFixture, TestBed} from '@angular/core/testing';
+import {ComponentFixture, TestBed, waitForAsync} from '@angular/core/testing';
 
 import {CourseDeleteComponent} from '../dialogs/course-delete/course-delete.component';
 
@@ -6,7 +6,7 @@ describe('CourseDeleteComponent', () => {
   let component: CourseDeleteComponent;
   let fixture: ComponentFixture<CourseDeleteComponent>;
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       declarations: [CourseDeleteComponent]
     })

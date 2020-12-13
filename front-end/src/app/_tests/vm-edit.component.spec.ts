@@ -1,4 +1,4 @@
-import {async, ComponentFixture, TestBed} from '@angular/core/testing';
+import {ComponentFixture, TestBed, waitForAsync} from '@angular/core/testing';
 
 import {VmEditComponent} from './vm-edit.component';
 
@@ -6,7 +6,7 @@ describe('VmEditComponent', () => {
   let component: VmEditComponent;
   let fixture: ComponentFixture<VmEditComponent>;
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       declarations: [VmEditComponent]
     })

@@ -1,4 +1,4 @@
-import {async, ComponentFixture, TestBed} from '@angular/core/testing';
+import {ComponentFixture, TestBed, waitForAsync} from '@angular/core/testing';
 
 import {TabsNavComponent} from '../r1-tabs-menu/tabs-nav.component';
 import {RouterTestingModule} from '@angular/router/testing';
@@ -8,7 +8,7 @@ describe('SidenavContComponent', () => {
   let component: TabsNavComponent;
   let fixture: ComponentFixture<TabsNavComponent>;
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       declarations: [TabsNavComponent],
       imports: [RouterTestingModule, HttpClientTestingModule]

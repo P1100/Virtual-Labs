@@ -1,4 +1,4 @@
-import {async, ComponentFixture, TestBed} from '@angular/core/testing';
+import {ComponentFixture, TestBed, waitForAsync} from '@angular/core/testing';
 
 import {VmCreateComponent} from '../dialogs/vm-create/vm-create.component';
 
@@ -6,7 +6,7 @@ describe('VmCreateComponent', () => {
   let component: VmCreateComponent;
   let fixture: ComponentFixture<VmCreateComponent>;
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       declarations: [VmCreateComponent]
     })

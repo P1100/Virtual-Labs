@@ -1,16 +1,16 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import {ComponentFixture, TestBed, waitForAsync} from '@angular/core/testing';
 
-import { AssignmentsHistoryComponent } from './assignments-history.component';
+import {AssignmentsHistoryComponent} from './assignments-history.component';
 
 describe('AssignmentsHistoryComponent', () => {
   let component: AssignmentsHistoryComponent;
   let fixture: ComponentFixture<AssignmentsHistoryComponent>;
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      declarations: [ AssignmentsHistoryComponent ]
+      declarations: [AssignmentsHistoryComponent]
     })
-    .compileComponents();
+      .compileComponents();
   }));
 
   beforeEach(() => {
