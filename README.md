@@ -11,12 +11,12 @@
 This is a didactical learning project, made for the 2020 Internet Applications course ("Applicazioni internet"). It is a web app for handling university courses, teams, students and all their assignments/laboratories. Is it kept up to date
 
 ## Technologies
-- [Angular: **10.1.5**](https://github.com/angular/angular)
-- [Java **11** LTS](https://docs.oracle.com/en/java/javase/11/index.html)
-- [Spring Boot: **2.3.4.RELEASE**](https://github.com/spring-projects/spring-boot/releases/tag/v2.3.3.RELEASE)
-  -  [Spring Data JPA](http://projects.spring.io/spring-data-jpa/)
-    -    [Hibernate](http://docs.spring.io/spring/docs/current/spring-framework-reference/html/orm.html#orm-hibernate)
-  -  [Spring Security](http://projects.spring.io/spring-security/)
+- [Angular: **11.1.0-next.2**](https://github.com/angular/angular) (started with Angular 8, then kept cleanly updating)
+- [Java **11** LTS](https://docs.oracle.com/en/java/javase/11/index.html) (java8 used initially)
+- [Spring Boot: **2.3.7.RELEASE**](https://github.com/spring-projects/spring-boot/releases/tag/v2.3.7.RELEASE)
+    - [Spring Data JPA](http://projects.spring.io/spring-data-jpa/)
+    - [Hibernate](http://docs.spring.io/spring/docs/current/spring-framework-reference/html/orm.html#orm-hibernate)
+    - [Spring Security](http://projects.spring.io/spring-security/)
 - [MariaDb](https://github.com/MariaDB/server)
 - [Docker](https://docs.docker.com/install/)
 - IDE: IDEA, Webstorm
