@@ -27,7 +27,7 @@ npm install npm@latest -g
 - `sudo bash nodesource_setup.sh`
 - `sudo apt install nodejs`
 
-## NPM dependencies
+### NPM dependencies
 
 ```
 npm cache clean --force
@@ -35,12 +35,12 @@ npm list -g
 npm update
 ```
 
-## Angular Front-end to latest
+### Angular Front-end to latest
 
 - `ng update --all=true --allow-dirty --force`
 - OR: `ng update @angular/cli @angular/core`
 
-### Angular Front-end to a specific version
+#### Angular Front-end to a specific version
 
 ```
 ng update --allow-dirty --next
