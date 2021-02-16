@@ -141,7 +141,7 @@ const routes: Routes = [
     enableTracing: false,
     onSameUrlNavigation: 'reload',
     paramsInheritanceStrategy: 'always',
-    relativeLinkResolution: 'legacy'
+    relativeLinkResolution: 'corrected'
   })],
   exports: [RouterModule]
 })
