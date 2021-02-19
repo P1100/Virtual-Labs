@@ -1,12 +1,10 @@
 # AI 2020 VirtualLabs Project - Front end
 
 # Build
-
 - `npm install`
 - `ng build –prod`
 
 # Usage
-
 - `npm start`
 - Production with SSL: `npm serve-prod-ssl`
 
@@ -15,7 +13,6 @@
 #### NPM on Windows
 
 To update npm on windows, install newer nodejs. Alternatively:
-
 ```
 npm install npm@latest -g
 ```
@@ -27,32 +24,28 @@ npm install npm@latest -g
 - `sudo bash nodesource_setup.sh`
 - `sudo apt install nodejs`
 
-### NPM dependencies
-
-```
-npm cache clean --force
-npm list -g
-npm update
-```
-
 ### Angular Front-end to latest
 
-- `ng update --all=true --allow-dirty --force`
-- OR: `ng update @angular/cli @angular/core`
+```
+npm install -g @angular/cli@latest
+ng update @angular/core @angular/cli @angular/cdk @angular/material --allow-dirty
+```
+
+- Eventually, after:  
+  `npm update`
 
 #### Angular Front-end to a specific version
 
 ```
-ng update --allow-dirty --next
-ng update @angular/core @angular/cli @angular/cdk @angular/material --allow-dirty --force --next
-(ng update @angular/core @angular/cli@11 @angular/cdk@11 @angular/material@11 --allow-dirty)
+(ng update @angular/core @angular/cli@12 @angular/cdk@12 @angular/material@12 --allow-dirty --force)
 ```
 
-- Eventually:
+### Npm & Dependencies
 
 ```
 npm cache clean --force
 (delete node_modules, dist, and eventually package-lock)
+npm list -g
 npm install
 npm run build
 ```
@@ -60,7 +53,6 @@ npm run build
 ----------------------------
 
 ## First Time Creation
-
 ```
 npm init -y 
 npm install -g typescript 
@@ -76,12 +68,10 @@ npm ls @angular/material
 ```
 
 ### Installing Third Part Dependencies
-
 - moment js
 - `ng add @ng-bootstrap/ng-bootstrap`
 
 ### Project Custom settings
-
 * In node_modules/json-server-auth/dist/constants.js, changed from '1h' to
   `exports.JWT_EXPIRES_IN = '999999h';`p
 * In app.e2e-spec.ts
@@ -105,7 +95,6 @@ npm ls @angular/material
   `reporters: ['progress', 'kjhtml'],`
 
 ## Uninstall
-
 ```
 npm uninstall -g @angular/cli 
 npm uninstall --save-dev angular-cli 
@@ -116,7 +105,6 @@ npm cache verify
 --------------------------
 
 #### IDEA Terminal Bash NPM-NG usage
-
 ```
 cmd.exe
 (npm run ng version)
