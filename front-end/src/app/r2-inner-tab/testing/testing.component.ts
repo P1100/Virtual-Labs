@@ -1,7 +1,6 @@
-import {Component, ViewChild} from '@angular/core';
+import {Component} from '@angular/core';
 import {StudentService} from '../../services/student.service';
 import {CourseService} from '../../services/course.service';
-import {FormGroup, NgForm} from '@angular/forms';
 import {Student} from '../../models/student.model';
 import {Course} from '../../models/course.model';
 import {ImageService} from '../../services/image.service';
