@@ -28,7 +28,9 @@ npm install npm@latest -g
 
 ```
 npm install -g @angular/cli@latest
+ng update --verbose
 ng update @angular/core @angular/cli @angular/cdk @angular/material --allow-dirty
+npm install
 ```
 
 - Eventually, after:  
@@ -37,7 +39,7 @@ ng update @angular/core @angular/cli @angular/cdk @angular/material --allow-dirt
 #### Angular Front-end to a specific version
 
 ```
-(ng update @angular/core @angular/cli@12 @angular/cdk@12 @angular/material@12 --allow-dirty --force)
+(ng update @angular/core@12 @angular/cli@12 @angular/cdk @angular/material@12 --allow-dirty --force)
 ```
 
 ### Npm & Dependencies
