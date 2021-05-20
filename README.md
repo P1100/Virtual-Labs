@@ -8,7 +8,7 @@
  <img alt="Framework" src="https://img.shields.io/badge/Framework-Spring | Angular-green"/>
 </p>
 
-This is a didactical learning project, made for the 2020 Internet Applications course ("Applicazioni internet"). It is a web app for handling university courses, teams, students and all their assignments/laboratories. Is it kept up to date
+This is a didactical learning project, made for the 2020 Internet Applications course. It is a web app for handling university courses, teams, students and all their assignments/laboratories. Is it kept up to date
 
 ## Technologies
 - [Angular: **11.2.5**](https://github.com/angular/angular/releases) (started with Angular 8, then kept cleanly updating)
