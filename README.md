@@ -11,7 +11,7 @@
 This is a didactical learning project, made for the 2020 Internet Applications course. It is a web app for handling university courses, teams, students and all their assignments/laboratories. Is it kept up to date
 
 ## Technologies
-- [Angular: **11.2.5**](https://github.com/angular/angular/releases) (started with Angular 8, then kept cleanly updating)
+- [Angular: **12.1.1**](https://github.com/angular/angular/releases) (started with Angular 8, then kept cleanly updating)
 - [Java **11** LTS](https://docs.oracle.com/en/java/javase/11/index.html) (java8 used initially)
 - [Spring Boot: **2.5.2**](https://github.com/spring-projects/spring-boot/releases) (started with 2.2.6.RELEASE)
     - [Spring Data JPA](http://projects.spring.io/spring-data-jpa/)

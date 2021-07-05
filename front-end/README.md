@@ -26,15 +26,14 @@ npm install npm@latest -g
 
 ### Angular Front-end to latest
 
-```
+``` 
+ng version
 npm install -g @angular/cli@latest
 ng update --verbose
 ng update @angular/core @angular/cli @angular/cdk @angular/material --allow-dirty
+npm update
 npm install
 ```
-
-- Eventually, after:  
-  `npm update`
 
 #### Angular Front-end to a specific version
 
